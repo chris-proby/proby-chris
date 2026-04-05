@@ -80,15 +80,33 @@ body::before {
 }
 .upanel-row1 { display: flex; align-items: center; gap: .6rem; }
 .upanel-chevron {
-  flex-shrink: 0; width: 26px; height: 26px; border-radius: .35rem;
-  background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.09);
-  color: rgba(255,255,255,.38); cursor: pointer; transition: all .15s;
+  flex-shrink: 0; width: 30px; height: 30px; border-radius: .38rem;
+  background: rgba(0,237,212,.08); border: 1px solid rgba(0,237,212,.28);
+  color: rgba(0,237,212,.65); cursor: pointer; transition: all .18s;
   display: flex; align-items: center; justify-content: center;
   font-family: inherit;
 }
-.upanel-chevron:hover { background: rgba(0,237,212,.22); color: var(--accent-lt); border-color: rgba(0,237,212,.4); }
-.upanel-chevron:disabled { opacity: .18; cursor: default; pointer-events: none; }
-.upanel-chevron .material-symbols-outlined { font-size: .9rem !important; }
+.upanel-chevron:hover { background: rgba(0,237,212,.2); color: #5CFFF0; border-color: rgba(0,237,212,.6); box-shadow: 0 0 10px rgba(0,237,212,.2); }
+.upanel-chevron:disabled { opacity: .15; cursor: default; pointer-events: none; }
+.upanel-chevron .material-symbols-outlined { font-size: 1.1rem !important; }
+
+/* nav cluster */
+@keyframes upanel-nav-glow {
+  0%, 100% { box-shadow: 0 0 0 1px rgba(0,237,212,.1), 0 0 8px rgba(0,237,212,.06); }
+  50%       { box-shadow: 0 0 0 1px rgba(0,237,212,.22), 0 0 16px rgba(0,237,212,.14); }
+}
+.upanel-nav {
+  display: flex; align-items: center; gap: .3rem; flex-shrink: 0;
+  background: rgba(0,237,212,.05);
+  border: 1px solid rgba(0,237,212,.18);
+  border-radius: .52rem; padding: .2rem .28rem;
+  animation: upanel-nav-glow 3s ease-in-out infinite;
+}
+.upanel-nav-counter {
+  font-size: .52rem; font-weight: 700; color: rgba(0,237,212,.5);
+  letter-spacing: .06em; min-width: 26px; text-align: center;
+  font-family: 'Silkscreen', monospace; line-height: 1;
+}
 .upanel-identity { display: flex; align-items: center; gap: .42rem; flex-shrink: 0; }
 .upanel-meta { font-size: .58rem; color: rgba(255,255,255,.28); white-space: nowrap; }
 .upanel-quote {
@@ -845,10 +863,16 @@ function renderUserPanel(){
     <div class="upanel-row1">
       <img src="vigloo.jpg" alt="Vigloo"
            style="height:22px;object-fit:contain;border-radius:.28rem;flex-shrink:0;opacity:.75;margin-right:.25rem;"/>
-      <div style="width:1px;height:18px;background:rgba(0,237,212,.15);flex-shrink:0;"></div>
-      <button class="upanel-chevron" onclick="changeUser(-1)" ${prevDis}>
-        <span class="material-symbols-outlined">chevron_left</span>
-      </button>
+      <div style="width:1px;height:18px;background:rgba(0,237,212,.15);flex-shrink:0;margin-right:.15rem;"></div>
+      <div class="upanel-nav">
+        <button class="upanel-chevron" onclick="changeUser(-1)" ${prevDis} title="이전 참여자">
+          <span class="material-symbols-outlined">chevron_left</span>
+        </button>
+        <div class="upanel-nav-counter">${String(currentUserIdx+1).padStart(2,'0')} / ${String(USERS.length).padStart(2,'0')}</div>
+        <button class="upanel-chevron" onclick="changeUser(1)" ${nextDis} title="다음 참여자">
+          <span class="material-symbols-outlined">chevron_right</span>
+        </button>
+      </div>
       <div class="user-avatar" style="width:30px;height:30px;font-size:.7rem;flex-shrink:0;">${user.initials}</div>
       <div class="upanel-identity">
         <span class="user-name" style="font-size:.88rem;">${user.fullName}</span>
@@ -856,9 +880,6 @@ function renderUserPanel(){
         <span class="upanel-meta">${user.meta}</span>
       </div>
       <div class="upanel-quote">${user.quote}</div>
-      <button class="upanel-chevron" onclick="changeUser(1)" ${nextDis}>
-        <span class="material-symbols-outlined">chevron_right</span>
-      </button>
     </div>
     <div class="upanel-row2">
       ${insightsHtml}
