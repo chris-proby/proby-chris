@@ -420,6 +420,42 @@ body::before {
 }
 .ct-qcard-no-quote { font-size: .6rem; color: rgba(255,255,255,.1); }
 
+/* ── Content Evaluation Section ── */
+.eval-section { margin: 1.5rem 1.5rem 0; padding-bottom: 2rem; }
+.eval-section-hdr { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 1.2rem; flex-wrap: wrap; }
+.eval-section-hdr-title { font-size: 1.35rem; font-weight: 900; color: rgba(255,255,255,.88); letter-spacing: -.02em; }
+.eval-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(295px, 1fr)); gap: .875rem; }
+.eval-card { background: rgba(10,10,11,.5); border: 1px solid rgba(37,37,45,.65); border-radius: 1rem; overflow: hidden; transition: border-color .2s; }
+.eval-card:hover { border-color: rgba(37,37,45,.95); }
+.eval-card-top { display: flex; gap: .8rem; padding: .85rem .9rem; border-top: 3px solid; }
+.eval-poster { flex-shrink: 0; width: 56px; height: 74px; border-radius: .45rem; overflow: hidden; position: relative; background: rgba(255,255,255,.04); }
+.eval-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.eval-meta { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: .3rem; }
+.eval-meta-title { font-size: .8rem; font-weight: 800; color: rgba(255,255,255,.9); line-height: 1.3; }
+.eval-meta-badges { display: flex; gap: .3rem; align-items: center; }
+.eval-user-rows { display: flex; flex-direction: column; gap: .3rem; margin-top: .1rem; }
+.eval-user-row { display: flex; align-items: center; gap: .4rem; }
+.eval-user-avatar { width: 18px; height: 18px; border-radius: 50%; border: 1px solid rgba(0,237,212,.25); display: flex; align-items: center; justify-content: center; font-size: .42rem; font-weight: 900; color: rgba(0,237,212,.7); flex-shrink: 0; background: rgba(0,60,50,.7); }
+.eval-trail { display: flex; gap: 2.5px; align-items: center; flex: 1; }
+.eval-trail-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.eval-verdict-pill { font-size: .44rem; font-weight: 800; padding: .1rem .32rem; border-radius: .22rem; white-space: nowrap; letter-spacing: .04em; flex-shrink: 0; }
+.eval-verdict-pill.positive { background: rgba(0,237,212,.12); color: rgba(0,237,212,.85); }
+.eval-verdict-pill.neutral  { background: rgba(245,158,11,.1);  color: rgba(245,158,11,.8); }
+.eval-verdict-pill.negative { background: rgba(239,68,68,.1);   color: rgba(239,68,68,.7); }
+.eval-verdict-pill.na       { background: rgba(255,255,255,.05); color: rgba(255,255,255,.22); font-style: italic; }
+.eval-card-divider { height: 1px; background: rgba(37,37,45,.65); }
+.eval-card-body { padding: .72rem .9rem; display: flex; flex-direction: column; gap: .55rem; }
+.eval-tag-lbl { font-size: .44rem; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .18rem; font-family: 'Silkscreen', monospace; }
+.eval-tag-lbl.pro { color: rgba(0,237,212,.45); }
+.eval-tag-lbl.con { color: rgba(239,68,68,.42); }
+.eval-tag-group { display: flex; flex-wrap: wrap; gap: .2rem; }
+.eval-tag { font-size: .5rem; padding: .1rem .3rem; border-radius: .2rem; }
+.eval-tag.pro { background: rgba(0,237,212,.06); color: rgba(0,237,212,.62); border: 1px solid rgba(0,237,212,.1); }
+.eval-tag.con { background: rgba(239,68,68,.05); color: rgba(239,68,68,.58); border: 1px solid rgba(239,68,68,.09); }
+.eval-quotes { display: flex; flex-direction: column; gap: .35rem; padding-top: .5rem; border-top: 1px solid rgba(37,37,45,.5); }
+.eval-quote { font-size: .57rem; color: rgba(255,255,255,.38); font-style: italic; line-height: 1.55; }
+.eval-quote-user-lbl { font-size: .44rem; color: rgba(255,255,255,.22); font-style: normal; font-weight: 700; margin-bottom: .06rem; }
+
 /* ── Dot pulse ── */
 @keyframes ct-pulse {
   0%   { transform: scale(1);   opacity: .3;  }
@@ -502,6 +538,11 @@ body::before {
     </div>
 
   </div><!-- /ct-chart-panel -->
+
+  <!-- ═══ CONTENT EVALUATION ═══ -->
+  <div class="eval-section" id="eval-section">
+    <!-- filled by JS -->
+  </div>
 
 </div><!-- /page -->
 
@@ -1252,8 +1293,161 @@ function showTooltip(e, p, title){
 function moveTooltip(e){ TT.style.left = e.clientX + 'px'; TT.style.top = e.clientY + 'px'; }
 function hideTooltip(){ TT.classList.remove('show'); TT.classList.remove('ct-tip-dropout'); }
 
+/* ─────────────────── CONTENT EVALUATION ─────────────────── */
+const CONTENT_EVAL = [
+  {
+    title: 'Vicious', thumb: 'vicious.png', type: 'Human',
+    ratings: {
+      Hector: {
+        trail: [1,-1,-1,3,-3,-3,-1,null,1], verdictType: 'negative', verdictLabel: 'Switch 이탈',
+        quote: '"sex sells 방식 하나로만 끌고 가는 구조 — 뭔가 있을까 하는 기대가 유일한 생명줄이었다."',
+      },
+      Dani: null,
+    },
+    pros: ['강렬한 첫 오프닝', '성적·로맨틱 긴장감', '매력적인 배우'],
+    cons: ['예측 가능한 클리셰', '고등학교 트로프', '비자연적 인물 반응', '반복적 고난 구조'],
+  },
+  {
+    title: 'Trapped and Redeemed', thumb: 'trapped and redeemed.png', type: 'Human',
+    ratings: {
+      Hector: null,
+      Dani: {
+        trail: [3,3,3,2,2,3,1], verdictType: 'neutral', verdictLabel: 'Switch',
+        quote: '"첫 화 바에서의 만남이 완벽한 티저였다 — 비밀 아이 반전에서 모든 게 멈추는 느낌이었다."',
+      },
+    },
+    pros: ['강력한 첫 화 훅', '직장·CEO 로맨스 설정', '비밀 아이 반전', '역할 역학 긴장감'],
+    cons: ['과도한 대화 씬', '드라마 없는 장면 반복', '광고 시스템 오류 이탈'],
+  },
+  {
+    title: 'Blood Bound Lunar', thumb: 'luna.png', type: 'AI',
+    ratings: {
+      Hector: {
+        trail: [-1,0,-1,-3,-3,-3], verdictType: 'negative', verdictLabel: 'Switch 이탈',
+        quote: '"진짜 Twilight 그대로 가버렸다 — 100% 예측 가능, 오리지널이 될 가능성이 없다."',
+      },
+      Dani: {
+        trail: [3,3,1,3,3,2], verdictType: 'neutral', verdictLabel: 'Switch',
+        quote: '"뱀파이어 정말 좋은데 — AI가 만든 목소리가 너무 로봇 같아서 거부감이 생겼다."',
+      },
+    },
+    pros: ['뱀파이어 장르 자체 매력 (Dani)', '액션·싸움 장면', '로맨틱 긴장감'],
+    cons: ['Twilight 완전 복사 (Hector)', 'AI 목소리 부자연 (Dani)', '에피소드 간 연결 단절', '세계관 설명 없음'],
+  },
+  {
+    title: 'Everyone Awakens', thumb: 'everyone rules.png', type: 'AI',
+    ratings: {
+      Hector: {
+        trail: [1,3,1,0,0,1], verdictType: 'neutral', verdictLabel: 'Switch',
+        quote: '"오리지널한 세계관이 좋다 — 레벨업 장면 없이 이미 레벨30, 액션이 너무 적다."',
+      },
+      Dani: {
+        trail: [1,1,2,1,1,0], verdictType: 'negative', verdictLabel: 'Switch 이탈',
+        quote: '"처음부터 설명이 없어서 몇 화를 봐도 전체 흐름을 파악하지 못했다."',
+      },
+    },
+    pros: ['독창적 세계관 (Hector)', '언더독 성장 서사', '운석 OP 주인공 설정'],
+    cons: ['레벨업 화면 미표시', '애니메이션 거부감 (Dani)', '언어 장벽 (Dani)', '화면 액션 부족'],
+  },
+  {
+    title: 'Last Dragon Tamer', thumb: 'dragon tamer.png', type: 'AI',
+    ratings: {
+      Hector: {
+        trail: [1,1,1,3], verdictType: 'positive', verdictLabel: '계속 의향 ★',
+        quote: '"지금까지 본 작품 중 가장 좋다 — 드래곤이 어떻게 전개될지 기대된다."',
+      },
+      Dani: {
+        trail: [1,2,2,3,1,2], verdictType: 'neutral', verdictLabel: '완료',
+        quote: '"애니메이션은 취향이 아닌데, 액션이 쌓이고 설명이 조금씩 나오기 시작했다."',
+      },
+    },
+    pros: ['코미디·세계관 다양성 (Hector)', '빠른 전개', '드래곤 설정 기대감', '액션 장면'],
+    cons: ['애니메이션 거부감 (Dani)', '언어 장벽 (Dani)', '여자친구 급전개', '세계관 이해 어려움'],
+  },
+];
+
+function evalScoreColor(score){
+  if(score === null || score === undefined) return 'rgba(255,255,255,.08)';
+  if(score >= 2)   return '#00EDD4';
+  if(score === 1)  return '#F59E0B';
+  if(score === 0)  return 'rgba(255,255,255,.18)';
+  if(score === -1) return '#F97316';
+  return '#EF4444';
+}
+
+function renderEvalSection(){
+  const section = document.getElementById('eval-section');
+  if(!section) return;
+
+  const cards = CONTENT_EVAL.map(item => {
+    const c   = getSeriesColor({ title: item.title });
+    const isAI = item.type === 'AI';
+
+    const userRows = Object.entries(item.ratings).map(([name, r]) => {
+      if(!r) return `<div class="eval-user-row">
+        <div class="eval-user-avatar">${name.slice(0,2)}</div>
+        <div style="font-size:.46rem;color:rgba(255,255,255,.14);font-style:italic;flex:1;">미시청</div>
+      </div>`;
+      const dots = r.trail.map(s =>
+        `<div class="eval-trail-dot" style="background:${evalScoreColor(s)};" title="${s !== null ? (s > 0 ? '+'+s : s) : '—'}"></div>`
+      ).join('');
+      return `<div class="eval-user-row">
+        <div class="eval-user-avatar">${name.slice(0,2)}</div>
+        <div class="eval-trail">${dots}</div>
+        <span class="eval-verdict-pill ${r.verdictType}">${r.verdictLabel}</span>
+      </div>`;
+    }).join('');
+
+    const proTags = item.pros.map(p => `<span class="eval-tag pro">${p}</span>`).join('');
+    const conTags = item.cons.map(p => `<span class="eval-tag con">${p}</span>`).join('');
+
+    const quotes = Object.entries(item.ratings)
+      .filter(([,r]) => r?.quote)
+      .map(([name, r]) => `<div class="eval-quote">
+        <div class="eval-quote-user-lbl">${name}</div>
+        ${r.quote}
+      </div>`).join('');
+
+    return `<div class="eval-card">
+      <div class="eval-card-top" style="border-top-color:${c.dot};">
+        <div class="eval-poster">
+          <img src="${item.thumb}" alt="${item.title}"/>
+          ${isAI ? `<div class="ct-ai-chip" style="font-size:.3rem;padding:.04rem .15rem;top:4px;right:4px;left:auto;bottom:auto;">AI</div>` : ''}
+        </div>
+        <div class="eval-meta">
+          <div class="eval-meta-title">${item.title}</div>
+          <div class="eval-meta-badges">
+            <span class="ct-qseries-type-badge ${item.type.toLowerCase()}" style="font-size:.44rem;">${item.type}</span>
+          </div>
+          <div class="eval-user-rows">${userRows}</div>
+        </div>
+      </div>
+      <div class="eval-card-divider"></div>
+      <div class="eval-card-body">
+        <div>
+          <div class="eval-tag-lbl pro">흥미 유발</div>
+          <div class="eval-tag-group">${proTags}</div>
+        </div>
+        <div>
+          <div class="eval-tag-lbl con">흥미 저해</div>
+          <div class="eval-tag-group">${conTags}</div>
+        </div>
+        <div class="eval-quotes">${quotes}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  section.innerHTML = `
+    <div class="eval-section-hdr">
+      <div class="section-label" style="margin-bottom:0;">CONTENT EVALUATION</div>
+      <div class="eval-section-hdr-title">작품별 종합 평가</div>
+    </div>
+    <div class="eval-grid">${cards}</div>`;
+}
+
 /* ─────────────────── INIT ─────────────────── */
 goUser(0);
+renderEvalSection();
 window.addEventListener('resize', () => redrawChart());
 
 /* ── Sync quote rail scroll with chart scroll ── */
