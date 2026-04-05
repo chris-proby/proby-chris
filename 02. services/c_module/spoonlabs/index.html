@@ -334,6 +334,12 @@ body::before {
 .ct-qthumb-card:hover { background: rgba(255,255,255,.03); }
 .ct-qthumb-card.soloed { background: rgba(0,237,212,.08); }
 .ct-qthumb-card.dimmed { opacity: .22; }
+.ct-qthumb-img-wrap {
+  width: calc(100% - .6rem); flex-shrink: 0;
+  height: 60px; border-radius: .35rem; overflow: hidden;
+  position: relative; display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,.04);
+}
 .ct-yaxis-svg   { display: block; }
 .ct-chart-scroll { flex: 1; overflow-x: auto; overflow-y: hidden; min-width: 0; }
 .ct-chart-scroll::-webkit-scrollbar       { height: 5px; }
@@ -512,7 +518,7 @@ body::before {
 const ALL_SERIES = [
   /* ─ Hector ─ */
   {
-    title: 'Vichus',
+    title: 'Vicious',
     ep: '1–9화', type: 'Human', hasDropout: true,
     boundaries: [
       { time:   33, label: '1화' }, { time:  465, label: '2화' }, { time:  518, label: '3화' },
@@ -764,7 +770,7 @@ const USERS = [
 
 /* ─────────────────── SERIES COLORS ─────────────────── */
 const CONTENT_COLORS = {
-  'Vichus':               { line:'rgba(245,158,11,.88)',  dot:'#F59E0B', fillTop:'rgba(245,158,11,.22)', fillBot:'rgba(245,158,11,.01)' },
+  'Vicious':              { line:'rgba(245,158,11,.88)',  dot:'#F59E0B', fillTop:'rgba(245,158,11,.22)', fillBot:'rgba(245,158,11,.01)' },
   'Trapped and Redeemed': { line:'rgba(236,72,153,.88)',  dot:'#EC4899', fillTop:'rgba(236,72,153,.20)', fillBot:'rgba(236,72,153,.01)' },
   'Blood Bound Lunar':    { line:'rgba(139,92,246,.85)',  dot:'#8B5CF6', fillTop:'rgba(139,92,246,.20)', fillBot:'rgba(139,92,246,.01)' },
   'Everyone Awakens':     { line:'rgba(6,182,212,.85)',   dot:'#06B6D4', fillTop:'rgba(6,182,212,.18)',  fillBot:'rgba(6,182,212,.01)'  },
@@ -777,6 +783,15 @@ const FALLBACK_COLORS = [
   { line:'rgba(72,114,152,.75)', dot:'#487290', fillTop:'rgba(72,114,152,.16)', fillBot:'rgba(72,114,152,.01)' },
 ];
 function getSeriesColor(series){ return CONTENT_COLORS[series.title] || FALLBACK_COLORS[0]; }
+
+const SERIES_THUMBNAILS = {
+  'Vicious':              'vicious.png',
+  'Blood Bound Lunar':    'luna.png',
+  'Everyone Awakens':     'everyone rules.png',
+  'Last Dragon Tamer':    'dragon tamer.png',
+  'Trapped and Redeemed': 'trapped and redeemed.png',
+};
+function getSeriesThumb(series){ return SERIES_THUMBNAILS[series.title] || null; }
 
 /* ─────────────────── CHART CONSTANTS ─────────────────── */
 let EP_W = 160; // computed dynamically: scrollWidth / 7
@@ -938,15 +953,19 @@ function renderQThumbCol(){
     .filter(({ localIdx }) => visibleSet.has(localIdx));
 
   col.innerHTML = activeSeries.map(({ series, localIdx }) => {
-    const c    = getSeriesColor(series);
+    const c      = getSeriesColor(series);
+    const thumb  = getSeriesThumb(series);
     const isSolo = visibleSet.size === 1 && visibleSet.has(localIdx);
     const isAI   = series.type === 'AI';
     return `<div class="ct-qthumb-card ${isSolo ? 'soloed' : ''}" data-qthumb="${localIdx}"
                  onclick="soloSeries(${localIdx})" title="${series.title}">
       <div class="ct-series-card-stripe" style="background:${c.dot};"></div>
-      <div class="ct-series-card-icon">
-        <span class="material-symbols-outlined" style="font-size:1rem;color:${c.dot};opacity:.65;">movie</span>
-        ${isAI ? `<div class="ct-ai-chip" style="font-size:.33rem;padding:.05rem .18rem;bottom:-6px;right:-6px;top:auto;left:auto;">AI</div>` : ''}
+      <div class="ct-qthumb-img-wrap">
+        ${thumb
+          ? `<img src="${thumb}" alt="${series.title}" style="width:100%;height:100%;object-fit:cover;display:block;"/>`
+          : `<span class="material-symbols-outlined" style="font-size:1.2rem;color:${c.dot};opacity:.5;">movie</span>`
+        }
+        ${isAI ? `<div class="ct-ai-chip" style="font-size:.3rem;padding:.04rem .15rem;bottom:3px;right:3px;top:auto;left:auto;">AI</div>` : ''}
       </div>
       <div class="ct-series-card-title">${series.title}</div>
     </div>`;
@@ -1192,7 +1211,9 @@ function renderQuoteRail(){
 
     return `<div class="ct-qseries">
       <div class="ct-qseries-hdr">
-        <div class="ct-qseries-dot" style="background:${col.dot};"></div>
+        ${(() => { const t = getSeriesThumb(series); return t
+          ? `<img src="${t}" alt="${series.title}" style="width:20px;height:28px;object-fit:cover;border-radius:.22rem;flex-shrink:0;"/>`
+          : `<div class="ct-qseries-dot" style="background:${col.dot};"></div>`; })()}
         <div class="ct-qseries-name">${series.title}</div>
         <span class="ct-qseries-type-badge ${series.type.toLowerCase()}">${series.type}</span>
       </div>
