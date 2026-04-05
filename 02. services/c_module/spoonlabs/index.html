@@ -9,7 +9,8 @@
   integrity="sha384-y9k2lBaj/ETgBd4674Kql3098euvZU5fWlBcBBrlROBI6c2KDmjWhd508Rfsx9R/"
   crossorigin="anonymous"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<title>Content Tracker | Proby</title>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap" rel="stylesheet"/>
+<title>흥미도 타임라인 | Vigloo × Proby</title>
 <script>
 tailwind.config = {
   theme: { extend: { fontFamily: { display: ['Pretendard','-apple-system','BlinkMacSystemFont','system-ui','sans-serif'] } } }
@@ -17,15 +18,15 @@ tailwind.config = {
 </script>
 <style>
 :root {
-  --bg:          #0A0A0B;
-  --surface:     #111114;
-  --card:        #19191E;
-  --border:      #25252D;
-  --accent-dim:  #1E3050;
-  --accent:      #28406E;
-  --accent-hi:   #4168AF;
-  --accent-text: #7DA3E0;
-  --accent-lt:   #A3C2EF;
+  --bg:          #080A09;
+  --surface:     #0D110F;
+  --card:        #141A17;
+  --border:      #1E2820;
+  --accent-dim:  #002E28;
+  --accent:      #004038;
+  --accent-hi:   #00EDD4;
+  --accent-text: #00EDD4;
+  --accent-lt:   #5CFFF0;
 }
 
 * { box-sizing: border-box; }
@@ -48,9 +49,10 @@ body::before {
 .section-label {
   font-size: .6rem; font-weight: 900; letter-spacing: .16em; text-transform: uppercase;
   color: var(--accent-text); opacity: .6; margin-bottom: .875rem;
+  font-family: 'Silkscreen', monospace;
 }
 .grad-text {
-  background: linear-gradient(90deg, #7DA3E0 0%, #A3C2EF 60%, rgba(163,194,239,.5) 100%);
+  background: linear-gradient(90deg, #00EDD4 0%, #5CFFF0 55%, rgba(92,255,240,.45) 100%);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
 .blob {
@@ -84,7 +86,7 @@ body::before {
   display: flex; align-items: center; justify-content: center;
   font-family: inherit;
 }
-.upanel-chevron:hover { background: rgba(65,104,175,.22); color: var(--accent-lt); border-color: rgba(65,104,175,.4); }
+.upanel-chevron:hover { background: rgba(0,237,212,.22); color: var(--accent-lt); border-color: rgba(0,237,212,.4); }
 .upanel-chevron:disabled { opacity: .18; cursor: default; pointer-events: none; }
 .upanel-chevron .material-symbols-outlined { font-size: .9rem !important; }
 .upanel-identity { display: flex; align-items: center; gap: .42rem; flex-shrink: 0; }
@@ -136,7 +138,7 @@ body::before {
   overflow: hidden; font-family: inherit;
 }
 .ct-legend-card:hover  { background: rgba(255,255,255,.06); }
-.ct-legend-card.active { background: rgba(255,255,255,.055); border-color: rgba(65,104,175,.35); }
+.ct-legend-card.active { background: rgba(255,255,255,.055); border-color: rgba(0,237,212,.35); }
 .ct-legend-card.inactive { opacity: .32; }
 .ct-legend-card-bar { height: 3px; width: 100%; }
 .ct-legend-card.inactive .ct-legend-card-bar { opacity: .35; }
@@ -147,7 +149,7 @@ body::before {
   position: relative; overflow: hidden;
 }
 .ct-legend-card-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.ct-legend-thumb-icon { font-size: 1.4rem !important; color: rgba(65,104,175,.3); }
+.ct-legend-thumb-icon { font-size: 1.4rem !important; color: rgba(0,237,212,.3); }
 .ct-legend-card-body { padding: .45rem .55rem .6rem; }
 .ct-legend-card-title {
   font-size: .65rem; font-weight: 700; color: rgba(255,255,255,.8); line-height: 1.45;
@@ -191,10 +193,10 @@ body::before {
 .user-panel::-webkit-scrollbar-thumb { background: rgba(255,255,255,.08); border-radius: 2px; }
 .user-avatar {
   width: 44px; height: 44px; border-radius: 50%;
-  background: linear-gradient(135deg, rgba(30,48,80,.9), rgba(40,64,110,.7));
-  border: 1.5px solid rgba(65,104,175,.3);
+  background: linear-gradient(135deg, rgba(0,60,50,.9), rgba(0,100,80,.7));
+  border: 1.5px solid rgba(0,237,212,.4);
   display: flex; align-items: center; justify-content: center;
-  font-size: 1rem; font-weight: 900; color: rgba(255,255,255,.7);
+  font-size: 1rem; font-weight: 900; color: rgba(0,237,212,.85);
   letter-spacing: -.02em; flex-shrink: 0;
 }
 .user-name { font-size: .95rem; font-weight: 800; color: rgba(255,255,255,.88); }
@@ -209,7 +211,7 @@ body::before {
 .persona-tag-row { display: flex; flex-wrap: wrap; gap: .35rem; }
 .persona-tag {
   font-size: .62rem; font-weight: 600; padding: .22rem .6rem; border-radius: .35rem;
-  background: rgba(65,104,175,.15); border: 1px solid rgba(65,104,175,.22);
+  background: rgba(0,237,212,.15); border: 1px solid rgba(0,237,212,.22);
   color: rgba(163,194,239,.75);
 }
 .persona-tag.red    { background: rgba(248,65,65,.12);  border-color: rgba(248,65,65,.2);  color: rgba(248,113,113,.75); }
@@ -220,7 +222,7 @@ body::before {
 /* Persona quote */
 .persona-quote {
   font-size: .7rem; line-height: 1.6; color: rgba(255,255,255,.5); font-style: italic;
-  border-left: 2px solid rgba(65,104,175,.4); padding-left: .65rem;
+  border-left: 2px solid rgba(0,237,212,.4); padding-left: .65rem;
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
 /* Persona info grid */
@@ -256,7 +258,7 @@ body::before {
   padding: .8rem 1.25rem .7rem;
   border-bottom: 1px solid rgba(37,37,45,.4);
 }
-.ct-chart-bar-label { font-size: .6rem; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.2); }
+.ct-chart-bar-label { font-size: .6rem; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; color: rgba(0,237,212,.35); font-family: 'Silkscreen', monospace; }
 .ct-chart-bar-hint  { font-size: .58rem; color: rgba(255,255,255,.13); }
 .ct-chart-body { display: flex; align-items: stretch; }
 .ct-yaxis-panel { flex-shrink: 0; width: 52px; border-right: 1px solid rgba(37,37,45,.45); }
@@ -278,7 +280,7 @@ body::before {
 }
 .ct-series-card:last-child { border-bottom: none; }
 .ct-series-card:hover { background: rgba(255,255,255,.03); }
-.ct-series-card.soloed { background: rgba(65,104,175,.08); }
+.ct-series-card.soloed { background: rgba(0,237,212,.08); }
 .ct-series-card.dimmed { opacity: .22; }
 .ct-series-card-stripe { width: 100%; height: 2.5px; position: absolute; top: 0; left: 0; }
 .ct-series-card-icon {
@@ -312,13 +314,13 @@ body::before {
 }
 .ct-qthumb-card:last-child { border-bottom: none; }
 .ct-qthumb-card:hover { background: rgba(255,255,255,.03); }
-.ct-qthumb-card.soloed { background: rgba(65,104,175,.08); }
+.ct-qthumb-card.soloed { background: rgba(0,237,212,.08); }
 .ct-qthumb-card.dimmed { opacity: .22; }
 .ct-yaxis-svg   { display: block; }
 .ct-chart-scroll { flex: 1; overflow-x: auto; overflow-y: hidden; min-width: 0; }
 .ct-chart-scroll::-webkit-scrollbar       { height: 5px; }
 .ct-chart-scroll::-webkit-scrollbar-track  { background: rgba(255,255,255,.02); }
-.ct-chart-scroll::-webkit-scrollbar-thumb  { background: rgba(65,104,175,.35); border-radius: 3px; }
+.ct-chart-scroll::-webkit-scrollbar-thumb  { background: rgba(0,237,212,.35); border-radius: 3px; }
 .ct-main-svg { display: block; }
 
 .ct-state-empty {
@@ -330,7 +332,7 @@ body::before {
 /* ── Tooltip ── */
 #ct-tooltip {
   position: fixed; z-index: 600; pointer-events: none;
-  background: rgba(8,10,16,.98); border: 1px solid rgba(65,104,175,.35);
+  background: rgba(8,10,16,.98); border: 1px solid rgba(0,237,212,.35);
   border-radius: .75rem; padding: .875rem 1rem; width: 220px;
   backdrop-filter: blur(16px); box-shadow: 0 12px 40px rgba(0,0,0,.7);
   opacity: 0; transition: opacity .12s; transform: translate(-50%,-115%);
@@ -340,7 +342,7 @@ body::before {
 .ct-tip-score { font-size: 1.75rem; font-weight: 900; line-height: 1; margin-bottom: .25rem; letter-spacing: -.02em; }
 .ct-tip-score span { font-size: .82rem; font-weight: 600; color: rgba(255,255,255,.4); margin-left: 2px; }
 .ct-tip-time  { font-size: .6rem; color: rgba(255,255,255,.3); margin-bottom: .625rem; }
-.ct-tip-quote { font-size: .77rem; color: rgba(255,255,255,.6); line-height: 1.65; font-style: italic; border-left: 2px solid rgba(65,104,175,.5); padding-left: .625rem; }
+.ct-tip-quote { font-size: .77rem; color: rgba(255,255,255,.6); line-height: 1.65; font-style: italic; border-left: 2px solid rgba(0,237,212,.5); padding-left: .625rem; }
 .ct-tip-dropout-label { display: inline-block; font-size: .58rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; background: rgba(248,65,65,.18); color: #f87171; border-radius: .35rem; padding: .2rem .5rem; margin-bottom: .5rem; }
 .ct-tip-dropout .ct-tip-quote { border-left-color: rgba(248,113,113,.5); }
 
@@ -354,7 +356,7 @@ body::before {
 }
 .ct-qsection-scroll::-webkit-scrollbar       { height: 5px; }
 .ct-qsection-scroll::-webkit-scrollbar-track  { background: rgba(255,255,255,.02); }
-.ct-qsection-scroll::-webkit-scrollbar-thumb  { background: rgba(65,104,175,.35); border-radius: 3px; }
+.ct-qsection-scroll::-webkit-scrollbar-thumb  { background: rgba(0,237,212,.35); border-radius: 3px; }
 .ct-qseries { border-bottom: 1px solid rgba(37,37,45,.3); }
 .ct-qseries:last-child { border-bottom: none; }
 .ct-qseries-hdr {
@@ -418,19 +420,26 @@ body::before {
 
   <!-- ═══ HERO ═══ -->
   <section class="ct-hero">
-    <div class="blob w-[500px] h-[500px] opacity-8" style="background:var(--accent-dim);top:-100px;left:-120px;"></div>
-    <div class="blob w-[320px] h-[320px] opacity-6" style="background:var(--accent-hi);top:10px;right:-60px;"></div>
-    <div class="relative">
-      <div class="section-label">Content Tracker</div>
-      <h1 style="font-size:2.5rem;font-weight:900;letter-spacing:-.03em;line-height:1.15;margin-bottom:.75rem;">
-        <span class="grad-text">시청 흥미도</span> 타임라인
-      </h1>
-      <p style="font-size:.9rem;color:rgba(255,255,255,.42);max-width:520px;line-height:1.7;margin-bottom:.35rem;">
-        숏드라마를 시청하면서 발화한 흥미도 점수를 시계열로 시각화합니다.
-      </p>
-      <p style="font-size:.78rem;color:rgba(255,255,255,.22);max-width:580px;line-height:1.65;">
-        어느 장면에서 몰입이 올라가고, 어느 지점에서 이탈 신호가 나타나는지 에피소드 단위로 확인할 수 있습니다.
-      </p>
+    <div class="blob w-[600px] h-[600px] opacity-6" style="background:rgba(0,237,212,.18);top:-140px;left:-160px;filter:blur(100px);"></div>
+    <div class="blob w-[360px] h-[360px] opacity-5" style="background:rgba(0,237,212,.25);top:20px;right:-80px;filter:blur(80px);"></div>
+    <div class="relative" style="display:flex;align-items:flex-start;gap:2.5rem;flex-wrap:wrap;">
+      <div style="flex:1;min-width:260px;">
+        <div class="section-label" style="opacity:.9;">VIGLOO × PROBY · Content Analytics</div>
+        <h1 style="font-size:2.6rem;font-weight:900;letter-spacing:-.03em;line-height:1.15;margin-bottom:.75rem;font-family:'Silkscreen',monospace;">
+          <span class="grad-text">시청 흥미도</span><br>타임라인
+        </h1>
+        <p style="font-size:.88rem;color:rgba(255,255,255,.42);max-width:480px;line-height:1.75;margin-bottom:.3rem;">
+          Vigloo 유저가 숏드라마를 시청하며 발화한 흥미도 점수를 에피소드 단위로 시각화합니다.
+        </p>
+        <p style="font-size:.75rem;color:rgba(0,237,212,.3);max-width:520px;line-height:1.65;">
+          어느 장면에서 몰입이 오르고, 어느 지점에서 이탈 신호가 나타나는지 확인할 수 있습니다.
+        </p>
+      </div>
+      <div style="flex-shrink:0;padding-top:.5rem;">
+        <img src="vigloo.jpg" alt="Vigloo"
+             style="height:44px;object-fit:contain;border-radius:.5rem;opacity:.85;"/>
+        <div style="font-size:.52rem;color:rgba(0,237,212,.4);letter-spacing:.12em;text-transform:uppercase;font-family:'Silkscreen',monospace;margin-top:.45rem;text-align:right;">Spoon Labs</div>
+      </div>
     </div>
   </section>
 
@@ -834,6 +843,9 @@ function renderUserPanel(){
 
   panel.innerHTML = `
     <div class="upanel-row1">
+      <img src="vigloo.jpg" alt="Vigloo"
+           style="height:22px;object-fit:contain;border-radius:.28rem;flex-shrink:0;opacity:.75;margin-right:.25rem;"/>
+      <div style="width:1px;height:18px;background:rgba(0,237,212,.15);flex-shrink:0;"></div>
       <button class="upanel-chevron" onclick="changeUser(-1)" ${prevDis}>
         <span class="material-symbols-outlined">chevron_left</span>
       </button>
