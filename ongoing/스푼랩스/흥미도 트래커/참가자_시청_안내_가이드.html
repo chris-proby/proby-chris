@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>숏드라마 시청 · 인터뷰 참가 안내</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,500&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0f1412;
+      --surface: #1a2220;
+      --border: #2a3532;
+      --text: #e8f0ec;
+      --muted: #8fa89e;
+      --accent: #4fbd8a;
+      --accent-dim: rgba(79, 189, 138, 0.15);
+      --warn: #e8c547;
+      --radius: 14px;
+      --font-sans: "IBM Plex Sans KR", system-ui, sans-serif;
+      --font-display: "Fraunces", Georgia, serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--font-sans);
+      font-size: 1.05rem;
+      line-height: 1.65;
+      color: var(--text);
+      background:
+        radial-gradient(ellipse 120% 80% at 50% -20%, rgba(79, 189, 138, 0.12), transparent 55%),
+        var(--bg);
+    }
+
+    .wrap {
+      max-width: 42rem;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+
+    header {
+      margin-bottom: 2.75rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-dim);
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(1.75rem, 5vw, 2.35rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin: 0 0 0.75rem;
+      letter-spacing: -0.02em;
+    }
+
+    .lead {
+      color: var(--muted);
+      font-size: 1.05rem;
+      margin: 0;
+      max-width: 36ch;
+    }
+
+    .setup-first {
+      margin-bottom: 2.25rem;
+      padding: 1.5rem 1.35rem;
+      background: linear-gradient(145deg, var(--accent-dim), transparent 60%);
+      border: 1px solid rgba(79, 189, 138, 0.35);
+      border-radius: var(--radius);
+    }
+
+    .setup-first h2 {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin: 0 0 1.1rem;
+      color: var(--accent);
+      letter-spacing: -0.02em;
+    }
+
+    .setup-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .setup-list li {
+      position: relative;
+      padding: 0.85rem 0 0.85rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text);
+      font-size: 1.02rem;
+      line-height: 1.55;
+    }
+
+    .setup-list li:first-child {
+      border-top: none;
+      padding-top: 0;
+    }
+
+    .setup-list .role {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .setup-list .arrow {
+      color: var(--muted);
+      margin: 0 0.35rem;
+      font-weight: 500;
+    }
+
+    .setup-list .purpose {
+      color: var(--muted);
+    }
+
+    .flow-section {
+      margin-bottom: 2.25rem;
+      padding: 1.5rem 1.35rem;
+      background: linear-gradient(145deg, rgba(232, 197, 71, 0.08), transparent 55%);
+      border: 1px solid rgba(232, 197, 71, 0.28);
+      border-radius: var(--radius);
+    }
+
+    .flow-section h2 {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin: 0 0 1rem;
+      color: var(--warn);
+      letter-spacing: -0.02em;
+    }
+
+    .flow-section h3 {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin: 0 0 0.65rem;
+      color: var(--warn);
+      letter-spacing: -0.02em;
+      opacity: 0.95;
+    }
+
+    .flow-part-2 {
+      margin-top: 1.35rem;
+      padding-top: 1.35rem;
+      border-top: 1px solid rgba(232, 197, 71, 0.28);
+    }
+
+    .flow-part-2 h3 {
+      margin-bottom: 0.65rem;
+    }
+
+    .flow-part-2 .flow-proby-first {
+      margin-bottom: 0;
+    }
+
+    .flow-section-lead {
+      margin: 0 0 1rem;
+      color: var(--muted);
+      font-size: 0.98rem;
+      line-height: 1.55;
+    }
+
+    .flow-proby-first {
+      margin: 0 0 1rem;
+      padding: 1rem 1.1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      border-left: 3px solid var(--warn);
+      color: var(--muted);
+      font-size: 0.98rem;
+      line-height: 1.65;
+    }
+
+    .flow-proby-first p {
+      margin: 0;
+      color: var(--text);
+    }
+
+    .flow-proby-first a {
+      display: inline-block;
+      margin-top: 0.65rem;
+      word-break: break-all;
+      color: var(--accent);
+      font-weight: 600;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(79, 189, 138, 0.45);
+    }
+
+    .flow-proby-first a:hover {
+      color: #6fd4a3;
+      border-bottom-color: rgba(111, 212, 163, 0.7);
+    }
+
+    .flow-link-rows {
+      margin-top: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .flow-link-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .flow-link-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .flow-link-rows a {
+      margin-top: 0;
+    }
+
+    ol.flow-steps {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      counter-reset: flow;
+    }
+
+    ol.flow-steps > li {
+      counter-increment: flow;
+      position: relative;
+      padding: 0.95rem 1rem 0.95rem 3.15rem;
+      margin-bottom: 0.65rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    ol.flow-steps > li p {
+      margin: 0;
+    }
+
+    ol.flow-steps > li:last-child {
+      margin-bottom: 0;
+    }
+
+    ol.flow-steps > li::before,
+    .flow-section ol.steps > li::before {
+      position: absolute;
+      left: 0.85rem;
+      top: 0.95rem;
+      width: 1.85rem;
+      height: 1.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.82rem;
+      color: var(--bg);
+      background: var(--warn);
+      border-radius: 8px;
+    }
+
+    ol.flow-steps > li::before {
+      content: counter(flow);
+    }
+
+    ol.flow-steps > li strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    ol.steps {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      counter-reset: step;
+    }
+
+    .flow-section ol.steps > li {
+      counter-increment: step;
+      position: relative;
+      padding: 0.95rem 1rem 0.95rem 3.15rem;
+      margin-bottom: 0.65rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .flow-section ol.steps > li:last-child {
+      margin-bottom: 0;
+    }
+
+    .flow-section ol.steps > li::before {
+      content: counter(step);
+    }
+
+    ol.steps > li strong {
+      display: block;
+      font-size: 1.08rem;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+
+    ol.steps > li p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    ol.steps > li .step-inline-kbd {
+      margin-top: 0.5rem;
+    }
+
+    .apps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+
+    .apps span {
+      font-size: 0.88rem;
+      padding: 0.35rem 0.7rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+    }
+
+    .titles {
+      margin: 1rem 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .titles li {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-style: italic;
+      padding: 0.65rem 0.85rem;
+      margin-bottom: 0.5rem;
+      background: var(--bg);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      color: var(--text);
+    }
+
+    ul.titles.titles-with-posters {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    @media (max-width: 36rem) {
+      ul.titles.titles-with-posters {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    ul.titles.titles-with-posters > li {
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      margin-bottom: 0;
+      border-left: none;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    ul.titles.titles-with-posters > li img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: cover;
+    }
+
+    ul.titles.titles-with-posters .work-title {
+      font-family: var(--font-display);
+      font-size: 0.82rem;
+      font-style: italic;
+      font-weight: 500;
+      line-height: 1.35;
+      padding: 0.55rem 0.65rem;
+      color: var(--text);
+      border-top: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .scale {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: 0.85rem;
+    }
+
+    .scale button,
+    .scale span.pill {
+      font-family: var(--font-sans);
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.5rem 0.85rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      cursor: default;
+    }
+
+    .scale .neg { border-color: #5c6b63; color: #b8c9c0; }
+    .scale .zero { border-color: var(--muted); }
+    .scale .pos { border-color: var(--accent); color: var(--accent); }
+
+    .scale-legend {
+      margin: 0.9rem 0 0;
+      padding: 0.75rem 0.9rem;
+      display: grid;
+      grid-template-columns: minmax(2.5rem, auto) 1fr;
+      gap: 0.4rem 1rem;
+      align-items: baseline;
+      font-size: 0.92rem;
+      line-height: 1.45;
+      color: var(--muted);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .scale-legend dt {
+      margin: 0;
+      font-weight: 700;
+      color: var(--text);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .scale-legend dd {
+      margin: 0;
+    }
+
+    .step-scale-note {
+      margin: 0.85rem 0 0;
+      font-size: 0.92rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .kbd {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-top: 0.5rem;
+    }
+
+    kbd {
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 0.25rem 0.55rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      box-shadow: 0 2px 0 var(--border);
+      color: var(--warn);
+    }
+
+    .note {
+      margin-top: 2rem;
+      padding: 1.15rem 1.25rem;
+      background: linear-gradient(135deg, rgba(232, 197, 71, 0.08), transparent);
+      border: 1px solid rgba(232, 197, 71, 0.25);
+      border-radius: var(--radius);
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .note strong {
+      color: var(--warn);
+      font-weight: 600;
+    }
+
+    footer {
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .download-figure {
+      margin: 1.1rem 0 0;
+      padding: 0;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .download-figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .download-figure figcaption {
+      padding: 0.65rem 0.9rem;
+      font-size: 0.88rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+
+    .store-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 0.75rem 0 0;
+    }
+
+    .store-link {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 0.55rem 1rem;
+      border-radius: 10px;
+      background: var(--accent-dim);
+      border: 1px solid rgba(79, 189, 138, 0.45);
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .store-link:hover {
+      background: rgba(79, 189, 138, 0.22);
+      color: #6fd4a3;
+      border-color: rgba(111, 212, 163, 0.55);
+    }
+
+    @media print {
+      body { background: #fff; color: #111; }
+      .wrap { max-width: none; padding: 1rem; }
+      .flow-section ol.steps > li { break-inside: avoid; border-color: #ccc; background: #fafafa; }
+      .flow-section ol.steps > li::before,
+      ol.flow-steps > li::before {
+        color: #0f1412;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+      .setup-first { border-color: #ccc; background: #f5faf7; }
+      .flow-section { border-color: #e5d9a8; background: #fffdf5; }
+      .flow-proby-first { background: #fafafa; border-color: #ddd; }
+      ol.flow-steps > li { background: #fafafa; border-color: #ddd; }
+      .download-figure { border-color: #ccc; }
+      .badge, kbd { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <span class="badge">Participant guide</span>
+      <h1>숏드라마 시청 · 인터뷰 진행 안내</h1>
+      <p class="lead">아래 순서대로 진행해 주세요. 막히는 부분이 있으면 연구 담당자에게 말씀해 주세요.</p>
+    </header>
+
+    <section class="setup-first" aria-labelledby="setup-heading">
+      <h2 id="setup-heading">기본 세팅</h2>
+      <ul class="setup-list">
+        <li>
+          <span class="role">스마트폰 / 태블릿</span>
+          <span class="arrow">→</span>
+          <span class="purpose">컨텐츠 시청 용도</span>
+        </li>
+        <li>
+          <span class="role">랩탑 / 태블릿</span>
+          <span class="arrow">→</span>
+          <span class="purpose">AI 인터뷰 대화 용도</span>
+        </li>
+        <li>
+          <span class="role">이어폰</span>
+          <span class="arrow">→</span>
+          <span class="purpose">컨텐츠 청취 용도</span>
+        </li>
+      </ul>
+    </section>
+
+    <section class="flow-section" aria-labelledby="survey-flow-heading">
+      <h2 id="survey-flow-heading">조사 흐름</h2>
+
+      <h3 id="survey-part1">파트 1 : 점수 측정 프로비</h3>
+      <div class="flow-proby-first">
+        <p>컨텐츠의 흥미도를 측정하기 위해 먼저 아래 링크로 들어가 주세요.</p>
+        <a href="https://www.proby.io/interview?t=Jiuh2g5m" target="_blank" rel="noopener noreferrer">https://www.proby.io/interview?t=Jiuh2g5m</a>
+      </div>
+      <p class="flow-section-lead">회차마다 아래 순서로 AI 인터뷰가 이어집니다.</p>
+      <ol class="flow-steps">
+        <li>
+          <p><strong>시청 중 점수 말하기 → 회차 종료 후 스페이스바.</strong> 드라마를 보면서 평가 점수(−3~+3)를 입으로 말씀해 주시고, 한 회차가 모두 끝나면 <kbd>Space</kbd>를 눌러 인터뷰로 넘어갑니다.</p>
+        </li>
+        <li>
+          <p><strong>방금 본 회차 전반 소감.</strong> 직전 회차에 대한 전반적인 소감을 편하게 말씀해 주세요.</p>
+        </li>
+        <li>
+          <p><strong>점수 변동이 컸던 구간.</strong> 시청 중 점수가 크게 오내렸던 부분이 있으면 어떤 장면·전개였는지 짧게 설명해 주시고, 없으시면 없다고 말씀해 주셔도 됩니다.</p>
+        </li>
+        <li>
+          <p><strong>다음 에피소드 vs 다른 작품.</strong> 다음 화를 이어 보고 싶으시면 계속 시청하시면 되고, 더 보고 싶지 않아 다른 작품으로 가고 싶으시면 다른 작품으로 이동하셔도 됩니다.</p>
+        </li>
+      </ol>
+
+      <div class="flow-part-2" id="survey-part2">
+        <h3>파트 2 : 사후 인터뷰 프로비</h3>
+        <div class="flow-proby-first">
+          <p>평가가 끝나면 아래 링크에 들어가서 AI 인터뷰어와 사후 인터뷰를 진행해 주세요. 본인에 해당하는 링크를 선택해 주세요.</p>
+          <div class="flow-link-rows">
+            <div class="flow-link-row">
+              <span class="flow-link-label">남자</span>
+              <a href="https://www.proby.io/interview?t=yuJCuqco" target="_blank" rel="noopener noreferrer">https://www.proby.io/interview?t=yuJCuqco</a>
+            </div>
+            <div class="flow-link-row">
+              <span class="flow-link-label">여자</span>
+              <a href="https://www.proby.io/interview?t=1BaRIpkHZ" target="_blank" rel="noopener noreferrer">https://www.proby.io/interview?t=1BaRIpkHZ</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="flow-section" aria-labelledby="steps-heading">
+      <h2 id="steps-heading">진행 순서</h2>
+      <p class="flow-section-lead">앱 설치부터 시청·평가까지, 전체 세션에서 아래 순서로 준비하고 진행해 주세요.</p>
+      <ol class="steps">
+      <li>
+        <strong>릴쇼트·드라마박스 등 숏드라마 앱 이용 여부 확인</strong>
+        <p>평소 릴쇼트(ReelShort), 드라마박스(DramaBox) 같은 숏드라마 앱을 이용하는지 먼저 확인합니다.</p>
+        <div class="apps" aria-label="예시 앱">
+          <span>ReelShort</span>
+          <span>DramaBox</span>
+          <span>기타 숏드라마 앱</span>
+        </div>
+      </li>
+
+      <li>
+        <strong>해당 앱을 쓰신다면, 최근에 재미있게 보신 작품부터 시청</strong>
+        <p>릴쇼트·드라마박스 등을 이미 쓰고 계시다면, 그 앱에서 최근에 재미있게 보신 작품이 있으면 그 작품부터 시청을 시작해 주세요.</p>
+      </li>
+
+      <li>
+        <strong>Vigloo 앱 설치 후 지정 작품 3편 시청</strong>
+        <p>Vigloo 앱을 설치한 뒤 아래 세 작품을 시청해 주세요. 아래 링크에서 바로 받으실 수 있고, 앱스토어·플레이스토어에서 «Vigloo» 또는 «비글루»로 검색해 설치하셔도 됩니다.</p>
+        <div class="store-links" aria-label="Vigloo 앱 스토어 다운로드">
+          <a class="store-link" href="https://play.google.com/store/apps/details?id=com.vigloo&amp;hl=en" target="_blank" rel="noopener noreferrer">Google Play에서 받기</a>
+          <a class="store-link" href="https://apps.apple.com/us/app/vigloo-premier-short-dramas/id6503421271" target="_blank" rel="noopener noreferrer">App Store에서 받기</a>
+        </div>
+        <figure class="download-figure">
+          <img src="vigloo.png" alt="Vigloo 앱 스토어 다운로드 안내 이미지" loading="lazy" decoding="async" />
+          <figcaption>스토어 검색·설치 화면 예시</figcaption>
+        </figure>
+        <ul class="titles titles-with-posters" aria-label="지정 작품 포스터">
+          <li>
+            <img src="luna.png" alt="Bloodbound Luna 포스터" loading="lazy" decoding="async" />
+            <span class="work-title">Bloodbound Luna</span>
+          </li>
+          <li>
+            <img src="everyone%20rules.png" alt="Everyone Awakens! My Ultimate Build Rule All 포스터" loading="lazy" decoding="async" />
+            <span class="work-title">Everyone Awakens! My Ultimate Build Rule All</span>
+          </li>
+          <li>
+            <img src="dragon%20tamer.png" alt="The Last Dragon Tamer 포스터" loading="lazy" decoding="async" />
+            <span class="work-title">The Last Dragon Tamer</span>
+          </li>
+        </ul>
+      </li>
+
+      <li>
+        <strong>시청 중 입으로 평가 점수 말하기</strong>
+        <p>화면을 보면서 느낌에 맞게 아래 점수 중 하나를 말로 평가해 주시면 되며, 예를 들어 “지금은 1”, “이 장면은 마이너스 1”처럼 자연스럽게 말씀해 주셔도 됩니다.</p>
+        <div class="scale" aria-label="평가 척도">
+          <span class="pill neg">−3</span>
+          <span class="pill neg">−1</span>
+          <span class="pill zero">0</span>
+          <span class="pill pos">+1</span>
+          <span class="pill pos">+3</span>
+        </div>
+        <dl class="scale-legend" aria-label="점수 범례">
+          <dt>−3</dt><dd>굉장히 별로다</dd>
+          <dt>−1</dt><dd>별로다</dd>
+          <dt>0</dt><dd>보통</dd>
+          <dt>+1</dt><dd>괜찮다</dd>
+          <dt>+3</dt><dd>굉장히 괜찮다</dd>
+        </dl>
+        <p class="step-scale-note"><strong>2점</strong>은 의도적으로 척도에서 빠져 있습니다. <strong>굉장히 재밌거나</strong>, <strong>굉장히 재미없을 때</strong> <strong>+3점</strong> / <strong>−3점</strong>을 주시면 됩니다.</p>
+      </li>
+
+      <li>
+        <strong>한 회차가 끝나면 스페이스바로 인터뷰 진행</strong>
+        <p>에피소드(회차) 재생이 끝나면 안내에 따라 스페이스바를 눌러 인터뷰 단계로 넘어가 주세요.</p>
+        <div class="kbd step-inline-kbd"><kbd>Space</kbd> 인터뷰 진행</div>
+      </li>
+
+      <li>
+        <strong>더 보고 싶지 않으면 다른 콘텐츠로 이동 가능</strong>
+        <p>지정된 작품이라도 더 이상 보고 싶지 않으시면 다른 콘텐츠로 넘어가셔도 괜찮으니 무리하지 마시고 편한 속도로 진행해 주세요.</p>
+      </li>
+    </ol>
+    </section>
+
+    <div class="note">
+      <strong>요약</strong> — <strong>기본 세팅</strong> → <strong>조사 흐름</strong>(<strong>파트 1</strong> 흥미도·점수 측정 Proby → 회차별 구두 점수·<kbd style="color:inherit;border-color:#999;">Space</kbd>·소감·변동 구간·다음 화/작품 → <strong>파트 2</strong> 사후 인터뷰 Proby 남자·여자 링크) → <strong>진행 순서</strong>(앱·지정 작품·평가 척도 등)
+    </div>
+
+    <footer>
+      내부 연구용 안내 문서입니다. 브라우저에서 이 파일을 열어 사용할 수 있습니다.
+    </footer>
+  </div>
+</body>
+</html>

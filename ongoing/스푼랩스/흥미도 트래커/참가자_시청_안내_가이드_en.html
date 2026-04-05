@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Short-drama viewing &amp; interview — participant guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0f1412;
+      --surface: #1a2220;
+      --border: #2a3532;
+      --text: #e8f0ec;
+      --muted: #8fa89e;
+      --accent: #4fbd8a;
+      --accent-dim: rgba(79, 189, 138, 0.15);
+      --warn: #e8c547;
+      --radius: 14px;
+      --font-sans: "IBM Plex Sans", system-ui, sans-serif;
+      --font-display: "Fraunces", Georgia, serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--font-sans);
+      font-size: 1.05rem;
+      line-height: 1.65;
+      color: var(--text);
+      background:
+        radial-gradient(ellipse 120% 80% at 50% -20%, rgba(79, 189, 138, 0.12), transparent 55%),
+        var(--bg);
+    }
+
+    .wrap {
+      max-width: 42rem;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+
+    header {
+      margin-bottom: 2.75rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-dim);
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(1.75rem, 5vw, 2.35rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin: 0 0 0.75rem;
+      letter-spacing: -0.02em;
+    }
+
+    .lead {
+      color: var(--muted);
+      font-size: 1.05rem;
+      margin: 0;
+      max-width: 42ch;
+    }
+
+    .setup-first {
+      margin-bottom: 2.25rem;
+      padding: 1.5rem 1.35rem;
+      background: linear-gradient(145deg, var(--accent-dim), transparent 60%);
+      border: 1px solid rgba(79, 189, 138, 0.35);
+      border-radius: var(--radius);
+    }
+
+    .setup-first h2 {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin: 0 0 1.1rem;
+      color: var(--accent);
+      letter-spacing: -0.02em;
+    }
+
+    .setup-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .setup-list li {
+      position: relative;
+      padding: 0.85rem 0 0.85rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text);
+      font-size: 1.02rem;
+      line-height: 1.55;
+    }
+
+    .setup-list li:first-child {
+      border-top: none;
+      padding-top: 0;
+    }
+
+    .setup-list .role {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .setup-list .arrow {
+      color: var(--muted);
+      margin: 0 0.35rem;
+      font-weight: 500;
+    }
+
+    .setup-list .purpose {
+      color: var(--muted);
+    }
+
+    .flow-section {
+      margin-bottom: 2.25rem;
+      padding: 1.5rem 1.35rem;
+      background: linear-gradient(145deg, rgba(232, 197, 71, 0.08), transparent 55%);
+      border: 1px solid rgba(232, 197, 71, 0.28);
+      border-radius: var(--radius);
+    }
+
+    .flow-section h2 {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin: 0 0 1rem;
+      color: var(--warn);
+      letter-spacing: -0.02em;
+    }
+
+    .flow-section h3 {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin: 0 0 0.65rem;
+      color: var(--warn);
+      letter-spacing: -0.02em;
+      opacity: 0.95;
+    }
+
+    .flow-part-2 {
+      margin-top: 1.35rem;
+      padding-top: 1.35rem;
+      border-top: 1px solid rgba(232, 197, 71, 0.28);
+    }
+
+    .flow-part-2 h3 {
+      margin-bottom: 0.65rem;
+    }
+
+    .flow-part-2 .flow-proby-first {
+      margin-bottom: 0;
+    }
+
+    .flow-section-lead {
+      margin: 0 0 1rem;
+      color: var(--muted);
+      font-size: 0.98rem;
+      line-height: 1.55;
+    }
+
+    .flow-proby-first {
+      margin: 0 0 1rem;
+      padding: 1rem 1.1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      border-left: 3px solid var(--warn);
+      color: var(--muted);
+      font-size: 0.98rem;
+      line-height: 1.65;
+    }
+
+    .flow-proby-first p {
+      margin: 0;
+      color: var(--text);
+    }
+
+    .flow-proby-first a {
+      display: inline-block;
+      margin-top: 0.65rem;
+      word-break: break-all;
+      color: var(--accent);
+      font-weight: 600;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(79, 189, 138, 0.45);
+    }
+
+    .flow-proby-first a:hover {
+      color: #6fd4a3;
+      border-bottom-color: rgba(111, 212, 163, 0.7);
+    }
+
+    .flow-link-rows {
+      margin-top: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .flow-link-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .flow-link-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .flow-link-rows a {
+      margin-top: 0;
+    }
+
+    ol.flow-steps {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      counter-reset: flow;
+    }
+
+    ol.flow-steps > li {
+      counter-increment: flow;
+      position: relative;
+      padding: 0.95rem 1rem 0.95rem 3.15rem;
+      margin-bottom: 0.65rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    ol.flow-steps > li p {
+      margin: 0;
+    }
+
+    ol.flow-steps > li:last-child {
+      margin-bottom: 0;
+    }
+
+    ol.flow-steps > li::before,
+    .flow-section ol.steps > li::before {
+      position: absolute;
+      left: 0.85rem;
+      top: 0.95rem;
+      width: 1.85rem;
+      height: 1.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.82rem;
+      color: var(--bg);
+      background: var(--warn);
+      border-radius: 8px;
+    }
+
+    ol.flow-steps > li::before {
+      content: counter(flow);
+    }
+
+    ol.flow-steps > li strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    ol.steps {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      counter-reset: step;
+    }
+
+    .flow-section ol.steps > li {
+      counter-increment: step;
+      position: relative;
+      padding: 0.95rem 1rem 0.95rem 3.15rem;
+      margin-bottom: 0.65rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .flow-section ol.steps > li:last-child {
+      margin-bottom: 0;
+    }
+
+    .flow-section ol.steps > li::before {
+      content: counter(step);
+    }
+
+    ol.steps > li strong {
+      display: block;
+      font-size: 1.08rem;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+
+    ol.steps > li p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    ol.steps > li .step-inline-kbd {
+      margin-top: 0.5rem;
+    }
+
+    .apps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+
+    .apps span {
+      font-size: 0.88rem;
+      padding: 0.35rem 0.7rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+    }
+
+    .titles {
+      margin: 1rem 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .titles li {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-style: italic;
+      padding: 0.65rem 0.85rem;
+      margin-bottom: 0.5rem;
+      background: var(--bg);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      color: var(--text);
+    }
+
+    ul.titles.titles-with-posters {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    @media (max-width: 36rem) {
+      ul.titles.titles-with-posters {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    ul.titles.titles-with-posters > li {
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      margin-bottom: 0;
+      border-left: none;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    ul.titles.titles-with-posters > li img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: cover;
+    }
+
+    ul.titles.titles-with-posters .work-title {
+      font-family: var(--font-display);
+      font-size: 0.82rem;
+      font-style: italic;
+      font-weight: 500;
+      line-height: 1.35;
+      padding: 0.55rem 0.65rem;
+      color: var(--text);
+      border-top: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .scale {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: 0.85rem;
+    }
+
+    .scale button,
+    .scale span.pill {
+      font-family: var(--font-sans);
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.5rem 0.85rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      cursor: default;
+    }
+
+    .scale .neg { border-color: #5c6b63; color: #b8c9c0; }
+    .scale .zero { border-color: var(--muted); }
+    .scale .pos { border-color: var(--accent); color: var(--accent); }
+
+    .scale-legend {
+      margin: 0.9rem 0 0;
+      padding: 0.75rem 0.9rem;
+      display: grid;
+      grid-template-columns: minmax(2.5rem, auto) 1fr;
+      gap: 0.4rem 1rem;
+      align-items: baseline;
+      font-size: 0.92rem;
+      line-height: 1.45;
+      color: var(--muted);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .scale-legend dt {
+      margin: 0;
+      font-weight: 700;
+      color: var(--text);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .scale-legend dd {
+      margin: 0;
+    }
+
+    .step-scale-note {
+      margin: 0.85rem 0 0;
+      font-size: 0.92rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .kbd {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-top: 0.5rem;
+    }
+
+    kbd {
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 0.25rem 0.55rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      box-shadow: 0 2px 0 var(--border);
+      color: var(--warn);
+    }
+
+    .note {
+      margin-top: 2rem;
+      padding: 1.15rem 1.25rem;
+      background: linear-gradient(135deg, rgba(232, 197, 71, 0.08), transparent);
+      border: 1px solid rgba(232, 197, 71, 0.25);
+      border-radius: var(--radius);
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .note strong {
+      color: var(--warn);
+      font-weight: 600;
+    }
+
+    footer {
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .download-figure {
+      margin: 1.1rem 0 0;
+      padding: 0;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .download-figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .download-figure figcaption {
+      padding: 0.65rem 0.9rem;
+      font-size: 0.88rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+
+    .store-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 0.75rem 0 0;
+    }
+
+    .store-link {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 0.55rem 1rem;
+      border-radius: 10px;
+      background: var(--accent-dim);
+      border: 1px solid rgba(79, 189, 138, 0.45);
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .store-link:hover {
+      background: rgba(79, 189, 138, 0.22);
+      color: #6fd4a3;
+      border-color: rgba(111, 212, 163, 0.55);
+    }
+
+    @media print {
+      body { background: #fff; color: #111; }
+      .wrap { max-width: none; padding: 1rem; }
+      .flow-section ol.steps > li { break-inside: avoid; border-color: #ccc; background: #fafafa; }
+      .flow-section ol.steps > li::before,
+      ol.flow-steps > li::before {
+        color: #0f1412;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+      .setup-first { border-color: #ccc; background: #f5faf7; }
+      .flow-section { border-color: #e5d9a8; background: #fffdf5; }
+      .flow-proby-first { background: #fafafa; border-color: #ddd; }
+      ol.flow-steps > li { background: #fafafa; border-color: #ddd; }
+      .download-figure { border-color: #ccc; }
+      .badge, kbd { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <span class="badge">Participant guide</span>
+      <h1>Short-drama viewing &amp; interview — how to take part</h1>
+      <p class="lead">Please follow the steps below. If anything is unclear, contact the study coordinator.</p>
+    </header>
+
+    <section class="setup-first" aria-labelledby="setup-heading">
+      <h2 id="setup-heading">Basic setup</h2>
+      <ul class="setup-list">
+        <li>
+          <span class="role">Smartphone / tablet</span>
+          <span class="arrow">→</span>
+          <span class="purpose">Watch the content here</span>
+        </li>
+        <li>
+          <span class="role">Laptop / tablet</span>
+          <span class="arrow">→</span>
+          <span class="purpose">AI interview conversation</span>
+        </li>
+        <li>
+          <span class="role">Earphones</span>
+          <span class="arrow">→</span>
+          <span class="purpose">Listen to the content</span>
+        </li>
+      </ul>
+    </section>
+
+    <section class="flow-section" aria-labelledby="survey-flow-heading">
+      <h2 id="survey-flow-heading">Study flow</h2>
+
+      <h3 id="survey-part1">Part 1: Rating (Proby)</h3>
+      <div class="flow-proby-first">
+        <p>To measure how engaging the content feels, please open this link first.</p>
+        <a href="https://www.proby.io/interview?t=Jiuh2g5m" target="_blank" rel="noopener noreferrer">https://www.proby.io/interview?t=Jiuh2g5m</a>
+      </div>
+      <p class="flow-section-lead">After each episode, the AI interview will follow the order below.</p>
+      <ol class="flow-steps">
+        <li>
+          <p><strong>Say your score while watching → press Space when the episode ends.</strong> Say your rating (−3 to +3) out loud while you watch. When an episode finishes, press <kbd>Space</kbd> to move on to the interview.</p>
+        </li>
+        <li>
+          <p><strong>Overall reaction to the episode you just watched.</strong> Share your general impressions of that episode in your own words.</p>
+        </li>
+        <li>
+          <p><strong>Where your score shifted a lot.</strong> If your rating moved up or down sharply at any point, briefly describe what was happening (scene, plot beat, etc.). If not, you can say there wasn’t a moment like that.</p>
+        </li>
+        <li>
+          <p><strong>Next episode vs another title.</strong> If you want to keep watching, continue; if you’d rather not watch more of this title, you may switch to another one.</p>
+        </li>
+      </ol>
+
+      <div class="flow-part-2" id="survey-part2">
+        <h3>Part 2: Post-study interview (Proby)</h3>
+        <div class="flow-proby-first">
+          <p>When you have finished the session, use the link below to complete the post-study interview with the AI interviewer. Choose the link that applies to you.</p>
+          <div class="flow-link-rows">
+            <div class="flow-link-row">
+              <span class="flow-link-label">Male participants</span>
+              <a href="https://www.proby.io/interview?t=yuJCuqco" target="_blank" rel="noopener noreferrer">https://www.proby.io/interview?t=yuJCuqco</a>
+            </div>
+            <div class="flow-link-row">
+              <span class="flow-link-label">Female participants</span>
+              <a href="https://www.proby.io/interview?t=1BaRIpkHZ" target="_blank" rel="noopener noreferrer">https://www.proby.io/interview?t=1BaRIpkHZ</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="flow-section" aria-labelledby="steps-heading">
+      <h2 id="steps-heading">Session steps</h2>
+      <p class="flow-section-lead">From installing apps through viewing and rating, use this order for the full session.</p>
+      <ol class="steps">
+      <li>
+        <strong>Check whether you use short-drama apps (e.g. ReelShort, DramaBox)</strong>
+        <p>Confirm whether you already use apps like ReelShort or DramaBox for short dramas.</p>
+        <div class="apps" aria-label="Example apps">
+          <span>ReelShort</span>
+          <span>DramaBox</span>
+          <span>Other short-drama apps</span>
+        </div>
+      </li>
+
+      <li>
+        <strong>If you use them, start with something you enjoyed recently</strong>
+        <p>If you already use ReelShort, DramaBox, or similar, and there is a title you enjoyed recently, start watching from that title.</p>
+      </li>
+
+      <li>
+        <strong>Install Vigloo, then watch the three assigned titles</strong>
+        <p>Install the Vigloo app, then watch the three titles below. You can install from the links here or search the App Store / Play Store for «Vigloo» (or the Korean store name «비글루»).</p>
+        <div class="store-links" aria-label="Vigloo app store download">
+          <a class="store-link" href="https://play.google.com/store/apps/details?id=com.vigloo&amp;hl=en" target="_blank" rel="noopener noreferrer">Get on Google Play</a>
+          <a class="store-link" href="https://apps.apple.com/us/app/vigloo-premier-short-dramas/id6503421271" target="_blank" rel="noopener noreferrer">Get on the App Store</a>
+        </div>
+        <figure class="download-figure">
+          <img src="vigloo.png" alt="Example: Vigloo app listing in the store" loading="lazy" decoding="async" />
+          <figcaption>Example: searching and installing from the store</figcaption>
+        </figure>
+        <ul class="titles titles-with-posters" aria-label="Assigned title posters">
+          <li>
+            <img src="luna.png" alt="Bloodbound Luna poster" loading="lazy" decoding="async" />
+            <span class="work-title">Bloodbound Luna</span>
+          </li>
+          <li>
+            <img src="everyone%20rules.png" alt="Everyone Awakens! My Ultimate Build Rule All poster" loading="lazy" decoding="async" />
+            <span class="work-title">Everyone Awakens! My Ultimate Build Rule All</span>
+          </li>
+          <li>
+            <img src="dragon%20tamer.png" alt="The Last Dragon Tamer poster" loading="lazy" decoding="async" />
+            <span class="work-title">The Last Dragon Tamer</span>
+          </li>
+        </ul>
+      </li>
+
+      <li>
+        <strong>Say your rating out loud while watching</strong>
+        <p>While you watch, say whichever score on the scale fits how you feel—for example, “Right now it’s a 1” or “This scene is a minus 1.”</p>
+        <div class="scale" aria-label="Rating scale">
+          <span class="pill neg">−3</span>
+          <span class="pill neg">−1</span>
+          <span class="pill zero">0</span>
+          <span class="pill pos">+1</span>
+          <span class="pill pos">+3</span>
+        </div>
+        <dl class="scale-legend" aria-label="Score legend">
+          <dt>−3</dt><dd>Extremely not interesting</dd>
+          <dt>−1</dt><dd>Not interesting</dd>
+          <dt>0</dt><dd>Neutral</dd>
+          <dt>+1</dt><dd>Interesting</dd>
+          <dt>+3</dt><dd>Extremely interesting</dd>
+        </dl>
+        <p class="step-scale-note"><strong>+2 / −2</strong> are intentionally not on the scale. Use <strong>+3</strong> when something is <strong>extremely interesting</strong>, and <strong>−3</strong> when it is <strong>extremely not interesting</strong>.</p>
+      </li>
+
+      <li>
+        <strong>When an episode ends, press Space to continue the interview</strong>
+        <p>When playback of an episode ends, press <kbd>Space</kbd> as instructed to move to the interview step.</p>
+        <div class="kbd step-inline-kbd"><kbd>Space</kbd> Continue to interview</div>
+      </li>
+
+      <li>
+        <strong>You may switch to another title if you prefer</strong>
+        <p>Even for assigned titles, if you no longer want to watch, you may move to another title—please go at a comfortable pace.</p>
+      </li>
+    </ol>
+    </section>
+
+    <div class="note">
+      <strong>At a glance</strong> — <strong>Basic setup</strong> → <strong>Study flow</strong> (<strong>Part 1</strong> Proby for interest / ratings → per-episode verbal scores · <kbd style="color:inherit;border-color:#999;">Space</kbd> · reactions · big shifts · next episode or other title → <strong>Part 2</strong> Proby post-study links for male / female participants) → <strong>Session steps</strong> (apps · assigned titles · rating scale, etc.)
+    </div>
+
+    <footer>
+      Internal research guide. Open this file in a browser to use it.
+    </footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,8 @@
+node_modules/
+
+# 로컬 시크릿 (API 키 등 — 절대 커밋하지 않음)
+.env
+.env.local
+.env.*.local
+.vercel
+.env*.local

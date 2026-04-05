@@ -1,0 +1,1082 @@
+{
+  "survey_draft": {
+    "title": "아이폰 고객 인터뷰 — 통신사 가입 여정 & 이용 경험",
+    "description": "아이폰 고객 인터뷰_가이드라인_초안_0319_0.5.xlsx 기반. 아이폰 고객의 통신사 가입 여정(결정·탐색·가입·배송·개통·온보딩)과 통신 이용 경험(NW·혜택·보안·AI앱) 전반을 탐색.",
+    "welcome_title": "안녕하세요, 인터뷰에 참여해 주셔서 감사합니다",
+    "welcome_message": "오늘 인터뷰는 아이폰 고객으로서 통신사를 선택하고 이용하는 경험 전반에 대해 이야기 나눕니다.",
+    "goal": "아이폰 고객의 통신사 가입 여정 및 이용 경험 심층 파악을 통한 NPS 영향 요인 분석",
+    "target_audience": "아이폰 사용 고객\n통신사: 현재 통신사(LGU+·SKT·KT) + 이전 통신사 이용 경험자\n최근 6개월 내 통신사 이동 경험자 우선\n연령대: 20대~50대",
+    "quota": 10,
+    "user_groups": [],
+    "user_inputs": [
+      {
+        "id": "6d5db181-3cd7-46c8-bf87-8fa4dd194582",
+        "readable_id": "user_input_1",
+        "label": "이름을 적어 주세요 (또는 닉네임)"
+      }
+    ],
+    "screener_questions": [],
+    "interview_opening": "안녕하세요, 반갑습니다! 저와 편하게 대화 나눠주시면 됩니다.\n\n한 가지만 부탁드릴게요. 가능하면 너무 짧은 단답은 피해주시고, 경험이나 느낌을 좀 풀어서 말씀해 주시면 훨씬 풍부한 인터뷰가 될 것 같아요.\n\n준비되셨으면 시작해볼까요?",
+    "interview_chapters": [
+      {
+        "id": "0029d491-55ec-4197-8910-cbf9b2565e9a",
+        "readable_id": "chapter_1",
+        "title": "아이폰 & 애플 이용 경험",
+        "topics": [
+          {
+            "id": "9ee4f816-d929-476d-a939-c11e7cd77713",
+            "readable_id": "topic_1",
+            "title": "아이폰 이용 역사",
+            "questions": [
+              {
+                "id": "941e065a-77bf-4593-bcd6-766d3d0df2ee",
+                "readable_id": "question_1",
+                "content": "안녕하세요, 반갑습니다! 먼저 아이폰을 언제부터 쓰기 시작하셨는지, 그리고 왜 아이폰을 쓰게 되셨는지부터 편하게 말씀해 주세요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": null,
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "a13e4b56-cfe2-4b13-9a7b-3e279d40ec72",
+                      "text": "아이폰 외에 사용 중인 애플 기기나 유료 구독 중인 애플 서비스가 있다면 어떤 것들인지 확인",
+                      "position": 0
+                    },
+                    {
+                      "id": "2ad0a148-eb0e-42f7-8e88-c92e8eea6992",
+                      "text": "아이폰을 바꾸는 주기가 어떻게 되는지, 어떤 계기로 교체하게 되는지 확인",
+                      "position": 1
+                    },
+                    {
+                      "id": "21fab15b-3a7a-4c1a-a3ea-2218b4d8345a",
+                      "text": "이전에 쓰던 단말기는 어떻게 처리하는지 확인 (보상판매·중고·그냥 보관 등)",
+                      "position": 2
+                    },
+                    {
+                      "id": "96d681f1-cf6b-4b9d-b67d-7717f523dc71",
+                      "text": "기기 변경 시 데이터는 어떻게 옮기거나 관리하는지 확인",
+                      "position": 3
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "6f1e85cf-e653-4950-a7a1-d48bd121287a",
+        "readable_id": "chapter_2",
+        "title": "통신사 현황 & NPS",
+        "topics": [
+          {
+            "id": "ae829bd3-6724-4ad9-9d18-d8a4811781ae",
+            "readable_id": "topic_1",
+            "title": "현재 통신사",
+            "questions": [
+              {
+                "id": "029d6977-06a6-4d72-aad3-7007fd45d864",
+                "readable_id": "question_1",
+                "content": "지금 쓰고 계신 통신사는 얼마나 됐고, 어떤 요금제를 쓰고 계신가요? 결합 상품이나 요금 납부도 직접 하시는지 간단하게 말씀해 주세요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": null,
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "7336e551-6e7a-493f-8e74-3fcd508df414",
+                      "text": "요금제 선택 이유, 결합 여부, 납부 방식 등 기본 현황 파악",
+                      "position": 0
+                    }
+                  ],
+                  "branches": [
+                    {
+                      "id": "817b52dd-1886-47f8-80c7-8cfa64a290ab",
+                      "if": "9~10점이라고 하신 경우,",
+                      "note": "",
+                      "position": 0,
+                      "checklist": [
+                        {
+                          "id": "866136a3-75b6-41a4-8e9e-a688fea758aa",
+                          "text": "그 점수를 주게 된 결정적인 경험이나 이유가 있었는지 확인",
+                          "position": 0
+                        },
+                        {
+                          "id": "605d9913-509c-440d-92b3-57d35a45ed24",
+                          "text": "어떤 부분이 특히 만족스러운지 구체적 경험 확인",
+                          "position": 1
+                        }
+                      ],
+                      "branches": []
+                    },
+                    {
+                      "id": "8f41a163-3167-42b6-83f7-30f090700b2d",
+                      "if": "7~8점이라고 하신 경우,",
+                      "note": "",
+                      "position": 1,
+                      "checklist": [
+                        {
+                          "id": "06df050f-2540-4653-abaf-052e1891ab71",
+                          "text": "9~10점까지 올라가지 못한 이유가 무엇인지 확인",
+                          "position": 0
+                        },
+                        {
+                          "id": "8a4afe70-34e1-4ef2-961f-8b6091d6dc75",
+                          "text": "어떤 부분이 아쉽거나 바뀌면 좋겠다고 느꼈는지 확인",
+                          "position": 1
+                        }
+                      ],
+                      "branches": []
+                    },
+                    {
+                      "id": "d8e2668c-1873-4367-b36c-d05b65391f79",
+                      "if": "0~6점이라고 하신 경우,",
+                      "note": "",
+                      "position": 2,
+                      "checklist": [
+                        {
+                          "id": "01679f4b-cc1c-41c9-8a64-a4f45c91f1d3",
+                          "text": "그 점수를 주게 된 가장 큰 이유와 결정적 경험이 무엇인지 확인",
+                          "position": 0
+                        },
+                        {
+                          "id": "345d6123-aaee-4c99-a219-29e60ac43d2e",
+                          "text": "어떤 것이 바뀌면 점수가 올라갈 것 같은지 확인",
+                          "position": 1
+                        }
+                      ],
+                      "branches": []
+                    }
+                  ]
+                },
+                "response_type": "episode",
+                "duration_sec": 30,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "cc7b8fb8-a20e-4218-adf6-7f7a5a91c214",
+            "readable_id": "topic_2",
+            "title": "이전 통신사",
+            "questions": [
+              {
+                "id": "4aa1b393-08a4-429c-9fed-92256bad9844",
+                "readable_id": "question_1",
+                "content": "이전에 쓰시던 통신사는 어디였고 얼마나 이용하셨나요? 그 통신사라면 0~10점 중 몇 점을 주셨을 것 같으신가요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": null,
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [],
+                  "branches": [
+                    {
+                      "id": "6cc65c2b-59fd-4670-91d2-75fdfd2899fe",
+                      "if": "9~10점이라고 하신 경우,",
+                      "note": "",
+                      "position": 0,
+                      "checklist": [
+                        {
+                          "id": "0d22b479-1cfa-4b40-9d47-c5b7200bbd8c",
+                          "text": "이전 통신사를 높게 평가하게 된 결정적 경험 확인",
+                          "position": 0
+                        },
+                        {
+                          "id": "02b3312d-83a6-48be-86fe-7df81bb8c9e5",
+                          "text": "그럼에도 이전 통신사를 떠나게 된 이유 확인",
+                          "position": 1
+                        }
+                      ],
+                      "branches": []
+                    },
+                    {
+                      "id": "2d9ae06c-b578-4694-91b4-aa81d87b4f3c",
+                      "if": "7~8점이라고 하신 경우,",
+                      "note": "",
+                      "position": 1,
+                      "checklist": [
+                        {
+                          "id": "429bce9e-6dc3-4085-8896-ed23bdaf663a",
+                          "text": "좋았던 부분과 아쉬웠던 부분 각각 확인",
+                          "position": 0
+                        },
+                        {
+                          "id": "31b35e3e-7e8b-4fee-88e3-71157931ce54",
+                          "text": "지금 통신사와 비교했을 때 차이가 느껴지는 부분 확인",
+                          "position": 1
+                        }
+                      ],
+                      "branches": []
+                    },
+                    {
+                      "id": "0fb7c2c6-5da4-4ccf-98e6-6baf7e95279d",
+                      "if": "0~6점이라고 하신 경우,",
+                      "note": "",
+                      "position": 2,
+                      "checklist": [
+                        {
+                          "id": "423ee245-8eb6-4101-bea7-89f4677f5ccb",
+                          "text": "이전 통신사에서 가장 불만이었던 경험 확인",
+                          "position": 0
+                        },
+                        {
+                          "id": "64e24b1d-7f1d-4cb9-bd46-3e5778c53696",
+                          "text": "그 불만이 이번 통신사 이동의 계기가 됐는지 확인",
+                          "position": 1
+                        }
+                      ],
+                      "branches": []
+                    }
+                  ]
+                },
+                "response_type": "episode",
+                "duration_sec": 30,
+                "media": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "1e6b6e25-d998-4624-8903-6b56688a4ce5",
+        "readable_id": "chapter_3",
+        "title": "통신사 가입 여정",
+        "topics": [
+          {
+            "id": "58356fb5-e38c-4a90-b5ba-2f47f38d8d2d",
+            "readable_id": "topic_1",
+            "title": "결정 순서 & 첫 접점",
+            "questions": [
+              {
+                "id": "5ab419bf-95e5-4e82-b088-b195b7c3ca66",
+                "readable_id": "question_1",
+                "content": "이번에 통신사를 바꾸실 때, 처음부터 아이폰을 사기로 마음을 먹고 통신사를 고르셨나요, 아니면 통신사를 먼저 정하셨나요? 왜 그런 순서로 고민하게 됐는지 말씀해 주시겠어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": null,
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "fe9e69bb-87f2-4d9e-bb1c-ad10f2d5fd03",
+                      "text": "그 결정을 위해 가장 먼저 한 행동이나 방문한 채널이 어딘지 확인 (유튜브·커뮤니티·통신사 홈피·애플스토어 등)",
+                      "position": 0
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 30,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "fb797831-1626-4b23-a1ac-c510c88b4e09",
+            "readable_id": "topic_2",
+            "title": "통신사 탐색 & 결정",
+            "questions": [
+              {
+                "id": "88686f09-56b4-4e6e-a5ae-c1c0b8146813",
+                "readable_id": "question_1",
+                "content": "통신사를 탐색하고 결정하는 과정에서 가장 영향을 많이 받은 정보 채널이 있었나요? 어떤 정보를 주로 보셨는지 말씀해 주세요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": null,
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "ef8df977-ba7d-4275-8aea-f279f29201bc",
+                      "text": "온라인 커뮤니티(뽐뿌·디씨 등), 유튜브, 통신사 매장, 친구·지인 중 어디서 가장 도움이 됐는지 확인",
+                      "position": 0
+                    },
+                    {
+                      "id": "9ad7b7b6-9b29-4221-8c7c-6d5c392946a9",
+                      "text": "탐색하고 결정하는 과정에서 불편하거나 불만이었던 경험, 혹은 편리했던 경험 확인",
+                      "position": 1
+                    },
+                    {
+                      "id": "184e49d8-f769-4bce-8bf2-bde8e4adef9a",
+                      "text": "왜 지금 통신사를 선택했는지 - 가입혜택·NW품질·멤버십혜택·개인정보 이슈 등 KBF 확인",
+                      "position": 2
+                    },
+                    {
+                      "id": "89e9b0df-cf9d-4757-a291-a64ca38f6c55",
+                      "text": "통신사를 탐색하고 결정하기까지 무엇이 가장 중요했는지 확인",
+                      "position": 3
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 30,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "afac3b06-8359-4635-8ad0-4d15807c99b8",
+            "readable_id": "topic_3",
+            "title": "단말기 결정",
+            "questions": [
+              {
+                "id": "7cc0d315-7519-43fc-8618-068a5b1cb136",
+                "readable_id": "question_1",
+                "content": "이번 아이폰 구매를 결정하는 데 가장 주요한 요인은 무엇이었나요? 모델, 색상, 용량, 혜택 중 어떤 게 가장 중요하셨는지 말씀해 주세요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": null,
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "9aad1ec6-d035-40e7-9d7e-453005b415f4",
+                      "text": "통신사 가입 전 단말기를 체험해봤는지, 어디서 해봤는지 확인",
+                      "position": 0
+                    },
+                    {
+                      "id": "b8c80cbc-9928-4eed-bf56-23e3b9f658f3",
+                      "text": "단말기를 구매하는 데 가장 영향을 받은 정보 채널 확인 (아사모·디씨 등 커뮤니티, 유튜브, 지인 등)",
+                      "position": 1
+                    },
+                    {
+                      "id": "c04ea382-44a0-4041-ac88-504ec2ba96cc",
+                      "text": "고려한 단말기 구매 채널과 최종 선택 채널 확인 (자급제·통신사 공홈·매장 등)",
+                      "position": 2
+                    },
+                    {
+                      "id": "b8f4ff32-55ba-4736-92ef-673490318062",
+                      "text": "단말기 구매를 결정하기까지 가장 중요하게 본 것이 무엇인지 확인",
+                      "position": 3
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 30,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "80e8d93b-f154-43a3-ae0a-cb20df7675c5",
+            "readable_id": "topic_4",
+            "title": "통신사 가입 신청",
+            "questions": [
+              {
+                "id": "8d56109e-871e-47fe-aef0-ca3a8b5ce839",
+                "readable_id": "question_1",
+                "content": "통신사 가입은 온라인과 오프라인 중 어디서 하셨나요? 최종적으로 어떤 채널에서 가입하게 됐는지 말씀해 주세요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": null,
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "bd4d95d2-0475-439f-a414-999dba79cf69",
+                      "text": "가입 과정에서 만족했던 점과 불편했던 점 각각 확인",
+                      "position": 0
+                    },
+                    {
+                      "id": "73fadcd9-9252-4dfe-9082-70ed9cd59f0a",
+                      "text": "불편했다면 어떤 점이 보완되면 좋겠는지, 이전 통신사와 비교해서 아쉽거나 좋았던 점 확인",
+                      "position": 1
+                    },
+                    {
+                      "id": "922f2ee3-6df3-415f-bdab-4a45c956d795",
+                      "text": "가입 신청하기까지 무엇이 가장 중요하다고 느꼈는지 확인",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 30,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "9837b883-e4e4-4b55-ba19-45b45c608f5c",
+            "readable_id": "topic_5",
+            "title": "단말기 배송/수령 (온라인 가입 고객)",
+            "questions": [
+              {
+                "id": "01c851d2-bc27-4ea1-a637-d243975e73e3",
+                "readable_id": "question_1",
+                "content": "가입 신청하고 단말기 받기까지 얼마나 기다리셨나요? 그 과정에서 통신사로부터 어떤 안내들을 받으셨는지 기억나시는 대로 말씀해 주세요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": null,
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "9dabc401-f54a-458c-a09f-8c67302fdadb",
+                      "text": "가입 신청 직후, 배송 시작, 배송 도착 시 각각 어떤 안내를 받았는지 최대한 확보",
+                      "position": 0
+                    },
+                    {
+                      "id": "a7bd74e5-2da7-444e-9b73-d13118efe990",
+                      "text": "단말기 배송받을 때 가장 기대됐던 부분 확인",
+                      "position": 1
+                    },
+                    {
+                      "id": "4247bc23-f02e-4fb7-983f-e97c6d90225e",
+                      "text": "단말기 박스 오픈하는 순간부터 구성품 확인까지의 언박싱 경험을 최대한 자세히 확인",
+                      "position": 2
+                    },
+                    {
+                      "id": "f62d0b0b-0e36-4c87-9dae-cc2632910ab9",
+                      "text": "단말기 배송/수령 단계에서 무엇이 가장 중요하다고 느꼈는지 확인",
+                      "position": 3
+                    }
+                  ],
+                  "branches": [
+                    {
+                      "id": "6803f9cf-0fee-43a0-98d9-0dce0ffa2cc3",
+                      "if": "지연이 있었다면,",
+                      "note": "",
+                      "position": 0,
+                      "checklist": [
+                        {
+                          "id": "6bc4f96d-65cc-457a-ad9d-414f352ed444",
+                          "text": "지연됐을 때 불만 강도가 어느 정도였는지 확인 (미미함-불편함-답답함-분노/이탈)",
+                          "position": 0
+                        },
+                        {
+                          "id": "19328060-9d13-493e-860a-b8d47ed4dc78",
+                          "text": "지연 시 통신사가 어떻게 케어해줬으면 좋겠는지 확인",
+                          "position": 1
+                        }
+                      ],
+                      "branches": []
+                    },
+                    {
+                      "id": "48df80ee-e360-47be-8e89-266e45a8c783",
+                      "if": "기다림 없이 잘 받았다면,",
+                      "note": "",
+                      "position": 1,
+                      "checklist": [
+                        {
+                          "id": "dd6abdcd-ab01-4003-8cd7-df0154adfa04",
+                          "text": "배송 경험에서 특히 좋았던 부분이나 기억에 남는 부분 확인",
+                          "position": 0
+                        }
+                      ],
+                      "branches": []
+                    }
+                  ]
+                },
+                "response_type": "episode",
+                "duration_sec": 30,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "dec91c8f-fd99-4fae-bc50-2735a85fd063",
+            "readable_id": "topic_6",
+            "title": "단말기 개통",
+            "questions": [
+              {
+                "id": "24fd8ec6-42f5-4818-b328-36c8f2e7dd73",
+                "readable_id": "question_1",
+                "content": "단말기 개통은 USIM으로 하셨나요, eSIM으로 하셨나요? 왜 그걸 선택하셨는지, 그리고 개통 과정이 어땠는지 말씀해 주세요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": null,
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "421e5eb3-f239-4e3e-8118-efc591d2623e",
+                      "text": "개통하는 동안 어떤 채널을 통해 어떤 안내를 받았는지 확인 (상담사·매장·홈페이지·문자 등)",
+                      "position": 0
+                    },
+                    {
+                      "id": "eb228308-7c2a-4205-ba38-3a2baedb9320",
+                      "text": "개통 과정에서 편리했던 점과 어려웠던 점 각각 확인",
+                      "position": 1
+                    },
+                    {
+                      "id": "4be99d78-46e5-4f44-8aa1-10d8360b163c",
+                      "text": "단말기 개통 단계에서 무엇이 가장 중요하다고 느꼈는지 확인",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 30,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "2ca57f0f-7c6d-43f7-b05f-b87f2b78ea95",
+            "readable_id": "topic_7",
+            "title": "통신서비스 온보딩 (가입 직후 2주)",
+            "questions": [
+              {
+                "id": "33cb4a2f-3988-492c-a273-a7b9962f4898",
+                "readable_id": "question_1",
+                "content": "단말기 개통 완료 직후 통신사에서 가장 먼저 어떤 안내를 받으셨나요? 그 느낌은 어떠셨는지 말씀해 주세요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": null,
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "613c96b9-6948-41c9-869d-e9fb4154bf2c",
+                      "text": "가입 후 2주 내 받은 안내들을 최대한 많이 확인 (설정법·데이터이관·요금·결합·멤버십·보안 등)",
+                      "position": 0
+                    },
+                    {
+                      "id": "d1a2965e-21dd-4040-98f5-fde1962b1149",
+                      "text": "그 중 가장 효과적이었던 정보나 안내가 무엇이었는지 확인",
+                      "position": 1
+                    },
+                    {
+                      "id": "276ff1c5-fb7d-480f-9899-3a5958877397",
+                      "text": "현재 통신사 이용에 충분히 적응할 수 있었는지, 앞으로 어떤 정보가 더 필요한지 확인",
+                      "position": 2
+                    },
+                    {
+                      "id": "577e98f0-c952-4b3a-afa5-9b07730922ba",
+                      "text": "아이폰 고객만을 위해 챙긴 것 같다고 느껴진 콘텐츠나 안내가 있었는지 확인",
+                      "position": 3
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "4549605d-5468-43ca-9805-c9e945871a8a",
+                "readable_id": "question_2",
+                "content": "통신사 가입하면서 가장 기대되었던 사항은 무엇이었나요? 그 기대가 충족됐나요, 아니었나요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": null,
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [],
+                  "branches": [
+                    {
+                      "id": "e00406fe-2b7e-462b-b844-7da94a366d4f",
+                      "if": "기대가 충족됐다면,",
+                      "note": "",
+                      "position": 0,
+                      "checklist": [
+                        {
+                          "id": "1e67c0fc-32f7-43fb-b46a-2647b77bb610",
+                          "text": "기대가 충족됐다고 느낀 결정적 시점이나 계기 확인",
+                          "position": 0
+                        },
+                        {
+                          "id": "c2438eeb-51b7-48ba-aa4a-ecf11a7b921c",
+                          "text": "어떤 경험이 가장 인상적이었는지 확인",
+                          "position": 1
+                        }
+                      ],
+                      "branches": []
+                    },
+                    {
+                      "id": "e5063531-bec2-429b-8278-865ddf4535de",
+                      "if": "기대가 충족되지 않았다면,",
+                      "note": "",
+                      "position": 1,
+                      "checklist": [
+                        {
+                          "id": "7dfa8475-5758-4f79-85fc-a289d01695c7",
+                          "text": "기대가 충족되지 않았다고 느낀 결정적 시점이나 계기 확인",
+                          "position": 0
+                        },
+                        {
+                          "id": "b5e2a5fa-7ddb-45d3-b644-8c874e2d6b7d",
+                          "text": "어떤 점이 바뀌면 기대에 부합했을지 확인",
+                          "position": 1
+                        }
+                      ],
+                      "branches": []
+                    }
+                  ]
+                },
+                "response_type": "episode",
+                "duration_sec": 30,
+                "media": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "4037b2e7-5cee-4879-af24-9d541b53e2f0",
+        "readable_id": "chapter_4",
+        "title": "통신 이용 경험",
+        "topics": [
+          {
+            "id": "b42afaa8-1631-44c7-b3ae-5f354cdabf3b",
+            "readable_id": "topic_1",
+            "title": "전반적 이용 경험",
+            "questions": [
+              {
+                "id": "479a66a4-c28e-4d05-b03f-10d8150abed7",
+                "readable_id": "question_1",
+                "content": "현재 통신사를 쓰면서 통신 서비스에서 가장 중요하다고 느껴지는 게 무엇인지 솔직하게 말씀해 주시겠어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": null,
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "8b23c764-e621-40d9-bebf-9367ac840929",
+                      "text": "NW·혜택·보안·부가서비스·요금·통신사 커뮤니케이션·브랜드 중 어떤 것이 가장 중요한지 확인",
+                      "position": 0
+                    },
+                    {
+                      "id": "f256b924-00f3-4ad5-be73-68b68b9f7571",
+                      "text": "이전/현재 통신사에서 가장 불만이었던 경험 각 1개씩 확인",
+                      "position": 1
+                    },
+                    {
+                      "id": "3cdbcba2-6352-4f1a-a72d-6185c91e52cc",
+                      "text": "이전/현재 통신사에서 가장 긍정적이었던 경험 각 1개씩 확인",
+                      "position": 2
+                    },
+                    {
+                      "id": "f4df19e9-a08d-41ea-95fb-b721b5c00e3d",
+                      "text": "단말기를 이용하는 데 통신사가 좀 더 잘 도와줬으면 하는 것이 있는지 확인",
+                      "position": 3
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "bdc9ba8d-bd92-4301-bf4a-f4424fb0f125",
+            "readable_id": "topic_2",
+            "title": "네트워크 품질",
+            "questions": [
+              {
+                "id": "8cfd59a0-d108-4218-8b40-f10d224d0bb9",
+                "readable_id": "question_1",
+                "content": "현재 통신사를 쓰면서 통화나 데이터 끊김, 속도 저하 같은 네트워크 이슈를 겪어보신 적이 있으신가요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": null,
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "4f46f508-d78a-4523-854f-6f67b3ac1ce0",
+                      "text": "NW 품질이 이전/현재 통신사 NPS 점수에 영향을 줬는지 확인",
+                      "position": 0
+                    }
+                  ],
+                  "branches": [
+                    {
+                      "id": "112370a6-1a1a-4641-9f1d-a6740846d4a0",
+                      "if": "이슈를 경험했다면,",
+                      "note": "",
+                      "position": 0,
+                      "checklist": [
+                        {
+                          "id": "16312d8f-994c-4d15-b8f2-61c611488c58",
+                          "text": "언제, 어디서, 얼마나 자주 발생했는지 확인",
+                          "position": 0
+                        },
+                        {
+                          "id": "3ad0f587-50b0-4175-9a15-42d4da57592b",
+                          "text": "불만 강도가 어느 정도인지 확인 (미미함-불편함-답답함-분노/포기)",
+                          "position": 1
+                        },
+                        {
+                          "id": "645760dd-b5f5-4a6d-9464-2fce6560dcc1",
+                          "text": "원인이 통신사 때문인지 단말기(아이폰) 때문인지 어떻게 생각하는지 확인",
+                          "position": 2
+                        },
+                        {
+                          "id": "59eb824e-0071-4c7e-8d34-102339547986",
+                          "text": "아이폰이 갤럭시보다 NW 품질 차이가 있을 수 있다고 알았을 때 생각이 달라지는지 확인",
+                          "position": 3
+                        },
+                        {
+                          "id": "01743267-8b77-4881-8b7f-e50afdb95274",
+                          "text": "통신사에 문의하거나 안내받은 경험이 있는지, 어떻게 응대받았는지 확인",
+                          "position": 4
+                        }
+                      ],
+                      "branches": []
+                    },
+                    {
+                      "id": "5fc8789f-6f37-4ec7-adab-eb994594d07f",
+                      "if": "이슈가 없었다면,",
+                      "note": "",
+                      "position": 1,
+                      "checklist": [
+                        {
+                          "id": "74973115-7b5f-4547-8cf0-54bc0618415f",
+                          "text": "아주 사소하더라도 불편했던 순간이 있었는지 확인",
+                          "position": 0
+                        },
+                        {
+                          "id": "de43cc0d-8fc7-4f53-9a55-cb0ff370dbac",
+                          "text": "가입 전후 이전/현재 통신사 NW에 대한 생각에 변화가 있는지 확인",
+                          "position": 1
+                        }
+                      ],
+                      "branches": []
+                    }
+                  ]
+                },
+                "response_type": "episode",
+                "duration_sec": 30,
+                "media": []
+              },
+              {
+                "id": "7511ed8f-ab7f-4411-869c-229e20ad0206",
+                "readable_id": "question_2",
+                "content": "NW 품질 문제가 생겼을 때 통신사가 어떻게 해결해줬으면 좋겠다고 생각하시나요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": null,
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "ab44daea-3779-40b6-b6bf-c4ad7af393c6",
+                      "text": "통신사가 NW 이슈 대응을 어떻게 해줬으면 좋겠는지 구체적으로 확인",
+                      "position": 0
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 20,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "511433e1-494a-43d8-85f0-c98464d2b2ce",
+            "readable_id": "topic_3",
+            "title": "혜택 (멤버십·유플투쁠 등)",
+            "questions": [
+              {
+                "id": "1a730f24-54be-4d57-8ccd-720d662a6f87",
+                "readable_id": "question_1",
+                "content": "통신사 멤버십 혜택은 잘 활용하고 계신가요? 어떤 혜택을 주로 쓰시는지 말씀해 주세요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": null,
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "a17f1c75-888f-4ff1-ae53-8318acae09a9",
+                      "text": "얼마나 자주, 어디서 주로 사용하는지 확인",
+                      "position": 0
+                    },
+                    {
+                      "id": "aca39437-3913-4055-a763-43359340b352",
+                      "text": "유플투쁠(or Tday·달달혜택) 혜택을 챙기는지, 어떤 혜택을 주로 발급받는지 확인",
+                      "position": 1
+                    },
+                    {
+                      "id": "b28a6342-3e47-40ef-80b3-0656372b4d20",
+                      "text": "혜택을 잘 안 쓰게 되는 이유나 불편했던 경험 확인",
+                      "position": 2
+                    },
+                    {
+                      "id": "c663060d-321a-4c5a-8b35-ec7748753d09",
+                      "text": "이전/현재 통신사 통틀어 정말 잘 쓰는 혜택이 있었다면 무엇인지 확인",
+                      "position": 3
+                    },
+                    {
+                      "id": "1e5c26a1-eca5-427d-8262-f3f079bd1a14",
+                      "text": "가입 전후 이전/현재 통신사 혜택에 대한 생각에 변화가 있는지 확인",
+                      "position": 4
+                    },
+                    {
+                      "id": "8ba16cef-57fd-42e7-ab4e-bbabbf5d866b",
+                      "text": "혜택을 잘 챙기기 위해 통신사가 더 해줬으면 하는 것 확인",
+                      "position": 5
+                    },
+                    {
+                      "id": "d175704e-2341-4c68-92d4-2d0053daea66",
+                      "text": "한정된 금액 안에서 가장 받고 싶은 혜택이 무엇인지 확인",
+                      "position": 6
+                    },
+                    {
+                      "id": "895797ca-fa81-4805-855a-f005aa576a27",
+                      "text": "아이폰 고객만을 위한 혜택이 있다고 생각하는지, 아이폰을 더 잘 쓰기 위해 어떤 혜택이 있으면 좋겠는지 확인",
+                      "position": 7
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 40,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "f61e0f67-31b1-4773-ad29-aa378a860f2b",
+            "readable_id": "topic_4",
+            "title": "보안 서비스",
+            "questions": [
+              {
+                "id": "f2a47378-f5e4-4e4a-aa06-0f7e9034de0d",
+                "readable_id": "question_1",
+                "content": "통신사에서 보안 서비스를 안내받거나 이용해보신 적이 있으신가요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": null,
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "11b4e436-900a-4d6a-8e25-678b934ad7bc",
+                      "text": "보안 서비스를 더 잘 안내받으려면 통신사가 어떻게 하면 좋을지 확인",
+                      "position": 0
+                    },
+                    {
+                      "id": "0daace09-8479-457a-89d8-7d3ff24c9810",
+                      "text": "통신사가 보안을 잘 챙긴다는 인식을 주려면 무엇을 해주면 좋겠는지 확인",
+                      "position": 1
+                    }
+                  ],
+                  "branches": [
+                    {
+                      "id": "54a4f1e9-3f8d-4359-91b7-07e54013757f",
+                      "if": "안내받거나 이용해봤다면,",
+                      "note": "",
+                      "position": 0,
+                      "checklist": [
+                        {
+                          "id": "0811fe53-dc34-4fd4-bfa5-15d962aee1c8",
+                          "text": "어떤 보안 서비스인지, 어떻게 안내받았는지 확인 (USIM보호·피싱해킹 보험·보이스피싱 탐지 등)",
+                          "position": 0
+                        },
+                        {
+                          "id": "57a825a9-f21f-4219-8d91-c02b4c503bcc",
+                          "text": "안내받을 때 어떤 생각이 들었는지, 통신 생활에 도움이 될 것 같았는지 확인",
+                          "position": 1
+                        }
+                      ],
+                      "branches": []
+                    },
+                    {
+                      "id": "73b2cfd6-d993-4a17-b89e-8ed4bcdee864",
+                      "if": "잘 모르거나 이용 안 했다면,",
+                      "note": "",
+                      "position": 1,
+                      "checklist": [
+                        {
+                          "id": "66eebae4-4985-4116-a7c9-3094423ce505",
+                          "text": "보안 서비스 자체에 대한 인식이 어떤지 확인",
+                          "position": 0
+                        },
+                        {
+                          "id": "b758cb99-3a2e-4048-9657-8ef629b72e68",
+                          "text": "알고 있었다면 왜 이용하지 않았는지 확인",
+                          "position": 1
+                        }
+                      ],
+                      "branches": []
+                    }
+                  ]
+                },
+                "response_type": "episode",
+                "duration_sec": 25,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "9c757d7f-d6fc-4efa-821a-2848a341a1cb",
+            "readable_id": "topic_5",
+            "title": "AI 앱 (익시오 / 에이닷)",
+            "questions": [
+              {
+                "id": "e0e82eb9-ff16-407e-9433-b64fe3912129",
+                "readable_id": "question_1",
+                "content": "혹시 통신사 AI 앱인 익시오나 에이닷을 알고 계시나요? 써보신 적이 있으신지요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": null,
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [],
+                  "branches": [
+                    {
+                      "id": "569493e1-eb9b-411f-8406-9318bda10982",
+                      "if": "사용해본 적이 있다면,",
+                      "note": "",
+                      "position": 0,
+                      "checklist": [
+                        {
+                          "id": "b87781c0-d45d-4d78-bb66-ab3b6bb09cb6",
+                          "text": "부정적으로 느낀 경험과 긍정적으로 느낀 경험 각각 확인",
+                          "position": 0
+                        },
+                        {
+                          "id": "2fcc6b97-c313-42b3-b17f-6e53df2a9fe0",
+                          "text": "둘 다 써봤다면 어떤 차이가 느껴졌는지 확인 (통화품질·녹음·요약·기술적 버그·기능 차이 등)",
+                          "position": 1
+                        }
+                      ],
+                      "branches": []
+                    },
+                    {
+                      "id": "06b5f260-1ead-46ba-bd99-fec00d0b261d",
+                      "if": "알기만 하고 안 써봤다면,",
+                      "note": "",
+                      "position": 1,
+                      "checklist": [
+                        {
+                          "id": "9b4eada2-0c28-4740-b823-45059eee9de6",
+                          "text": "써보지 않은 이유 확인",
+                          "position": 0
+                        },
+                        {
+                          "id": "6661b6e7-6642-4e96-bf12-adaa691223ba",
+                          "text": "어떤 기능이 있으면 써볼 것 같은지 확인",
+                          "position": 1
+                        }
+                      ],
+                      "branches": []
+                    },
+                    {
+                      "id": "59b1c2ef-5b2b-411c-8774-90791f242efc",
+                      "if": "전혀 모른다면,",
+                      "note": "",
+                      "position": 2,
+                      "checklist": [
+                        {
+                          "id": "cf79d23f-b51c-44f1-b7b8-506addb3516e",
+                          "text": "간략히 설명 후, 어떤 기능이 있으면 관심이 생길 것 같은지 확인",
+                          "position": 0
+                        }
+                      ],
+                      "branches": []
+                    }
+                  ]
+                },
+                "response_type": "episode",
+                "duration_sec": 25,
+                "media": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "fa7d0ed7-196a-4857-91dc-f76e48eedf87",
+        "readable_id": "chapter_5",
+        "title": "전체 정리 & 마무리",
+        "topics": [
+          {
+            "id": "c83f2fa5-cfec-4d5d-b4c1-04e54ad3ac7b",
+            "readable_id": "topic_1",
+            "title": "마무리",
+            "questions": [
+              {
+                "id": "8f6fbfc2-41e0-4772-819a-0b8c0b667e27",
+                "readable_id": "question_1",
+                "content": "지금까지 이야기한 전체 여정을 돌아봤을 때, 현재 통신사 추천 의향 점수를 가장 결정적으로 깎았던 단 하나의 순간이 있었다면 언제였나요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": null,
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "30f1f5a1-9472-4b1a-a041-30fb53ce631a",
+                      "text": "전체 여정 중 추천을 위해 가장 중요한 단계는 어디였는지, 그 이유 확인",
+                      "position": 0
+                    },
+                    {
+                      "id": "08c825ef-28ac-470b-b74f-a35639a8bc36",
+                      "text": "그 경험을 통신사가 어떻게 제공해줬으면 했는지 확인",
+                      "position": 1
+                    },
+                    {
+                      "id": "78653ee3-3b4d-40e9-8d8b-3fe23d51d117",
+                      "text": "두 통신사 중 전체 경험이 더 나았던 곳은 어디인지, 이유 확인",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 30,
+                "media": []
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "interview_closing": {
+      "closing_message": "오늘 정말 소중한 이야기 나눠주셔서 감사합니다. 마지막으로 하고 싶으신 말씀이 있으시면 자유롭게 말씀해 주시고, 없으시면 '없습니다'라고 해 주셔도 됩니다. 감사합니다!"
+    }
+  }
+}

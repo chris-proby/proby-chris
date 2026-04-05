@@ -1,0 +1,5 @@
+﻿Table,seq,frame_lv3,variable_name,variable_label,점수,근거_녹취록
+VALUES_RES,1,Humility,attitude_humility_score,겸손 점수,4 / 5,Q7: 팀장 피드백(따라가기 벅차다) 수용 → 의식적 언어 조정. Q17: 360 피드백에서 자기인식과 타인 인식의 시차를 구체적으로 인정. 단 고정Q2에서 스트레스 시 독단적 지시 증가 패턴 인정.
+VALUES_RES,2,Integrity,attitude_integrity_score,청렴성 점수,5 / 5,Q8: 100억 규모 계약 원칙상 거절 경험 사후에도 같은 선택 확인. AI 거버넌스 위원회 자발 신설. 위치기반 광고 사전 가이드라인 수립으로 규제보다 앞선 원칙 구조화.
+VALUES_RES,3,Resilience,attitude_resilience_score,회복 탄력성 점수,5 / 5,Q5: 베트남 위기 72시간 내 시나리오 수립 자책 → 실행 전환의 구체적 메커니즘 보유. 비행기 안에서 복기 루틴 서술로 회복 속도·성장 전환력 모두 확인.
+VALUES_RES,4,Derailment,attitude_derailment_risk_score,리더십 탈선 위험 점수,2 / 5 (낮을수록 안전),Q10(나르시즘): 반대 의견 수용 후 타이밍 조정 사례. Q13(공격성): 법무팀장 다그침 인정·사후 사과. Q19: 스트레스 시 독단적 지시 증가 패턴 자인. 탈선 신호 일부 존재하나 자기인식·보완 행동 병행.

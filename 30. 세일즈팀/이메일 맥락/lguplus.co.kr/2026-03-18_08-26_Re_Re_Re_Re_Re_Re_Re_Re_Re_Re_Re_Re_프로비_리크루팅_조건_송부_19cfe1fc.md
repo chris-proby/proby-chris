@@ -1,0 +1,17 @@
+---
+message_id: 19cfe1fcbdb45e4e
+date: 2026-03-18 08:26
+from: "이상협/책임" <leeshyup@lguplus.co.kr>
+to: Chris Lee <chris@proby.io>
+subject: Re: Re: Re: Re: Re: Re: Re: Re: Re: Re: Re: Re: 프로비 리크루팅 조건 송부
+---
+
+# Re: Re: Re: Re: Re: Re: Re: Re: Re: Re: Re: Re: 프로비 리크루팅 조건 송부
+
+- **From**: "이상협/책임" <leeshyup@lguplus.co.kr>
+- **To**: Chris Lee <chris@proby.io>
+- **Date**: 2026-03-18 08:26
+
+---
+
+

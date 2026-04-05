@@ -1,0 +1,721 @@
+{
+  "survey_draft": {
+    "title": "통신사 이동 고객 온보딩·이용 경험 인터뷰",
+    "description": "`가이드라인 - Sheet1.csv` 기반. 통신사 변경 직후 가입·온보딩 여정, NPS, 요금·부가·결합·멤버십·네트워크·첫 청구까지 심층 탐색.",
+    "welcome_title": "안녕하세요, 인터뷰에 참여해 주셔서 감사합니다",
+    "welcome_message": "오늘은 통신사를 옮기신 이후 가입 과정과 이용 경험에 대해 편하게 이야기 나눕니다.",
+    "goal": "이동 고객 온보딩·초기 이용 경험 파악 및 개선 우선순위 도출",
+    "target_audience": "최근 통신사를 변경한 이동 고객(가입 직후~초기 이용 단계)",
+    "quota": 10,
+    "user_groups": [],
+    "user_inputs": [
+      {
+        "id": "19645b75-d8d4-4bae-8a18-872ec98e8e72",
+        "readable_id": "user_input_1",
+        "label": "이름 또는 닉네임을 적어 주세요"
+      }
+    ],
+    "screener_questions": [],
+    "interview_opening": "안녕하세요, 반갑습니다. 오늘은 정해진 답이 아니라 본인 경험과 느낌을 편하게 말씀해 주시면 됩니다. 짧은 답만 이어지면 가볍게 한두 번만 더 여쭤볼 수 있어요. 준비되시면 시작할게요.",
+    "interview_chapters": [
+      {
+        "id": "a92559f4-7f32-438e-828e-5d50dd369d02",
+        "readable_id": "chapter_1",
+        "title": "가입 배경 & 추천 의향",
+        "topics": [
+          {
+            "id": "edd524ae-bd37-4466-9cd5-695d0c1c3ef0",
+            "readable_id": "topic_1",
+            "title": "가입 경로·상품 구성",
+            "questions": [
+              {
+                "id": "9f3c5403-56e8-4445-b57c-3a63b23856ac",
+                "readable_id": "question_1",
+                "content": "통신사 가입은 어디서 하셨나요? 직영몰, 도매, 소매점 등 채널을 말씀해 주시고, 이번에 옮기면서 선택하신 요금제와 결합(인터넷·TV·다른 단말·가족·지인 등) 여부, 그리고 가입하신 유료 부가서비스가 있다면 간단히 짚어 주세요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": null,
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "46017a37-bc63-4c1f-8899-02a61068c78a",
+                      "text": "가입 채널을 선택한 이유나 비교한 경험이 있었다면 확인",
+                      "position": 0
+                    },
+                    {
+                      "id": "ae07015a-2582-42f5-a5d5-9326defdff20",
+                      "text": "결합·부가를 넣거나 빼면서 고민했던 점이 있었는지 확인",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 50,
+                "media": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "0da097f7-77c4-48e2-9087-5d8a8524a65a",
+        "readable_id": "chapter_2",
+        "title": "추천 의향(NPS) & 비교",
+        "topics": [
+          {
+            "id": "a7721d09-0776-4399-bd2f-06e866af78eb",
+            "readable_id": "topic_1",
+            "title": "현재·이전 통신사",
+            "questions": [
+              {
+                "id": "ec3f3eb5-9077-4c1d-8a70-46dc5b0a0e0e",
+                "readable_id": "question_2",
+                "content": "지금 이용 중인 통신사를 다른 사람에게 추천할 의향이 어느 정도이신가요? 0점은 전혀 추천하지 않음, 10점은 적극 추천입니다. 점수를 말씀해 주신 뒤, 그렇게 평가하신 이유를 구체적인 경험과 함께 말씀해 주세요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": null,
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "e8c46e26-cbc3-441a-891b-99002dc9c3c4",
+                      "text": "점수와 이유가 맞도록 한두 가지 사례를 더 붙여 달라고 요청",
+                      "position": 0
+                    },
+                    {
+                      "id": "160e3928-f43b-4d0a-b328-9be672151225",
+                      "text": "추천을 망설이게 한 요소가 있다면 확인",
+                      "position": 1
+                    }
+                  ],
+                  "branches": [
+                    {
+                      "id": "d608d833-b765-459a-bb16-05ab24595e24",
+                      "if": "9~10점이라고 하신 경우,",
+                      "note": "",
+                      "position": 0,
+                      "checklist": [
+                        {
+                          "id": "8c0100c1-000e-4992-8655-8c1920cc01b3",
+                          "text": "그렇게 높게 보게 된 결정적 순간이나 서비스가 있었는지 확인",
+                          "position": 0
+                        },
+                        {
+                          "id": "16c17927-dd0b-4f5b-b387-7d6bac8ffc79",
+                          "text": "앞으로도 유지되려면 통신사가 해 주었으면 하는 점 확인",
+                          "position": 1
+                        }
+                      ],
+                      "branches": []
+                    },
+                    {
+                      "id": "f29ee91b-a507-4914-b6f6-a832876370b7",
+                      "if": "7~8점이라고 하신 경우,",
+                      "note": "",
+                      "position": 1,
+                      "checklist": [
+                        {
+                          "id": "1822001d-8a44-4b27-94c7-330dab8e19e7",
+                          "text": "10점이 아닌 이유, 아쉬웠던 한두 가지 확인",
+                          "position": 0
+                        },
+                        {
+                          "id": "509353b6-b062-40a2-a93e-f39073e65b31",
+                          "text": "바뀌면 점수가 오를 만한 부분 확인",
+                          "position": 1
+                        }
+                      ],
+                      "branches": []
+                    },
+                    {
+                      "id": "9043b930-aac9-4caf-ba88-e9b0b3f14726",
+                      "if": "0~6점이라고 하신 경우,",
+                      "note": "",
+                      "position": 2,
+                      "checklist": [
+                        {
+                          "id": "eb8ec5b2-c2e1-43d0-bee4-b770d23ea7b8",
+                          "text": "점수를 깎은 결정적 경험이나 사건이 있었는지 확인",
+                          "position": 0
+                        },
+                        {
+                          "id": "254ee899-dad4-4638-92d7-292add6a269a",
+                          "text": "어떤 변화가 있으면 추천 의향이 달라질지 확인",
+                          "position": 1
+                        }
+                      ],
+                      "branches": []
+                    }
+                  ]
+                },
+                "response_type": "episode",
+                "duration_sec": 55,
+                "media": []
+              },
+              {
+                "id": "b2a019d5-2194-4262-982a-2636b7e2e95a",
+                "readable_id": "question_3",
+                "content": "이전에 이용하시던 통신사에 대해서도, 같은 기준으로 0~10점 중 몇 점 정도를 주실 것 같으신가요? 점수와 함께 그렇게 평가한 이유도 말씀해 주세요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": null,
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "1692ebe9-e8a5-4031-a3bf-3d193b5abf8e",
+                      "text": "현재 통신사와 비교해 달라진 점·비슷하다고 느낀 점 확인",
+                      "position": 0
+                    },
+                    {
+                      "id": "a6376e53-fd89-4114-bdc3-499cc67277c0",
+                      "text": "이전 통신사를 떠나게 된 결정적 이유가 있다면 확인",
+                      "position": 1
+                    }
+                  ],
+                  "branches": [
+                    {
+                      "id": "73d8832f-915e-4195-afe4-34fec509c239",
+                      "if": "이전과 현재가 비슷하거나 차이를 잘 모르겠다고 하신 경우,",
+                      "note": "가이드: 이전 통신사 대비 차이 체감이 약한 응답자",
+                      "position": 0,
+                      "checklist": [
+                        {
+                          "id": "a8f9b856-e32d-4271-89a1-00217a067a68",
+                          "text": "왜 차이를 못 느끼거나 비슷하다고 생각하셨는지 확인",
+                          "position": 0
+                        },
+                        {
+                          "id": "ceac09b5-c8c4-403c-9c7b-e6881ba04b16",
+                          "text": "현 통신사 혜택·서비스를 더 잘 체감하려면 어떤 안내가 도움이 될지 확인",
+                          "position": 1
+                        }
+                      ],
+                      "branches": []
+                    },
+                    {
+                      "id": "c8f65425-874f-442d-9b59-270957f9aa6a",
+                      "if": "앞서 불편하다고 하신 경험이 있었다면,",
+                      "note": "",
+                      "position": 1,
+                      "checklist": [
+                        {
+                          "id": "ef08d012-03c3-44a5-89e8-b7aa89ad8b78",
+                          "text": "어떤 과정에서 어떤 일이 있었는지 순서대로 확인",
+                          "position": 0
+                        },
+                        {
+                          "id": "d7f797d2-32c2-401b-a8ea-aef040d030d5",
+                          "text": "통신사 측 대응이 있었다면 어떻게 처리되었는지 확인",
+                          "position": 1
+                        }
+                      ],
+                      "branches": []
+                    }
+                  ]
+                },
+                "response_type": "episode",
+                "duration_sec": 55,
+                "media": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "3030945c-dba1-43bd-8d7f-a2c4dec5df17",
+        "readable_id": "chapter_3",
+        "title": "가입 직후 여정",
+        "topics": [
+          {
+            "id": "db2b0bd3-348f-488a-961e-b606cfb102da",
+            "readable_id": "topic_1",
+            "title": "타임라인·알림",
+            "questions": [
+              {
+                "id": "dc22ea40-c02e-4613-817a-ff9628e88352",
+                "readable_id": "question_4",
+                "content": "가입 당일부터 약 2주까지를 하루 단위로 떠올려 보시겠어요? 기억나는 주요 일(개통·배송·설정·상담 등)을 순서대로 말씀해 주세요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": null,
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "c06a5bc5-eccd-4a62-a985-71f890d761a1",
+                      "text": "그중 가장 헷갈리거나 불안하거나 짜증 났던 순간이 언제였는지, 이유 확인",
+                      "position": 0
+                    },
+                    {
+                      "id": "3685f5dd-2aab-4e8b-a753-ee63708f4e37",
+                      "text": "그 순간 본인이 취한 행동(연락·검색·대기 등) 확인",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              },
+              {
+                "id": "67740a94-d28f-45e0-a4a4-c72416747652",
+                "readable_id": "question_5",
+                "content": "가입 후 문자(MMS·RCS)나 카카오톡 알림이 어느 정도 왔다고 느끼셨나요? 많다·적다보다는 어떤 점이 부담이었는지, 반대로 도움이 되거나 안심이 됐던 점이 있었는지 말씀해 주세요. 가입 초기에 꼭 받아야 한다고 생각하는 알림, 발송 빈도·순서에 대한 생각, 문자 대신 앱·푸시·체크리스트로 안내하는 것에 대한 의견도 편하게 이어서 말씀해 주세요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": null,
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "6f12ba5a-79e9-4b08-b3bb-7da68358de25",
+                      "text": "문의가 필요했던 순간이 있었다면 어디로·어떻게 연락했는지, 번호·채널이 여러 개여서 불편했는지 확인",
+                      "position": 0
+                    },
+                    {
+                      "id": "6983be6e-1d96-463d-8ab1-d6861aad561b",
+                      "text": "이상적인 고객 지원(한곳 통합·상황별 연결·챗 우선 등)에 대한 기대 확인",
+                      "position": 1
+                    }
+                  ],
+                  "branches": [
+                    {
+                      "id": "a6698dfc-f8ea-4bd4-8f84-dda61601af47",
+                      "if": "알림이 과하다고 느끼신 경우,",
+                      "note": "",
+                      "position": 0,
+                      "checklist": [
+                        {
+                          "id": "619a3dee-1c4a-43da-90ae-413db6341731",
+                          "text": "줄였으면 하는 종류나 시점이 있는지 확인",
+                          "position": 0
+                        },
+                        {
+                          "id": "56843399-cfeb-4769-acd3-8a3d30956efc",
+                          "text": "남기고 싶은 알림은 무엇인지 확인",
+                          "position": 1
+                        }
+                      ],
+                      "branches": []
+                    },
+                    {
+                      "id": "a9728db6-82a0-4b61-bee7-80ad64b29dbf",
+                      "if": "알림이 부족하거나 놓친 것 같다고 느끼신 경우,",
+                      "note": "",
+                      "position": 1,
+                      "checklist": [
+                        {
+                          "id": "4d1f0f33-6b09-4a58-9a04-0327b495c985",
+                          "text": "어떤 정보를 더 일찍 받았으면 했는지 확인",
+                          "position": 0
+                        }
+                      ],
+                      "branches": []
+                    }
+                  ]
+                },
+                "response_type": "episode",
+                "duration_sec": 70,
+                "media": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "12a7e9bf-22f5-42cf-8285-9699d943df7d",
+        "readable_id": "chapter_4",
+        "title": "요금·부가·결합",
+        "topics": [
+          {
+            "id": "1381e44e-8d01-4a29-971f-58aa36af96e7",
+            "readable_id": "topic_1",
+            "title": "요금제",
+            "questions": [
+              {
+                "id": "6cbf9ced-10af-44de-9665-ab9494764a9c",
+                "readable_id": "question_6",
+                "content": "앞서 말씀해 주신 요금제를 이번에 선택하신 이유는 무엇인가요? 본인 사용 패턴에 맞춰 직접 고르신 건지, 가입처에서 제안을 받아 선택하신 건지도 알려 주세요. 일정 기간(예: 3~6개월) 의무로 쓰는 조건이 있는 요금제인지, 있다면 그때 선택하신 이유와 걱정되는 점이 있는지도 말씀해 주세요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": null,
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "3b52d1a3-c37d-4c83-91a4-2355c6d032f6",
+                      "text": "의무 사용 기간 안내가 명확했는지, 변경 가능 시점을 알려주는 서비스에 관심이 있는지 확인",
+                      "position": 0
+                    }
+                  ],
+                  "branches": [
+                    {
+                      "id": "4f04532e-bf05-4ee3-96b1-cfc694f98a1d",
+                      "if": "의무 사용 기간이 있는 요금제라고 하신 경우,",
+                      "note": "",
+                      "position": 0,
+                      "checklist": [
+                        {
+                          "id": "5d1ff68d-e679-4bc4-b087-3a00f2f2768c",
+                          "text": "그 조건을 수용한 이유와 불안 요소가 있는지 확인",
+                          "position": 0
+                        }
+                      ],
+                      "branches": []
+                    },
+                    {
+                      "id": "9608a784-b999-42b7-9504-4a4a92b0c6d8",
+                      "if": "가입처 제안 위주로 선택하셨다고 한 경우,",
+                      "note": "",
+                      "position": 1,
+                      "checklist": [
+                        {
+                          "id": "da8fa450-b700-415a-8e55-a6cae41c311d",
+                          "text": "본인이 비교·검토한 범위가 어느 정도였는지 확인",
+                          "position": 0
+                        }
+                      ],
+                      "branches": []
+                    }
+                  ]
+                },
+                "response_type": "episode",
+                "duration_sec": 55,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "08bf048e-a3e5-4154-a3fe-c28a78557755",
+            "readable_id": "topic_2",
+            "title": "부가서비스",
+            "questions": [
+              {
+                "id": "2783ce2d-6bce-4607-87e1-377568bdd17f",
+                "readable_id": "question_7",
+                "content": "요금제에 OTT·미디어 등이 포함된 경우, 계정 연동이나 설정해야 할 일이 명확했는지, 그 과정에서 불편했던 점과 해결 방법을 말씀해 주세요. 통신 관련 유·무료 부가서비스는 가입하지 않으셨다면 이유(필요 없음·몰라서 등), 유료 부가를 쓰고 계시다면 본인이 직접 가입했는지·안내·해지 방법 인지 여부·미사용 시 독려나 해지 안내에 대한 느낌, 필요한 무료 부가를 안내받지 못해 불편했던 경험이 있는지도 함께 짚어 주세요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": null,
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "03cbe0da-94e0-47de-9fae-a418b19e83d0",
+                      "text": "OTT·미디어 해당 여부에 따라 연동 이슈를 한 번 더 구체화",
+                      "position": 0
+                    },
+                    {
+                      "id": "d1ad524d-d5f8-4c6c-8671-61accef8ac5a",
+                      "text": "유료 부가 가입이 본인 의도와 달랐는지 확인",
+                      "position": 1
+                    }
+                  ],
+                  "branches": [
+                    {
+                      "id": "4119088b-98e9-4785-9a7a-99ea85f31c7a",
+                      "if": "OTT·미디어 부가를 쓰는 요금제라고 하신 경우,",
+                      "note": "",
+                      "position": 0,
+                      "checklist": [
+                        {
+                          "id": "80f879c0-c84b-49d9-a5ed-9b66acf5884e",
+                          "text": "연동·로그인 과정에서 막힌 지점이 있었는지 확인",
+                          "position": 0
+                        }
+                      ],
+                      "branches": []
+                    },
+                    {
+                      "id": "23cc85c2-a1e4-4e30-87cc-23a76596ef7b",
+                      "if": "통신 부가를 일부러 넣지 않았다고 하신 경우,",
+                      "note": "",
+                      "position": 1,
+                      "checklist": [
+                        {
+                          "id": "6bf9849f-f2a4-4834-988d-e4a51c092039",
+                          "text": "정보 부족 때문인지, 필요 없어서인지 구분해 확인",
+                          "position": 0
+                        }
+                      ],
+                      "branches": []
+                    }
+                  ]
+                },
+                "response_type": "episode",
+                "duration_sec": 65,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "d50c24ef-32dc-4c8e-a122-df119477f70f",
+            "readable_id": "topic_3",
+            "title": "결합",
+            "questions": [
+              {
+                "id": "58b7a969-82c4-4466-a895-24493dd3711e",
+                "readable_id": "question_8",
+                "content": "결합(인터넷·TV·가족·지인 등)을 이번에 신청하셨거나, 당장은 아니지만 할 계획이 있으신가요? 결합을 하셨다면 어떤 상품과 누구와 묶이는지, 왜 결합을 선택하셨는지·기대했던 점은 무엇이었는지 말씀해 주세요. 진행 과정에서 어려움이 있었다면 무엇이었고 어떻게 해결하셨는지, 무선 결합 시 WAP 인증 동의가 잘 되었는지, 유선 개통·기사 방문 일정이 얽혀 불편했는지, 지금 결합 상태를 확인하는 방법이 쉬운지도 이야기해 주세요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": null,
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "7cebf437-4383-4867-ba2c-6224c87cc21f",
+                      "text": "결합을 하지 않은 이유나 시기를 미루는 이유가 있다면 확인",
+                      "position": 0
+                    }
+                  ],
+                  "branches": [
+                    {
+                      "id": "98c46f82-0609-42f0-b372-95c397a76727",
+                      "if": "결합을 신청·진행 중이라고 하신 경우,",
+                      "note": "",
+                      "position": 0,
+                      "checklist": [
+                        {
+                          "id": "eeabd8b3-0fcc-4501-87bb-44e8c79af1cf",
+                          "text": "과정 중 가장 헷갈렸던 단계 확인",
+                          "position": 0
+                        },
+                        {
+                          "id": "619dd21a-ce32-4790-a89d-1f54ec091fb4",
+                          "text": "WAP·유선 일정 등 기술·일정 이슈가 있었는지 확인",
+                          "position": 1
+                        }
+                      ],
+                      "branches": []
+                    },
+                    {
+                      "id": "64b8e8d7-d282-4acc-93cc-2606a813fe7c",
+                      "if": "결합 예정이 없거나 보류 중이라고 하신 경우,",
+                      "note": "",
+                      "position": 1,
+                      "checklist": [
+                        {
+                          "id": "3e3387a6-9d51-4e62-8e1e-563aa102897f",
+                          "text": "향후 결합을 염두에 두고 있는지, 조건이 무엇인지 확인",
+                          "position": 0
+                        }
+                      ],
+                      "branches": []
+                    }
+                  ]
+                },
+                "response_type": "episode",
+                "duration_sec": 65,
+                "media": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "03a708f6-eeef-46e1-a46c-049871e77a97",
+        "readable_id": "chapter_5",
+        "title": "멤버십·네트워크·청구",
+        "topics": [
+          {
+            "id": "536b532e-906e-446a-b2fa-dfcaee41bc76",
+            "readable_id": "topic_1",
+            "title": "멤버십",
+            "questions": [
+              {
+                "id": "381aaf24-ee97-4a48-93eb-0ef121f9c52c",
+                "readable_id": "question_9",
+                "content": "현재 통신사 멤버십 혜택에 관심이 어느 정도이신가요? 본인 등급과 그 기준에 대해 어떻게 생각하시는지, 승급일을 미리 알려주는 것·장기 고객 기준에 대한 생각도 말씀해 주세요. 가입 후 한 달 안에 실제로 써 보신 적이 있다면 마음에 들었던 점, 안 쓰셨다면 이유, 선착순 혜택에 대한 감정, 가입 초기 고객만을 위한 혜택이 있다면 어떻게 느끼실지도 짚어 주세요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": null,
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "b293f21c-f553-4d65-a98c-a194a212ad1c",
+                      "text": "멤버십을 가입 초기에 쓰게 하려면 어떤 안내·혜택이 필요할지 확인",
+                      "position": 0
+                    }
+                  ],
+                  "branches": [
+                    {
+                      "id": "f92f0b94-7a7b-492b-b083-0bab5260b7bc",
+                      "if": "멤버십을 거의 쓰지 않는다고 하신 경우,",
+                      "note": "",
+                      "position": 0,
+                      "checklist": [
+                        {
+                          "id": "24007a24-41b2-4550-ace7-567d4ae40808",
+                          "text": "안 쓰는 이유가 인지·절차·매력 부족 중 어디에 가까운지 확인",
+                          "position": 0
+                        }
+                      ],
+                      "branches": []
+                    }
+                  ]
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "0706498d-226c-41a1-a62c-fc139bf91bac",
+            "readable_id": "topic_2",
+            "title": "네트워크·청구",
+            "questions": [
+              {
+                "id": "388ee108-32d6-4c20-8c0a-a95e4f3f4f7b",
+                "readable_id": "question_10",
+                "content": "데이터 통화 품질(속도·끊김) 이슈를 겪으신 적이 있나요? 있다면 언제·어디서·얼마나 자주였는지, 변경 후 며칠 만에 처음 느끼셨는지 말씀해 주세요. 통신사가 해결해 줄 거라 기대하셨는지, 해결 경로가 명확했는지, 스스로 점검·해결 가이드를 앱 등으로 받는 것에 대한 생각도 이야기해 주세요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": null,
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "8d9bacf7-f4b4-403d-a0c1-78dfb18044fc",
+                      "text": "문제를 접수하거나 해결해 본 경로가 있다면 확인",
+                      "position": 0
+                    }
+                  ],
+                  "branches": [
+                    {
+                      "id": "11af35c9-b5b3-450c-9fba-854ee0fed841",
+                      "if": "품질 이슈를 겪으셨다고 한 경우,",
+                      "note": "",
+                      "position": 0,
+                      "checklist": [
+                        {
+                          "id": "a5a223fd-97aa-4566-9c67-61faf8d19fc9",
+                          "text": "기대한 대응과 실제 대응의 차이가 있었는지 확인",
+                          "position": 0
+                        }
+                      ],
+                      "branches": []
+                    },
+                    {
+                      "id": "57cb6315-c9ee-4d3c-b88a-b74697181b23",
+                      "if": "큰 문제는 없었다고 하신 경우,",
+                      "note": "",
+                      "position": 1,
+                      "checklist": [
+                        {
+                          "id": "d4b57b76-5906-4ca7-b9d5-b3d0c4ab788d",
+                          "text": "가끔 불편했던 상황이 있었는지 가볍게 확인",
+                          "position": 0
+                        }
+                      ],
+                      "branches": []
+                    }
+                  ]
+                },
+                "response_type": "episode",
+                "duration_sec": 50,
+                "media": []
+              },
+              {
+                "id": "683c644e-49a8-42e0-bf3d-f047618b9ffc",
+                "readable_id": "question_11",
+                "content": "첫 달 청구서를 확인해 보셨나요? 요금 구조가 이해되었는지, 어렵거나 불신이 생긴 부분, 가입 시 안내와 달랐던 점이 있었는지 말씀해 주세요. 청구 전에 얼마 나올지 미리 확인해 보셨다면 언제·어떤 채널로 확인하셨는지도 알려 주세요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": null,
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "ec3bd128-c9ab-43b0-bc37-9bdaf0a2c2c5",
+                      "text": "청구 금액을 예상과 다르게 느낀 포인트가 있었는지 확인",
+                      "position": 0
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "b77f6c76-8639-4a72-9b60-6d7ccad955e6",
+        "readable_id": "chapter_6",
+        "title": "우선순위·마무리",
+        "topics": [
+          {
+            "id": "294db9a4-e569-45b1-9b37-f3b83d255d77",
+            "readable_id": "topic_1",
+            "title": "정리",
+            "questions": [
+              {
+                "id": "bf5e9d7a-77e7-45b5-bfee-e6d7726ca2f6",
+                "readable_id": "question_12",
+                "content": "지금까지 이야기한 것 중에서 딱 한 가지만 고칠 수 있다면 무엇을 고치면 좋을까요? 이유와 함께 말씀해 주세요. 그리고 잠깐이라도 해지를 생각해 보신 순간이 있었다면 언제였고 무엇이 계기였는지도 알려 주세요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": null,
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "6c432819-05d9-453c-a698-cf7820aa3a7b",
+                      "text": "한 가지를 꼽기 어렵다면 상위 두 가지까지 확인",
+                      "position": 0
+                    },
+                    {
+                      "id": "c638c63e-e0e3-4665-bbb0-b167d5250c6e",
+                      "text": "해지를 생각하지 않았다면 그 이유도 가볍게 확인",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "interview_closing": {
+      "closing_message": "오늘 소중한 시간 내어 주셔서 감사합니다. 추가로 하실 말씀이 있으시면 편하게 말씀해 주시고, 없으시면 '없습니다'라고 해 주셔도 됩니다. 감사합니다!"
+    }
+  }
+}

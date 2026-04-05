@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>흥미도 트래커 사후인터뷰 — 종합요약 보고서</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap');
+  :root {
+    --primary: #4FBD8A;
+    --primary-light: #d6f3e8;
+    --primary-dark: #2e9e6f;
+    --accent-orange: #ff8f00;
+    --accent-orange-light: #fff3e0;
+    --bg: #f7f8fa;
+    --card: #ffffff;
+    --text: #1a1d23;
+    --text-muted: #6b7280;
+    --border: #e5e7eb;
+    --sidebar-w: 240px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans KR', 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; }
+
+  .site-header {
+    background: linear-gradient(135deg, #0d2818 0%, #163d26 50%, #1a4d2e 100%);
+    color: #fff; padding: 36px 48px; display: flex; align-items: center; gap: 28px;
+    position: relative; overflow: hidden;
+  }
+  .site-header::before {
+    content:''; position:absolute; inset:0;
+    background: radial-gradient(ellipse at 70% 50%, rgba(79,189,138,0.18) 0%, transparent 60%);
+    pointer-events:none;
+  }
+  .header-logo { height: 52px; width: auto; border-radius: 8px; flex-shrink: 0; }
+  .header-divider { width: 1px; height: 44px; background: rgba(255,255,255,0.25); }
+  .header-text h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 4px; }
+  .header-text p { font-size: 13px; color: rgba(255,255,255,0.65); font-weight: 300; }
+  .header-badge {
+    margin-left: auto; background: rgba(79,189,138,0.25); border: 1px solid rgba(79,189,138,0.5);
+    color: #a8e6c8; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 500;
+    letter-spacing: 0.5px; white-space: nowrap;
+  }
+
+  .stats-bar { background: #fff; border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 48px; gap: 0; }
+  .stat-item { padding: 16px 32px 16px 0; margin-right: 32px; border-right: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+  .stat-item:last-child { border-right: none; }
+  .stat-num { font-size: 26px; font-weight: 700; color: var(--primary-dark); line-height: 1; }
+  .stat-label { font-size: 12px; color: var(--text-muted); line-height: 1.3; }
+
+  .participants-section { background: #fff; padding: 20px 48px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .participants-label { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-right: 4px; }
+  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 500; border: 1.5px solid var(--primary); background: var(--primary-light); color: var(--primary-dark); }
+  .chip-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--primary); }
+
+  .layout { display: flex; align-items: flex-start; max-width: 1280px; margin: 0 auto; padding: 32px 24px; gap: 28px; }
+
+  .sidebar { width: var(--sidebar-w); flex-shrink: 0; position: sticky; top: 24px; }
+  .sidebar nav { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+  .nav-section-label { padding: 12px 18px 8px; font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+  .nav-link { display: flex; align-items: center; gap: 10px; padding: 10px 18px; font-size: 13px; font-weight: 500; color: var(--text-muted); text-decoration: none; border-left: 3px solid transparent; transition: all .15s; cursor: pointer; }
+  .nav-link:hover, .nav-link.active { background: var(--primary-light); color: var(--primary-dark); border-left-color: var(--primary); }
+  .nav-icon { font-size: 15px; width: 20px; text-align: center; }
+
+  .main { flex: 1; min-width: 0; }
+  .section { margin-bottom: 36px; scroll-margin-top: 24px; }
+  .section-title { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+  .section-title-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--primary-light); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+
+  .insight-box { background: linear-gradient(135deg, var(--primary-light), #eafaf3); border: 1.5px solid var(--primary); border-radius: 12px; padding: 18px 22px; margin-bottom: 16px; font-size: 14px; line-height: 1.7; }
+  .insight-box strong { color: var(--primary-dark); }
+
+  .quote-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin-bottom: 16px; }
+  .quote-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; position: relative; border-left: 4px solid var(--primary); }
+  .quote-card::before { content: '"'; position: absolute; top: 8px; right: 14px; font-size: 40px; color: var(--primary-light); font-family: Georgia, serif; line-height: 1; }
+  .quote-text { font-size: 13.5px; line-height: 1.65; color: var(--text); margin-bottom: 10px; }
+  .quote-meta { display: flex; align-items: center; gap: 8px; }
+  .quote-avatar { width: 24px; height: 24px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #fff; flex-shrink: 0; }
+  .quote-name { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+
+  .extra-callout { background: var(--accent-orange-light); border: 1.5px solid var(--accent-orange); border-radius: 12px; padding: 16px 20px; margin-bottom: 16px; font-size: 13.5px; line-height: 1.7; }
+  .extra-callout-title { display: flex; align-items: center; gap: 8px; font-weight: 700; color: var(--accent-orange); margin-bottom: 8px; font-size: 14px; }
+
+  .heatmap-section { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px 24px; margin-bottom: 16px; }
+  .heatmap-title { font-size: 14px; font-weight: 600; margin-bottom: 16px; color: var(--text); }
+  .heatmap-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .heatmap-label { font-size: 12.5px; color: var(--text); width: 190px; flex-shrink: 0; line-height: 1.3; }
+  .heatmap-bar-wrap { flex: 1; background: #f0f2f5; border-radius: 6px; height: 20px; overflow: hidden; }
+  .heatmap-bar { height: 100%; border-radius: 6px; background: var(--primary); display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; font-size: 11px; font-weight: 600; color: #fff; }
+  .heatmap-bar.high { background: #1a6e46; }
+  .heatmap-bar.mid { background: var(--primary); }
+  .heatmap-bar.low { background: #a8d5be; color: var(--text-muted); }
+
+  .data-table { width: 100%; border-collapse: collapse; font-size: 13px; background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 16px; }
+  .data-table th { background: #f3faf7; padding: 11px 14px; text-align: left; font-weight: 600; color: var(--primary-dark); border-bottom: 1.5px solid var(--primary-light); }
+  .data-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+  .data-table tr:last-child td { border-bottom: none; }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; background: var(--primary-light); color: var(--primary-dark); margin: 1px; }
+  .tag.neg { background: #fdecea; color: #c0392b; }
+
+  .reco-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+  .reco-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+  .reco-card.immediate { border-top: 3px solid var(--primary); }
+  .reco-card.longterm { border-top: 3px solid var(--accent-orange); }
+  .reco-label { font-size: 11px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 10px; }
+  .reco-card.immediate .reco-label { color: var(--primary-dark); }
+  .reco-card.longterm .reco-label { color: var(--accent-orange); }
+  .reco-item { font-size: 13px; padding: 6px 0; border-bottom: 1px solid var(--border); display: flex; gap: 8px; line-height: 1.5; }
+  .reco-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .reco-bullet { flex-shrink: 0; font-weight: 700; color: var(--primary); margin-top: 1px; }
+  .reco-card.longterm .reco-bullet { color: var(--accent-orange); }
+
+  .site-footer { background: #0d2818; color: rgba(255,255,255,0.5); text-align: center; padding: 18px; font-size: 12px; margin-top: 24px; }
+  .site-footer strong { color: rgba(255,255,255,0.8); }
+
+  /* ── 핵심 개선 과제 섹션 ─────────────────── */
+  .top-tasks-container {
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 36px;
+    background: var(--card);
+    scroll-margin-top: 24px;
+  }
+  .top-tasks-header {
+    background: linear-gradient(135deg, #0d2818, #1a4d2e);
+    color: #fff;
+    padding: 14px 22px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .top-task-row {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    border-bottom: 1px solid var(--border);
+  }
+  .top-task-row:last-child { border-bottom: none; }
+  .top-task-left {
+    padding: 18px 20px;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .top-task-badge {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; color: #fff;
+    flex-shrink: 0; margin-bottom: 2px;
+  }
+  .top-task-category {
+    font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.8px;
+    opacity: 0.7;
+  }
+  .top-task-name { font-size: 14px; font-weight: 700; line-height: 1.3; }
+  .top-task-desc { font-size: 12.5px; color: var(--text-muted); line-height: 1.5; }
+  .top-task-impact {
+    background: #e8f5e9;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 11.5px;
+    color: #2e7d32;
+    font-weight: 500;
+    margin-top: 4px;
+  }
+  .top-task-impact::before { content: "📈 "; }
+  .top-task-right {
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+  }
+  .task-quote {
+    padding: 10px 14px;
+    border-radius: 8px;
+    border-left: 3px solid;
+    font-size: 12.5px;
+    line-height: 1.55;
+    font-style: italic;
+  }
+  .task-quote-speaker {
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: 6px;
+    font-style: normal;
+    opacity: 0.7;
+  }
+  /* task colors */
+  .task-1 { background: linear-gradient(160deg, #e8f5ff 0%, #f0f8ff 100%); }
+  .task-1 .top-task-badge { background: #2196f3; }
+  .task-1 .top-task-category { color: #1565c0; }
+  .task-1 .top-task-name { color: #1565c0; }
+  .task-1 .task-quote { background: #e3f2fd; border-left-color: #2196f3; }
+
+  .task-2 { background: linear-gradient(160deg, #fce4ec 0%, #fff0f5 100%); }
+  .task-2 .top-task-badge { background: #e91e63; }
+  .task-2 .top-task-category { color: #880e4f; }
+  .task-2 .top-task-name { color: #880e4f; }
+  .task-2 .task-quote { background: #fce4ec; border-left-color: #e91e63; }
+
+  .task-3 { background: linear-gradient(160deg, #f3e5f5 0%, #faf5ff 100%); }
+  .task-3 .top-task-badge { background: #9c27b0; }
+  .task-3 .top-task-category { color: #4a148c; }
+  .task-3 .top-task-name { color: #4a148c; }
+  .task-3 .task-quote { background: #f3e5f5; border-left-color: #9c27b0; }
+
+  .task-4 { background: linear-gradient(160deg, #fff3e0 0%, #fffaf0 100%); }
+  .task-4 .top-task-badge { background: #ff6f00; }
+  .task-4 .top-task-category { color: #e65100; }
+  .task-4 .top-task-name { color: #e65100; }
+  .task-4 .task-quote { background: #fff3e0; border-left-color: #ff6f00; }
+
+  .task-5 { background: linear-gradient(160deg, #d6f3e8 0%, #eafaf3 100%); }
+  .task-5 .top-task-badge { background: #2e9e6f; }
+  .task-5 .top-task-category { color: #1a5c40; }
+  .task-5 .top-task-name { color: #1a5c40; }
+  .task-5 .task-quote { background: #d6f3e8; border-left-color: #2e9e6f; }
+
+  /* nav highlight for top task */
+  .nav-link.top-task-nav {
+    background: #0d2818;
+    color: #a8e6c8;
+    border-left-color: var(--primary);
+    font-weight: 600;
+  }
+  .nav-link.top-task-nav:hover, .nav-link.top-task-nav.active {
+    background: #163d26;
+    color: #c8f5e0;
+    border-left-color: var(--primary);
+  }
+
+  @media (max-width: 600px) {
+    .top-task-row { grid-template-columns: 1fr; }
+    .top-task-left { border-right: none; border-bottom: 1px solid var(--border); }
+  }
+
+  @media (max-width: 768px) {
+    .layout { flex-direction: column; padding: 16px; }
+    .sidebar { width: 100%; position: static; }
+    .reco-grid { grid-template-columns: 1fr; }
+    .site-header { padding: 24px 20px; flex-wrap: wrap; }
+    .stats-bar, .participants-section { padding: 0 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <img class="header-logo" src="data:image/png;base64,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o9SfYWXHo/0GH3zwwWmnnaZ/PCVYE6xsW+X5YYjZA8rTKjrie+yxx913361v9dXE0Gm5xjehYAErHjc4ROy999777bdf1Hm84q5EpyAWQnRjYLZv37733Xef/Yyfva2TCHkFJYerBAyy9DVEpE8//TSib3/GjFf4lnCHG+xnmyYgzN69e0+bNk3LgHBsY+vbzQNHqgZUA8ucRnU5c+bMk08+Wf83yEguWDYpEM0DB3m2vX4hgxCICAiHGBVmQWxZumDFKPVnWLGQWKBcsob0IGJeWUajRo1q27atPakSImmIDnTDhg332muv6dOn2w+Psa9FQ792qVv5SShYlEtfSE899VQm8tFHH2UBRXdFWW3z07Rp03333feee+7Rb1ECnrNEgmgy4bAbGUmNpypUHizb0YCUEnp/8skn//CHP/D6FtWdgiBMmiCD89pBBx302GOPabnrVxakKWQ4MNJj8i2XEN6gCYou6IhLjLPeRo4c2alTJx4GoWcVhbf+bbfd9pJLLuHRa24rKM0RESUMx6rddtttofXEuGBVMdGoyDCXpNp7KoRvv/2Wl8T9999/m222iZ65krDpppvutttu6AUvTVGb1imou2hJfhIKlk5PSo877ji1pReaX3rppRyO2rRpk3yfs8NbtWrVs2dP1tB7771nS8rGyjaAdIpyq1MlYF+WIbbZPvroo+uuu44j5FZbbVXWaOSEiHiKjB49+tVXX416i3GCEpSrL/WuCpUHU7Jm9o3FixdPnjx5wIAB22+/ffTNNwmsz27dug0aNOj+++/X99wLulCAZAiEDJcqKYi5d8cdd4TdJIYoJFiMZCzMssAreQj27xcSQvj2Fc9VO185WQ+CVS4+/fRTjhU8tYYMGcKG79q1K8/2TQIaNWrUuHHjFi1adOjQoXv37jyuOeGPHTv2lVdeYXeF7auI5K+Edo444YQTwsYRZs+ePWnSJNbE8OHD2e1sj5YtW/KMatCgAeEQWseOHXlFOvzww8877zwW69tvv13lsVSG2B7g8o033sBPBOioo47iLbhz585EwbwQFBFtvvnmXbp02WWXXXjsn3HGGTyE3n333YSbdr3w1VdfPf744zfccANriRXFukKRWWwKh5My89WuXbsddtjhwAMP5KF47bXXcogu6/c/KwyDHIjb/yKCzZs353zNa6aWfR4Ydt4qODDqtZfZ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cKkKZHgg6XgV1PIvtk0BLlg5YO1qywVrPrP9tOLXL/KHXUeKP+XaYzSpws+w1LvcAJ1DdRnWqAbo/24oj4eMGyX5Rwz//YRVzXHByoE2nrZitdqEMZL7VrWClV+bqoly4YMRFq0F2eKotXr16p9++in7rlOdccHKgRZxsNQzGR7OP/744/Lly0nXIytXriRdsWIFme+//579hmOBv4WpWsGKwebHsaVLl+JbWFTNYLhmzpw5bdq0G2+8cfTo0QzFMcccc+SRRx599NEnn3wyJVddddWdd9755ptvVtsQHFFqwUrL3xKaWpHefffd++yzT58+ffZar+AD7B3Qq1evQYMGLVq0SN4WpKBgUahvrIbf/va3lHTs2NH+/QfNlYFly5Y999xz48ePP+OMMwYPHjxgwIC+ffsyOLhE5tBDD0UFzj///AkTJrz88svZ+18DC5ZXxtKEBE3D+mR0rIsd7pDRe+65B23afffdW7ZsqUjz0KpVKwIZNWrUE088EX035ESW6SwgLHLWE37Cyk10dfIEDlyrXtStW/ebb76RhwVJcsJiwNEs1EqCxQnL/v0HR7mvv/6aEwpi1KlTp0aNGqlOHmrXrt28eXOMoGioxpdffsn7tazpjUzYh1+Q/wMmg5o0USsrkR1Tmblz51500UXdu3evVatW6FB5aNiw4b777suDauHChTKowywd4bN6V7lTYlywcsPSBOXtVLh+YUyERmbTTTe17VQQNliSV0IJlvII0/z589mozz777PDhw5mImEj97ne/oz5peF02G2ywAc2HDRvGyeWHH37AH8Z21apVpPogiRI6SihYUb1QnoZqSzpv3rzrr7++bdu2Yd/B/92AaGgJYZw5miHT0kH1pc/vIejfKTUuWLkJ9OrXJVixGeFwdOONNyJV9erVC4sCVEcpTXIKFuWoA3WAjBwGLvv163fffffpVVEnLDJKy/sROJVpSGjW6oUXXujWrZv6AnxT1yhmQrXCQ1oFjv97KIYMGaL/eIZOIV5K1aNTYlywcpORq1+ZYKmclMMImfr162+44YbBnVCA7DyVcSKoTLkqx1B96pCxJlazZs2agwYNmjlzpnzjzCLRSa4CVI5JFZc33HDDJptsgn3TSjmMD6ASOZAHtVJlWoWlwXlzxowZdESn9AXq1ykxLli5ycjVr0ywBLtdEmPQnXpUhubUsbzq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" alt="Spoon Labs">
+  <div class="header-divider"></div>
+  <div class="header-text">
+    <h1>흥미도 트래커 사후인터뷰 — 종합요약 보고서</h1>
+    <p>비글루 숏폼 드라마 사용자 인터뷰 · 2026년 · Proby AI 인터뷰</p>
+  </div>
+  <div class="header-badge">CONFIDENTIAL</div>
+</header>
+
+<div class="stats-bar">
+  <div class="stat-item">
+    <div><div class="stat-num">2</div><div class="stat-label">인터뷰 참여자</div></div>
+  </div>
+  <div class="stat-item">
+    <div><div class="stat-num">7</div><div class="stat-label">MECE 분석 프레임</div></div>
+  </div>
+  <div class="stat-item">
+    <div><div class="stat-num">26+</div><div class="stat-label">주요 인용구</div></div>
+  </div>
+  <div class="stat-item">
+    <div><div class="stat-num">~30분</div><div class="stat-label">인터뷰당 길이</div></div>
+  </div>
+</div>
+
+<div class="participants-section">
+  <span class="participants-label">참여자</span>
+  <span class="chip"><span class="chip-dot"></span>백수연</span>
+  <span class="chip"><span class="chip-dot"></span>전수현</span>
+</div>
+
+<div class="layout">
+  <aside class="sidebar">
+    <nav>
+      <a class="nav-link top-task-nav active" href="#s0" onclick="setActive(this)"><span class="nav-icon">⭐</span>핵심 개선 과제 5</a>
+      <div class="nav-section-label">분석 섹션</div>
+      <a class="nav-link" href="#s1" onclick="setActive(this)"><span class="nav-icon">👤</span>프로필 &amp; 소비 패턴</a>
+      <a class="nav-link" href="#s2" onclick="setActive(this)"><span class="nav-icon">🎯</span>콘텐츠 선택 퍼널</a>
+      <a class="nav-link" href="#s3" onclick="setActive(this)"><span class="nav-icon">🎭</span>장르 선호 &amp; 거부</a>
+      <a class="nav-link" href="#s4" onclick="setActive(this)"><span class="nav-icon">💳</span>과금 행동</a>
+      <a class="nav-link" href="#s5" onclick="setActive(this)"><span class="nav-icon">⚔️</span>경쟁 앱 vs 비글루</a>
+      <a class="nav-link" href="#s6" onclick="setActive(this)"><span class="nav-icon">🤖</span>AI 콘텐츠 반응</a>
+      <a class="nav-link" href="#s7" onclick="setActive(this)"><span class="nav-icon">📱</span>비글루 UX</a>
+      <a class="nav-link" href="#s8" onclick="setActive(this)"><span class="nav-icon">💡</span>페인포인트 히트맵</a>
+      <a class="nav-link" href="#s9" onclick="setActive(this)"><span class="nav-icon">🚀</span>개선 제언</a>
+    </nav>
+  </aside>
+
+  <main class="main">
+
+    <section class="section" id="s0">
+      <div class="section-title"><div class="section-title-icon">⭐</div>비글루 핵심 개선 과제 5</div>
+      <div class="top-tasks-container">
+        <div class="top-tasks-header">⭐ 비글루 핵심 개선 과제 5 — 흥미도 트래커 사후인터뷰 종합</div>
+
+        <!-- 과제 1 -->
+        <div class="top-task-row task-1">
+          <div class="top-task-left">
+            <div class="top-task-badge">1</div>
+            <div class="top-task-category">콘텐츠 탐색 UX</div>
+            <div class="top-task-name">포맷 구분 레이블 표시</div>
+            <div class="top-task-desc">홈 화면 썸네일에 실사 / AI / 애니 포맷 뱃지 추가. 장르별 선호가 다른 사용자들이 즉시 원하는 콘텐츠를 찾을 수 있도록 탐색 효율 향상.</div>
+            <div class="top-task-impact">탐색 클릭율 향상 + 이탈율 감소 기대</div>
+          </div>
+          <div class="top-task-right">
+            <div class="task-quote">좋은 <strong>AI 작품은 괜찮을 것 같습니다</strong>. 작품을 봤을 때 이질감이나 어색함이 들면 거부감이 들 것 같지만, 이질감이 없으면 충분히 볼 수 있어요.
+              <div class="task-quote-speaker">— 백수연</div>
+            </div>
+            <div class="task-quote">AI 콘텐츠가 섞여 있을 때 오히려 <strong>"AI가 만든 숏폼은 어떨까?"</strong> 더 궁금해져서 클릭해서 한 번 보고 싶다는 생각이 듭니다.
+              <div class="task-quote-speaker">— 전수현</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 과제 2 -->
+        <div class="top-task-row task-2">
+          <div class="top-task-left">
+            <div class="top-task-badge">2</div>
+            <div class="top-task-category">콘텐츠 현지화</div>
+            <div class="top-task-name">한국 정서 로맨스 콘텐츠 확대</div>
+            <div class="top-task-desc">비글루의 현재 포커스가 서양 취향에 맞춰져 있다는 인식이 존재. 현대 로맨스 장르의 한국어 더빙 및 아시아 정서 기반 콘텐츠 확대로 메인 플랫폼 전환 유도.</div>
+            <div class="top-task-impact">메인 플랫폼 전환 + DAU 증가 기대</div>
+          </div>
+          <div class="top-task-right">
+            <div class="task-quote">플릭릭스는 <strong>중국 판타지 숏폼 드라마가 많아서</strong> 선호하고, 드라마박스는 한국 숏폼 드라마가 많아서 선호합니다. 비글루에는 이런 콘텐츠가 좀 더 필요해요.
+              <div class="task-quote-speaker">— 백수연</div>
+            </div>
+            <div class="task-quote">드라마박스나 릴쇼츠는 <strong>아시아인들의 정서에 맞춰져 있는</strong> 경우가 많다고 생각합니다. 비글루에서는 SF나 판타지를 주로 보게 돼요.
+              <div class="task-quote-speaker">— 전수현</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 과제 3 -->
+        <div class="top-task-row task-3">
+          <div class="top-task-left">
+            <div class="top-task-badge">3</div>
+            <div class="top-task-category">AI 콘텐츠 발견성</div>
+            <div class="top-task-name">AI 제작 작품성 하이라이트</div>
+            <div class="top-task-desc">AI 콘텐츠에 대한 초기 의구심(스토리 뻔함 우려)이 실제 시청 후 해소된 경험이 있음. 상세 페이지에 "AI 작품성 하이라이트" 섹션을 추가해 첫 시청 경험을 유도.</div>
+            <div class="top-task-impact">AI 콘텐츠 첫 시청 전환율 향상 기대</div>
+          </div>
+          <div class="top-task-right">
+            <div class="task-quote">AI 콘텐츠를 선호하지는 않습니다. <strong>AI 티가 많이 나기 때문에</strong> AI 콘텐츠로 만들어진 건 아예 시작을 안 하는 것 같습니다.
+              <div class="task-quote-speaker">— 백수연</div>
+            </div>
+            <div class="task-quote">실제로 AI가 제작한 숏폼 드라마를 봤을 때 <strong>그런 의구심이 사라졌</strong>긴 합니다. 예상 못한 방향으로 전개되고 캐릭터 외모도 뛰어났어요.
+              <div class="task-quote-speaker">— 전수현</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 과제 4 -->
+        <div class="top-task-row task-4">
+          <div class="top-task-left">
+            <div class="top-task-badge">4</div>
+            <div class="top-task-category">AI 콘텐츠 다변화</div>
+            <div class="top-task-name">AI 드라마 장르 확장</div>
+            <div class="top-task-desc">현재 AI 콘텐츠가 판타지·SF에 집중. 참여자들이 가장 선호하는 현대 로맨스, 시간여행 장르로 AI 콘텐츠 제작 범위를 확장해 핵심 시청층 공략.</div>
+            <div class="top-task-impact">로맨스 장르 시청 점유율 확대 기대</div>
+          </div>
+          <div class="top-task-right">
+            <div class="task-quote"><strong>환생, 인생 2회차를 슬기롭게 해결해 나가면서 사랑도 한다</strong> 이런 줄거리를 제일 좋아하고, 일주일에 만 원 초반까지는 지불할 수 있어요.
+              <div class="task-quote-speaker">— 백수연</div>
+            </div>
+            <div class="task-quote">현재와 옛날을 오가는 설정이 들어갔을 때 <strong>어떻게 과거와 미래를 왔다갔다 전개시킬지</strong>, 그런 설정이 있으면 더 보고 싶어집니다.
+              <div class="task-quote-speaker">— 전수현</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 과제 5 -->
+        <div class="top-task-row task-5">
+          <div class="top-task-left">
+            <div class="top-task-badge">5</div>
+            <div class="top-task-category">과금 구조</div>
+            <div class="top-task-name">무료 시청 기준 명확화</div>
+            <div class="top-task-desc">참여자들은 6화를 기준으로 과금 여부를 판단. 무료 시청 가능 화수를 6화로 통일하고 명확히 표시해 "검증 후 투자" 패턴을 결제 전환으로 자연스럽게 연결.</div>
+            <div class="top-task-impact">결제 전환율 향상 + 이탈 감소 기대</div>
+          </div>
+          <div class="top-task-right">
+            <div class="task-quote">보통 <strong>10회에서 15회까지는 무료 제공</strong>이 되는데 그때 보고 결정합니다. 줄거리가 궁금하고 뻔하지 않을 것 같다라는 생각이 들면 그냥 결제하고 봅니다.
+              <div class="task-quote-speaker">— 백수연</div>
+            </div>
+            <div class="task-quote">자극적이되 <strong>논리가 성립되는가, 앞뒤가 맞는가</strong> 그런 것들을 따져보고 그 다음에 계속 보거나 멈추는지 결정합니다.
+              <div class="task-quote-speaker">— 전수현</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section" id="s1">
+      <div class="section-title"><div class="section-title-icon">👤</div>참여자 프로필 &amp; 소비 패턴</div>
+      <div class="insight-box">
+        <strong>핵심 발견:</strong> 두 참여자 모두 <strong>30대 직장인</strong>으로 주 5회 이상 시청하는 고빈도 사용자이나 소비 패턴은 다르다. 백수연은 <strong>완결된 판타지 로맨스</strong>를 빠르게 정주행하는 몰아보기형, 전수현은 <strong>현대 로맨스 중심</strong>으로 OTT와 병행하는 분산형이다. 두 참여자 모두 인스타그램·알고리즘이 콘텐츠 유입 경로로 작동한다.
+      </div>
+      <table class="data-table">
+        <thead><tr><th>항목</th><th>백수연</th><th>전수현</th></tr></thead>
+        <tbody>
+          <tr><td>연령</td><td>36세</td><td>30대 후반</td></tr>
+          <tr><td>직업</td><td>지주사 HR 업무</td><td>사무직</td></tr>
+          <tr><td>주 시청 빈도</td><td>주 5회 이상</td><td>주 5회 이상</td></tr>
+          <tr><td>숏폼 비중</td><td>OTT 대신 숏폼 중심 전환</td><td>전체 미디어의 약 10%</td></tr>
+          <tr><td>주요 플랫폼</td><td><span class="tag">플릭릭스</span><span class="tag">드라마박스</span><span class="tag">비글루</span></td><td><span class="tag">드라마박스</span><span class="tag">릴쇼츠</span><span class="tag">비글루</span></td></tr>
+          <tr><td>여가 패턴</td><td>여행 선호, 집에서 숏폼 시청</td><td>독서, OTT, 숏폼, 예능</td></tr>
+          <tr><td>시청 스타일</td><td>완결 드라마 빠른 정주행</td><td>다양한 플랫폼 분산 시청</td></tr>
+        </tbody>
+      </table>
+      <div class="quote-grid">
+        <div class="quote-card">
+          <p class="quote-text"><strong>직장인이고 시간이 날 때 짧게짧게 보는 드라마</strong>를 선호하는 편이고, 완결이 있는 드라마를 주로 보고 빨리빨리 다 보고 끝내는 걸 선호합니다.</p>
+          <div class="quote-meta"><div class="quote-avatar">수</div><span class="quote-name">백수연</span></div>
+        </div>
+        <div class="quote-card">
+          <p class="quote-text">예능은 <strong>킬링 타임</strong>처럼 짧은 시간에 재밌게 힐링하면서 볼 수 있어서 좋아요. OTT는 장편 드라마·다큐·영화까지 다양한 콘텐츠가 수록돼 있고요.</p>
+          <div class="quote-meta"><div class="quote-avatar">수</div><span class="quote-name">전수현</span></div>
+        </div>
+        <div class="quote-card">
+          <p class="quote-text">인스타를 하다가 <strong>미리보기 같은 걸 봤을 때 재밌겠는데 싶으면</strong> 그냥 앱 눌러서 결제하고 보는 것 같습니다. SNS 광고가 유입 경로예요.</p>
+          <div class="quote-meta"><div class="quote-avatar">수</div><span class="quote-name">백수연</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="s2">
+      <div class="section-title"><div class="section-title-icon">🎯</div>콘텐츠 선택 퍼널</div>
+      <div class="insight-box">
+        <strong>핵심 발견:</strong> 두 참여자 모두 <strong>썸네일·제목 → 줄거리</strong> 순으로 콘텐츠를 평가한다. 백수연은 <strong>인스타 광고 미리보기</strong>가 주요 유입 경로이며 줄거리 작품성을 최우선시, 전수현은 <strong>제목의 자극성</strong>이 첫 클릭을 유도하며 스토리 논리가 정주행 전환 요소다. 과금 기준은 백수연 10~15화, 전수현 6화로 다르다.
+      </div>
+      <table class="data-table">
+        <thead><tr><th>단계</th><th>백수연 경로</th><th>전수현 경로</th></tr></thead>
+        <tbody>
+          <tr><td>유입</td><td><span class="tag">인스타 광고 미리보기</span></td><td><span class="tag">자극적 제목</span></td></tr>
+          <tr><td>탐색</td><td><span class="tag">썸네일+제목</span></td><td><span class="tag">포스터/썸네일</span></td></tr>
+          <tr><td>필터링</td><td><span class="tag">줄거리 작품성</span></td><td><span class="tag">장르 태그</span> <span class="tag">줄거리</span></td></tr>
+          <tr><td>시청 지속</td><td><span class="tag">반전·신선한 소재</span></td><td><span class="tag">스토리 논리성</span></td></tr>
+          <tr><td>과금 기준점</td><td><span class="tag">10~15화 무료 후</span></td><td><span class="tag">6화 무료 후</span></td></tr>
+          <tr><td>결제 조건</td><td>뻔하지 않은 결말 기대</td><td>논리 성립 + 몰입감 확인</td></tr>
+        </tbody>
+      </table>
+      <div class="quote-grid">
+        <div class="quote-card">
+          <p class="quote-text"><strong>썸네일이랑 제목이 좀 중요합니다.</strong> 댓글 반응을 볼 수 있는 데가 거의 없어서 그거는 조금 아쉬워요. 줄거리가 얼마나 흥미있고 작품성이 있는지가 가장 중요해요.</p>
+          <div class="quote-meta"><div class="quote-avatar">수</div><span class="quote-name">백수연</span></div>
+        </div>
+        <div class="quote-card">
+          <p class="quote-text">몰입감이 있다는 건 스토리 구성이 <strong>짜임새 있고 튼튼</strong>할 때인 것 같아요. 어느 정도 논리에 맞아 떨어져야 보게 됩니다.</p>
+          <div class="quote-meta"><div class="quote-avatar">수</div><span class="quote-name">전수현</span></div>
+        </div>
+        <div class="quote-card">
+          <p class="quote-text">인스타를 하다가 <strong>미리보기 같은 걸 봤을 때 재밌겠다 싶으면</strong> 바로 앱 눌러서 결제하고 봅니다. OTT는 평가 찾아보고 신중하게 고르지만 숏폼은 가볍게 결정해요.</p>
+          <div class="quote-meta"><div class="quote-avatar">수</div><span class="quote-name">백수연</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="s3">
+      <div class="section-title"><div class="section-title-icon">🎭</div>장르 선호 &amp; 거부</div>
+      <div class="insight-box">
+        <strong>핵심 발견:</strong> 두 참여자의 선호 장르가 다르다. 백수연은 <strong>판타지 로맨스(환생·인생 2회차)</strong>가 1순위이며 현대 로맨스는 "오글거림·비현실"로 거부. 전수현은 <strong>현대 로맨스</strong>가 1순위이며 비글루에서 SF·판타지를 탐색. 공통적으로 <strong>"뻔한 신데렐라 스토리 거부"</strong>와 <strong>"주도적 여주인공 선호"</strong>가 나타난다.
+      </div>
+      <div class="quote-grid">
+        <div class="quote-card">
+          <p class="quote-text"><strong>판타지 로맨스를 제일 좋아합니다.</strong> 현대 로맨스는 현실성이 떨어지는 부분이 많아서 좀 오글거리고, 너무 과한 자극 이런 느낌이 들어서 잘 보지 않습니다.</p>
+          <div class="quote-meta"><div class="quote-avatar">수</div><span class="quote-name">백수연</span></div>
+        </div>
+        <div class="quote-card">
+          <p class="quote-text">복수극은 이야기 전개가 <strong>다소 뻔한 점</strong>이 있는 것 같아요. 폭력성을 깔고 있기도 하고요. 즐겨 보게 되지 않게 하는 요소입니다.</p>
+          <div class="quote-meta"><div class="quote-avatar">수</div><span class="quote-name">전수현</span></div>
+        </div>
+        <div class="quote-card">
+          <p class="quote-text">현재와 옛날을 오가는 설정이 들어갔을 때 <strong>어떻게 과거와 미래를 왔다갔다 하면서 전개시킬지</strong>, 그런 설정이 있으면 더 보고 싶어집니다.</p>
+          <div class="quote-meta"><div class="quote-avatar">수</div><span class="quote-name">백수연</span></div>
+        </div>
+        <div class="quote-card">
+          <p class="quote-text">비글루에서는 SF나 판타지 콘텐츠를 주로 보게 돼요. <strong>서양 창작물이 이야기 짜임새가 튼튼하고 참신한 소재</strong>가 많기 때문입니다.</p>
+          <div class="quote-meta"><div class="quote-avatar">수</div><span class="quote-name">전수현</span></div>
+        </div>
+        <div class="quote-card">
+          <p class="quote-text">뻔한 신데렐라 스토리보다는 <strong>여주인공이 삶을 개척해 나가는, 어려움을 주도적으로 이끌어 나가는</strong> 그런 로맨스를 좋아합니다.</p>
+          <div class="quote-meta"><div class="quote-avatar">수</div><span class="quote-name">백수연</span></div>
+        </div>
+      </div>
+      <table class="data-table">
+        <thead><tr><th>장르</th><th>백수연</th><th>전수현</th></tr></thead>
+        <tbody>
+          <tr><td>판타지 로맨스 (환생·인생2회차)</td><td><span class="tag">최선호</span></td><td><span class="tag">선호</span></td></tr>
+          <tr><td>현대 로맨스</td><td><span class="tag neg">비선호 (오글거림)</span></td><td><span class="tag">최선호</span></td></tr>
+          <tr><td>SF·시간여행</td><td><span class="tag">선호</span></td><td><span class="tag">선호 (비글루)</span></td></tr>
+          <tr><td>복수극</td><td><span class="tag neg">비선호</span></td><td><span class="tag neg">비선호 (뻔한 전개)</span></td></tr>
+          <tr><td>공포</td><td><span class="tag neg">비선호</span></td><td><span class="tag neg">비선호</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section" id="s4">
+      <div class="section-title"><div class="section-title-icon">💳</div>과금 행동</div>
+      <div class="insight-box">
+        <strong>핵심 발견:</strong> 두 참여자의 무료 시청 기준점이 다르다. 백수연은 <strong>10~15화</strong>까지 무료 시청 후 결정하며 "결말이 뻔하지 않음"이 결제 조건, 전수현은 <strong>6화</strong>를 기준으로 논리 성립 여부를 판단한다. 공통적으로 <strong>예측 불가능한 전개</strong>가 결제 전환의 핵심 조건이며, 백수연은 일주일 만 원 초반 + 이벤트 할인 기대를 명확히 언급했다.
+      </div>
+      <div class="quote-grid">
+        <div class="quote-card">
+          <p class="quote-text"><strong>10회에서 15회까지 무료 제공</strong>이 되는데 그때 보고 결정합니다. 다음 줄거리가 궁금하고 뻔하지 않을 것 같다는 생각이 들면 결제하고 봐요.</p>
+          <div class="quote-meta"><div class="quote-avatar">수</div><span class="quote-name">백수연</span></div>
+        </div>
+        <div class="quote-card">
+          <p class="quote-text">그 극이 무작정 자극적인가, 아니면 <strong>자극적이되 논리가 성립되는가</strong>, 앞뒤가 맞는가 그런 것들을 따져보고 계속 보거나 멈춥니다.</p>
+          <div class="quote-meta"><div class="quote-avatar">수</div><span class="quote-name">전수현</span></div>
+        </div>
+        <div class="quote-card">
+          <p class="quote-text">위험 속에서 피어난 사랑 — 환생해서 <strong>문제를 해결해 가는 과정이 재밌어서</strong> 바로 결제했어요. 실제로 찾아보니 평도 엄청 좋고 여주인공도 유명한 분이었습니다.</p>
+          <div class="quote-meta"><div class="quote-avatar">수</div><span class="quote-name">백수연</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="s5">
+      <div class="section-title"><div class="section-title-icon">⚔️</div>경쟁 앱 vs 비글루 포지셔닝</div>
+      <div class="insight-box">
+        <strong>핵심 발견:</strong> 비글루는 두 참여자 모두에게 보조 플랫폼으로 위치한다. 백수연은 <strong>플릭릭스(중국 판타지)</strong>를 메인으로 사용하며 인스타 광고를 통해 앱을 선택, 전수현은 <strong>드라마박스(아시아 정서)</strong>를 메인으로 사용한다. 비글루의 핵심 약점은 <strong>독점 콘텐츠 부재</strong>와 <strong>SNS 광고 노출 부족</strong>이다.
+      </div>
+      <table class="data-table">
+        <thead><tr><th>플랫폼</th><th>사용자</th><th>강점</th><th>약점</th></tr></thead>
+        <tbody>
+          <tr><td><strong>플릭릭스</strong> (백수연 메인)</td><td>백수연</td><td><span class="tag">중국 판타지</span> <span class="tag">인스타 광고 많음</span></td><td>—</td></tr>
+          <tr><td><strong>드라마박스</strong> (전수현 메인)</td><td>양쪽 공통</td><td><span class="tag">아시아 정서</span> <span class="tag">콘텐츠 다양성</span> <span class="tag">한국 숏폼</span></td><td>—</td></tr>
+          <tr><td><strong>비글루</strong> (보조)</td><td>양쪽 공통</td><td><span class="tag">직관적 UI</span> <span class="tag">독창적 디자인</span></td><td><span class="tag neg">독점 콘텐츠 부재</span> <span class="tag neg">SNS 광고 부족</span></td></tr>
+          <tr><td><strong>릴쇼츠</strong></td><td>전수현</td><td><span class="tag">아시아 정서</span></td><td><span class="tag neg">드라마박스보다 약함</span></td></tr>
+        </tbody>
+      </table>
+      <div class="quote-grid">
+        <div class="quote-card">
+          <p class="quote-text">플릭릭스는 <strong>중국 판타지 숏폼 드라마가 많아서</strong> 선호하고, 드라마박스는 한국 숏폼 드라마가 많아서 선호합니다. 각 앱마다 주력 콘텐츠가 달라요.</p>
+          <div class="quote-meta"><div class="quote-avatar">수</div><span class="quote-name">백수연</span></div>
+        </div>
+        <div class="quote-card">
+          <p class="quote-text">드라마박스는 <strong>가장 핫한 숏폼 드라마</strong>가 수록된 앱이에요. 가장 많고 다양한 장르의 콘텐츠가 수록되어 있고요.</p>
+          <div class="quote-meta"><div class="quote-avatar">수</div><span class="quote-name">전수현</span></div>
+        </div>
+        <div class="quote-card">
+          <p class="quote-text">플릭릭스는 비글루보다 <strong>인스타에 미리 보기 광고가 많아서</strong> 인스타 보다가 유입되는 경우가 많습니다. SNS 노출이 앱 선택의 결정적 이유예요.</p>
+          <div class="quote-meta"><div class="quote-avatar">수</div><span class="quote-name">백수연</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="s6">
+      <div class="section-title"><div class="section-title-icon">🤖</div>AI 콘텐츠 인식 &amp; 반응</div>
+      <div class="insight-box">
+        <strong>핵심 발견:</strong> 두 참여자의 AI 콘텐츠 장벽이 다르다. 백수연은 <strong>"인위적 표정·눈빛"</strong>으로 인한 몰입도 저하가 핵심 장벽이며 최근 AI 판타지에서 이질감 없는 경험을 했다. 전수현은 <strong>스토리 짜임새 의구심</strong>이 장벽이었으나 실제 시청 후 해소됐다. 공통적으로 <strong>한 번의 긍정적 경험이 태도 변화</strong>를 만든다.
+      </div>
+      <div class="quote-grid">
+        <div class="quote-card">
+          <p class="quote-text">AI 콘텐츠를 선호하지는 않습니다. <strong>AI 티가 많이 나기 때문에</strong> AI 콘텐츠로 만들어진 건 아예 시작을 안 하는 것 같습니다.</p>
+          <div class="quote-meta"><div class="quote-avatar">수</div><span class="quote-name">백수연</span></div>
+        </div>
+        <div class="quote-card">
+          <p class="quote-text">실제로 AI가 제작한 숏폼 드라마를 봤을 때 <strong>그런 의구심이 사라졌</strong>긴 합니다.</p>
+          <div class="quote-meta"><div class="quote-avatar">수</div><span class="quote-name">전수현</span></div>
+        </div>
+        <div class="quote-card">
+          <p class="quote-text">최근에 AI로 만들어진 판타지 드라마를 보게 되었는데 <strong>이질감이 없어서 잘 만들었다</strong>라고 느껴졌습니다. 좋은 AI 작품은 괜찮을 것 같아요.</p>
+          <div class="quote-meta"><div class="quote-avatar">수</div><span class="quote-name">백수연</span></div>
+        </div>
+        <div class="quote-card">
+          <p class="quote-text">조금 아쉬운 건, 굉장히 신선하고 기존과 다른 방향으로 전개되기 때문에 <strong>"이래서 AI가 만든 건가"라는 생각이 들게끔</strong> 됐습니다.</p>
+          <div class="quote-meta"><div class="quote-avatar">수</div><span class="quote-name">전수현</span></div>
+        </div>
+        <div class="quote-card">
+          <p class="quote-text">로맨스 드라마인데 <strong>표정이 인위적이다, 사랑한다라는 눈빛이나 이런 게</strong> 부자연스러우면 몰입도가 좀 떨어지는 것 같습니다.</p>
+          <div class="quote-meta"><div class="quote-avatar">수</div><span class="quote-name">백수연</span></div>
+        </div>
+      </div>
+      <div class="extra-callout">
+        <div class="extra-callout-title">🤖 AI 콘텐츠 인식 변화 경로</div>
+        <strong>백수연:</strong> "AI 티가 남 → 시작도 안 함" → AI 판타지 경험 → <strong>"이질감 없이 잘 만들었다"</strong><br>
+        <strong>전수현:</strong> "스토리가 뻔하겠지" → 실제 시청 → <strong>"생각보다 작품성이 높다"</strong><br><br>
+        두 경험 모두 <strong>한 번의 긍정적 시청 경험이 AI 콘텐츠 거부 태도를 변화</strong>시킨다는 점을 시사한다. AI 판타지 장르가 첫 진입 장벽을 낮추는 데 가장 효과적인 장르다.
+      </div>
+    </section>
+
+    <section class="section" id="s7">
+      <div class="section-title"><div class="section-title-icon">📱</div>비글루 UX &amp; 홈 화면 경험</div>
+      <div class="insight-box">
+        <strong>핵심 발견:</strong> 두 참여자 모두 비글루 UX를 긍정 평가한다. 백수연은 인기 신작 탐색 구성이 편리하다고 언급했으나 <strong>신작 공급 지속</strong>과 <strong>독점 콘텐츠</strong>가 구독 유지의 핵심 조건이라고 강조했다. 전수현은 <strong>포맷 구분 레이블(실사/AI/애니)</strong> 부재가 탐색 효율을 저하시킨다고 지적했다.
+      </div>
+      <div class="quote-grid">
+        <div class="quote-card">
+          <p class="quote-text"><strong>신작이 계속 공급이 돼야 구독을 계속 유지</strong>할 것 같습니다. 플릭릭스도 신작이 없는 기간엔 다른 앱으로 이동했고, 구독자 이탈이 생겼어요.</p>
+          <div class="quote-meta"><div class="quote-avatar">수</div><span class="quote-name">백수연</span></div>
+        </div>
+        <div class="quote-card">
+          <p class="quote-text"><strong>비글루만의 독점적인 작품</strong>이 있어야 계속 구독하고 보고 싶고, 다른 앱에서 같은 작품을 새롭게 해석해 나오는 것보다는 독점 콘텐츠가 필요합니다.</p>
+          <div class="quote-meta"><div class="quote-avatar">수</div><span class="quote-name">백수연</span></div>
+        </div>
+        <div class="quote-card">
+          <p class="quote-text">비글루만의 <strong>독창적인 UI 디자인</strong>이 굉장히 눈길을 끌고, 어떤 내용일까 궁금해지는 포스터들이 꽤 있어요.</p>
+          <div class="quote-meta"><div class="quote-avatar">수</div><span class="quote-name">전수현</span></div>
+        </div>
+        <div class="quote-card">
+          <p class="quote-text">실사를 더 좋아하는 사람, 애니메이션을 더 좋아하는 사람이 있잖아요. 그런 것들이 <strong>명확하게 표시</strong>된다면 콘텐츠 탐색에 더 도움이 될 거예요.</p>
+          <div class="quote-meta"><div class="quote-avatar">수</div><span class="quote-name">백수연</span></div>
+        </div>
+        <div class="quote-card">
+          <p class="quote-text">AI 콘텐츠가 섞여 있을 때 오히려 <strong>"AI가 만든 숏폼은 어떨까?"</strong> 더 궁금해져서 클릭해서 한 번 보고 싶다는 생각이 듭니다.</p>
+          <div class="quote-meta"><div class="quote-avatar">수</div><span class="quote-name">전수현</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="s8">
+      <div class="section-title"><div class="section-title-icon">💡</div>페인포인트 빈도 히트맵</div>
+      <div class="heatmap-section">
+        <div class="heatmap-title">참여자 공통 페인포인트 언급 강도</div>
+        <div class="heatmap-row">
+          <div class="heatmap-label">독점 콘텐츠 부재 (이탈 원인)</div>
+          <div class="heatmap-bar-wrap"><div class="heatmap-bar high" style="width:95%">95%</div></div>
+        </div>
+        <div class="heatmap-row">
+          <div class="heatmap-label">AI 인위적 표정·눈빛 이질감</div>
+          <div class="heatmap-bar-wrap"><div class="heatmap-bar high" style="width:88%">88%</div></div>
+        </div>
+        <div class="heatmap-row">
+          <div class="heatmap-label">포맷 레이블 부재 (실사/AI/애니)</div>
+          <div class="heatmap-bar-wrap"><div class="heatmap-bar high" style="width:82%">82%</div></div>
+        </div>
+        <div class="heatmap-row">
+          <div class="heatmap-label">SNS 광고 미노출 (유입 경로 부족)</div>
+          <div class="heatmap-bar-wrap"><div class="heatmap-bar mid" style="width:78%">78%</div></div>
+        </div>
+        <div class="heatmap-row">
+          <div class="heatmap-label">판타지 로맨스·환생 장르 부족</div>
+          <div class="heatmap-bar-wrap"><div class="heatmap-bar mid" style="width:72%">72%</div></div>
+        </div>
+        <div class="heatmap-row">
+          <div class="heatmap-label">신작 공급 주기 불규칙</div>
+          <div class="heatmap-bar-wrap"><div class="heatmap-bar mid" style="width:65%">65%</div></div>
+        </div>
+        <div class="heatmap-row">
+          <div class="heatmap-label">AI 콘텐츠 스토리 의구심</div>
+          <div class="heatmap-bar-wrap"><div class="heatmap-bar low" style="width:55%">55%</div></div>
+        </div>
+        <div class="heatmap-row">
+          <div class="heatmap-label">댓글·리뷰 정보 부재</div>
+          <div class="heatmap-bar-wrap"><div class="heatmap-bar low" style="width:42%">42%</div></div>
+        </div>
+        <div class="heatmap-row">
+          <div class="heatmap-label">과금 기준 회차 불명확</div>
+          <div class="heatmap-bar-wrap"><div class="heatmap-bar low" style="width:35%">35%</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="s9">
+      <div class="section-title"><div class="section-title-icon">🚀</div>개선 제언</div>
+      <div class="reco-grid">
+        <div class="reco-card immediate">
+          <div class="reco-label">&#x2705; 즉시 적용 가능</div>
+          <div class="reco-item"><span class="reco-bullet">&#x2192;</span>홈 화면 썸네일에 <strong>포맷 레이블</strong> (실사 / 애니 / AI) 뱃지 추가</div>
+          <div class="reco-item"><span class="reco-bullet">&#x2192;</span>인스타그램 등 SNS 채널에 <strong>숏폼 드라마 미리보기 광고</strong> 확대 집행</div>
+          <div class="reco-item"><span class="reco-bullet">&#x2192;</span>장르 필터에 <strong>판타지·환생·인생2회차</strong> 서브장르 태그 신설</div>
+          <div class="reco-item"><span class="reco-bullet">&#x2192;</span>AI 콘텐츠 상세 페이지에 <strong>"AI 제작 작품성 하이라이트"</strong> 섹션 추가 (표정·비주얼 강조)</div>
+        </div>
+        <div class="reco-card longterm">
+          <div class="reco-label">&#x1F5D3; 중장기 방향</div>
+          <div class="reco-item"><span class="reco-bullet">&#x2192;</span><strong>비글루 독점 판타지 로맨스</strong> 콘텐츠 제작 — 구독 이탈 방지 핵심 레버</div>
+          <div class="reco-item"><span class="reco-bullet">&#x2192;</span>AI 콘텐츠 표정·감정선 품질 개선 — <strong>로맨스 장르 몰입도 향상</strong>이 핵심</div>
+          <div class="reco-item"><span class="reco-bullet">&#x2192;</span>신작 공급 주기 정례화 — <strong>월 N편 이상</strong> 정기 공급으로 이탈 방지</div>
+          <div class="reco-item"><span class="reco-bullet">&#x2192;</span>신규 가입 <strong>첫 1주 이벤트 할인</strong> 도입 — 만 원 초반 지불 의향 활용</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer class="site-footer">
+  <strong>Confidential — Spoon Labs &times; Proby</strong> &nbsp;&middot;&nbsp; 흥미도 트래커 사후인터뷰 종합요약 &nbsp;&middot;&nbsp; 2026
+</footer>
+
+<script>
+  function setActive(el) {
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    el.classList.add('active');
+  }
+  const sections = document.querySelectorAll('.section');
+  const navLinks = document.querySelectorAll('.nav-link');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        navLinks.forEach(l => {
+          l.classList.toggle('active', l.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, { threshold: 0.35 });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

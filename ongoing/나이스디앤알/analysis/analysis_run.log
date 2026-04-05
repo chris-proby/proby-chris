@@ -1,0 +1,153 @@
+Quantization is not supported for ArchType::neon. Fall back to non-quantized model.
+Quantization is not supported for ArchType::neon. Fall back to non-quantized model.
+============================================================
+나이스디앤알 Exit Interview 종합 통계 분석 시작
+============================================================
+
+[1-2] 데이터 로드 및 정제
+  총 155개 인터뷰 파일 로드 완료
+  정제 후 유효 데이터: 155건
+  의향자: 63건 / 이탈자: 92건
+
+[4] 기술통계 분석
+                        count    mean     std     min    25%    50%      75%      max    cv
+나이                      155.0   41.84   11.57   25.00   31.5   39.0    51.50    64.00  0.28
+total_duration_sec      155.0  112.15  297.49    0.00    0.0    0.0     0.00  1366.00  2.65
+num_participant_turns   155.0   24.05    7.28   13.00   18.0   22.0    28.00    45.00  0.30
+participant_char_count  155.0  991.69  819.30  159.00  475.5  711.0  1213.50  5213.00  0.83
+avg_response_len        155.0   42.29   35.28    9.41   18.1   29.0    56.03   248.24  0.83
+
+  [성별]
+성별
+남    103
+여     52
+
+  [나이대]
+나이대
+30대     53
+50대     34
+40대     28
+20대     25
+60대+    15
+
+  [그룹구분]
+그룹구분
+보유자 그룹    63
+의향자 그룹    63
+이탈자 그룹    29
+
+  [구매희망_엔진타입_1순위]
+구매희망_엔진타입_1순위
+HEV     67
+가솔린     59
+EV      21
+PHEV     4
+디젤       2
+         2
+
+  [보유차_엔진타입]
+보유차_엔진타입
+가솔린    97
+       39
+HEV    13
+디젤      5
+LPG     1
+  저장: 01_descriptive_stats.png
+
+[5] 통계 검정
+  Mann-Whitney U (나이): U=3512.5, p=0.0252, r=-0.212
+  Mann-Whitney U (응답 길이): U=3579.0, p=0.0132
+  Chi-square (성별×그룹): χ²=6.506, p=0.0108, Cramér's V=0.205
+  Chi-square (엔진타입×그룹): χ²=5.365, p=0.3730
+  Kruskal-Wallis (나이대×응답길이): H=7.270, p=0.1223
+  Spearman ρ (나이 vs 응답길이): ρ=0.144, p=0.0733
+  Pearson r (인터뷰시간 vs 응답길이): r=-0.039, p=0.6281
+  저장: 02_statistical_tests.png
+
+[6] TF-IDF 분석
+  형태소 분석 진행 중...
+  [debug] id=0, tokens_cnt=56, sample=['안녕', '전형', '쏘나타', '느낌']
+  [debug] id=1, tokens_cnt=91, sample=['소나타', '소나타', '소나타', '미숙']
+  [debug] id=2, tokens_cnt=171, sample=['아반떼', '업데이트', '캐릭터', '라인']
+  비어있지 않은 토큰 문서: 155/155
+  TF-IDF 행렬 크기: (155, 500)
+  TF-IDF 상위 30 키워드: ['생각', '부분', '가격', '느낌', '운전', '실내', '외관', '기술', '다음', '세단']
+  저장: 03_tfidf_keywords.png
+  저장: 04_dotplot_keywords.png
+
+[7] LDA 토픽 모델링 (n_topics=6)
+  LDA 퍼플렉서티(Perplexity): 286.8
+  토픽 1: 생각 | 가격 | 기술 | 기능 | 부분 | 외관 | 운전 | 구매
+  토픽 2: 부분 | 다음 | 가격 | 외관 | 변속기 | 전반 | 기존 | 구매
+  토픽 3: 가격 | 생각 | 운전 | 느낌 | 기술 | 연비 | 마음 | 부분
+  토픽 4: 생각 | 부분 | 경우 | 느낌 | 기술 | 실내 | 자체 | 아이
+  토픽 5: 생각 | 느낌 | 다음 | 부분 | 외관 | 가격 | 실내 | 세단
+  토픽 6: 버튼 | 조작 | 안전 | 물리 | 운전 | 터치 | 생각 | 형식
+  저장: 05_lda_topics.png
+  저장: 06_topic_distribution_heatmap.png
+
+[8] 주성분 분석 (PCA)
+  PC1=2.1%, PC2=1.7%
+  90% 설명을 위한 주성분 수: 1
+  저장: 07_pca_analysis.png
+
+[9] K-평균 군집 분석
+  최적 K (Silhouette 기준): 3
+  클러스터별 그룹 분포:
+is_intender  의향자  이탈자
+row_0                
+0              6    3
+1             56   88
+2              1    1
+  저장: 08_kmeans_clustering.png
+
+[10] 계층적 군집 분석 (상위 60개 샘플)
+  저장: 09_dendrogram.png
+
+[11] 로지스틱 회귀 분석
+  CV AUC-ROC: 0.548 ± 0.091
+  저장: 10_logistic_regression.png
+
+[12] 랜덤 포레스트 특성 중요도
+  저장: 11_random_forest_importance.png
+  RF OOB 지원 여부: False
+  TOP 5 키워드: ['내부', '구입', '유지', '실내', '운전']
+
+[17] 대응 분석 (Correspondence Analysis)
+  저장: 17_correspondence_analysis.png
+
+[13] 감성 분석
+  의향자 평균 감성: 0.6261
+  이탈자 평균 감성: 0.6195
+  저장: 12_sentiment_analysis.png
+  Mann-Whitney U (감성점수): U=2866.5, p=0.9100
+
+[14] 개념 동시출현 네트워크 (상위 40 노드)
+  네트워크 노드: 40, 엣지: 740
+  네트워크 밀도: 0.9487
+  PageRank TOP 10: ['생각', '디자인', '부분', '가격', '기술', '느낌', '운전', '외관', '실내', '세단']
+  저장: 13_cooccurrence_network.png
+  저장: 14_network_centrality.png
+
+[16] 인터뷰 복잡도 분석
+  저장: 16_interview_complexity.png
+  의향자 평균 TTR: 0.7274
+  이탈자 평균 TTR: 0.7525
+
+[18] 코사인 유사도 분석 (n=50)
+  저장: 18_cosine_similarity_heatmap.png
+  의향자 내 평균 유사도: 0.1673
+  이탈자 내 평균 유사도: 0.1486
+  그룹 간 평균 유사도: 0.1614
+
+[15] 워드클라우드 생성
+  저장: 15_wordclouds.png
+
+[19] HTML 리포트 생성
+  HTML 리포트 저장: /Users/churryboy/Desktop/proby-sync/60. 유저인사이트팀/나이스디앤알/analysis/output/NICE_DNR_Statistical_Analysis_Report.html
+
+============================================================
+분석 완료!
+  → 그림 파일: /Users/churryboy/Desktop/proby-sync/60. 유저인사이트팀/나이스디앤알/analysis/output/figures
+  → HTML 리포트: /Users/churryboy/Desktop/proby-sync/60. 유저인사이트팀/나이스디앤알/analysis/output/NICE_DNR_Statistical_Analysis_Report.html
+============================================================

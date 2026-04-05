@@ -1,0 +1,35 @@
+name: PR Checks
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [wip]
+
+jobs:
+  e2e:
+    name: E2E 스모크 테스트
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Node.js 설정
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: 의존성 설치
+        run: npm ci
+
+      - name: CSS 빌드
+        run: npm run build:css
+
+      - name: E2E 테스트 실행
+        run: node tests/e2e.js
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          TEST_BASE_URL: https://panel-sand-one.vercel.app

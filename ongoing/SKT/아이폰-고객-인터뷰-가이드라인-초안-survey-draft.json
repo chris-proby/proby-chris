@@ -1,0 +1,3171 @@
+{
+  "survey_draft": {
+    "title": "아이폰 고객 인터뷰 가이드라인 (초안 0319)",
+    "description": "엑셀 가이드라인_0319 + checklist·branch(오디오 양식). 생성: build_아이폰_인터뷰_survey_draft.py / iphone_natural_phrases.json",
+    "welcome_title": "안녕하세요 인터뷰에 참여해 주셔서 감사합니다",
+    "welcome_message": "오늘 인터뷰는 약 2시간 분량으로 설계되어 있으며, 구간별로 나누어 진행될 수 있습니다.",
+    "goal": "아이폰 이용 맥락과 통신사 가입·이용 여정에서의 인지·탐색·구매·개통·온보딩·이용 경험을 파악하고, 이전·현재 통신사 비교 관점에서 니즈와 NPS·추천에 영향을 준 요인을 이해한다",
+    "target_audience": "아이폰을 주 단말로 사용 중이거나 최근 가입·기변한 통신사 고객",
+    "quota": null,
+    "user_groups": [],
+    "user_inputs": [
+      {
+        "id": "e86ef11d-32f8-47a8-9687-44ef311d8ff8",
+        "readable_id": "user_input_1",
+        "label": "이름을 적어 주세요 (또는 닉네임)"
+      }
+    ],
+    "screener_questions": [],
+    "interview_opening": "안녕하세요. 저는 오늘 인터뷰를 진행하는 AI 인터뷰어입니다.\n정답은 없으며, 경험하신 대로 편하게 말씀해 주시면 됩니다. 이전 통신사와 현재 통신사를 비교해 답해 주시는 구간이 있습니다.\n준비되셨으면 '준비되었어요'라고 말씀해 주세요.",
+    "interview_chapters": [
+      {
+        "id": "9dcf36f3-70a7-442e-8903-21cf354f2d9a",
+        "readable_id": "chapter_1",
+        "title": "오프닝 · 아이폰 및 통신사 기초",
+        "topics": [
+          {
+            "id": "105b7b2f-24f8-4d8f-888a-e10e7ed9a518",
+            "readable_id": "topic_1_1",
+            "title": "아이폰 이용 경험 간략하게",
+            "questions": [
+              {
+                "id": "221be1b3-4b89-4338-afc0-1953dad54b54",
+                "readable_id": "question_1_1_1",
+                "content": "아이폰은 언제부터 쓰셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q1]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q1] 분류: 아이폰 이용 경험 간략하게",
+                  "root_checklist": [
+                    {
+                      "id": "1117a718-ed48-4a68-a86d-678b8abf54b8",
+                      "text": "그때 아이폰으로 바꾸시게 된 계기나 이유가 있다면 편하게 말씀해 주세요.",
+                      "position": 0
+                    },
+                    {
+                      "id": "0058c55a-bf31-42e0-88e7-2ca3e68b3be3",
+                      "text": "아이폰을 쓰기 시작한 시점이 말로 특정된다",
+                      "position": 1
+                    },
+                    {
+                      "id": "12d962d5-ffdd-4112-871e-42f142d381e5",
+                      "text": "아이폰을 택한 이유·전환 계기가 한 가지 이상 구체적으로 나온다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "54698825-c1f9-4dd9-b852-08ffb128b288",
+                "readable_id": "question_1_1_2",
+                "content": "아이폰 말고 같이 쓰시는 애플 기기가 있으신가요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q2]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q2]",
+                  "root_checklist": [
+                    {
+                      "id": "137a2ec8-c578-4eb3-b9d2-ff0c09c3b191",
+                      "text": "iCloud나 애플 원 같은 유료 서비스는 구독하고 계신 게 있으신가요?",
+                      "position": 0
+                    },
+                    {
+                      "id": "e3b2b734-33f0-4c23-98b9-d9726bef8515",
+                      "text": "아이폰 외 애플 기기 보유 여부와 유료 구독 서비스가 각각 정리되어 말해진다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "ae3973bd-96d8-4078-8e82-509d97a88b74",
+                "readable_id": "question_1_1_3",
+                "content": "아이폰은 보통 몇 년 주기로 바꾸시는 편이세요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q3]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q3]",
+                  "root_checklist": [
+                    {
+                      "id": "44265bc2-4ea2-4217-89a4-6db6bd130016",
+                      "text": "이번에 바꾸시게 된 계기도 궁금하고요. 예전에 쓰시던 폰은 보상판매나 중고로 넘기셨는지도 알려 주시겠어요?",
+                      "position": 0
+                    },
+                    {
+                      "id": "22505c7a-4292-450c-b7ad-ebf3b9c1efbb",
+                      "text": "기변 주기·이번에 바꾼 계기·이전 단말 처리 방식(보상판매·중고 등)이 빠지지 않았는지 확인한다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "c4168b64-3a2a-422f-8c52-da9e82ef58c3",
+                "readable_id": "question_1_1_4",
+                "content": "아이폰 바꾸실 때 연락처나 사진 같은 데이터는 어떻게 옮기셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q4]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q4]",
+                  "root_checklist": [
+                    {
+                      "id": "3b7c109b-1736-4344-9909-21ac05eb37d4",
+                      "text": "지금은 어떻게 관리하고 계신지도요.",
+                      "position": 0
+                    },
+                    {
+                      "id": "a1bc2b60-b134-4464-8227-d2ed4f263426",
+                      "text": "데이터 이전·백업·관리 방식이 실제 행동 수준으로 설명된다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "a7eb2651-52fa-49d8-87af-0f8d11e8ebec",
+            "readable_id": "topic_1_2",
+            "title": "현재 통신사 경험 확인",
+            "questions": [
+              {
+                "id": "60622d77-d934-4657-b2c9-adf5934f3ada",
+                "readable_id": "question_1_2_5",
+                "content": "지금 쓰시는 통신사는 얼마나 오래 쓰셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q5]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q5] 분류: 현재 통신사 경험 확인",
+                  "root_checklist": [
+                    {
+                      "id": "d3f8255f-179b-4bfd-af81-1e691971ad7c",
+                      "text": "요금제는 어떤 걸 쓰고 계시고, 인터넷이나 IPTV 같은 결합은 있으신가요",
+                      "position": 0
+                    },
+                    {
+                      "id": "a758591f-91fd-4c5b-a835-942361b0ccfa",
+                      "text": "요금은 본인이 직접 내시는지도요.",
+                      "position": 1
+                    },
+                    {
+                      "id": "7d365c4b-5a73-4972-afa5-8dbe8cad1062",
+                      "text": "이용 기간·요금제·결합·납부 방식이 각각 말로 정리될 때까지 추가 질문한다",
+                      "position": 2
+                    },
+                    {
+                      "id": "c0f3b6d7-01f0-4a1e-b2e0-4cd119217d87",
+                      "text": "이전(Q7)·현재(Q5)를 구분해 말하도록 유도한다",
+                      "position": 3
+                    },
+                    {
+                      "id": "1f29a9e1-8b20-41ef-9e8f-1ae47a5613c3",
+                      "text": "숫자·기간이 애매하면 대략 시점으로라도 특정한다",
+                      "position": 4
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "68f201b6-2e22-44fa-8d0c-7d2ce1bcabea",
+                "readable_id": "question_1_2_6",
+                "content": "그 통신사를 주변 사람에게 추천한다고 생각해 보시면, 몇 점 정도 주고 싶으세요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q6]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q6]",
+                  "root_checklist": [
+                    {
+                      "id": "6de7f377-7af4-46f0-8db2-97eab986b622",
+                      "text": "0은 전혀 추천 안 함, 10은 적극 추천 정도로 숫자로 말씀해 주시고, 그 점수를 주신 이유랑 점수를 더 올리려면 통신사가 뭘 해 주면 좋을지도 함께 부탁드릴게요.",
+                      "position": 0
+                    },
+                    {
+                      "id": "a50456d1-239c-4f89-b87d-1812eb0d7ec2",
+                      "text": "추천 의향(NPS) 점수를 숫자(또는 명확한 척도)로 말하게 한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "071d597c-64a7-4c9a-8240-dc897784251c",
+                      "text": "그 점수를 준 이유를 최소 한 가지 이상 구체적으로 말하게 한다",
+                      "position": 2
+                    },
+                    {
+                      "id": "ab008aba-213f-4f22-b9e2-8236e8625771",
+                      "text": "점수를 올리려면 통신사가 무엇을 해야 하는지(또는 어떤 경험이 필요했는지)를 묻는다",
+                      "position": 3
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "a8c1bcd7-8b09-4910-a5a8-8c60dbd0d7b6",
+            "readable_id": "topic_1_3",
+            "title": "이전 통신사 경험 확인",
+            "questions": [
+              {
+                "id": "4c37d5f8-3998-434c-896b-b3e3d5b52c4a",
+                "readable_id": "question_1_3_7",
+                "content": "그전에 쓰시던 통신사는 대략 얼마나 쓰셨고, 어떤 요금제였는지, 결합은 있었는지, 요금은 누가 내셨는지도 편하게 말씀해 주세요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q7]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q7] 분류: 이전 통신사 경험 확인",
+                  "root_checklist": [
+                    {
+                      "id": "f5a3954f-b5f1-4080-accd-3d0ee65c5426",
+                      "text": "이용 기간·요금제·결합·납부 방식이 각각 말로 정리될 때까지 추가 질문한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "6f0a4dc9-699e-45b8-bcc2-0b3eab399be5",
+                      "text": "이전(Q7)·현재(Q5)를 구분해 말하도록 유도한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "adf03c46-64b6-45f5-9f80-8e47632c75dc",
+                      "text": "숫자·기간이 애매하면 대략 시점으로라도 특정한다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "6b36d908-93fb-4d66-8628-5dcd5475669f",
+                "readable_id": "question_1_3_8",
+                "content": "그 통신사를 추천한다고 생각하면 몇 점 정도 주시겠어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q8]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q8]",
+                  "root_checklist": [
+                    {
+                      "id": "b5c71e19-7cac-4fa5-a958-099b7c3fa9eb",
+                      "text": "역시 0에서 10 사이 숫자로, 그 점수 이유랑 점수를 올리려면 뭐가 필요했을지도요.",
+                      "position": 0
+                    },
+                    {
+                      "id": "43abef54-1f24-4f90-8649-3a6dd921d556",
+                      "text": "추천 의향(NPS) 점수를 숫자(또는 명확한 척도)로 말하게 한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "43a7a413-0ba7-401e-b387-f79ea5d316f7",
+                      "text": "그 점수를 준 이유를 최소 한 가지 이상 구체적으로 말하게 한다",
+                      "position": 2
+                    },
+                    {
+                      "id": "76a9f550-388f-4dad-a7e5-67282ea9583d",
+                      "text": "점수를 올리려면 통신사가 무엇을 해야 하는지(또는 어떤 경험이 필요했는지)를 묻는다",
+                      "position": 3
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "58c0d0e3-c578-4ddc-9c45-edb2919eaab0",
+        "readable_id": "chapter_2",
+        "title": "통신사 가입 여정",
+        "topics": [
+          {
+            "id": "6c2f3dc3-9b4c-415c-ba76-f67b3b45f28d",
+            "readable_id": "topic_2_1",
+            "title": "통신사 or 단말기 결정 순서 확인",
+            "questions": [
+              {
+                "id": "fa19ed66-c7a0-4f80-b669-c4b7aac073d0",
+                "readable_id": "question_2_1_1",
+                "content": "당시에 아이폰을 먼저 정하셨는지, 통신사를 먼저 정하셨는지 기억나시는 대로 말씀해 주실 수 있을까요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q9]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q9] 분류: 통신사 or 단말기 결정 순서 확인 상세: 결정순서(우선순위) 확인",
+                  "root_checklist": [
+                    {
+                      "id": "dcd1a24f-5b87-4565-a1ff-fe6e534d24fc",
+                      "text": "그 순서로 고민하시게 된 이유도 궁금해요.",
+                      "position": 0
+                    },
+                    {
+                      "id": "b79c19e8-901e-409a-a761-f4039ea0075a",
+                      "text": "결정 순서(통신사 우선 vs 단말 우선)가 한 문장으로 드러나는지 확인한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "8ddb9cb1-3e40-40cc-b53d-8015733f964a",
+                      "text": "그 순서를 택한 이유·고민이 구체적으로 나올 때까지 추가 질문한다",
+                      "position": 2
+                    },
+                    {
+                      "id": "d38376b2-0b99-44ca-9c8a-25e0b0d8cd8a",
+                      "text": "첫 접점 채널(Q10)과 연결해 ‘가장 먼저 한 행동’이 말로 확보되면 다음으로 넘어간다",
+                      "position": 3
+                    }
+                  ],
+                  "branches": [
+                    {
+                      "id": "aac1c4a0-e584-4d6c-ab0b-52fc6fd27f4d",
+                      "if": "통신사를 먼저 정했다고 말한 경우",
+                      "note": "",
+                      "position": 0,
+                      "checklist": [
+                        {
+                          "id": "081b5452-1a4c-4ee1-be94-e2728b55f24f",
+                          "text": "통신사 인지·탐색(Q12~Q16)을 단말기 결정보다 먼저 깊게 진행한다",
+                          "position": 0
+                        },
+                        {
+                          "id": "5b30cc4a-31ff-4988-9a0d-e43835c1fc8c",
+                          "text": "첫 접점(Q10)과 연결해 순서를 재확인한다",
+                          "position": 1
+                        }
+                      ],
+                      "branches": []
+                    },
+                    {
+                      "id": "141e8f0f-d280-4e8c-9139-558a2bb34d46",
+                      "if": "아이폰(단말)을 먼저 정했다고 말한 경우",
+                      "note": "",
+                      "position": 1,
+                      "checklist": [
+                        {
+                          "id": "2f486fc2-4a61-4cfb-9d42-5f3faea96fce",
+                          "text": "단말기 결정(Q17~Q24)을 통신사 인지·탐색(Q12~Q16)보다 먼저 깊게 진행한다",
+                          "position": 0
+                        }
+                      ],
+                      "branches": []
+                    },
+                    {
+                      "id": "9e232075-098e-41d3-8146-38b4b9f84ca1",
+                      "if": "두 가지를 동시에·반복하며 정했다고 말한 경우",
+                      "note": "",
+                      "position": 2,
+                      "checklist": [
+                        {
+                          "id": "456e015e-3438-4e07-b72d-6dc74cbfa138",
+                          "text": "실제 시간 순서대로 경험을 재구성해 질문 순서를 맞춘다",
+                          "position": 0
+                        }
+                      ],
+                      "branches": []
+                    }
+                  ]
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "9fcb4f21-accb-42a6-bf3e-1b8ac5c3b782",
+            "readable_id": "topic_2_2",
+            "title": "통신여정 첫 접점 확인",
+            "questions": [
+              {
+                "id": "7fd7d6ef-293c-4d4c-b8a6-be5a5f4ff6c2",
+                "readable_id": "question_2_2_2",
+                "content": "그때 가장 먼저 하신 일이 뭐였어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q10]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q10] 상세: 통신여정 첫 접점 확인",
+                  "root_checklist": [
+                    {
+                      "id": "00700462-4884-47c1-9562-d55bdabd8307",
+                      "text": "검색을 하셨는지, 커뮤니티나 홈페이지, 매장 중 어디를 제일 먼저 찾아가셨는지요.",
+                      "position": 0
+                    },
+                    {
+                      "id": "e742533d-717f-45bb-a902-c2c4a33eb0d7",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "51002eb6-1e6b-43a2-b6e7-6293f8a06efe",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "2779afbf-1164-4eee-a219-2c940335f7e4",
+                "readable_id": "question_2_2_3",
+                "content": "예를 들어 유튜브나 커뮤니티, 통신사 홈페이지, 애플 스토어처럼, 정보는 주로 어디서 찾아보셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q11]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q11]",
+                  "root_checklist": [
+                    {
+                      "id": "5d255706-a630-4467-9f7a-df7a9471e682",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "727ee913-8ab5-43a0-a89c-c37af2935b4f",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "4c227b11-c657-4949-a35c-ac44dee616fb",
+                "readable_id": "question_2_2_4",
+                "content": "지금까지 말씀해 주신 순서에 맞춰서, 통신사를 알아보신 부분이랑 단말기를 정하신 부분을 나눠서 조금 더 여쭤볼게요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[안내1]",
+                "probing_plan": {
+                  "root_note": "[엑셀 안내]",
+                  "root_checklist": [
+                    {
+                      "id": "1d7673fd-a31b-46cb-90f7-a4613e13d1b9",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "9dc8fa02-fad7-4607-8ea8-ec713b5e3f4d",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "75864225-46fe-4aca-87cd-1eaefaa6dc3f",
+            "readable_id": "topic_2_3",
+            "title": "통신사 인지/탐색",
+            "questions": [
+              {
+                "id": "d6f95d0b-628d-44e7-9d8e-8aeef2a08346",
+                "readable_id": "question_2_3_5",
+                "content": "통신사 정할 때 정보는 주로 어디서 많이 보셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q12]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q12] 분류: 통신사 인지/탐색 상세: 주요 정보 획득 채널",
+                  "root_checklist": [
+                    {
+                      "id": "93d5e0ed-97a8-42cc-b631-18f12d170551",
+                      "text": "후기나 홍보 중에 특히 와닿았던 채널이 있었는지도요.",
+                      "position": 0
+                    },
+                    {
+                      "id": "a2783b7f-de76-43f9-9150-8e9c05ed3715",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "321fab8b-1fc5-467f-aa68-00bf1e585b02",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "45a6d318-ffed-4df9-b611-d9297b1dd0ce",
+                "readable_id": "question_2_3_6",
+                "content": "뽐뿌나 디시 같은 온라인 커뮤니티, 유튜브, 매장, 지인 추천 같은 데서 정보를 얻으셨다면 어디가 제일 컸는지 말씀해 주세요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q13]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q13]",
+                  "root_checklist": [
+                    {
+                      "id": "baec9ce3-84d0-4b00-82fe-033af0842823",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "6167a0c7-f97e-4c08-a490-29ce0b9ead84",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "149373de-5e16-40ef-a020-48faa8d51ab1",
+            "readable_id": "topic_2_4",
+            "title": "해당 단계 긍부정경험",
+            "questions": [
+              {
+                "id": "5707a333-a041-4bfd-a749-4eec7fa561b6",
+                "readable_id": "question_2_4_7",
+                "content": "통신사 알아보시고 정하시는 동안에, 기억에 남는 불편하거나 아쉬웠던 경험이 있으셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q14]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q14] 상세: 해당 단계 긍부정경험",
+                  "root_checklist": [
+                    {
+                      "id": "45523d7d-9d41-4a05-9982-8f1006229a5c",
+                      "text": "반대로 편했거나 만족했던 순간도 있으셨는지요.",
+                      "position": 0
+                    },
+                    {
+                      "id": "27ae14cf-bc45-4542-8537-c4adab035934",
+                      "text": "사건의 시점·장소·강도(척도)가 가능하면 구체적으로 나오게 한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "257d52ab-02cf-4980-8cdc-07c30d8e3c58",
+                      "text": "원인을 통신사·단말·환경 중 어디에 두는지 확인한다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "4fe5bd42-7159-4395-90c9-be551fe3d880",
+            "readable_id": "topic_2_5",
+            "title": "통신사 KBF",
+            "questions": [
+              {
+                "id": "5c929f66-46b7-4019-8fea-1d8ee2cf4c82",
+                "readable_id": "question_2_5_8",
+                "content": "그래서 지금 통신사로 가입하시기로 최종 결정하신 가장 큰 이유는 뭐였어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q15]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q15] 상세: 통신사 KBF",
+                  "root_checklist": [
+                    {
+                      "id": "a0bd553d-445a-431f-8429-ffe3520bcdd6",
+                      "text": "가입 혜택이었는지, 네트워크나 멤버십 같은 것도 있었을까요?",
+                      "position": 0
+                    },
+                    {
+                      "id": "cb78712d-bfca-4aae-9a43-78101950d688",
+                      "text": "지금 통신사를 선택한 ‘결정적 이유’가 1개 이상 명확히 말해질 때까지 프로빙한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "eb0387eb-dc09-4d16-920c-1c79eca95251",
+                      "text": "엑셀 괄호에 있는 후보(가입혜택·사건·NW·멤버십 등) 중 해당하는 것이 있는지 확인한다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": [
+                    {
+                      "id": "0b357eec-5ee5-4433-b778-a64fd7afcfe7",
+                      "if": "가입혜택·NW·멤버십·이슈 등 특정 키워드가 답에 나온 경우",
+                      "note": "",
+                      "position": 0,
+                      "checklist": [
+                        {
+                          "id": "b00b38bd-1067-4f27-a9f3-20d49c1e6e7e",
+                          "text": "해당 키워드가 실제 의사결정에서 얼마나 가중됐는지 한 가지씩 깊게 묻는다",
+                          "position": 0
+                        }
+                      ],
+                      "branches": []
+                    }
+                  ]
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "fe0a156d-eb3e-4303-9321-84f4979ebcfd",
+            "readable_id": "topic_2_6",
+            "title": "해당 단계 니즈 정리",
+            "questions": [
+              {
+                "id": "4e8ce15f-bda0-4986-828b-72787278c046",
+                "readable_id": "question_2_6_9",
+                "content": "통신사 고르실 때 ‘이건 꼭 되어야 한다’ 싶었던 게 있었다면 뭐였어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q16]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q16] 상세: 해당 단계 니즈 정리",
+                  "root_checklist": [
+                    {
+                      "id": "a7433e3a-fef0-4409-a2e8-9ac6bf165d6e",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "2e042645-0167-437f-a03c-2ad90ac1f9d3",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "56066b16-c904-453d-b0c7-84f7f797203e",
+            "readable_id": "topic_2_7",
+            "title": "단말기 결정",
+            "questions": [
+              {
+                "id": "c849c29b-756d-4d6f-abbf-1f07b3fbceef",
+                "readable_id": "question_2_7_10",
+                "content": "가입하기 전에 매장이나 체험존에서 단말기 만져보신 적 있으세요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q17]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q17] 분류: 단말기 결정 상세: 단말기 체험 여부",
+                  "root_checklist": [
+                    {
+                      "id": "d7c63934-88e2-44be-86dc-619b96ad514d",
+                      "text": "있으시다면 어디서 해 보셨는지요.",
+                      "position": 0
+                    },
+                    {
+                      "id": "05dd4915-f098-4cf6-8a78-3311eb268310",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "9c4410f3-553e-4337-9d11-d82d8a9c5cb8",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "7dbaef9b-2f17-47fc-beca-854a557ae0da",
+            "readable_id": "topic_2_8",
+            "title": "단말기 KBF",
+            "questions": [
+              {
+                "id": "a3b2b687-3c78-4701-a5e1-db10c6fe5ba2",
+                "readable_id": "question_2_8_11",
+                "content": "지금 쓰시는 기기로 결정하실 때 가장 크게 본 건 뭐였어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q18]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q18] 상세: 단말기 KBF",
+                  "root_checklist": [
+                    {
+                      "id": "a17d4766-00ba-4551-866d-5ecd4880a43e",
+                      "text": "그것만 맞으면 안드로이드나 다른 모델도 괜찮았을 것 같으셨어요?",
+                      "position": 0
+                    },
+                    {
+                      "id": "06a23eb8-0bae-4bff-8ba1-09a590253f43",
+                      "text": "단말기 구매의 1순위 결정 요인이 한 가지로 특정된다",
+                      "position": 1
+                    },
+                    {
+                      "id": "93d7a03b-4b8c-4b6b-b69a-3c892775ac00",
+                      "text": "그 요인만 충족되면 다른 모델·OS도 수용 가능했는지 여부가 밝혀진다",
+                      "position": 2
+                    },
+                    {
+                      "id": "06c9ce3a-a69c-48f4-b99a-23aafcca9f94",
+                      "text": "재고·배송일·색상·용량·혜택 등 실무 조건과의 트레이드오프가 언급되면 추가 질문한다",
+                      "position": 3
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "1c47e677-175a-4ba1-82da-be36acf0909f",
+                "readable_id": "question_2_8_12",
+                "content": "재고나 배송일, 모델·색·용량, 혜택 같은 것들 중에서 실제로 결정에 많이 작용한 건 뭐였어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q19]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q19]",
+                  "root_checklist": [
+                    {
+                      "id": "5878a69c-aec9-4b10-877b-aa6970edcd56",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "eecb90c0-ddff-46af-aa39-ce7a7a9c950f",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "fc34daf4-24de-4715-8a93-ae43e217b64f",
+            "readable_id": "topic_2_9",
+            "title": "단말기 정보 획득 채널",
+            "questions": [
+              {
+                "id": "1bbd0489-7700-40be-ab56-bc256be4d6b2",
+                "readable_id": "question_2_9_13",
+                "content": "단말기 고를 때는 정보를 주로 어디서 얻으셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q20]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q20] 상세: 단말기 정보 획득 채널",
+                  "root_checklist": [
+                    {
+                      "id": "789de3ae-dc76-464c-a9e3-eacfb7f80fbf",
+                      "text": "어떤 내용이 결정에 제일 도움이 됐는지도요.",
+                      "position": 0
+                    },
+                    {
+                      "id": "34b6f96b-3f35-4361-a64e-d41fd7f2e895",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "0d92b7c7-3c8a-41e6-a87d-4e66b7787e18",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "7e862026-7576-44b8-ab61-f0e486ee4256",
+                "readable_id": "question_2_9_14",
+                "content": "커뮤니티, 유튜브, 지인 중에서 단말기 쪽으로는 어디를 제일 많이 참고하셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q21]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q21]",
+                  "root_checklist": [
+                    {
+                      "id": "3603f1fd-3916-4612-bc7e-75aa2e213d89",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "b203924d-fd1b-46ce-a347-aeb902487ccd",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "5f55969d-7e48-43b8-9012-4607ff3991c9",
+            "readable_id": "topic_2_10",
+            "title": "단말기 구매 채널",
+            "questions": [
+              {
+                "id": "38911617-dda3-4f92-bf62-5d514438ae18",
+                "readable_id": "question_2_10_15",
+                "content": "폰 사실 때 자급제나 통신사, 온라인 같은 여러 경로를 비교해 보셨을 텐데, 어디를 고르셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q22]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q22] 상세: 단말기 구매 채널",
+                  "root_checklist": [
+                    {
+                      "id": "4f65f72b-4d98-41d3-8091-abf5cfaecf33",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "ac82fcac-fbf4-4ce3-9ed3-e4ba4bc563a5",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "6c256b73-9b1d-45a0-ad9b-d98c95d4c7c4",
+                "readable_id": "question_2_10_16",
+                "content": "쿠팡이나 애플 스토어, 통신사 매장처럼 후보는 어떤 데를 두고 고민하셨는지, 최종적으로는 어디로 하셨는지요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q23]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q23]",
+                  "root_checklist": [
+                    {
+                      "id": "627ab744-514d-4a07-9ec9-17842722b639",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "e2f0a60f-eba0-444a-93f5-d60e72f21d5d",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "db6d14a1-a4ae-4103-baef-8a25676e73b2",
+            "readable_id": "topic_2_11",
+            "title": "해당 단계 니즈 정리",
+            "questions": [
+              {
+                "id": "d2987d0c-da21-478a-9ad4-013ac0910728",
+                "readable_id": "question_2_11_17",
+                "content": "단말기 고르실 때 ‘이게 제일 중요했다’고 느끼신 건 뭐였어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q24]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q24] 상세: 해당 단계 니즈 정리",
+                  "root_checklist": [
+                    {
+                      "id": "6a554c16-ac59-4949-8ba2-758e49765e1a",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "c5767d40-fcd6-4c55-ba37-47b2f5219eb2",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "6f61697f-a68f-47c2-9c04-13583eecc1bf",
+            "readable_id": "topic_2_12",
+            "title": "통신사 가입 신청",
+            "questions": [
+              {
+                "id": "8c5337e0-2b73-4385-92df-7e4dd0775241",
+                "readable_id": "question_2_12_18",
+                "content": "통신사 가입하실 때는 온라인으로 하셨어요, 매장에 가셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q25]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q25] 분류: 통신사 가입 신청 상세: 통신사 가입 채널",
+                  "root_checklist": [
+                    {
+                      "id": "8947a4de-469c-4f02-b7e8-b5e46063ae93",
+                      "text": "공식이었는지 대리점이었는지, 최종적으로 가입까지 마치신 경로를 말씀해 주세요.",
+                      "position": 0
+                    },
+                    {
+                      "id": "57566c6d-595c-4351-9ad1-5c3900a84015",
+                      "text": "가입에 사용한 채널(온라인/오프라인·공식/대리)이 구체적으로 밝혀질 때까지 추가 질문한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "ef4119fd-dce3-4b3e-9df3-440e03c923e7",
+                      "text": "최종적으로 가입을 마친 경로가 한 줄로 설명되면 다음 단계로 넘어간다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": [
+                    {
+                      "id": "3db1307c-49f2-482b-b026-ee704c016ba9",
+                      "if": "온라인(공홈·앱·비대면)으로 가입했다고 말한 경우",
+                      "note": "",
+                      "position": 0,
+                      "checklist": [
+                        {
+                          "id": "4f071d6f-f47d-4b27-ace5-8a810d9032df",
+                          "text": "배송·수령·지연·안내(Q29~Q36) 블록을 심층 진행한다",
+                          "position": 0
+                        }
+                      ],
+                      "branches": []
+                    },
+                    {
+                      "id": "de7237e6-d329-423b-b993-2cb9abb1d92e",
+                      "if": "매장·오프라인 위주로 가입했다고 말한 경우",
+                      "note": "",
+                      "position": 1,
+                      "checklist": [
+                        {
+                          "id": "a1cd14f1-15b5-48f7-898f-064222ce8eac",
+                          "text": "배송 블록은 축소하고 매장 대면·수령 경험으로 질문을 대체한다",
+                          "position": 0
+                        }
+                      ],
+                      "branches": []
+                    }
+                  ]
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "222ee430-d8eb-4bc6-8f7c-da38a9e1e249",
+            "readable_id": "topic_2_13",
+            "title": "긍부정 경험",
+            "questions": [
+              {
+                "id": "9f2d5eea-509a-426d-9315-a8d31306b7ca",
+                "readable_id": "question_2_13_19",
+                "content": "가입하시는 과정 전체로 보면 어느 정도 만족하셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q26]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q26] 상세: 긍부정 경험 비고: 가입신청(사전예약)~온보딩까지 어떤 안내 받는지 문자/RCS 등 안내내용 캡쳐",
+                  "root_checklist": [
+                    {
+                      "id": "7bb956eb-d920-4749-afbc-7de602ee5a1b",
+                      "text": "좋았던 점이랑 불편했던 점이 있다면 나눠서 말씀해 주세요.",
+                      "position": 0
+                    },
+                    {
+                      "id": "1ab9b60e-97d9-4763-91c6-5e132e271648",
+                      "text": "사건의 시점·장소·강도(척도)가 가능하면 구체적으로 나오게 한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "74a1a1e7-03a9-4016-9977-88e46ced6060",
+                      "text": "원인을 통신사·단말·환경 중 어디에 두는지 확인한다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "7f613509-13ed-4c16-8262-947ac3382d31",
+                "readable_id": "question_2_13_20",
+                "content": "불편하셨다면 어떤 부분이었으면 좋겠는지도요. 이전에 쓰시던 통신사랑 비교해 보시면 어떤 점이 아쉽거나 나아졌는지도요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q27]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q27]",
+                  "root_checklist": [
+                    {
+                      "id": "ec6878e0-cd12-423a-a929-917efa8c8d06",
+                      "text": "사건의 시점·장소·강도(척도)가 가능하면 구체적으로 나오게 한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "e64b441c-2734-4f60-822a-41483654cbce",
+                      "text": "원인을 통신사·단말·환경 중 어디에 두는지 확인한다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "867eaea7-c792-4aed-af54-7a81b26adf96",
+            "readable_id": "topic_2_14",
+            "title": "해당 단계 니즈 정리",
+            "questions": [
+              {
+                "id": "81403a1e-c4aa-4f8b-982a-e40edb3837a0",
+                "readable_id": "question_2_14_21",
+                "content": "가입 신청하시기까지 진행하실 때 가장 중요하게 보신 건 뭐였어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q28]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q28] 상세: 해당 단계 니즈 정리",
+                  "root_checklist": [
+                    {
+                      "id": "cb2b041f-5354-409e-8239-ca5509629884",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "eb971119-3354-4f46-9180-63d05aff35c9",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "79124968-1c63-43e5-b0ac-72e96900bab8",
+            "readable_id": "topic_2_15",
+            "title": "(온라인 채널 가입 고객만) \n단말기 배송/수령",
+            "questions": [
+              {
+                "id": "e4eeb21a-cfdf-4768-a1f4-916baf7b5f9b",
+                "readable_id": "question_2_15_22",
+                "content": "신청하시고 단말기 받으시기까지는 대략 며칠 정도 걸리셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q29]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q29] 분류: (온라인 채널 가입 고객만) \n단말기 배송/수령 상세: 걸리는 시간/지연여부 확인",
+                  "root_checklist": [
+                    {
+                      "id": "e36ca040-ffb6-4f27-853e-61617b1ded1d",
+                      "text": "가입신청부터 단말기 수령까지 실제 소요 시간이 구간별로 말로 특정된다",
+                      "position": 0
+                    },
+                    {
+                      "id": "f40a3671-58e9-45e0-ad22-e8eced536bf7",
+                      "text": "지연이 있었다면 불만 강도 척도(①~④)와 통신사 케어 기대가 연결되어 나온다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": [
+                    {
+                      "id": "82b074bb-8fe2-4a50-9937-9b319e39eb3c",
+                      "if": "온라인 가입이 아니었다고 확인된 경우",
+                      "note": "",
+                      "position": 0,
+                      "checklist": [
+                        {
+                          "id": "de55356f-ef60-49f5-a3aa-a8dfbf514b54",
+                          "text": "Q29~Q36은 생략·축소하고 매장 수령·현장 개통 경험으로 전환한다",
+                          "position": 0
+                        }
+                      ],
+                      "branches": []
+                    }
+                  ]
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "9fd0b82a-4ccb-46ed-815d-81d1ab063b0a",
+                "readable_id": "question_2_15_23",
+                "content": "만약 배송이 늦어지셨다면, 그때 불편하셨던 정도가 어느 쪽에 가깝게 느껴지셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q30]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q30]",
+                  "root_checklist": [
+                    {
+                      "id": "1ee304cf-2ef4-49b4-b77d-62ab33140625",
+                      "text": "살짝 불편한 정도부터, 많이 답답하셨는지도요.",
+                      "position": 0
+                    },
+                    {
+                      "id": "41ffba95-5637-41c5-9d26-43ac212f86da",
+                      "text": "사건의 시점·장소·강도(척도)가 가능하면 구체적으로 나오게 한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "bfa2c2cb-05c5-4bb3-84af-e180c3f1ff28",
+                      "text": "원인을 통신사·단말·환경 중 어디에 두는지 확인한다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "bc83fbcc-7583-49fb-b07c-46f3d5d2264b",
+                "readable_id": "question_2_15_24",
+                "content": "지연되셨을 때 통신사가 어떻게 해 주셨으면 덜 불편하셨을 것 같으세요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q31]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q31]",
+                  "root_checklist": [
+                    {
+                      "id": "76b70da1-9726-4c36-ba65-ab3ef4c3eb84",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "e56ea5a7-083a-42e4-9c84-f97deb91bd3f",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "c226f282-dd02-4aea-a267-53a1926a87c1",
+            "readable_id": "topic_2_16",
+            "title": "온라인 안내사항 확인",
+            "questions": [
+              {
+                "id": "9c954650-ffdd-4512-86d4-79f0663b7624",
+                "readable_id": "question_2_16_25",
+                "content": "신청부터 받으실 때까지 통신사에서 문자나 앱으로 안내 받으신 내용이 있다면 떠오르는 대로 말씀해 주세요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q32]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q32] 상세: 온라인 안내사항 확인",
+                  "root_checklist": [
+                    {
+                      "id": "48aa6dd3-d15e-4222-aa81-5741e9d2741d",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "5c5c0bd0-9e15-46bb-9c01-4ed2d9d0d49e",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "df624a7d-688d-428c-b5c2-b7d12af81609",
+                "readable_id": "question_2_16_26",
+                "content": "신청 직후 안내, 배송 늦을 때 안내, 출발·도착 안내 같은 것들 중에 기억나시는 게 있으신가요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q33]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q33]",
+                  "root_checklist": [
+                    {
+                      "id": "47cb40ef-adee-481d-9f37-084fb55fbe2d",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "d4419b60-02ab-4663-b964-e10d726be5e2",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "1a895a42-2079-481d-814c-2c98e63ffe7b",
+            "readable_id": "topic_2_17",
+            "title": "단말기 배송 기대사항",
+            "questions": [
+              {
+                "id": "6b2aad55-61c1-470f-8714-a991ff9bb20c",
+                "readable_id": "question_2_17_27",
+                "content": "박스 받으실 때 가장 기대되셨던 부분은 뭐였어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q34]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q34] 상세: 단말기 배송 기대사항",
+                  "root_checklist": [
+                    {
+                      "id": "f999659c-7a25-49ba-90de-e2df98d605ae",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "2fd62753-5b89-41cb-99b3-40bbd630cc81",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "7b495b54-d702-4f7c-a5dc-217b369f1e95",
+            "readable_id": "topic_2_18",
+            "title": "언박싱 경험 확인",
+            "questions": [
+              {
+                "id": "135f80c9-e045-458e-9b80-1b26ac664b35",
+                "readable_id": "question_2_18_28",
+                "content": "박스 뜯으실 때부터 본체랑 구성품 확인하실 때까지, 전체적으로 어떠셨는지 느낌을 자세히 말씀해 주실 수 있을까요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q35]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q35] 상세: 언박싱 경험 확인",
+                  "root_checklist": [
+                    {
+                      "id": "732803ef-715f-49d2-88c2-edf5487f2eed",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "dfebb56b-b307-45f9-9dc0-178d386b0a75",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    },
+                    {
+                      "id": "9dfb7a48-609c-47c9-9c7c-8d7a369d8ac4",
+                      "text": "박스를 뜯는 순간부터, 박스 형태? 구성품은 어땠는지? 단말기 외 다른 구성품은 무엇이 있고 뭐가 인상적이었는지?",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "5faca4e6-cd32-4372-a0c3-bb836087e571",
+            "readable_id": "topic_2_19",
+            "title": "해당 단계 니즈 정리",
+            "questions": [
+              {
+                "id": "54729ce8-e86c-49b5-8f13-6ee65c6508e9",
+                "readable_id": "question_2_19_29",
+                "content": "배송·수령까지의 과정에서 ‘이건 꼭 되어야 한다’고 느끼셨던 건 뭐였어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q36]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q36] 상세: 해당 단계 니즈 정리",
+                  "root_checklist": [
+                    {
+                      "id": "83379f0c-27a1-447e-bec3-c155ba7c9127",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "cd1dc35e-8f49-41a9-bd4c-07fe296a0c13",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "f84fcd3e-af87-426b-8075-c38cbcee4e22",
+            "readable_id": "topic_2_20",
+            "title": "단말기 개통",
+            "questions": [
+              {
+                "id": "79f0a7d3-69b0-49be-a259-f41378f3ffc6",
+                "readable_id": "question_2_20_30",
+                "content": "개통은 유심으로 하셨어요, 이심으로 하셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q37]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q37] 분류: 단말기 개통 상세: USIM/eSIM 여부",
+                  "root_checklist": [
+                    {
+                      "id": "d5aecdc7-ca72-4d48-ad93-d87b7df610ff",
+                      "text": "선택하신 이유도 궁금해요.",
+                      "position": 0
+                    },
+                    {
+                      "id": "0fdf3822-4ee9-4f95-80a9-6a38856dd411",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "0844c9f8-1f35-4d7b-b9dd-eae5bb40ed8d",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "589d66c1-1ca6-4d92-8cbb-ba2e023ac6f3",
+            "readable_id": "topic_2_21",
+            "title": "안내되는 개통절차 확인",
+            "questions": [
+              {
+                "id": "37c11811-16e8-43f6-9d00-d2bc04181b77",
+                "readable_id": "question_2_21_31",
+                "content": "개통하실 때 통신사에서 상담사나 문자, 홈페이지 같은 채널로 안내 받으신 게 있으셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q38]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q38] 상세: 안내되는 개통절차 확인",
+                  "root_checklist": [
+                    {
+                      "id": "404399c6-a6c7-41d8-b784-4838205daee5",
+                      "text": "도움이 되셨는지도요.",
+                      "position": 0
+                    },
+                    {
+                      "id": "f10c5e07-4eb5-488d-9258-3f6ad39e6fb7",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "db056cbe-8704-498f-81b4-55fd18c3ddc5",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "ae0696a0-1634-4c83-9ff1-1070840f7583",
+                "readable_id": "question_2_21_32",
+                "content": "안내는 주로 상담사·매장 직원·온라인·문자 링크 중 어떤 경로로 받으셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q39]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q39]",
+                  "root_checklist": [
+                    {
+                      "id": "282dde4f-31ae-4f90-9986-6f80f4afe1a1",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "0c74e61b-5b7c-40d9-90a7-8e9b894cccfd",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "7c2e7b49-c736-45d9-8a40-f2073ece438f",
+            "readable_id": "topic_2_22",
+            "title": "긍부정 경험 확인",
+            "questions": [
+              {
+                "id": "99da3b02-d706-49cf-93c3-2e5864de263e",
+                "readable_id": "question_2_22_33",
+                "content": "개통 과정 전체로 보면 만족도는 어느 정도셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q40]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q40] 상세: 긍부정 경험 확인",
+                  "root_checklist": [
+                    {
+                      "id": "4c37cace-9b2c-4a5a-a182-9dcdc57a30ad",
+                      "text": "편하다고 느끼신 부분이랑 어려웠던 부분이 있으셨는지요.",
+                      "position": 0
+                    },
+                    {
+                      "id": "2ca35b27-d3e7-4f15-bf41-08180df68617",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "99b9dc86-1e9d-4d84-b65f-23f3ee3f6cc8",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "7ae63855-9052-475b-8be7-3d627d36982f",
+            "readable_id": "topic_2_23",
+            "title": "해당 단계 니즈 정리",
+            "questions": [
+              {
+                "id": "4ac2b3bf-cc1e-4460-b34b-f84a35ae9405",
+                "readable_id": "question_2_23_34",
+                "content": "개통할 때 가장 중요하게 보신 건 뭐였어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q41]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q41] 상세: 해당 단계 니즈 정리",
+                  "root_checklist": [
+                    {
+                      "id": "e840e29b-050c-450f-bb25-d79a45192f14",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "3ed505f9-2de2-48f9-ae26-b2ae239f92e0",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "2cfdaef1-9f1d-4d63-947d-c9a5d93e0344",
+            "readable_id": "topic_2_24",
+            "title": "통신서비스 온보딩",
+            "questions": [
+              {
+                "id": "db151709-6c29-4acc-95d8-c93b331e9da2",
+                "readable_id": "question_2_24_35",
+                "content": "개통 끝나자마자 통신사에서 가장 먼저 연락 오거나 안내 받으신 내용이 있으셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q42]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q42] 분류: 통신서비스 온보딩 상세: 가입 직후 안내 경험",
+                  "root_checklist": [
+                    {
+                      "id": "893d8f40-9b21-4f94-96af-998b7192f6cd",
+                      "text": "그때 기분은 어떠셨어요?",
+                      "position": 0
+                    },
+                    {
+                      "id": "f6191120-2f88-47b6-afdd-729c8452ec36",
+                      "text": "개통 직후 ‘가장 먼저’ 받은 안내의 채널·내용·느낌이 구체적으로 나온다",
+                      "position": 1
+                    },
+                    {
+                      "id": "00de5de1-9075-4bf2-996a-d560f4675e78",
+                      "text": "가입 후 2주 안에 받은 안내를 가능한 한 많이 열거하게 하고, 그중 효과적이었던 것을 고른다",
+                      "position": 2
+                    },
+                    {
+                      "id": "c27b6a93-7728-4156-b4e7-3fa4f82823d2",
+                      "text": "엑셀 예시(설정·데이터이전·요금·결합·구독·멤버십·보안 등) 중 해당 경험이 있는지 확인한다",
+                      "position": 3
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "785d3dc6-e852-4028-a0b9-1a5629360186",
+                "readable_id": "question_2_24_36",
+                "content": "가입하신 뒤 두 주 안에 통신사에서 오는 안내들 중에 기억에 남는 게 있으셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q43]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q43]",
+                  "root_checklist": [
+                    {
+                      "id": "65cb29ae-1bfc-4c0d-bf86-c989fd1a8fba",
+                      "text": "그중에서 특히 도움이 됐다고 느끼신 건 뭐였어요?",
+                      "position": 0
+                    },
+                    {
+                      "id": "f3776e72-a70a-40fa-8f52-6171dd02ce95",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "5969c9dc-8d03-49d5-bea6-a6c2102e7637",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 2
+                    },
+                    {
+                      "id": "e2364c41-4f79-40c2-ba32-e00cd3a68f47",
+                      "text": "단말기 설정법? 데이터옮기기? 개통방법? 가입 기초정보(요금 등)? 결합 정보? 구독 서비스? 멤버십 혜택? 보안서비스? 하나하나 확인해보기",
+                      "position": 3
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "a465ebd6-2b5c-4887-a376-7b56a1609356",
+                "readable_id": "question_2_24_37",
+                "content": "지금 통신사 쓰시는 데 적응하시는 데는 괜찮으셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q44]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q44]",
+                  "root_checklist": [
+                    {
+                      "id": "bbb67163-3627-4d8c-81bf-abdf0feea55a",
+                      "text": "앞으로 통신사가 어떤 정보를 어떻게 알려 주면 더 도움이 될 것 같으세요?",
+                      "position": 0
+                    },
+                    {
+                      "id": "c4c4ed29-1e7d-49fd-894b-a855afc0ea71",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "ba175622-853a-45ff-8264-21afd9de81c6",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "346e910c-def4-4577-af51-409547fefaf5",
+                "readable_id": "question_2_24_38",
+                "content": "아이폰 쓰시는 분들만을 위한 안내이나 혜택이 있다고 느끼신 적이 있으셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[안내2]",
+                "probing_plan": {
+                  "root_note": "[엑셀 안내]",
+                  "root_checklist": [
+                    {
+                      "id": "6c125d93-9c2c-47b7-aa3e-95be022c5922",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "e78f05f2-e4b9-400a-8dd7-c21f60093ee8",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "f855b905-13ef-457b-b7ea-3bd734a8f5d1",
+            "readable_id": "topic_2_25",
+            "title": "가입 기대사항 충족여부 확인",
+            "questions": [
+              {
+                "id": "d1136cad-79af-47c3-b00b-7e8718b99d68",
+                "readable_id": "question_2_25_39",
+                "content": "가입하실 때 통신사나 통신 서비스에 대해 가장 기대하셨던 건 뭐였어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q45]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q45] 상세: 가입 기대사항 충족여부 확인",
+                  "root_checklist": [
+                    {
+                      "id": "15f5e0f0-c25f-4262-b56b-c788c3871470",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "65764969-f948-4377-83f5-38fed95e3d45",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "f19a4099-93fc-4944-8600-284051d3ea9d",
+                "readable_id": "question_2_25_40",
+                "content": "그때 기대하셨던 것들이 지금까지 써 보시면서 어느 정도 맞으셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q46]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q46]",
+                  "root_checklist": [
+                    {
+                      "id": "2c308c9a-7522-41c3-a146-aa570d5d47ad",
+                      "text": "‘아 이때 충족됐다’ 또는 ‘아니다’고 느끼신 순간이 있으셨다면 언제쯤이었는지도요.",
+                      "position": 0
+                    },
+                    {
+                      "id": "698f1a9b-2306-478d-906f-99ea3e8d933d",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "146b1bc1-9e78-4f0d-b3c0-67332b86191c",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "1f9a2ae7-371e-42f1-9918-1c38458289b6",
+            "readable_id": "topic_2_26",
+            "title": "해당 단계 니즈 정리",
+            "questions": [
+              {
+                "id": "f962effe-eba4-4979-8782-2daa3100f2c4",
+                "readable_id": "question_2_26_41",
+                "content": "가입 직후 한두 주 정도는 어떤 게 가장 중요하게 느껴지셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q47]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q47] 상세: 해당 단계 니즈 정리",
+                  "root_checklist": [
+                    {
+                      "id": "e658b51e-c2df-42e6-b234-6e248d8f9d6a",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "08754966-60ce-4ac3-8537-24c8f1f35900",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "c037290a-2f48-40d6-802d-65d0e8769acb",
+            "readable_id": "topic_2_27",
+            "title": "정리",
+            "questions": [
+              {
+                "id": "6f89d24c-e8ed-4f85-83ca-dc16d2e480a4",
+                "readable_id": "question_2_27_42",
+                "content": "지금까지 말씀해 주신 여정 중에서, 지금 통신사 점수를 가장 많이 깎았다고 느끼신 순간이 있다면 언제였고, 왜 그렇게 느끼셨는지요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[안내3]",
+                "probing_plan": {
+                  "root_note": "[엑셀 안내] 분류: 정리",
+                  "root_checklist": [
+                    {
+                      "id": "5a861d0b-bd14-47e9-b502-d39673190d47",
+                      "text": "점수·척도와 이유가 한 흐름으로 연결되도록 추가 질문한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "0e5382c6-c4b9-44da-8e26-1f1cfff5842c",
+                      "text": "사전에 다른 질문에서 준 점수와의 일관성을 필요 시 확인한다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "34ccc286-a871-49fa-b485-3cf2ec15fd36",
+                "readable_id": "question_2_27_43",
+                "content": "주변에 추천해 드릴 때 가장 중요하게 보시는 여정은 뭐였어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[안내4]",
+                "probing_plan": {
+                  "root_note": "[엑셀 안내] 비고: 고객 기대 확인",
+                  "root_checklist": [
+                    {
+                      "id": "59beb91a-13cd-4f00-8127-8573e950562b",
+                      "text": "그리고 그런 경험은 어떻게 제공해 주면 좋겠다고 생각하세요?",
+                      "position": 0
+                    },
+                    {
+                      "id": "fc48b50d-314f-449a-829a-a420159930ca",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "66f2efcb-ed31-460d-8953-4d5df8b54e44",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "dfc046c1-4b1c-4fe7-b488-767aede060ec",
+                "readable_id": "question_2_27_44",
+                "content": "지금까지 말씀해 주신 경험을 통틀어 보시면, 이전 통신사랑 지금 통신사 중에 어디가 더 나으셨다고 느끼세요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[안내5]",
+                "probing_plan": {
+                  "root_note": "[엑셀 안내] 비고: 다시 재확인",
+                  "root_checklist": [
+                    {
+                      "id": "297fb579-7a35-414a-beab-b2a7a5e9243c",
+                      "text": "이유도 함께 부탁드릴게요.",
+                      "position": 0
+                    },
+                    {
+                      "id": "f0c6127d-2932-412a-b066-0149cac18cd2",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "8ce0fd15-e5a9-469a-96fc-90ab23015de4",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "a36e6f3a-7d09-4871-bd6d-c4dce3886e99",
+        "readable_id": "chapter_3",
+        "title": "통신사 이용 경험 · 심화",
+        "topics": [
+          {
+            "id": "5c81cb81-11ee-439f-b834-94a29dcf1e90",
+            "readable_id": "topic_3_1",
+            "title": "전반적인 이용 경험 확인",
+            "questions": [
+              {
+                "id": "8766ef54-8e08-4d60-9df7-4d94c04531e6",
+                "readable_id": "question_3_1_1",
+                "content": "지금까지 통신 서비스 써 보시면서, 본인에게는 가장 중요한 가치나 서비스가 뭐라고 느껴지세요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q48]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q48] 분류: 전반적인 이용 경험 확인",
+                  "root_checklist": [
+                    {
+                      "id": "b2721d02-f7a3-41d4-8c17-cebd5b947286",
+                      "text": "떠오르는 대로 먼저 말씀해 주시고, 필요하면 제가 NW나 혜택 같은 키워드도 같이 짚어 볼게요.",
+                      "position": 0
+                    },
+                    {
+                      "id": "28888558-a940-4145-bd0b-eabafc0890fb",
+                      "text": "이전 통신사 이용 기간과 현재 통신사 이용 기간이 말 속에서 정리된다",
+                      "position": 1
+                    },
+                    {
+                      "id": "cc0a2095-e884-4438-afff-d9da2cf51b91",
+                      "text": "통신서비스에서 ‘가장 중요한 가치’가 OPEN으로 먼저 나온 뒤, 필요 시 보조 카테고리(NW·혜택 등)로 좁힌다",
+                      "position": 2
+                    },
+                    {
+                      "id": "731e0b36-d7ec-4979-8b34-fce022ced6fa",
+                      "text": "이전 통신사와 비교해 무엇이 달라졌는지 한 문장 이상 나온다",
+                      "position": 3
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "9c92fa8d-f700-48fc-bbb1-ee41fb47a2dd",
+                "readable_id": "question_3_1_2",
+                "content": "NW, 혜택, 보안, 요금, 브랜드 같은 쪽으로 생각해 보시면 어디에 더 마음이 가세요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q49]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q49]",
+                  "root_checklist": [
+                    {
+                      "id": "2368ba65-76ba-4749-b32e-4881fd83574e",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "36783753-9e52-40c5-8dd1-970f562911ee",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "36a90e58-e5df-45c4-a37d-56da89ce8e63",
+                "readable_id": "question_3_1_3",
+                "content": "폰 쓰시면서 통신사가 이런 걸 해 주면 좋겠다고 느끼신 게 있으셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[추가1]",
+                "probing_plan": {
+                  "root_note": "[엑셀 추가]",
+                  "root_checklist": [
+                    {
+                      "id": "e0a5ff93-aa74-4e32-80b9-5a3246405f01",
+                      "text": "질문 의도(아이폰 활용·혜택 니즈)가 말로 확보될 때까지 추가 질문한다",
+                      "position": 0
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "0b9866ff-dd59-4c8e-a830-2df92f46fc3a",
+            "readable_id": "topic_3_2",
+            "title": "부정경험 확인",
+            "questions": [
+              {
+                "id": "51e66ff9-9c57-4805-be14-48a9a4711401",
+                "readable_id": "question_3_2_4",
+                "content": "지금까지 통신사 쓰시면서 가장 불편하셨던 경험 하나씩, 이전 통신사랑 지금 통신사에서 나눠서 말씀해 주실 수 있을까요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q50]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q50] 상세: 부정경험 확인",
+                  "root_checklist": [
+                    {
+                      "id": "5b998eb3-2895-4ddc-b0eb-5f8b253506c1",
+                      "text": "이전 통신사와 현재 통신사에 대해 각각 한 가지 이상 사례가 나오도록 한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "d1a46374-293b-4217-bbca-bbb655fafb50",
+                      "text": "두 경험을 한 문장으로 비교할 수 있게 정리해 보도록 유도한다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "552b6175-e85e-42a6-882d-b5bf34453044",
+            "readable_id": "topic_3_3",
+            "title": "긍정경험 확인",
+            "questions": [
+              {
+                "id": "613a9be5-17df-47d0-a1b6-cc16458bad4c",
+                "readable_id": "question_3_3_5",
+                "content": "반대로 가장 좋았던 경험도 이전이랑 지금 각각 하나씩 있으셨다면요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q51]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q51] 상세: 긍정경험 확인",
+                  "root_checklist": [
+                    {
+                      "id": "49a27376-4ba4-4153-843a-36867de3aa7f",
+                      "text": "이전 통신사와 현재 통신사에 대해 각각 한 가지 이상 사례가 나오도록 한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "24e9c7e0-38ca-425e-8aff-d884faf4fc1d",
+                      "text": "두 경험을 한 문장으로 비교할 수 있게 정리해 보도록 유도한다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "928575f1-655d-4f29-a29c-a9edb8e061d7",
+            "readable_id": "topic_3_4",
+            "title": "NW",
+            "questions": [
+              {
+                "id": "555bbd52-4d2c-4405-9f42-7abcd9b56b7f",
+                "readable_id": "question_3_4_6",
+                "content": "통화나 데이터 같은 네트워크 품질은 만족하시는 편이세요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q52]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q52] 분류: NW",
+                  "root_checklist": [
+                    {
+                      "id": "1cf0628f-8d58-4da7-87b5-9967df8c5cf1",
+                      "text": "아까 말씀해 주신 추천 점수에 네트워크가 얼마나 영향을 준 것 같으세요?",
+                      "position": 0
+                    },
+                    {
+                      "id": "fc89e903-04ba-4d46-9a20-a22ca6fc371d",
+                      "text": "점수·척도와 이유가 한 흐름으로 연결되도록 추가 질문한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "5b7e2684-447f-45ea-82e3-478a71b8b4a2",
+                      "text": "사전에 다른 질문에서 준 점수와의 일관성을 필요 시 확인한다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "e3d5ddbc-bdfb-4143-bb4b-54b414e0de81",
+                "readable_id": "question_3_4_7",
+                "content": "통화 끊김이나 음질, 데이터 끊김 같은 건 어떠셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q53]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q53]",
+                  "root_checklist": [
+                    {
+                      "id": "47afd4ea-8952-4781-9681-32c72b958616",
+                      "text": "5G 위주로 쓰시는지, 잘 안 터지는 구역은 있으셨는지도요.",
+                      "position": 0
+                    },
+                    {
+                      "id": "7d451f44-1573-409b-ae1b-8a714d599194",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "d1c3a8b4-ee1c-45a5-8e51-758bcfcc47aa",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "1e28bee9-1dd5-4569-b688-3cc8115ebb13",
+                "readable_id": "question_3_4_8",
+                "content": "사소해 보여도 불편하셨던 순간이 있으셨다면 말씀해 주세요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q54]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q54]",
+                  "root_checklist": [
+                    {
+                      "id": "4cfdb3ca-9634-43a8-9406-13efea94439c",
+                      "text": "사건의 시점·장소·강도(척도)가 가능하면 구체적으로 나오게 한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "a3fb37ae-8e91-47a3-a2ab-ebdfd5e0d1ef",
+                      "text": "원인을 통신사·단말·환경 중 어디에 두는지 확인한다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "39912f41-42c5-42ba-96cb-b8cf4b31bbe6",
+                "readable_id": "question_3_4_9",
+                "content": "가입하기 전이랑 지금이랑 네트워크에 대한 생각이 달라지신 부분이 있으세요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q55]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q55]",
+                  "root_checklist": [
+                    {
+                      "id": "c70a64a2-2041-462f-906f-c706021d3c73",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "22d90fa1-0848-4678-83cb-b7bcb8fb8a06",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "da1cff71-ad39-4027-bfee-e23e1b5e57d0",
+                "readable_id": "question_3_4_10",
+                "content": "언제, 어디서 겪으신 일이었는지, 그때 불편하셨던 정도는 어느 정도였는지도요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q56]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q56]",
+                  "root_checklist": [
+                    {
+                      "id": "004280bd-6161-4eeb-a64d-9c83a19313e3",
+                      "text": "사건의 시점·장소·강도(척도)가 가능하면 구체적으로 나오게 한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "e285d77b-1615-4207-a50c-fdc05bf6a4b0",
+                      "text": "원인을 통신사·단말·환경 중 어디에 두는지 확인한다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "4942e0f8-8296-488c-89b1-f01d56ab1c98",
+                "readable_id": "question_3_4_11",
+                "content": "그때 원인이 통신사 쪽 문제에 가깝다고 보셨어요, 단말기 쪽에 가깝다고 보셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q61]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q61]",
+                  "root_checklist": [
+                    {
+                      "id": "bacd5466-cb64-43b8-84f8-8b7307cdb924",
+                      "text": "어떻게 해결해 보셨는지도요.",
+                      "position": 0
+                    },
+                    {
+                      "id": "ffa1896f-4c6d-4684-b9a2-1f26d32c15a2",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "6204224d-ba40-45f4-b63d-ced308631956",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "c8b339ee-5b51-42c9-abf8-02e3a4012b4a",
+                "readable_id": "question_3_4_12",
+                "content": "아이폰이랑 갤럭시면 네트워크 체감이 다를 수 있다는 말씀을 들으시면 생각이 달라지시는 편이세요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q62]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q62]",
+                  "root_checklist": [
+                    {
+                      "id": "a2a1a530-67d6-4811-a8ea-8027aa07de56",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "26137046-b4c9-4057-9817-5ddaff9eedd3",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "3a931d6c-8049-4c0f-b4ed-044dabca7f2d",
+                "readable_id": "question_3_4_13",
+                "content": "네트워크 때문에 통신사에 문의하거나 안내 받아 보신 적 있으세요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q63]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q63]",
+                  "root_checklist": [
+                    {
+                      "id": "a0f20d9c-2a49-4092-b126-43562b37d385",
+                      "text": "있으시다면 어떤 경위였는지 자세히 말씀해 주세요.",
+                      "position": 0
+                    },
+                    {
+                      "id": "bc64a26f-6c78-400e-a65d-13a0ce41e7f4",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "57abf30d-768f-4adc-8efc-7f0cb4135962",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "3020eadb-0d98-4c73-b7ab-95c7c8435c28",
+                "readable_id": "question_3_4_14",
+                "content": "통화나 데이터 품질로 문의하셨을 때는 어떻게 접수되셨고, 응대는 어떠셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q64]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q64]",
+                  "root_checklist": [
+                    {
+                      "id": "ca6f45c5-b39d-4ab2-9729-94a89f404dd5",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "a8de2ce7-8b8a-4998-933e-fbe1a369d3fc",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "e6fdeedf-d217-4b51-bf8a-a9bbd047adf0",
+                "readable_id": "question_3_4_15",
+                "content": "네트워크 이슈가 있을 때 통신사가 어떻게 해 줬으면 좋겠다고 느끼셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q65]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q65]",
+                  "root_checklist": [
+                    {
+                      "id": "113a9307-d823-471b-baf3-2962723a26d8",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "635f9259-356d-4bf4-9ef4-c5ea76105338",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "4d41b809-c61b-45b6-85a2-4bf33a7dbe32",
+            "readable_id": "topic_3_5",
+            "title": "혜택",
+            "questions": [
+              {
+                "id": "988c3cd0-967e-428a-9ddc-165bc93fdd22",
+                "readable_id": "question_3_5_16",
+                "content": "통신사에서 주는 혜택이나 멤버십은 만족하시는 편이세요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q66]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q66] 분류: 혜택",
+                  "root_checklist": [
+                    {
+                      "id": "9dca2756-d823-4a0e-ab50-2d28c92c25fa",
+                      "text": "추천 점수에 혜택이 얼마나 영향을 준 것 같으세요?",
+                      "position": 0
+                    },
+                    {
+                      "id": "d042d1c6-fa90-42cc-ab88-53b2968fe6a6",
+                      "text": "점수·척도와 이유가 한 흐름으로 연결되도록 추가 질문한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "ac98b2fd-3042-48f6-be16-2ae39cce3d2e",
+                      "text": "사전에 다른 질문에서 준 점수와의 일관성을 필요 시 확인한다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "7e9f5007-fcac-45a7-8f97-93fb9a92aeb9",
+                "readable_id": "question_3_5_17",
+                "content": "멤버십은 자주 쓰시는 편이세요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q67]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q67]",
+                  "root_checklist": [
+                    {
+                      "id": "432b7eb2-ab17-44a3-b204-932814f26d40",
+                      "text": "어디서 주로 쓰시고, VIP 같은 것도 써 보셨는지요.",
+                      "position": 0
+                    },
+                    {
+                      "id": "5136d047-f3a8-4c02-b56d-d0f5d7f243c9",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "00a73998-a7f3-493a-9f60-1eab5e1c9bb6",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "0639687b-0ca1-40d1-b19b-6f5eac8b26ab",
+                "readable_id": "question_3_5_18",
+                "content": "유플레이나 티데이, 달달혜택 같은 것도 챙겨 쓰시는 편이세요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q68]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q68]",
+                  "root_checklist": [
+                    {
+                      "id": "cc895e90-33ed-42e7-b640-6942ecf0aeba",
+                      "text": "받아 놓고 잘 쓰시는지도요.",
+                      "position": 0
+                    },
+                    {
+                      "id": "9c028f8a-d606-47d3-a331-ca2e9151764a",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "51aaa6c3-9fb0-4997-997d-a5dd811da93b",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "3706de9d-e799-43c4-ae2a-f0d77a894117",
+                "readable_id": "question_3_5_19",
+                "content": "혜택 쓰시다가 사소하게 불편하셨던 일이 있으셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q69]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q69]",
+                  "root_checklist": [
+                    {
+                      "id": "eb6b86a3-9fc3-4e83-9299-9694ed301ef5",
+                      "text": "아니면 잘 안 쓰게 되시는 이유가 있으시면요.",
+                      "position": 0
+                    },
+                    {
+                      "id": "9b2659c5-1434-47d8-a8f7-f24de94bf699",
+                      "text": "사건의 시점·장소·강도(척도)가 가능하면 구체적으로 나오게 한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "d16a4709-89f1-4a53-a27b-686c5c3480cf",
+                      "text": "원인을 통신사·단말·환경 중 어디에 두는지 확인한다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "0116661d-665d-4af6-9e67-93111c04e30b",
+                "readable_id": "question_3_5_20",
+                "content": "반대로 혜택 중에 진짜 잘 쓰고 있다고 느끼신 건 있으셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q70]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q70]",
+                  "root_checklist": [
+                    {
+                      "id": "27d20c63-734c-4a4b-a027-7ca725c83e16",
+                      "text": "이전이랑 지금 통신사 통틀어서요.",
+                      "position": 0
+                    },
+                    {
+                      "id": "b90ef400-30c7-420f-95eb-a9444527ea67",
+                      "text": "사건의 시점·장소·강도(척도)가 가능하면 구체적으로 나오게 한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "0ed062fa-962c-43d9-8844-4a7ff7d8d1aa",
+                      "text": "원인을 통신사·단말·환경 중 어디에 두는지 확인한다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "927d73a6-ff52-4817-abfe-2f279bb9291e",
+                "readable_id": "question_3_5_21",
+                "content": "가입 전이랑 지금이랑 혜택에 대한 생각이 달라지신 부분이 있으세요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q71]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q71]",
+                  "root_checklist": [
+                    {
+                      "id": "1a495d70-afec-4001-9603-18eff77c794d",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "87e2de47-26ba-4615-97b2-7ad9a710e2fb",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "6e027f5f-5587-4a3e-bdb7-509f00f4bb21",
+                "readable_id": "question_3_5_22",
+                "content": "혜택을 더 잘 쓰시려면 통신사가 뭐를 챙겨 주면 좋겠다고 느끼세요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q72]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q72]",
+                  "root_checklist": [
+                    {
+                      "id": "703eee0c-b7eb-4551-9ab9-76a6fe5de0a6",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "2edf85d5-479d-478b-8a66-445f92e5b487",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "40a96fb1-80da-4f61-a762-28a45c10c727",
+                "readable_id": "question_3_5_23",
+                "content": "만약 정해진 금액 안에서 혜택을 고르신다면 가장 받고 싶으신 건 뭐예요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q73]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q73]",
+                  "root_checklist": [
+                    {
+                      "id": "e8e10823-6b40-4000-be97-37a3309c1c06",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "b7ec2e7a-893d-4a12-aed0-4685718e5555",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "039e82c2-2093-4478-9910-32a8b30e78ed",
+                "readable_id": "question_3_5_24",
+                "content": "아이폰 고객만을 위한 혜택이 있다고 느끼시는지, 있다면 어떤 점이 그렇게 느껴지셨는지요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[추가2]",
+                "probing_plan": {
+                  "root_note": "[엑셀 추가]",
+                  "root_checklist": [
+                    {
+                      "id": "61116809-0c55-4e6d-838b-0b1edfd84e33",
+                      "text": "‘아이폰 전용’ 혜택이 있다고 느끼는지 여부와 근거가 말로 나온다",
+                      "position": 0
+                    },
+                    {
+                      "id": "672fc56f-bcfb-40cf-9089-8ab45220b8a8",
+                      "text": "없다고 하면 왜 그렇게 인지하는지 한 가지 이상 묻는다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "da36198e-1f0e-4d8c-b144-1c777e534499",
+                "readable_id": "question_3_5_25",
+                "content": "아이폰을 더 잘 쓰시는 데 도움이 되는 혜택이 따로 있으시면 말씀해 주세요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q74]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q74]",
+                  "root_checklist": [
+                    {
+                      "id": "4bfeb111-f17f-428c-9945-88470b0c279b",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "eb2d227b-d261-4a89-97e8-2dbf6bc2e5fd",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "dfdb35a8-fa65-4504-a515-bd99a05d358d",
+            "readable_id": "topic_3_6",
+            "title": "보안",
+            "questions": [
+              {
+                "id": "02a7fea0-5ec2-4dcd-a520-51f8315b3ac1",
+                "readable_id": "question_3_6_26",
+                "content": "통신사에서 보안 서비스 안내 받아 보신 적 있으세요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q75]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q75] 분류: 보안",
+                  "root_checklist": [
+                    {
+                      "id": "5b338f82-6d6a-4f43-ada6-dc7d482e2818",
+                      "text": "알고 계시거나 쓰고 계신 보안 서비스가 있으신가요?",
+                      "position": 0
+                    },
+                    {
+                      "id": "f825bd88-df50-4684-b432-53df70dfadff",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "f940bbbd-0617-4434-9169-941936cc4ae7",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "759fc846-7fcc-4c58-8397-254108aedf0c",
+                "readable_id": "question_3_6_27",
+                "content": "예를 들어 유심 보호나 피싱 관련 보험, 보이스피싱 탐지 같은 것도 포함해서요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q76]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q76]",
+                  "root_checklist": [
+                    {
+                      "id": "6e54ed75-3d53-4d4c-9f51-a59016ec2767",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "867a94bf-2ec0-4bb5-8d5f-4384e49fd4ef",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "7e1b9c18-05f1-4a6b-a71c-9a99c3a7dc2a",
+                "readable_id": "question_3_6_28",
+                "content": "보안 서비스 안내 받으실 때 어떤 생각이 드셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q77]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q77]",
+                  "root_checklist": [
+                    {
+                      "id": "86673256-d85b-445d-baca-3e7e47ae91e8",
+                      "text": "통신 생활에 도움이 될 것 같다고 느끼셨는지도요.",
+                      "position": 0
+                    },
+                    {
+                      "id": "fcbade8f-a289-4804-9c09-42ae4768707e",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "68be6ad9-7a59-4c08-98ce-92fa98af6a9e",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "e5939f2e-a247-4c67-94c8-4a14490c599d",
+                "readable_id": "question_3_6_29",
+                "content": "보안 쪽 안내를 더 잘 받으려면 통신사가 어떻게 해 주면 좋을 것 같으세요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q78]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q78]",
+                  "root_checklist": [
+                    {
+                      "id": "f4a31b54-ee7c-4764-a269-d54bbd5c7287",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "c36e1973-6e67-413c-ad7f-71deaaf3b5e2",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "3c37a6e3-5d40-4e50-b73a-b895c792f0f0",
+                "readable_id": "question_3_6_30",
+                "content": "통신사가 보안을 잘 챙긴다는 느낌을 주려면 어떤 점이 있으면 좋겠다고 생각하세요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q79]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q79]",
+                  "root_checklist": [
+                    {
+                      "id": "a1e7bb62-f187-4ad2-9275-e5ee37c972b8",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "57784714-0f8b-4410-9211-d918f6f0e2a7",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "eb6dbff8-6bc4-4609-a06a-f4dcd240c469",
+            "readable_id": "topic_3_7",
+            "title": "AI앱",
+            "questions": [
+              {
+                "id": "846de490-abcb-4ce4-b3a6-8bbb5ce44450",
+                "readable_id": "question_3_7_31",
+                "content": "익시오나 에이닷 같은 서비스는 들어 보셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q80]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q80] 분류: AI앱",
+                  "root_checklist": [
+                    {
+                      "id": "f8fe878c-09f7-4e81-a980-23a11313348c",
+                      "text": "써 보신 적도 있으신가요?",
+                      "position": 0
+                    },
+                    {
+                      "id": "7b6bf794-de04-4c61-829b-8dd6c9c05e1f",
+                      "text": "앱 인지 여부·실제 사용 여부가 명확히 구분되어 말해진다",
+                      "position": 1
+                    },
+                    {
+                      "id": "b0ae8d84-e651-4cd1-8bcf-923376baa0b5",
+                      "text": "사용 경험이 있다면 부정·긍정 사례를 각각 한 가지 이상 확보한다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": [
+                    {
+                      "id": "dc5fc6b9-890e-41ab-b7cd-28253768cc25",
+                      "if": "익시오와 에이닷을 둘 다 써 봤다고 말한 경우",
+                      "note": "",
+                      "position": 0,
+                      "checklist": [
+                        {
+                          "id": "8dd41e81-cc6b-425f-bb2d-9c0f5b50e196",
+                          "text": "Q82 비교 질문(차이·선호)을 반드시 진행한다",
+                          "position": 0
+                        }
+                      ],
+                      "branches": []
+                    },
+                    {
+                      "id": "6153343d-6e20-4f04-8923-f5e0b4f94415",
+                      "if": "한쪽만 써 봤다고 말한 경우",
+                      "note": "",
+                      "position": 1,
+                      "checklist": [
+                        {
+                          "id": "347ad029-4d32-46e6-b1fd-4b1ae2066b48",
+                          "text": "비교 질문은 생략하고 긍정·부정 경험 한 가지씩만 확보한다",
+                          "position": 0
+                        }
+                      ],
+                      "branches": []
+                    }
+                  ]
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "1cf6722d-7534-451d-911f-423a54211831",
+                "readable_id": "question_3_7_32",
+                "content": "써 보셨다면 좋았던 점이랑 아쉬웠던 점을 하나씩 말씀해 주실 수 있을까요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q81]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q81]",
+                  "root_checklist": [
+                    {
+                      "id": "c89762ff-6bfd-40b2-a93d-97f12482e023",
+                      "text": "사건의 시점·장소·강도(척도)가 가능하면 구체적으로 나오게 한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "8432e0de-65a2-49de-bac9-76b590eb8fa0",
+                      "text": "원인을 통신사·단말·환경 중 어디에 두는지 확인한다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "5014eb72-7892-497b-a101-70fe2e6e5b6e",
+                "readable_id": "question_3_7_33",
+                "content": "둘 다 써 보셨다면 어떤 점이 가장 달랐다고 느끼셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q82]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q82]",
+                  "root_checklist": [
+                    {
+                      "id": "182f0601-b3c8-4184-ae50-dc666ce7af4b",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "11b2a2d4-251f-4f9f-a275-a28c069f1ba4",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "aebc2d6c-0ea8-4208-9617-10efe4da0206",
+                "readable_id": "question_3_7_34",
+                "content": "통화 품질, 녹음, 요약, 버그나 기능 차이 같은 쪽에서 느끼신 게 있으셨는지요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q83]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q83]",
+                  "root_checklist": [
+                    {
+                      "id": "aa2995c5-7c4b-495b-a8dd-1a9263222cc5",
+                      "text": "이 시드만으로 목표 정보가 부족하면, 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 0
+                    },
+                    {
+                      "id": "7635fe99-9a47-4028-adee-14826a1b5994",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "interview_closing": {
+      "closing_message": "오늘 소중한 시간 내어 주셔서 감사합니다. 추가로 하실 말씀이 있으시면 짧게 말씀해 주시고, 없으시면 '없습니다'라고 해 주셔도 됩니다. 감사합니다."
+    }
+  }
+}

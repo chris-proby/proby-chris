@@ -1,0 +1,33 @@
+# 환경변수
+.env
+.env.local
+.env.*.local
+
+# 데이터베이스
+*.db
+*.sqlite
+*.sqlite3
+
+# 업로드 파일
+**/uploads/
+
+# 대용량 미디어 파일
+*.m4a
+*.mp4
+*.mp3
+*.wav
+*.mov
+
+# macOS
+.DS_Store
+
+# Node
+node_modules/
+
+# 빌드 결과물
+.next/
+dist/
+build/
+
+# Obsidian
+.obsidian/

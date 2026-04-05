@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>홍길동 — 흥미도 트래커 사후인터뷰 요약보고서 (모의 샘플)</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:    #0a0a0a;
+      --white:    #ffffff;
+      --g100:     #f5f5f5;
+      --g200:     #e6e6e6;
+      --g400:     #9e9e9e;
+      --g600:     #555555;
+      --font: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+    }
+
+    body {
+      font-family: var(--font);
+      background: #c8c8c8;
+      color: var(--black);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* PAGE */
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      background: var(--white);
+      margin: 14mm auto;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 28px rgba(0,0,0,0.16);
+      overflow: hidden;
+    }
+
+    /* ── HEADER ── */
+    .page-header {
+      background: var(--black);
+      padding: 7mm 10mm 7mm;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 6mm;
+    }
+
+    .header-left { display: flex; flex-direction: column; gap: 2mm; }
+
+    .header-program {
+      font-size: 7.5pt;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .header-name {
+      font-size: 30pt;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--white);
+    }
+
+    .header-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 5mm;
+    }
+
+    .logo-wrap {
+      background: var(--white);
+      padding: 2px 6px;
+      border-radius: 2px;
+    }
+    .logo-wrap img { height: 8mm; width: auto; display: block; }
+
+    .header-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 1px;
+    }
+    .badge-text {
+      font-size: 6pt;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+    }
+    .page-num {
+      font-size: 7.5pt;
+      font-weight: 700;
+      color: rgba(255,255,255,0.35);
+    }
+
+    /* ── META BAR ── */
+    .meta-bar {
+      background: var(--g100);
+      border-bottom: 1px solid var(--g200);
+      padding: 3mm 10mm;
+      display: flex;
+      gap: 8mm;
+    }
+
+    .meta-item { display: flex; flex-direction: column; gap: 0.8mm; }
+
+    .meta-label {
+      font-size: 6pt;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--g400);
+    }
+
+    .meta-value {
+      font-size: 7.5pt;
+      font-weight: 500;
+      color: var(--black);
+    }
+
+    /* ── BODY ── */
+    .page-body {
+      flex: 1;
+      padding: 7mm 10mm;
+      display: flex;
+      flex-direction: column;
+      gap: 5.5mm;
+    }
+
+    /* ── SECTION ── */
+    .section { display: flex; flex-direction: column; gap: 2.5mm; }
+
+    .section-title {
+      font-size: 7.5pt;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--black);
+      border-left: 2.5px solid var(--black);
+      padding-left: 2.5mm;
+      line-height: 1.2;
+    }
+
+    /* ── TWO-COL ── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3mm;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--g100);
+      padding: 4mm 5mm;
+    }
+
+    .card-label {
+      font-size: 6.5pt;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--g400);
+      margin-bottom: 2mm;
+    }
+
+    /* ── BULLET ── */
+    ul.b {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5mm;
+    }
+
+    ul.b li {
+      font-size: 7.5pt;
+      line-height: 1.55;
+      color: var(--g600);
+      padding-left: 3.5mm;
+      position: relative;
+    }
+
+    ul.b li::before {
+      content: "–";
+      position: absolute;
+      left: 0;
+      color: var(--g400);
+      font-weight: 500;
+    }
+
+    ul.b li strong { font-weight: 700; color: var(--black); }
+
+    /* ── TABLE ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 7.5pt;
+    }
+
+    thead tr {
+      border-bottom: 1.5px solid var(--black);
+    }
+
+    th {
+      font-size: 6.5pt;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--g400);
+      padding: 2mm 3mm 2mm 0;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    th:first-child { padding-left: 0; }
+
+    td {
+      padding: 2.5mm 3mm 2.5mm 0;
+      border-bottom: 1px solid var(--g200);
+      color: var(--g600);
+      line-height: 1.5;
+      vertical-align: top;
+    }
+
+    td:first-child {
+      font-weight: 700;
+      color: var(--black);
+      white-space: nowrap;
+      padding-right: 4mm;
+    }
+
+    td strong { font-weight: 700; color: var(--black); }
+
+    /* ── FUNNEL ── */
+    .funnel {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex-wrap: nowrap;
+      overflow: hidden;
+    }
+
+    .funnel-step {
+      flex: 1;
+      text-align: center;
+      font-size: 7pt;
+      font-weight: 700;
+      color: var(--black);
+      background: var(--g100);
+      border: 1px solid var(--g200);
+      padding: 2.5mm 2mm;
+      position: relative;
+      white-space: nowrap;
+    }
+
+    .funnel-step + .funnel-step {
+      border-left: none;
+    }
+
+    .funnel-step:not(:last-child)::after {
+      content: "›";
+      position: absolute;
+      right: -4px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 11pt;
+      color: var(--g400);
+      z-index: 1;
+      background: var(--white);
+      line-height: 1;
+    }
+
+    /* ── QUOTE / NOTE ── */
+    .note {
+      border-left: 2px solid var(--g200);
+      padding: 2mm 4mm;
+      font-size: 7.5pt;
+      font-style: italic;
+      color: var(--g600);
+      line-height: 1.6;
+    }
+
+    .note strong { font-style: normal; font-weight: 700; color: var(--black); }
+
+    /* ── INSIGHT LIST ── */
+    .insight-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .insight-row {
+      display: flex;
+      gap: 3.5mm;
+      padding: 3mm 0;
+      border-bottom: 1px solid var(--g200);
+      align-items: flex-start;
+    }
+
+    .insight-row:first-child { border-top: 1px solid var(--g200); }
+
+    .insight-idx {
+      font-size: 7pt;
+      font-weight: 700;
+      color: var(--g400);
+      min-width: 4mm;
+      padding-top: 0.5mm;
+      flex-shrink: 0;
+    }
+
+    .insight-content { flex: 1; }
+
+    .insight-title {
+      font-size: 7.5pt;
+      font-weight: 700;
+      color: var(--black);
+      margin-bottom: 1mm;
+    }
+
+    .insight-desc {
+      font-size: 7.5pt;
+      color: var(--g600);
+      line-height: 1.55;
+    }
+
+    .insight-desc strong { font-weight: 700; color: var(--black); }
+
+    /* ── P2 HEADER ── */
+    .page-header-sm {
+      background: var(--black);
+      padding: 3mm 10mm;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .p2-label {
+      font-size: 7.5pt;
+      font-weight: 500;
+      color: rgba(255,255,255,0.45);
+      letter-spacing: 0.04em;
+    }
+
+    .p2-right {
+      display: flex;
+      align-items: center;
+      gap: 3.5mm;
+    }
+
+    .p2-name {
+      font-size: 9.5pt;
+      font-weight: 900;
+      color: rgba(255,255,255,0.85);
+      letter-spacing: -0.01em;
+    }
+
+    .p2-num {
+      font-size: 7.5pt;
+      font-weight: 700;
+      color: rgba(255,255,255,0.3);
+    }
+
+    /* ── FOOTER ── */
+    .page-footer {
+      border-top: 1px solid var(--g200);
+      padding: 2.5mm 10mm;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-l { font-size: 6.5pt; color: var(--g400); }
+    .footer-r { font-size: 6.5pt; font-weight: 700; color: var(--g400); }
+
+    /* ── PRINT ── */
+    @media print {
+      body { background: white; }
+      .page { margin: 0; box-shadow: none; page-break-after: always; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════ PAGE 1 ══════════════════ -->
+<div class="page">
+
+  <div class="page-header">
+    <div class="header-left">
+      <div class="header-program">흥미도 트래커 사후인터뷰</div>
+      <div class="header-name">홍길동</div>
+    </div>
+    <div class="header-right">
+      <div class="logo-wrap">
+        <img src="data:image/jpeg;base64,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" alt="Spoon Labs" />
+      </div>
+      <div class="header-badge">
+        <div class="badge-text">Interview Summary</div>
+        <div class="page-num">1 / 2</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="meta-bar">
+    <div class="meta-item">
+      <div class="meta-label">참여자</div>
+      <div class="meta-value">홍길동 (모의 샘플)</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-label">인터뷰</div>
+      <div class="meta-value">AI 인터뷰어 Proby</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-label">형식</div>
+      <div class="meta-value">요약 보고서 (2p) · 가상 페르소나</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-label">조사 목적</div>
+      <div class="meta-value">숏폼 소비 패턴 · 장르 선호 · 비글루 인식 · AI 콘텐츠 반응</div>
+    </div>
+  </div>
+
+  <div class="page-body">
+
+    <!-- 참여자 프로필 -->
+    <div class="section">
+      <div class="section-title">참여자 프로필</div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-label">기본 정보</div>
+          <ul class="b">
+            <li><strong>연령·직업</strong> 29세, IT 스타트업 프로덕트</li>
+            <li><strong>여가</strong> 헬스, 유튜브 쇼츠·숏폼 드라마</li>
+            <li><strong>숏폼 비중</strong> 전체 시청 시간 대비 약 20~25%</li>
+            <li><strong>숏폼 빈도</strong> 주 3~4회 (릴스→앱, 주말 몰아보기)</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-label">주 사용 앱</div>
+          <ul class="b">
+            <li><strong>드라마박스</strong> 목록 탐색·시청</li>
+            <li><strong>틱톡</strong> 숏폼 유입 채널</li>
+            <li><strong>비글루</strong> 테스트 설치 후 가끔 이용</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 콘텐츠 소비 패턴 -->
+    <div class="section">
+      <div class="section-title">콘텐츠 소비 패턴</div>
+      <table>
+        <colgroup><col style="width:26mm"/><col/></colgroup>
+        <thead>
+          <tr><th>영역</th><th>내용</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>자주 보는 유형</td>
+            <td><strong>유튜브 쇼츠</strong>, <strong>인스타 릴스</strong>, 가끔 넷플릭스 — 짧은 콘텐츠는 알고리즘 연쇄 시청</td>
+          </tr>
+          <tr>
+            <td>선호 장르</td>
+            <td><strong>미스터리</strong>, <strong>블랙 코미디</strong>; 로맨스는 가볍게 힐링; <strong>공포</strong>는 혼자 보기 부담 → 비선호</td>
+          </tr>
+          <tr>
+            <td>정주행 vs 이탈</td>
+            <td>호기심에 <strong>3~4화 맛보기</strong> 후 갈아타기 잦음; 정주행 약 <strong>40%</strong>, 나머지는 맛보기에 가까움</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 작품 선택·과금 기준 -->
+    <div class="section">
+      <div class="section-title">작품 선택 · 과금 기준</div>
+
+      <div class="card">
+        <div class="card-label">선택 퍼널</div>
+        <div class="funnel">
+          <div class="funnel-step">썸네일·키워드</div>
+          <div class="funnel-step">장르·태그</div>
+          <div class="funnel-step">줄거리 요약</div>
+          <div class="funnel-step">4~5화 과금</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="card-label">과금 기준</div>
+          <ul class="b">
+            <li>무료 <strong>4~5화</strong> 전후로 결정 (첫 화 훅 약하면 즉시 이탈)</li>
+            <li><strong>복선 누적·대사 자연스러움</strong> — 제목만 자극적이면 이탈</li>
+            <li>배우보다 작품 <strong>톤·미스터리 시그널</strong>이 클릭에 중요</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-label">기억에 남는 과금 작품</div>
+          <ul class="b">
+            <li><strong>미래 도시·추적/스릴러</strong> 톤 (제목 기억 불명)</li>
+            <li>무료 종료 지점이 <strong>클라이맥스 직전</strong>이라 과금 결심</li>
+            <li>줄거리 요약은 <strong>스포 없이 2~3줄</strong> 형태 선호</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="page-footer">
+    <div class="footer-l">SpoonLabs · 흥미도 트래커 사후인터뷰 · AI 인터뷰어 Proby</div>
+    <div class="footer-r">1 / 2</div>
+  </div>
+
+</div>
+
+
+<!-- ══════════════════ PAGE 2 ══════════════════ -->
+<div class="page">
+
+  <div class="page-header-sm">
+    <div class="p2-label">SpoonLabs · 흥미도 트래커 사후인터뷰</div>
+    <div class="p2-right">
+      <div class="p2-name">홍길동</div>
+      <div class="p2-num">2 / 2</div>
+    </div>
+  </div>
+
+  <div class="page-body">
+
+    <!-- 장르 선호·거부 -->
+    <div class="section">
+      <div class="section-title">장르 선호 · 거부</div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-label">선호 / 거부</div>
+          <ul class="b">
+            <li><strong>선호</strong> 코믹 로맨스·캠퍼스물 — 킬링타임·부담 적음</li>
+            <li><strong>거부</strong> 재벌물 — 설정 설명이 길면 지루; <strong>과장 대사</strong>는 몰입 단절</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-label">판타지 관련</div>
+          <ul class="b">
+            <li>일반 숏폼 vs 판타지 팬 사이 <strong>중간</strong> — 둘 다 가끔 시청</li>
+            <li><strong>아쉬운 점</strong> 판타지인데 현실 파트만 과도하게 길거나 규칙이 허술할 때</li>
+            <li><strong>시간 루프·평행 세계</strong> 설정에 끌림; 유료는 <strong>5~6화</strong> 후 “이야기가 살아 있는지”로 판단</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 경쟁 앱 대비 비글루 -->
+    <div class="section">
+      <div class="section-title">경쟁 앱 대비 비글루 인식</div>
+      <table>
+        <colgroup><col style="width:30mm"/><col style="width:32mm"/><col/></colgroup>
+        <thead>
+          <tr><th>플랫폼</th><th>주로 보는 장르</th><th>이유 (발화 요지)</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>드라마박스</td>
+            <td>가볍게 볼 작품</td>
+            <td>한국 작품 필터, 무료 회차·이벤트 코인, 신작 알림 등 <strong>접근성</strong></td>
+          </tr>
+          <tr>
+            <td>비글루</td>
+            <td>SF · AI 태그</td>
+            <td>드라마박스와 달리 기대 <strong>분위기가 다름</strong>; 라인업은 상대적으로 얇게 느껴짐</td>
+          </tr>
+          <tr>
+            <td>Viki · iQIYI</td>
+            <td>—</td>
+            <td>사용 경험 없음</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="note">
+        비글루는 <strong>영상 톤·UI는 세련</strong>되나 라인업은 드라마박스 대비 <strong>얇게</strong> 느껴짐.
+        <strong>한글 자막·번역 톤</strong>이 가끔 어색하다는 피드백.
+      </div>
+    </div>
+
+    <!-- AI 제작 콘텐츠 -->
+    <div class="section">
+      <div class="section-title">AI 제작 콘텐츠 반응</div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-label">사전 인식 → 시청 후</div>
+          <ul class="b">
+            <li>처음엔 <strong>“AI가 감정선을 잘 그릴까”</strong> 반신반의 → 편견이 깨졌다고 함</li>
+            <li><strong>캠페인</strong>으로 짧게 시청 경험 있음</li>
+            <li><strong>긍정</strong> 연출 과감·컷 빠름, 한국 숏폼과 다른 전개 방향</li>
+            <li><strong>아쉬움</strong> 대사 <strong>번역투</strong>; 반면 비주얼·색감은 기대 이상</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-label">혼합 피드 · 기대</div>
+          <ul class="b">
+            <li>실사·애니·AI 혼합 <strong>거부감 없음</strong> — <strong>AI 뱃지</strong> 카드부터 클릭</li>
+            <li>실사/애니 <strong>라벨</strong> 명확 시 탐색에 도움</li>
+            <li><strong>한국어 더빙·현지 감성</strong> 작품 확대 시 이용 빈도 증가 기대</li>
+            <li>AI 드라마 <strong>작품성</strong>에 긍정 — 흥미롭다고 함</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 비글루 앱 UX + 주요 시사점 합산 -->
+    <div class="section">
+      <div class="section-title">비글루 앱 UX</div>
+      <div class="card">
+        <ul class="b" style="flex-direction: row; flex-wrap: wrap; gap: 1.5mm 6mm;">
+          <li style="flex: 1; min-width: 50mm;"><strong>첫 화면 정돈</strong> — 어디를 눌러야 할지 빠르게 파악</li>
+          <li style="flex: 1; min-width: 50mm;"><strong>큰 타이포·포스터 비율</strong> 영화 앱 톤 — 클릭 호기심 유발</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 주요 시사점 -->
+    <div class="section">
+      <div class="section-title">주요 시사점 (내부용)</div>
+      <div class="insight-list">
+        <div class="insight-row">
+          <div class="insight-idx">1</div>
+          <div class="insight-content">
+            <div class="insight-title">발견·클릭 신호</div>
+            <div class="insight-desc">썸네일 <strong>색감</strong>·제목 <strong>장르 키워드</strong>(반전·미스터리 등)가 클릭에 강함. 배우보다 작품 <strong>톤</strong>이 우선.</div>
+          </div>
+        </div>
+        <div class="insight-row">
+          <div class="insight-idx">2</div>
+          <div class="insight-content">
+            <div class="insight-title">리텐션</div>
+            <div class="insight-desc">자극적 제목만으로는 부족 — <strong>복선·대사 자연스러움</strong>이 이탈 방지의 핵심.</div>
+          </div>
+        </div>
+        <div class="insight-row">
+          <div class="insight-idx">3</div>
+          <div class="insight-content">
+            <div class="insight-title">과금·무료 구간 설계</div>
+            <div class="insight-desc"><strong>초반 훅</strong>이 약하면 6화 전에도 이탈. 무료 종료를 <strong>클라이맥스 직전</strong>에 두면 과금 트리거로 작동할 수 있음.</div>
+          </div>
+        </div>
+        <div class="insight-row">
+          <div class="insight-idx">4</div>
+          <div class="insight-content">
+            <div class="insight-title">비글루 체감 품질</div>
+            <div class="insight-desc"><strong>라인업 두께</strong> vs <strong>UI/톤 세련됨</strong>이 동시에 지각됨. <strong>한글·번역 품질</strong>이 신뢰·몰입에 직결.</div>
+          </div>
+        </div>
+        <div class="insight-row">
+          <div class="insight-idx">5</div>
+          <div class="insight-content">
+            <div class="insight-title">AI·혼합 피드</div>
+            <div class="insight-desc">사전 편견은 <strong>시청 경험으로 완화</strong> 가능. <strong>AI 뱃지</strong>는 탐색 동기로 작용. <strong>포맷 라벨</strong>·<strong>현지화(더빙·감성)</strong> 요구가 명확.</div>
+          </div>
+        </div>
+        <div class="insight-row">
+          <div class="insight-idx">6</div>
+          <div class="insight-content">
+            <div class="insight-title">보고 한계 (모의 샘플)</div>
+            <div class="insight-desc"><strong>가상 페르소나</strong>·모의 응답이므로 실제 리서치로 해석 불가. 원문 <code>홍길동.md</code>는 질문·답변 짝이 일부 어긋난 구간이 있어 요약은 의미 단위로 재배치함.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="page-footer">
+    <div class="footer-l">SpoonLabs · 흥미도 트래커 사후인터뷰 · AI 인터뷰어 Proby</div>
+    <div class="footer-r">2 / 2</div>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "name": "proby-company-auth-server",
+  "version": "1.0.0",
+  "description": "Simple company-member auth server with admin approval and business registration upload.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "NODE_ENV=development node server.js"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "express-session": "^1.18.0",
+    "multer": "^1.4.5-lts.2",
+    "nodemailer": "^6.9.15",
+    "sqlite3": "^5.1.7"
+  }
+}
+

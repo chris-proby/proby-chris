@@ -1,0 +1,2390 @@
+{
+  "survey_draft": {
+    "title": "AI모더 2차 · 가입경험 조건 가이드라인 (0326)",
+    "description": "LG U+ Poc2 · 엑셀 `AI모더2차_가입경험_조건_가이드라인_0326.xlsx` 가이드라인 시트 기반. 생성: build_lg_poc2_survey_draft.py",
+    "welcome_title": "안녕하세요 인터뷰에 참여해 주셔서 감사합니다",
+    "welcome_message": "오늘 인터뷰는 통신사 가입 경험과 가입 직후 경험에 대해 이야기 나눕니다.",
+    "goal": "통신사 변경·가입 경로·매장/온라인 가입 경험, 가입 직후 2주간 경험, 안내·온보딩에 대한 인식을 파악한다",
+    "target_audience": "최근 통신사를 변경·가입한 경험이 있는 사용자",
+    "quota": null,
+    "user_groups": [],
+    "user_inputs": [
+      {
+        "id": "1315dd2e-f5a0-4295-a348-a646f392b0c4",
+        "readable_id": "user_input_1",
+        "label": "이름을 적어 주세요 (또는 닉네임)"
+      }
+    ],
+    "screener_questions": [],
+    "interview_opening": "안녕하세요. 저는 오늘 인터뷰를 진행하는 AI 인터뷰어입니다.\n정답은 없으며, 경험하신 대로 편하게 말씀해 주시면 됩니다.\n준비되셨으면 '준비되었어요'라고 말씀해 주세요.",
+    "interview_chapters": [
+      {
+        "id": "82ed0ba7-f9bb-4285-8cc7-9941c5d2d00c",
+        "readable_id": "chapter_1",
+        "title": "통신사 가입 과정",
+        "topics": [
+          {
+            "id": "1aefa25d-b107-4bef-bbb8-fcb25294c5a2",
+            "readable_id": "topic_1_1",
+            "title": "통신사 가입 과정",
+            "questions": [
+              {
+                "id": "678ba222-df9b-40c5-b671-35bead63e21f",
+                "readable_id": "question_1_1_1",
+                "content": "※ 최근에 통신사를 변경하여 가입하시게 된 상황에 대해 이야기해보겠습니다. 가입 당시의 상황을 떠올려 이야기해주세요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[안내1]",
+                "probing_plan": {
+                  "root_note": "[엑셀 안내1] 분류: 통신사 가입 과정",
+                  "root_checklist": [
+                    {
+                      "id": "62f7ea62-313e-461c-8893-6caef6610c1d",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 0
+                    },
+                    {
+                      "id": "3421ba85-29da-4afe-b86f-580f0a1d350b",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "54b29fd7-7f00-4a0f-a4e7-1ba25de64034",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "4d7cfca3-1eb0-4e74-8742-f140bd38a2b1",
+                "readable_id": "question_1_1_2",
+                "content": "1.최근에 통신사를 바꾸셨는데요, 직전에 사용하시던 통신사는 왜 해지하게 되셨나요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q1]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q1] 분류: 통신사 가입 과정",
+                  "root_checklist": [
+                    {
+                      "id": "18266243-ee2c-4019-9a37-14769b96bdc5",
+                      "text": "(e.g. 직전 통신사 불만, 현통신사의 더 좋은 혜택 등)",
+                      "position": 0
+                    },
+                    {
+                      "id": "527fbda9-e075-4d0e-8042-b8b0a8118650",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    },
+                    {
+                      "id": "52d2cef3-3207-4e8c-9fb7-f74a7c694a1d",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 2
+                    },
+                    {
+                      "id": "f77caa4f-86d2-4d31-ae5e-b65d3e666ebd",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 3
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "93e90ae2-e11e-4a6e-94ef-763f5f9a6c0d",
+                "readable_id": "question_1_1_3",
+                "content": "2.그럼, 다른 통신사가 아닌 지금의 통신사를 선택한 결정적인 이유는 무엇이었나요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q2]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q2] 분류: 통신사 가입 과정",
+                  "root_checklist": [
+                    {
+                      "id": "999e13c9-6a88-45f4-89f3-a27f2f08d3ab",
+                      "text": "- 현 통신사를 선택하는 데에 최종적으로 어떤 채널에서의 어떤 내용에 설득이 된건가요?",
+                      "position": 0
+                    },
+                    {
+                      "id": "d1d62e59-4bab-45f4-b208-41f16ecbda17",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    },
+                    {
+                      "id": "14721943-b59b-4b18-ba8a-a93427ca2dde",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 2
+                    },
+                    {
+                      "id": "d34c7197-5251-4413-ac93-69494a2b93f9",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 3
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "663f0264-53cd-42eb-9283-1e162ec37afb",
+                "readable_id": "question_1_1_4",
+                "content": "3.지금 쓰시는 통신사는 [전속점/혼매점/공식몰]에서 가입하신 걸로 알고 있는데, 다른 곳이 아닌 그곳에서 가입하신 이유는 무엇인가요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q3]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q3] 분류: 통신사 가입 과정",
+                  "root_checklist": [
+                    {
+                      "id": "cfa6b5cb-5b08-4d18-9c53-d212f6e9a3f5",
+                      "text": "(e.g. 더 유리한 조건으로 안내,  복잡한 내용에 대한 쉬운 설명, 빠른 개통 처리, 궁금한 점 바로 문의, 타사와의 비교 용이, 접근성 용이 등)",
+                      "position": 0
+                    },
+                    {
+                      "id": "b65c6d8e-d622-43a5-8476-4d9ed0c26424",
+                      "text": "- 왜 다른 곳[전속점/혼매점/공식몰]에서는 가입하지 않으셨나요?",
+                      "position": 1
+                    },
+                    {
+                      "id": "12e9f9af-250f-4915-abfb-f2d30680aa4d",
+                      "text": "- (전속/혼매점 가입자만) 매장 방문 전에 사전에 파악하고 간 정보는? 또 무엇을 사전에 결정하고 가셨나요? (요금제, 단말 등)",
+                      "position": 2
+                    },
+                    {
+                      "id": "4e12e313-2a1d-42ac-816b-b02f0b4587a4",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 3
+                    },
+                    {
+                      "id": "ffd79eb2-f761-4c9b-8879-a3343dcf1815",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 4
+                    },
+                    {
+                      "id": "f008007a-bfa1-4fdf-840e-b2c6781c715b",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 5
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "a3e4fe73-c4d1-42fe-83c8-5215ec3864cf",
+                "readable_id": "question_1_1_5",
+                "content": "4.그 곳에서의 가입 경험을 다시 떠올려 보세요. 인상깊었던 순간이 있다면?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q4]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q4] 분류: 통신사 가입 과정",
+                  "root_checklist": [
+                    {
+                      "id": "d9e6f751-b122-44ca-989d-54a75223e061",
+                      "text": "(긍/부정 모두) 이유는",
+                      "position": 0
+                    },
+                    {
+                      "id": "b45776f3-4bf1-4de8-b745-81d532aacfeb",
+                      "text": "→ 자유롭게 듣고 아래 내용 Probing\n(전속점/혼매점 가입자만)",
+                      "position": 1
+                    },
+                    {
+                      "id": "b017e8b4-ce1b-4174-ab90-9d7138164bc3",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 2
+                    },
+                    {
+                      "id": "eeebf84e-c0ac-4781-984c-7df7749f34d8",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 3
+                    },
+                    {
+                      "id": "51cdd881-2c68-41a5-8258-9740f298e5cc",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 4
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "06185490-e65a-4e64-a36a-29820221f4c3",
+                "readable_id": "question_1_1_6",
+                "content": "1) 매장 방문 전에 현 통신사 관련한 정보탐색, 즉 알아보고 간 것은?, 그 정보를 확인하고 간 이유는?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q5]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q5] 분류: 통신사 가입 과정",
+                  "root_checklist": [
+                    {
+                      "id": "761f7bb2-06ac-42aa-998f-45a4214ea802",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 0
+                    },
+                    {
+                      "id": "c773508e-fce4-477e-b014-99c578dac012",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "9e038a34-c11f-49d8-8641-c77b31235c8f",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "6e59c8fe-d6dd-4282-a7c3-994334889ee0",
+                "readable_id": "question_1_1_7",
+                "content": "2) 가입과정에서 본인이 결정한 것 vs. 매장 제안에 따라 결정한 것은?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q6]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q6] 분류: 통신사 가입 과정",
+                  "root_checklist": [
+                    {
+                      "id": "8116aef9-8268-4679-9aa3-ecf7c9b92ea0",
+                      "text": "왜 매장 결정에 따라 결정했는지?",
+                      "position": 0
+                    },
+                    {
+                      "id": "9d829d79-b569-4189-b9ca-fc54c3a80da7",
+                      "text": "(e.g. 모델은 쓰고 싶은 것으로 내가 결정해서 가고, 요금제는 OO통신사 멤버십, 속도제어 등 조건을 잘 몰라서 상담 후 추천받아 결정하려고)",
+                      "position": 1
+                    },
+                    {
+                      "id": "d8c00249-8f85-40d0-8c09-f85a10958cb2",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 2
+                    },
+                    {
+                      "id": "4469e42e-aef2-4698-87b3-ac1fcba59d2c",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 3
+                    },
+                    {
+                      "id": "34001f87-ce7d-40a2-a527-8482c34f8137",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 4
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "f9764c9f-0c0f-49ef-b389-f810b887361a",
+                "readable_id": "question_1_1_8",
+                "content": "3) 직원의 응대는 만족스러웠는지?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q7]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q7] 분류: 통신사 가입 과정",
+                  "root_checklist": [
+                    {
+                      "id": "0474626b-6f25-48e0-9a82-146fada5e5cd",
+                      "text": "전문적이고 설명은 쉬웠는지",
+                      "position": 0
+                    },
+                    {
+                      "id": "7ba0d206-33b0-4081-b3a9-9cf889602fae",
+                      "text": "별로였다면 이유는?",
+                      "position": 1
+                    },
+                    {
+                      "id": "bb13add7-7973-497a-ba7f-85fca5774904",
+                      "text": "ㄴ 개통 당시 들은 내용 중에 지금도 명확히 기억나는 것이 있는지? 이유는?",
+                      "position": 2
+                    },
+                    {
+                      "id": "7279e491-e8b5-47a0-97af-60485bf3ea5a",
+                      "text": "ㄴ 별로였던 점이 있다면? 중간에 신뢰가 떨어지거나 불안했던 순간이 있었는지? 이유는?",
+                      "position": 3
+                    },
+                    {
+                      "id": "4ba0c613-197a-4d0a-9682-f143ca3cb981",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 4
+                    },
+                    {
+                      "id": "9ae2759f-48d9-43a3-bbf8-78ecb93bc9ac",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 5
+                    },
+                    {
+                      "id": "b1c6d50f-12b8-4524-9523-5ec026812df2",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 6
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "c1cb158c-7f6e-48de-8fb8-fdb1e331fae6",
+                "readable_id": "question_1_1_9",
+                "content": "4) 가입개통 절차는 신속하게, 적절한 시간 내에 진행되었는지?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q8]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q8] 분류: 통신사 가입 과정",
+                  "root_checklist": [
+                    {
+                      "id": "8c61fe6e-facc-41a7-a467-86cddc1398ef",
+                      "text": "불필요/느리게 진행되었다고 느꼈던 부분이 있다면",
+                      "position": 0
+                    },
+                    {
+                      "id": "8a3638cf-fab3-4db1-95a3-b06b2918f1b3",
+                      "text": "이유는?",
+                      "position": 1
+                    },
+                    {
+                      "id": "3f9d34c3-f1f6-4722-afa8-b69f62d92e98",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 2
+                    },
+                    {
+                      "id": "c49d3860-0dea-4980-9170-4b7be3092226",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 3
+                    },
+                    {
+                      "id": "1403cac6-2ce2-4ef1-ad86-4e815f7cdc08",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 4
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "1aa47a55-7fe5-4d24-95e6-476be130c17b",
+                "readable_id": "question_1_1_10",
+                "content": "5) 가입 내용과 관련해서 궁금한 점/불편이 생긴다면 어떻게 할지?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q9]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q9] 분류: 통신사 가입 과정",
+                  "root_checklist": [
+                    {
+                      "id": "84e17867-196a-44a9-9d9b-f116067ad479",
+                      "text": "다시 이 매장을 찾아가서 해결할 것 같으세요",
+                      "position": 0
+                    },
+                    {
+                      "id": "612b1a63-e676-4f65-90ea-da2a9a30d695",
+                      "text": "이유는?",
+                      "position": 1
+                    },
+                    {
+                      "id": "5a39dac2-90aa-42e7-acb7-79bfff46402b",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 2
+                    },
+                    {
+                      "id": "a13168c5-dda2-4086-bf3b-2e3d8c12de71",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 3
+                    },
+                    {
+                      "id": "1078c037-109a-440e-9c2c-c99c74163317",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 4
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "f107b811-dff7-45a4-85c6-c537c704ea54",
+                "readable_id": "question_1_1_11",
+                "content": "6) (혼매점 가입자만) 만약 가입과정에서 문제가 생긴다면, 즉 상담 내용과 실제가 다를 경우, 책임은 어디에 있다고 생각하세요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q10]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q10] 분류: 통신사 가입 과정",
+                  "root_checklist": [
+                    {
+                      "id": "052ff0b2-9846-4364-b3e2-a2a1288318fb",
+                      "text": "(공식몰)",
+                      "position": 0
+                    },
+                    {
+                      "id": "4f395628-6af2-46f6-bf89-01d0538112f1",
+                      "text": "ㄴ 해당 통신사의 문제 vs 3사 모두 취급하는 곳이니 통신사와 무관",
+                      "position": 1
+                    },
+                    {
+                      "id": "57f088a1-e392-4370-8033-768772faf59b",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 2
+                    },
+                    {
+                      "id": "6263ede7-1260-4955-bb52-13ffab5b6ef2",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 3
+                    },
+                    {
+                      "id": "d15528c6-41a6-405e-8d3a-239a046d68e7",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 4
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "cc25d4f7-c80a-4215-9575-d241a46e8b6e",
+                "readable_id": "question_1_1_12",
+                "content": "1) 가입/개통 절차(Sim 가입신청서 작성 등의 과정)는 어땠나요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q11]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q11] 분류: 통신사 가입 과정",
+                  "root_checklist": [
+                    {
+                      "id": "71d3f7b2-93d6-422c-8878-f892dff72120",
+                      "text": "쉽고 편하게 진행되었나요",
+                      "position": 0
+                    },
+                    {
+                      "id": "43661552-57de-4cdd-ba28-c9ec3539dce6",
+                      "text": "이유는",
+                      "position": 1
+                    },
+                    {
+                      "id": "25dc196c-fa95-4c78-99a3-b3d8d3ca2580",
+                      "text": "→ 어렵고 불편했던 순간 최대한 자세히 Probing",
+                      "position": 2
+                    },
+                    {
+                      "id": "d84b9862-c2c2-43d7-a10a-434539449c95",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 3
+                    },
+                    {
+                      "id": "403500ba-4ce6-40e6-8643-eee66268119b",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 4
+                    },
+                    {
+                      "id": "e72ddcb5-a4a9-4b22-8fc3-dfddacc6a642",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 5
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "2f8410b8-d76b-40b6-a47b-14ed6398dc78",
+                "readable_id": "question_1_1_13",
+                "content": "2) 필요한 정보는 충분했나요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q12]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q12] 분류: 통신사 가입 과정",
+                  "root_checklist": [
+                    {
+                      "id": "7dec9cbc-7f52-4175-bb7e-5da590142e6b",
+                      "text": "궁금한/부족한 정보를 모두 충분히 확인했나요?",
+                      "position": 0
+                    },
+                    {
+                      "id": "64927a77-2c21-4f78-8d60-26b0b27dd0db",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    },
+                    {
+                      "id": "92b827a1-b4dd-4587-9e7f-64a863e144c5",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 2
+                    },
+                    {
+                      "id": "23f072c5-8d90-4d26-9cfe-fb071654c3f8",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 3
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "877a2c37-04ab-4c1d-9530-ba376c6daa28",
+                "readable_id": "question_1_1_14",
+                "content": "3) 혹시 가입과정에서 (아주 작은것이라도) 도움이 필요했던 순간은 없었나요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q13]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q13] 분류: 통신사 가입 과정",
+                  "root_checklist": [
+                    {
+                      "id": "b7c7e7fe-6c5f-421d-b7dc-0f99ade82852",
+                      "text": "어떤 순간이었고, 그래서 어떻게 해결했는지?",
+                      "position": 0
+                    },
+                    {
+                      "id": "1b93547b-53dc-4f5d-888c-25f6fd673096",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    },
+                    {
+                      "id": "23492a2a-9e60-4018-becd-689a2d03dfdc",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 2
+                    },
+                    {
+                      "id": "bdcb19f4-897d-4d21-8228-69aa73811a6b",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 3
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "46e3dbdd-b226-46ed-bcb5-4f6a2d34ecb5",
+                "readable_id": "question_1_1_15",
+                "content": "4) 가입과정에서 통신사로부터 ‘해피콜‘ 받았나요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q14]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q14] 분류: 통신사 가입 과정",
+                  "root_checklist": [
+                    {
+                      "id": "8a1436d2-39ee-41fe-8a2b-ce3aa482640b",
+                      "text": "어떤 해피콜?, 이 과정이 필요하다고 생각되는지",
+                      "position": 0
+                    },
+                    {
+                      "id": "c8fc2f75-e6c8-443a-ab99-dec49df44f55",
+                      "text": "만족도는",
+                      "position": 1
+                    },
+                    {
+                      "id": "f74f09df-7c88-49d7-8651-0453bf0e08bc",
+                      "text": "이유는?",
+                      "position": 2
+                    },
+                    {
+                      "id": "6cdf1779-da07-488f-9378-8793c53f7cd6",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 3
+                    },
+                    {
+                      "id": "a9ad35ab-aabf-4126-a8c8-948259ef04e1",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 4
+                    },
+                    {
+                      "id": "1429ffe7-f971-466d-9300-1612d2c52537",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 5
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "4043c0b4-599e-4116-869a-388db77f1571",
+                "readable_id": "question_1_1_16",
+                "content": "5.다른 곳이 아닌 이 곳에서 가입하길 잘했다고 생각하는지?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q15]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q15] 분류: 통신사 가입 과정",
+                  "root_checklist": [
+                    {
+                      "id": "28c5102e-7075-4bb1-9394-98a8ce52c8f8",
+                      "text": "그럼, 다음에도 다시 이 곳에서 가입할지",
+                      "position": 0
+                    },
+                    {
+                      "id": "3a67ca8c-b13c-41dd-b617-04e6a7adb12d",
+                      "text": "이유는",
+                      "position": 1
+                    },
+                    {
+                      "id": "72c4776d-db1e-4d92-a6b3-24d94efed929",
+                      "text": "(가볍게)",
+                      "position": 2
+                    },
+                    {
+                      "id": "d6dbc335-31c4-4770-9505-0366a1eb95ca",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 3
+                    },
+                    {
+                      "id": "3178392a-d24a-42be-998c-86c513347811",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 4
+                    },
+                    {
+                      "id": "b5925a6e-c2f8-4150-918c-16c7b580ced7",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 5
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "b67cfe65-3739-48e3-9d2f-38cb8e06e1a2",
+        "readable_id": "chapter_2",
+        "title": "통신사 가입 후 2주 간 경험",
+        "topics": [
+          {
+            "id": "f338d1d4-6bef-472f-8f34-a484e47f9744",
+            "readable_id": "topic_2_1",
+            "title": "통신사 가입 후 2주 간 경험",
+            "questions": [
+              {
+                "id": "bcfa382b-aa7e-424e-9f27-3fe15f5b855f",
+                "readable_id": "question_2_1_1",
+                "content": "※ 현 통신사 가입한 날부터 ~ 약 2주간의 경험에 대해 이야기해 보겠습니다.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[안내2]",
+                "probing_plan": {
+                  "root_note": "[엑셀 안내2] 분류: 통신사 가입 후 2주 간 경험",
+                  "root_checklist": [
+                    {
+                      "id": "21f9e690-a9b7-4ff0-938e-7d925c93194b",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 0
+                    },
+                    {
+                      "id": "c06c2068-5156-4a8b-a64e-ad7664872a97",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "59568a4e-178b-4c9f-a84b-d769f498d6f1",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "2c151ee3-45d0-4aa2-b454-175eca47928f",
+                "readable_id": "question_2_1_2",
+                "content": "1.가입/개통 당시 어떤 기분이었는지 기억나시나요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q16]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q16] 분류: 통신사 가입 후 2주 간 경험",
+                  "root_checklist": [
+                    {
+                      "id": "179149c8-4305-4e3e-bb77-cde7263d3ab9",
+                      "text": "(신속함, 어려움, 막연함, 불안함 등) 이유는?",
+                      "position": 0
+                    },
+                    {
+                      "id": "688c0050-e8b0-4225-b518-f7b7e96d7d96",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    },
+                    {
+                      "id": "318975d2-0028-4f98-8149-8c0723bb8188",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 2
+                    },
+                    {
+                      "id": "1879e42e-0ced-4a53-825a-02e16ba973da",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 3
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "14da4312-f054-43ed-b839-edd411297185",
+                "readable_id": "question_2_1_3",
+                "content": "2.[컨셉카드1. 가입 후 행동 리스트]\n가입/개통일에 한 일은 무엇이 있나요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q17]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q17] 분류: 통신사 가입 후 2주 간 경험",
+                  "root_checklist": [
+                    {
+                      "id": "c3ee5288-20fc-4c3f-945d-08b998e39455",
+                      "text": "+ 그럼, 7일 이내에 한 것들은 무엇인가요?",
+                      "position": 0
+                    },
+                    {
+                      "id": "7ef31593-a19e-46fc-8a92-078ee648c5c9",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    },
+                    {
+                      "id": "8cbd2493-d046-4024-8f30-b527e5912822",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 2
+                    },
+                    {
+                      "id": "38c12859-0fc5-40c5-be2f-df052b802308",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 3
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "494a2a33-9868-4b41-9e15-27848ae250d8",
+                "readable_id": "question_2_1_4",
+                "content": "1) 모두 본인이 직접하셨나요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q18]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q18] 분류: 통신사 가입 후 2주 간 경험",
+                  "root_checklist": [
+                    {
+                      "id": "5a28117e-28ee-4c8e-8add-63c2501e5827",
+                      "text": "문의나 도움이 필요했던 일도 있었나요",
+                      "position": 0
+                    },
+                    {
+                      "id": "fddb2943-32f5-4141-8419-5cd1ec555372",
+                      "text": "무엇이고, 왜 도움이 필요했나요?",
+                      "position": 1
+                    },
+                    {
+                      "id": "7ae206b1-093d-495b-8711-1cca600239c5",
+                      "text": "- 모두 잘 확인/해결되셨나요?",
+                      "position": 2
+                    },
+                    {
+                      "id": "314a9635-63b4-47d4-9cc0-e28ab6ed3197",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 3
+                    },
+                    {
+                      "id": "0805b804-6c63-4dee-b2d1-417bd2099a3a",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 4
+                    },
+                    {
+                      "id": "6a77ecb4-4d66-4891-bdeb-da64d15cc866",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 5
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "0a1ee3c9-4c78-4d7f-a68b-254dc8678169",
+                "readable_id": "question_2_1_5",
+                "content": "2) 혹시 하기 싫거나/번거롭거나/스트레스를 받았던 일도 있나요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q19]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q19] 분류: 통신사 가입 후 2주 간 경험",
+                  "root_checklist": [
+                    {
+                      "id": "4d7c40d7-06ce-447f-8d20-2fb00c991a05",
+                      "text": "무엇이고, 어떤 점 때문에 스트레스를 받았나요?",
+                      "position": 0
+                    },
+                    {
+                      "id": "73d8cbe7-8977-4588-b26a-aa1bb62bf799",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    },
+                    {
+                      "id": "ef3299f4-fa8d-4294-ba99-752c8b9e7768",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 2
+                    },
+                    {
+                      "id": "3dd13f97-bb0a-41b6-901b-57d3f1ec3e5a",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 3
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "f29a56a6-7200-419a-b91e-3784d0cd086e",
+                "readable_id": "question_2_1_6",
+                "content": "※ 가입 후 행동 리스트\n개통 여부 확인, 데이터 백업 및 동기화, USIM/eSIM 설정, 통신사 공식 앱 설치 및 로그인, 통신사 부가서비스 확인 및 신청 (통화중대기 등), 요금, 할인, 결합 내역 확인 및 신청, 멤버십 등급 및 혜택 확인, 가입 환영 및 안내 메시지 확인, 앱을 통해 네트워크 품질 상태 확인(Speedtest, OpenSignal 등), 첫 청구요금 확인, 요금제에 포함된 부가서비스 계정 연결 (유튜브, 넷플릭스 등) 등",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[안내3]",
+                "probing_plan": {
+                  "root_note": "[엑셀 안내3] 분류: 통신사 가입 후 2주 간 경험 | 원문 일부: ※ 가입 후 행동 리스트\n개통 여부 확인, 데이터 백업 및 동기화, USIM/eSIM 설정, 통신사 공식 앱 설치 및 로그인, 통신사 부가서비스 확인 및 신청 (통화중대기 등), 요금, 할인, 결합 내역 확인 ...",
+                  "root_checklist": [
+                    {
+                      "id": "66688d04-3d6b-486f-95bb-4d2cfc96c648",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 0
+                    },
+                    {
+                      "id": "4d8970c7-9d54-4c49-bba4-3ce2a8da09dd",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "8133f394-fac8-4071-9d00-45ba9f7a2008",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "c9343fff-080e-43d7-8482-9534952674ef",
+                "readable_id": "question_2_1_7",
+                "content": "3.통신사 가입이 끝났다/완료되었다 라고 느낀 건 언제인가요?, 이유는?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q20]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q20] 분류: 통신사 가입 후 2주 간 경험",
+                  "root_checklist": [
+                    {
+                      "id": "4e729ddf-bb19-4afc-973b-deaedb844bf5",
+                      "text": "(컨셉카드. 행동 리스트 참고해서 → 어떤 일을 마치고 나니 ‘가입이 끝났다!’ 느껴졌는지)",
+                      "position": 0
+                    },
+                    {
+                      "id": "ff199354-b4b3-4220-9a8d-47f685b6f50c",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    },
+                    {
+                      "id": "a34f7161-606f-476c-ae77-411d369baeeb",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 2
+                    },
+                    {
+                      "id": "3dc95a5d-2f81-485e-a5a9-193032f8978e",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 3
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "091f3a44-1bd6-406f-bc3d-bf3c1a3942a7",
+                "readable_id": "question_2_1_8",
+                "content": "4.가입하고 약 2주 동안 (가입초기)에 가장 궁금했던 것은 무엇인가요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q21]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q21] 분류: 통신사 가입 후 2주 간 경험",
+                  "root_checklist": [
+                    {
+                      "id": "08c133fb-12a4-421a-8f7e-0a2e7830d26a",
+                      "text": "→ OE로 먼저 확인하고 [컨셉카드2. 가입 후 궁금한 정보] 제시/상기",
+                      "position": 0
+                    },
+                    {
+                      "id": "c388dd8a-46b5-43a1-a610-57de6f041243",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    },
+                    {
+                      "id": "ab885f2e-306b-496f-972a-72f22376a2e3",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 2
+                    },
+                    {
+                      "id": "baab4840-ebc0-41ac-a5ac-4f576bc93edb",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 3
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "ba62355e-b731-41ec-8660-58c137eee94f",
+                "readable_id": "question_2_1_9",
+                "content": "※ 가입 후 궁금한 정보 예시\n휴대폰/유심/사은품 배송 관련 , 개통 상태 확인 및 USIM·eSIM 오류/인증 실패, 내 요금/할부금/청구 금액 관련, 휴대폰 분실/보험 관련, 내 요금제 스펙, 멤버십 등급 및 혜택, 결합/가족 할인 방법 및 혜택, 구독 서비스 신청/사용법, 부가서비스 해지/가입, 결제/납부 방법 설정/변경, 네트워크 품질, 요금제 약정 기간 및 변경 가능 시점 (선택약정 가능일 포함) 등)",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[안내4]",
+                "probing_plan": {
+                  "root_note": "[엑셀 안내4] 분류: 통신사 가입 후 2주 간 경험 | 원문 일부: ※ 가입 후 궁금한 정보 예시\n휴대폰/유심/사은품 배송 관련 , 개통 상태 확인 및 USIM·eSIM 오류/인증 실패, 내 요금/할부금/청구 금액 관련, 휴대폰 분실/보험 관련, 내 요금제 스펙, 멤버십 등급 ...",
+                  "root_checklist": [
+                    {
+                      "id": "10aac9f7-9921-4b8a-a07f-b364b655987c",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 0
+                    },
+                    {
+                      "id": "501874c4-41d2-4fc2-ad10-9a12d107ba22",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "4cec0a7b-06cd-46b2-a1f7-94aa9550d59c",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "696972c7-a9c7-4bae-a9b0-09ff508f9d9b",
+                "readable_id": "question_2_1_10",
+                "content": "1) 구체적으로 OO의 어떤 점이, 왜 궁금했나요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q22]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q22] 분류: 통신사 가입 후 2주 간 경험",
+                  "root_checklist": [
+                    {
+                      "id": "6a2c61df-19c1-4fb2-a556-54c3b462bceb",
+                      "text": "(e.g. VIP면 넷플+유튜브P 할인된다고 해서 고요금제 가입했는데 기존 구독에서 바로 갈아탈 수 있는지)",
+                      "position": 0
+                    },
+                    {
+                      "id": "10b89c39-3fa3-4039-a651-deba91388a97",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    },
+                    {
+                      "id": "71cfb286-43e6-44b1-acb4-f7adecfa6ebd",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 2
+                    },
+                    {
+                      "id": "dbb3c77a-63c0-4be9-9fa0-dd99fbc3470d",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 3
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "cc015289-c303-45a0-b5a1-e17f699267cb",
+                "readable_id": "question_2_1_11",
+                "content": "2) 그래서 궁금한 것은 어떻게 해결/찾아보셨나요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q23]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q23] 분류: 통신사 가입 후 2주 간 경험",
+                  "root_checklist": [
+                    {
+                      "id": "df63a170-2d4f-4ddf-befe-7d2147885a57",
+                      "text": "그곳에서 해결한 이유는",
+                      "position": 0
+                    },
+                    {
+                      "id": "9e237de4-774a-46ee-be38-ed1f6346d56c",
+                      "text": "다른 곳은 컨택해 보지 않았는지?",
+                      "position": 1
+                    },
+                    {
+                      "id": "40e48a21-1a16-4ba7-bb1e-b9afca23a28b",
+                      "text": "(e.g. 포털 검색, 고객센터 앱 확인, 전화 문의, 통신사에서 받은 메시지 검색, 가입한 매장 방문, 가입하지 않은 매장 방문, 가족/지인에게 질문, 등)",
+                      "position": 2
+                    },
+                    {
+                      "id": "c57407ee-dcf5-4ab3-ba83-13e35bf24b1b",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 3
+                    },
+                    {
+                      "id": "8299cd98-5a04-4ea5-8ae1-6a07a6b6cdb5",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 4
+                    },
+                    {
+                      "id": "d9ac4e41-7ea7-4efb-a6e0-e6e064f1ab10",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 5
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "6d1fe94b-9987-433f-a252-263b342ed48b",
+                "readable_id": "question_2_1_12",
+                "content": "3) 도움/확인이 필요한 상황에 대해 어떻게 생각하세요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q24]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q24] 분류: 통신사 가입 후 2주 간 경험",
+                  "root_checklist": [
+                    {
+                      "id": "899d4a82-3f50-4ab6-86d6-50c41c7556da",
+                      "text": "문의하게 만든 상황 자체가 문제라고 생각하시는지(문의하게 하면 안된다) vs. 발생할 수 있는 일이기 때문에 어떻게 대응하느냐가 중요한지?",
+                      "position": 0
+                    },
+                    {
+                      "id": "067312fe-ec86-43f0-8c2e-2812bcf0445a",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    },
+                    {
+                      "id": "46bc6507-0ee9-487d-b6d9-06b9f2922439",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 2
+                    },
+                    {
+                      "id": "033ce1e5-bb0a-4a03-96a1-fcec6a529f3c",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 3
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "62a98e84-fadb-4ccd-8651-39b7713aade4",
+                "readable_id": "question_2_1_13",
+                "content": "4) 궁금했던 것들에 대해 이야기 들어봤는데요, 그럼, 이 중에서도 특히 가입/개통 1~2일 내에 가장 궁금한 정보는 무엇인가요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q25]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q25] 분류: 통신사 가입 후 2주 간 경험",
+                  "root_checklist": [
+                    {
+                      "id": "931ca054-4247-40cb-b63f-7ff5cfd54776",
+                      "text": "이유는",
+                      "position": 0
+                    },
+                    {
+                      "id": "1bc3c51c-0e4d-4ead-8f1e-cee66ab9f146",
+                      "text": "(즉 통신사 바꿨을 때, 최대한 빠른 시간내에 알려주면 좋은 것)",
+                      "position": 1
+                    },
+                    {
+                      "id": "d534e97c-82cc-4ab1-9e9c-7a153efb808b",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 2
+                    },
+                    {
+                      "id": "bf6aab5d-831c-4cd4-bcf5-0aff3f1ae6b2",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 3
+                    },
+                    {
+                      "id": "5d3c491f-3dd0-4ce3-8e15-88378306c8e1",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 4
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "17dae183-e1e1-4dbf-8e7b-8dac777d6065",
+                "readable_id": "question_2_1_14",
+                "content": "5.가입 후 통신사 처음 이용할 때, 이전 통신사와 달라서 어려웠던 점은?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q26]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q26] 분류: 통신사 가입 후 2주 간 경험",
+                  "root_checklist": [
+                    {
+                      "id": "59e432ad-c2fb-40f1-91bc-259fae05c9ea",
+                      "text": "→ 용어, 사용방법, 혜택 등의 다름으로 인해 어려운 점",
+                      "position": 0
+                    },
+                    {
+                      "id": "5d86545e-5853-40d7-bab7-8b0207f69a7e",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    },
+                    {
+                      "id": "da8c546c-ad56-40c3-b08c-f64f96198707",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 2
+                    },
+                    {
+                      "id": "72911306-08f2-4010-9879-58a71f3dcec3",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 3
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "64ead592-ae8f-45ad-969c-35b5fc61d0be",
+                "readable_id": "question_2_1_15",
+                "content": "※ 사전에 보내주신 통신사 안내 캡쳐 이미지를 함께 보며 이야기 나눠보겠습니다.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[안내5]",
+                "probing_plan": {
+                  "root_note": "[엑셀 안내5] 분류: 통신사 가입 후 2주 간 경험",
+                  "root_checklist": [
+                    {
+                      "id": "01c51232-314b-448e-8d87-be783529b159",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 0
+                    },
+                    {
+                      "id": "5c97e3b3-2c11-4ecc-a8e6-db941a8c6361",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "396d7bc0-10f6-4a86-bc6a-14016f555a4a",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "afe867d9-1ab9-442c-b199-42a2dc70b058",
+                "readable_id": "question_2_1_16",
+                "content": "4.[화면공유 – 사전과제. 통신사 안내 문자 캡처 이미지] 우선 어떤, 어떤 문자를 받으셨는지 쭉~보겠습니다. (※ 인터뷰 전 문자 내용 체크)\n[가입초기 안내문자 리스트 – 유인물] 혹시, 사진은 빠졌지만, 이 중에 안내받으신 것이 있나요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q27]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q27] 분류: 통신사 가입 후 2주 간 경험 | 원문 일부: 4.[화면공유 – 사전과제. 통신사 안내 문자 캡처 이미지] 우선 어떤, 어떤 문자를 받으셨는지 쭉~보겠습니다. (※ 인터뷰 전 문자 내용 체크)\n[가입초기 안내문자 리스트 – 유인물] 혹시, 사진은 빠졌지만,...",
+                  "root_checklist": [
+                    {
+                      "id": "91d2a0bf-a9a6-4598-9314-153f10cecbf2",
+                      "text": "> 포함하여 이후 Probing",
+                      "position": 0
+                    },
+                    {
+                      "id": "ce56ec4f-0501-43d6-b4b0-2df31beaec08",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    },
+                    {
+                      "id": "1ffad972-e301-4d0f-8c4a-9505df61465a",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 2
+                    },
+                    {
+                      "id": "eb129053-c713-4907-866e-089b9e4c3445",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 3
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "b138347b-7b3e-42e3-b1c8-d04851f3c60f",
+                "readable_id": "question_2_1_17",
+                "content": "5.그럼, 하나씩 보면서 이야기 해 볼께요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q28]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q28] 분류: 통신사 가입 후 2주 간 경험",
+                  "root_checklist": [
+                    {
+                      "id": "9ef7456f-1af8-478d-9cfb-ddeedab427a2",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 0
+                    },
+                    {
+                      "id": "5727b405-0aee-41cc-a70d-5f5f9e9aec6a",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "fde26baf-6b7d-446a-8003-a3b113e81fd0",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "f5274fe1-ef38-4792-95d1-ad0a35b6d7dd",
+                "readable_id": "question_2_1_18",
+                "content": "1) 이 안내 받았을 때 읽어 보셨나요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q29]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q29] 분류: 통신사 가입 후 2주 간 경험",
+                  "root_checklist": [
+                    {
+                      "id": "044e18c2-7a03-46fe-8ad8-d6efbb90ac3f",
+                      "text": "안 봤다면 이유는?",
+                      "position": 0
+                    },
+                    {
+                      "id": "179344c8-5bcd-4243-9f01-2ade3b8eb78e",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    },
+                    {
+                      "id": "72547859-9338-47d3-8b64-d52ef7461b67",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 2
+                    },
+                    {
+                      "id": "a2991079-e716-4b9a-9039-ac853d92b174",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 3
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "efb5f6f0-23cc-428f-8006-a54901943e63",
+                "readable_id": "question_2_1_19",
+                "content": "2) 이 안내를 받았을 때 어떤 느낌이셨나요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q30]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q30] 분류: 통신사 가입 후 2주 간 경험",
+                  "root_checklist": [
+                    {
+                      "id": "61ea76ec-e503-4df5-8d20-c3a6d8aa8e5e",
+                      "text": "이유는",
+                      "position": 0
+                    },
+                    {
+                      "id": "80fc49f4-1069-4eb2-9e19-a4ef74d4fc70",
+                      "text": "→ 아래 예시 참고해서 ①정보 충분성과 ②정보 유용성(필요성) 측면에서 Probing",
+                      "position": 1
+                    },
+                    {
+                      "id": "373508bf-5cd7-4626-a80e-e4421a470866",
+                      "text": "(e.g. 필요한/유용한 것을 받았다, 내용이 많아서 읽기 싫었다, 정작 나에게 맞는 정보가 아니었다, 정보가 불충분해서 더 찾아봐야겠다 등)",
+                      "position": 2
+                    },
+                    {
+                      "id": "0572815e-e2c6-492a-a12d-1eaeeaf89ec9",
+                      "text": "ㄴ 혹시 안내가 ‘불필요/스팸‘ 같다고 느껴졌다면, 구체적인 이유는?",
+                      "position": 3
+                    },
+                    {
+                      "id": "ca809b85-6a1e-4245-bb53-22d0333439d4",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 4
+                    },
+                    {
+                      "id": "5c61225e-62bd-45aa-a14c-2bc1df33472e",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 5
+                    },
+                    {
+                      "id": "e4f5bba6-f2ec-4932-837e-61529edf4139",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 6
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "0799039c-feab-4138-8a4c-b16c6de2bfc9",
+                "readable_id": "question_2_1_20",
+                "content": "3) 이 안내는 가입/개통한 날로부터 언제쯤 받으신건가요?, 적절한 시점에 받았다고 생각되세요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q31]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q31] 분류: 통신사 가입 후 2주 간 경험",
+                  "root_checklist": [
+                    {
+                      "id": "e6ee4181-8d53-4917-a4dc-70004db75171",
+                      "text": "이유는",
+                      "position": 0
+                    },
+                    {
+                      "id": "8f6251f7-e946-45cf-8631-87d8d6b2d208",
+                      "text": "③정보 적시성",
+                      "position": 1
+                    },
+                    {
+                      "id": "ba1a35b4-fd9a-42ec-97f0-04ff201901ef",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 2
+                    },
+                    {
+                      "id": "9115fc61-111b-4ad8-b737-381c8cfcac97",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 3
+                    },
+                    {
+                      "id": "1d1fdb81-f526-4dd3-bdc5-b6979f1defae",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 4
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "5f82a177-16c6-45fb-bd4a-15b8bc3f24ef",
+                "readable_id": "question_2_1_21",
+                "content": "6.[가입초기 안내문자 리스트 – 유인물] 가입 초기 안내문자에는 이런 것들이 있는데요, 이 중에서\n①가입 초기(1~2주 내)에 꼭 안내되어야 하는 것 vs. ② 따로 안내해주지 않고 내가 필요하면 찾아봐도 되는 것으로 구분할 수 있을까요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q32]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q32] 분류: 통신사 가입 후 2주 간 경험 | 원문 일부: 6.[가입초기 안내문자 리스트 – 유인물] 가입 초기 안내문자에는 이런 것들이 있는데요, 이 중에서\n①가입 초기(1~2주 내)에 꼭 안내되어야 하는 것 vs. ② 따로 안내해주지 않고 내가 필요하면 찾아봐도 되...",
+                  "root_checklist": [
+                    {
+                      "id": "489b89cf-c080-4ef2-8b8c-89ade99ad831",
+                      "text": "아니면 ②적절히 순차적으로 안내문자를 보내드리는게 좋을까요",
+                      "position": 0
+                    },
+                    {
+                      "id": "94abf36f-9f69-43eb-9604-8b984caa2fb4",
+                      "text": "이유는?",
+                      "position": 1
+                    },
+                    {
+                      "id": "21505061-56a6-4da5-97cf-3a050148727c",
+                      "text": "- 가입 초기 꼭 안내되어야 하는 것은 ①한번에 모두 안내해 드리는게 좋은가요?",
+                      "position": 2
+                    },
+                    {
+                      "id": "c4a45f65-24ef-4805-8308-849f4dcfea57",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 3
+                    },
+                    {
+                      "id": "fda5cfba-15f2-49b9-b9a3-35a37391210d",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 4
+                    },
+                    {
+                      "id": "08606385-597e-4fcd-bbf0-ca81302679c4",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 5
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "58ddc7b6-443d-44a8-bb0e-a1ee3aa582bc",
+                "readable_id": "question_2_1_22",
+                "content": "7.이제 ‘현 통신사의 서비스를 잘 활용하고, 필요한 설정을 할 수 있다’고 느끼시나요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q33]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q33] 분류: 통신사 가입 후 2주 간 경험",
+                  "root_checklist": [
+                    {
+                      "id": "71108ec6-9756-4538-bf3f-4b5cc81423f9",
+                      "text": "ㄴ 아직 헷갈리거나 도움/설명이 필요한 부분이 있다면 무엇인가요?",
+                      "position": 0
+                    },
+                    {
+                      "id": "4e2b91b3-86d5-40b6-b2a4-eac3cff81057",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    },
+                    {
+                      "id": "27536082-ae64-4bc7-a3b6-bcafaf926572",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 2
+                    },
+                    {
+                      "id": "9b5916dd-ee97-439c-8455-989ec7601596",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 3
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "127f3ca0-59e9-4f3d-b758-104a919bf5d3",
+                "readable_id": "question_2_1_23",
+                "content": "8.현 통신사에 가입하고 나서 느낀 감정을 모두 이야기해 주세요, 긍/부정 모두 포함됩니다. → 감정 키워드로 Probing.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q34]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q34] 분류: 통신사 가입 후 2주 간 경험",
+                  "root_checklist": [
+                    {
+                      "id": "6534046b-70ca-43af-9329-9086775c73db",
+                      "text": "(e.g. 환영받는 느낌, 쉬움, 편함, 친절함 / 방치된 느낌, 어려움/복잡함, 불편함, 불친절함, 배신감 등)",
+                      "position": 0
+                    },
+                    {
+                      "id": "38c9ad2c-4ce1-4891-8b12-9265b214a9c5",
+                      "text": "- 긍정적 or 부정적 감정을 느낀 순간은 언제이고, 그 이유는?",
+                      "position": 1
+                    },
+                    {
+                      "id": "1e901900-5043-4f3c-bdd0-1969eab937fd",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 2
+                    },
+                    {
+                      "id": "9e137221-86a7-431c-9714-d895da795c8f",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 3
+                    },
+                    {
+                      "id": "8f5cd6e8-8270-4622-a367-4a4953762269",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 4
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "593fe92b-ff1c-4c5d-979e-01eba99f2027",
+                "readable_id": "question_2_1_24",
+                "content": "9.통신사를 바꾸기로 결심했을 때와 비교하면, 바꾸고 난 지금은 전반적으로 더 만족스러운가요, 실망스러운가요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q35]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q35] 분류: 통신사 가입 후 2주 간 경험",
+                  "root_checklist": [
+                    {
+                      "id": "134e6ad7-fadf-41bf-9fc1-477d671d0d43",
+                      "text": "이유는?",
+                      "position": 0
+                    },
+                    {
+                      "id": "32e0ad0f-771d-4529-9b7e-f58b3ee9fdfa",
+                      "text": "- 기대했던 바와 실제 경험 사이의 차이가 있었다면 무엇인가요?",
+                      "position": 1
+                    },
+                    {
+                      "id": "14e5d81b-d5ae-4453-b77c-e9cf8b7d278e",
+                      "text": "- 만약 약정이 끝나면 현 통신사를 계속 이용할 것 같으세요? 아니면 다른 통신사로 변경할 것 같으세요? 결정적 이유는?",
+                      "position": 2
+                    },
+                    {
+                      "id": "1d45674e-48f7-4d37-8a90-826cb80325df",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 3
+                    },
+                    {
+                      "id": "99a4f0c1-f680-4491-8076-60abe85d764a",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 4
+                    },
+                    {
+                      "id": "5aabb2c4-e065-4cb0-9f3a-31ec949fc849",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 5
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "cc46153e-6c6f-48aa-be02-4b21100f9dc1",
+        "readable_id": "chapter_3",
+        "title": "WoW 경험",
+        "topics": [
+          {
+            "id": "ce9499b1-ed8e-4230-a2be-6330a2d223b0",
+            "readable_id": "topic_3_1",
+            "title": "WoW 경험",
+            "questions": [
+              {
+                "id": "16a807e5-8914-4dbd-959f-decb974faebf",
+                "readable_id": "question_3_1_1",
+                "content": "1.통신사 신규 가입자가 처음 7일 동안 어떤 지원을 받으면 좋을까요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q36]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q36] 분류: WoW 경험",
+                  "root_checklist": [
+                    {
+                      "id": "0e9b2f4d-e7de-4f56-939c-d3e44f548cd2",
+                      "text": "(아이데이션, 답변 바로 나오지 않으면 마지막에 한번 더 확인)",
+                      "position": 0
+                    },
+                    {
+                      "id": "95cf9c4d-4d3d-424a-8b02-7b55a8be23bc",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    },
+                    {
+                      "id": "0d1ac169-8139-436c-a323-12c52a944bb9",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 2
+                    },
+                    {
+                      "id": "8abf0068-bd66-4436-a06c-48e95c09c637",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 3
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "bf6d18e6-11ab-4882-b4fa-7fc2cd4f4239",
+                "readable_id": "question_3_1_2",
+                "content": "2.[컨셉카드3] 통신사에 가입하고 처음 쓰는 시기에, 다음 중에서 어떤 것이 가장 중요하다고 생각하세요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q37]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q37] 분류: WoW 경험",
+                  "root_checklist": [
+                    {
+                      "id": "a2565544-f49d-4e83-b88d-a8ec7298a98c",
+                      "text": "이유는?",
+                      "position": 0
+                    },
+                    {
+                      "id": "4406564f-b63a-44d3-a828-424b0fed40f7",
+                      "text": "- 1) 최대한 귀찮게 하지 않고 방해받지 않는 것, 2) 필요한 정보를 친절하게 안내받는 것, 3) 내 상황에 맞는 정보만 골라서 안내받는 것,",
+                      "position": 1
+                    },
+                    {
+                      "id": "9230b1bc-b608-428b-9301-f8cfe65a59b8",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 2
+                    },
+                    {
+                      "id": "1c25f1e0-5e53-4266-9aed-1185ac043075",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 3
+                    },
+                    {
+                      "id": "0576c1b5-e620-4024-b97c-86f5767cc7d5",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 4
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "011397fd-83b8-41db-aa1c-37ffe1dc8960",
+                "readable_id": "question_3_1_3",
+                "content": "4) 바로 활용할 수 있는 혜택을 안내받는 것",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q38]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q38] 분류: WoW 경험",
+                  "root_checklist": [
+                    {
+                      "id": "d364dc19-27e1-443f-92c0-8667bdffda93",
+                      "text": "ㄴ 이외에 중요하다고 생각하는 부분이 있다면 무엇인가요?",
+                      "position": 0
+                    },
+                    {
+                      "id": "35549e58-7c91-4c33-94ff-1b40376c6f90",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    },
+                    {
+                      "id": "8374eecb-d682-4c45-a04c-25a9064e81bf",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 2
+                    },
+                    {
+                      "id": "ff121d58-a9b8-4862-bbf3-893b3f0a49c9",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 3
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "fafb8e07-b965-4270-be4d-45da034fe2bd",
+                "readable_id": "question_3_1_4",
+                "content": "3.[컨셉카드4] 통신사 가입 초기 경험을 긍정적으로 만드는데 다음 중 어떤 노력이 가장 중요하다고 생각하세요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q39]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q39] 분류: WoW 경험",
+                  "root_checklist": [
+                    {
+                      "id": "cf8bdf4e-4862-46a5-9d77-6401e86ed282",
+                      "text": "이유는?",
+                      "position": 0
+                    },
+                    {
+                      "id": "836f40c8-0286-4be5-98af-409bebeb05d9",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    },
+                    {
+                      "id": "24571423-54d2-46bc-b9bb-44790cb0b4c3",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 2
+                    },
+                    {
+                      "id": "54a63432-ab96-4e99-b81b-1345c0c9a298",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 3
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "d11d885c-7e15-4110-9d59-97c31b2a3aa9",
+                "readable_id": "question_3_1_5",
+                "content": "1) 기존 안내 방식 개선: 현재 받고 있는 문자, 알림톡 내용을 더 이해하기 쉽고 유용하게 개선",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q40]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q40] 분류: WoW 경험",
+                  "root_checklist": [
+                    {
+                      "id": "be1f51a7-f66f-4d7a-9a0f-0c150557da96",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 0
+                    },
+                    {
+                      "id": "56328237-cab9-41c2-99cb-db834e0c3b70",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "843868c6-3981-4274-aa71-53597f1ed0c9",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "4a3a5219-8462-4a82-8ffc-735d4cb7dd40",
+                "readable_id": "question_3_1_6",
+                "content": "2) 초기 과정 간소화: 꼭 필요한 기능만 빠르게 설정하고 넘어갈 수 있도록 초기 과정을 최소화",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q41]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q41] 분류: WoW 경험",
+                  "root_checklist": [
+                    {
+                      "id": "fb5c3cef-fa4f-4c37-af3d-3a12bec15dea",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 0
+                    },
+                    {
+                      "id": "44762839-0ab0-46ef-b939-f5fb66ffd628",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "8bee373b-fca5-4a51-a6ed-d2b1464753b7",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "1fc91ed4-ea68-4ea2-9fab-2b3e88fa3aab",
+                "readable_id": "question_3_1_7",
+                "content": "3) 가입 시 설명 일괄 제공: 가입하는 매장이나 웹사이트에서 모든 설명을 완벽하게 끝내주는 것",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q42]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q42] 분류: WoW 경험",
+                  "root_checklist": [
+                    {
+                      "id": "e5274c5f-e657-4632-9b04-4a8da04af673",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 0
+                    },
+                    {
+                      "id": "3e224850-2b1a-4449-b570-7cd4b4cd1571",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "b5969ca9-8ca2-40af-b983-57a1e3baa63e",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "f99aeb98-9111-4d4b-832a-435fb7a3b12f",
+                "readable_id": "question_3_1_8",
+                "content": "4) 새로운 안내 방식 도입: 짧은 영상(릴스), 온라인 가이드북 등 새로운 형태로 정보를 제공",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q43]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q43] 분류: WoW 경험",
+                  "root_checklist": [
+                    {
+                      "id": "eb6057b5-3ea9-4d53-9fb1-584bfcd5858e",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 0
+                    },
+                    {
+                      "id": "5f8affef-cf20-4b03-8925-ee4066bafb9e",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "0be3fd73-fd17-4aaa-b15f-a6fef9fdb6a5",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "a8df5557-d8d8-4896-a6e2-663c0b950115",
+                "readable_id": "question_3_1_9",
+                "content": "5) 게임/재미 요소 도입: 앱에서 미션을 수행하며 혜택을 알아가는 등 재미 요소를 도입",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q44]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q44] 분류: WoW 경험",
+                  "root_checklist": [
+                    {
+                      "id": "5c96af60-5c07-4678-b50f-a0c2a7ca5331",
+                      "text": "ㄴ 이외에 가입초기에 긍정적인 경험을 주기 위해서 통신사가 노력해야 할 것이 있다면?",
+                      "position": 0
+                    },
+                    {
+                      "id": "d40c2869-6453-4dc7-8790-5f5e13b54021",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    },
+                    {
+                      "id": "3cc3af45-03fb-485b-9a4e-d6df45da08d6",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 2
+                    },
+                    {
+                      "id": "67cd6437-2a0e-4044-ab45-8f288491dce2",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 3
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "f704a6dc-bd50-432c-8dfb-0d5953643555",
+                "readable_id": "question_3_1_10",
+                "content": "4.[컨셉카드5] 통신사가 새로운 방식으로 서비스 이용법이나 혜택을 안내한다면, 어떤 방식을 이용해보실 의향이 있는지?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q45]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q45] 분류: WoW 경험",
+                  "root_checklist": [
+                    {
+                      "id": "8afae6e0-3e4e-45f0-91a2-3c80ed0acaa0",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 0
+                    },
+                    {
+                      "id": "e8649559-b2d7-4ac6-a494-9e587b2fd776",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "8d13de81-0b4e-4389-85c5-813cec2ec06a",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "178740c7-1a46-4752-8fde-57cd1efc88c4",
+                "readable_id": "question_3_1_11",
+                "content": "1) 1분 이내의 짧은 영상(릴스, 쇼츠)으로 핵심 혜택/기능 안내",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q46]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q46] 분류: WoW 경험",
+                  "root_checklist": [
+                    {
+                      "id": "b2dc642a-0644-43b8-9e28-382f81f93df9",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 0
+                    },
+                    {
+                      "id": "20761f20-cdbc-4632-b3a1-f2d61320ac8f",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "39d08d18-6414-495e-b648-e66bfbd24e09",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "886c71eb-3e17-4b9a-b128-61ea91445a3c",
+                "readable_id": "question_3_1_12",
+                "content": "2) 5분 내외의 상세한 동영상 튜토리얼 (ex. 요금 명세서 보는 법)",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q47]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q47] 분류: WoW 경험",
+                  "root_checklist": [
+                    {
+                      "id": "c2390fa7-dcb7-4037-96be-9f78a205cacb",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 0
+                    },
+                    {
+                      "id": "1a73e572-b00e-42fa-8a25-d53834f397ff",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "181f5191-c109-4de2-ae90-cc667d05b49e",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "ce4c58a0-cde4-413c-b842-b99da268ba65",
+                "readable_id": "question_3_1_13",
+                "content": "3) 원하는 정보를 쉽게 검색하고 찾아볼 수 있는 온라인 가이드북",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q48]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q48] 분류: WoW 경험",
+                  "root_checklist": [
+                    {
+                      "id": "1ac622db-a75b-4223-8ac0-f54af2fcc93e",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 0
+                    },
+                    {
+                      "id": "60347204-1703-41f2-8e4d-acfe1acff44c",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "c21cfd21-b7d8-491c-aae8-54cf7a13847f",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "9d99f5b3-0bd3-4b0c-9fd9-e5a9cf920f4d",
+                "readable_id": "question_3_1_14",
+                "content": "4) 통신사 세팅은 무엇부터 해야 하는지 하나씩 따라할 수 있도록 알려주는 체크리스트",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q49]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q49] 분류: WoW 경험",
+                  "root_checklist": [
+                    {
+                      "id": "89c821c5-1a97-487a-a587-55e7c7c94101",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 0
+                    },
+                    {
+                      "id": "83b067ee-80e4-49cd-8736-a46558468a17",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "76f8f35f-13a6-4794-ade8-59f8a6395c4f",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "defe8c59-4b97-4695-9976-a0480a10a869",
+                "readable_id": "question_3_1_15",
+                "content": "5) 고객센터 앱 내에서 미션(퀘스트)을 완료하고 소소한 보상을 받는 방식",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q50]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q50] 분류: WoW 경험",
+                  "root_checklist": [
+                    {
+                      "id": "0c86c93b-f0f8-494c-abbe-c0def97a3eb6",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 0
+                    },
+                    {
+                      "id": "52d8001b-61e5-4b9f-9c5c-a18fc6ad76c6",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "84cfa374-4ba5-4b6f-8d07-5a87763eb0f3",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "361bbe1e-763d-4b1c-9358-05d1dcef9864",
+                "readable_id": "question_3_1_16",
+                "content": "6) 실물 가이드북",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q51]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q51] 분류: WoW 경험",
+                  "root_checklist": [
+                    {
+                      "id": "963d7ddb-4ea9-4117-86eb-8041cbf455e7",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 0
+                    },
+                    {
+                      "id": "61801436-20d9-492b-af03-a9149b766d9f",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "01468cce-836f-4992-96d6-aadaa2df2218",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "25adcdbe-c0eb-4c93-ae49-5f12b5c01677",
+                "readable_id": "question_3_1_17",
+                "content": "7) 이전 통신사와이 비교 콘텐츠 제공 (이전 통신사에서 사용했던 용어, 비슷한 요금제 비교, 고객센터/멤버십 앱 사용 방법 가이드, 혜택 비교 등)",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q52]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q52] 분류: WoW 경험",
+                  "root_checklist": [
+                    {
+                      "id": "4ed4f6f8-5b77-4cdc-a305-3fb89f3d14b0",
+                      "text": "ㄴ 이외에 어떤 방식으로 이용방법/혜택을 알려주면 좋을 것 같으세요?",
+                      "position": 0
+                    },
+                    {
+                      "id": "634308e1-228b-4a5c-be5d-9e03616fc818",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 1
+                    },
+                    {
+                      "id": "ffc74251-8777-4069-8561-da380e6bf1d9",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 2
+                    },
+                    {
+                      "id": "e277b0b9-2951-481a-b9ea-6f936713f3aa",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 3
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              },
+              {
+                "id": "ffb6903a-935e-40ef-92ca-4d2ff8976586",
+                "readable_id": "question_3_1_18",
+                "content": "5.“좋았던 온보딩 사례 발굴”\n통신사가 이외 다른 서비스/상품를 처음 사용할 때, 안내나 설정과정 중 기억에 남았던 좋은 경험이 있었나요?그 경험이 좋았던 이유는?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[Q53]",
+                "probing_plan": {
+                  "root_note": "[엑셀 Q53] 분류: WoW 경험",
+                  "root_checklist": [
+                    {
+                      "id": "cb7aec8b-97ec-4236-a0ce-5099ffae81cd",
+                      "text": "참여자 발화를 한 줄 인용·확인한 뒤 다음 질문으로 넘어간다",
+                      "position": 0
+                    },
+                    {
+                      "id": "49be239c-9f02-4013-bed7-3327183a0693",
+                      "text": "목표 인사이트가 나올 때까지 같은 주제 안에서 추가 질문으로 보완한다",
+                      "position": 1
+                    },
+                    {
+                      "id": "dcabb428-8d15-41d9-b131-e5999f41284f",
+                      "text": "동일하거나 유사한 취지의 질문은 반복하지 않는다",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 45,
+                "media": []
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "interview_closing": {
+      "closing_message": "오늘 소중한 시간 내어 주셔서 감사합니다. 추가로 하실 말씀이 있으시면 짧게 말씀해 주시고, 없으시면 '없습니다'라고 해 주셔도 됩니다. 감사합니다."
+    }
+  }
+}

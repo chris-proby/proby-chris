@@ -1,0 +1,1413 @@
+{
+  "survey_draft": {
+    "title": "임원 인터뷰 가이드라인 (샘플)",
+    "description": "CEO/임원 후보 대상 심층 인터뷰 가이드라인. 에세이 기반 분류 분석 + Part1/Part2 구조. 생성: 샘플케이스 SKT 폴더",
+    "welcome_title": "안녕하세요, 인터뷰에 참여해 주셔서 감사합니다",
+    "welcome_message": "오늘 인터뷰는 약 1시간 분량으로 설계되어 있으며, 경력과 리더십에 대해 자유롭게 말씀해 주시면 됩니다.",
+    "goal": "임원 후보의 전략적 사고력·실행력·리더십 역량과 리스크를 파악하고, 에세이 내용을 기반으로 심층 탐색하여 포지션 적합도를 평가한다",
+    "target_audience": "CEO 또는 C레벨 임원 후보",
+    "quota": 10,
+    "user_groups": [],
+    "user_inputs": [
+      {
+        "id": "627be6f9-44e7-4017-a850-23c316af92b8",
+        "readable_id": "user_input_1",
+        "label": "성함을 알려 주세요"
+      }
+    ],
+    "screener_questions": [],
+    "interview_opening": "안녕하세요. 오늘 인터뷰를 진행하는 인터뷰어입니다.\n오늘은 작성해 주신 에세이를 바탕으로 경력과 리더십에 대해 편하게 이야기 나눠 보겠습니다.\n정답은 없으며, 경험하신 대로 솔직하게 말씀해 주시면 됩니다.\n준비되셨으면 '시작하겠습니다'라고 말씀해 주세요.",
+    "interview_chapters": [
+      {
+        "id": "0f5a42b9-83d3-44d6-bae2-705536e323d5",
+        "readable_id": "chapter_1",
+        "title": "오프닝 · 에세이 기반 도입",
+        "topics": [
+          {
+            "id": "0bc7616f-cc0b-483e-99f7-b095ba9a39e6",
+            "readable_id": "topic_1_1",
+            "title": "경력 핵심 사건 도입",
+            "questions": [
+              {
+                "id": "46e2c44e-808a-45ba-ac37-96b5cf0b61f4",
+                "readable_id": "question_1_1_1",
+                "content": "커리어에서 가장 난도가 높았던 사업·조직 과제 하나를 떠올려 주십시오.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[도입1]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "35c3aba0-9543-45ae-aaf0-45df84bc6508",
+                      "text": "어떤 상황이었는지, 본인의 역할은 무엇이었는지 구체적으로 말씀해 주세요.",
+                      "position": 0
+                    },
+                    {
+                      "id": "4818a87b-6dcf-4c98-b105-70824b1fac94",
+                      "text": "그 과제가 왜 가장 난도가 높았다고 생각하시는지 이유를 확인한다.",
+                      "position": 1
+                    },
+                    {
+                      "id": "4a002e06-06db-4a61-8b2c-5e9d431a44a3",
+                      "text": "결과가 어떻게 됐는지도 짧게 확인한다.",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              },
+              {
+                "id": "6548749f-2c97-4642-af94-6287991d72ff",
+                "readable_id": "question_1_1_2",
+                "content": "커리어에서 가장 큰 좌절·실패·시련의 경험을 하나 떠올려 주십시오.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[도입2]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "5b4a38b7-5ca2-4724-9bff-92dfa29b5d26",
+                      "text": "그 시련이 본인에게 어떤 영향을 줬는지 구체적으로 확인한다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "8f8ea334-0e95-43f7-b1e2-368ecf885ec8",
+                      "text": "어떻게 극복하거나 적응했는지 과정을 탐색한다.",
+                      "position": 1
+                    },
+                    {
+                      "id": "7492856f-744c-4f5b-b260-ecee39d28520",
+                      "text": "그 경험이 이후 리더십 방식에 어떤 변화를 가져왔는지 묻는다.",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "4f518107-2e97-4acf-a5d1-779fecd8836a",
+        "readable_id": "chapter_2",
+        "title": "Part 1 — Design 역량 + Learning Agility",
+        "topics": [
+          {
+            "id": "c61d37e6-eff4-467e-ae2f-6fbe259152a2",
+            "readable_id": "topic_2_1",
+            "title": "종합적 기획력 (Design 역량)",
+            "questions": [
+              {
+                "id": "f4e09a73-a61b-49fa-b3a3-d5360d4984b9",
+                "readable_id": "question_2_1_1",
+                "content": "지금의 경험과 역량을 갖고 그 과제를 다시 맡는다면 무엇을 다르게 하시겠습니까?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[P1-Q1]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "d915a427-5fa3-4f7e-ba96-63454aee5b6c",
+                      "text": "구체적으로 어떤 판단·결정을 바꾸겠다는 것인지 확인한다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "0ea30048-efbc-4f15-807b-54438ca47d51",
+                      "text": "왜 그 시점에는 그렇게 하지 못했는지 이유를 탐색한다.",
+                      "position": 1
+                    },
+                    {
+                      "id": "df78b7ff-e441-4fa0-93b7-b0d0407405e5",
+                      "text": "그 경험에서 얻은 학습이 이후 어떻게 적용됐는지 묻는다.",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "96ca6072-0f35-488d-a37e-da583e2b0f95",
+            "readable_id": "topic_2_2",
+            "title": "Globality / Learning Agility",
+            "questions": [
+              {
+                "id": "e9d92f21-ef7d-4efc-91c1-3778804f03d5",
+                "readable_id": "question_2_2_1",
+                "content": "글로벌 경쟁에서 우리 회사가 'Global Top Tier'로 올라서려면 어떤 시장 전략과 승부수가 필요합니까?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[P1-Q2]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "179cad4f-73de-4323-9372-7f46721fd191",
+                      "text": "본인의 글로벌 경험에서 나온 시각인지, 이론적 분석인지 구분해 확인한다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "f561c936-1efc-4683-a0cd-f4957801d8cd",
+                      "text": "제시한 전략의 실행 가능성과 본인의 역할을 물어본다.",
+                      "position": 1
+                    },
+                    {
+                      "id": "fe14d6ea-bf87-467a-b28b-dc04bed0677d",
+                      "text": "가장 큰 리스크는 무엇이라 보는지 확인한다.",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "b47cf0d3-f9a5-4627-8cc4-eb657fc58606",
+            "readable_id": "topic_2_3",
+            "title": "AX 혁신",
+            "questions": [
+              {
+                "id": "8c2343c3-5303-4e4e-8cb4-b6d167ddaa14",
+                "readable_id": "question_2_3_1",
+                "content": "AX 혁신이 본인의 사업/기능 영역에 어떤 변화를 가져올 것이라 확신합니까?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[P1-Q3]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "a9d1e55e-310c-4ef3-9bb1-38df70951bbd",
+                      "text": "확신의 근거를 실제 경험 또는 구체적 관찰에서 말하게 한다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "d5e7fb86-cc40-4b20-ade2-24d7ba866fb1",
+                      "text": "본인이 직접 AI를 활용해 일하는 방식을 바꾼 사례가 있는지 확인한다.",
+                      "position": 1
+                    },
+                    {
+                      "id": "e8398acb-7190-4263-bc9f-e952e6353c4e",
+                      "text": "조직 구성원들에게 AI 전환을 어떻게 설득하고 이끌 계획인지 묻는다.",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "be695dc9-e00f-4b74-9aca-35c133541af3",
+        "readable_id": "chapter_3",
+        "title": "Part 2 — Attitude + 리더십 리스크",
+        "topics": [
+          {
+            "id": "99e2eb17-f0e5-42ac-aea5-b9140a5f275a",
+            "readable_id": "topic_3_1",
+            "title": "비전과 목표",
+            "questions": [
+              {
+                "id": "e00dede8-8254-4086-ae22-1b0b2e7d6b33",
+                "readable_id": "question_3_1_1",
+                "content": "리더로서 궁극적으로 이루고 싶은 비전과 목표는 무엇입니까?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[P2-Q1]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "df8c3606-f841-46d7-8844-c9418c7ad854",
+                      "text": "직책이 아닌 비전 중심으로 말하도록 유도한다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "a4b2ec2d-83b5-48f4-9d0d-27315626f193",
+                      "text": "그 비전이 언제부터 형성됐는지, 어떤 경험에서 비롯됐는지 확인한다.",
+                      "position": 1
+                    },
+                    {
+                      "id": "680d6d9e-2ae8-43ff-9cbc-ff16af94ac5a",
+                      "text": "5년 내 검증 가능한 지표를 물어본다.",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "5274bd60-b755-487c-9eb9-91c1ea1bd301",
+            "readable_id": "topic_3_2",
+            "title": "시련과 실패",
+            "questions": [
+              {
+                "id": "c668d512-3d39-41f2-85d5-15852d25d43b",
+                "readable_id": "question_3_2_1",
+                "content": "커리어에서 가장 큰 좌절·실패·시련을 경험한 시점은 언제였습니까?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[P2-Q2]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "433debbe-358e-4718-922c-ef0f333897c2",
+                      "text": "그 시련이 본인에게 어떤 영향을 줬는지 구체적으로 확인한다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "3b6f8051-13ca-4c53-9de7-aef95c0e381d",
+                      "text": "어떻게 극복하거나 적응했는지 과정을 탐색한다.",
+                      "position": 1
+                    },
+                    {
+                      "id": "cd9c5426-4789-4a12-90ba-486c59fdb939",
+                      "text": "그 경험이 이후 리더십 방식에 어떤 변화를 가져왔는지 묻는다.",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "0dafd3c2-7c9e-413d-a7f3-5ada177500e5",
+            "readable_id": "topic_3_3",
+            "title": "리더십 리스크 인식",
+            "questions": [
+              {
+                "id": "5f783fa1-86e6-4664-b018-9eed8e41390f",
+                "readable_id": "question_3_3_1",
+                "content": "가장 큰 리스크가 온다면, 본인의 어떤 리더십 특성이나 행동 패턴에서 비롯될 것입니까?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[P2-Q3]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "500ffd52-7530-4b0d-b221-04b14f74e750",
+                      "text": "구체적인 행동 패턴이나 상황을 예시로 들게 한다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "aa7d4314-9028-4ea3-9d5b-9f0c778058b8",
+                      "text": "그 리스크를 인식한 계기가 있는지 확인한다.",
+                      "position": 1
+                    },
+                    {
+                      "id": "541d9113-bd4f-4d05-bfde-bed552ec411b",
+                      "text": "현재 어떻게 관리·보완하고 있는지 묻는다.",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "8e9fa413-7ad8-4947-9b20-6efca8af80be",
+        "readable_id": "chapter_4",
+        "title": "에세이 분류 분석 인터뷰",
+        "topics": [
+          {
+            "id": "b1e39fc1-6b0f-40cf-9fda-41c89b7b52ef",
+            "readable_id": "topic_4_1",
+            "title": "역량 지표 (전략적 사고력 ~ 비전 명확성)",
+            "questions": [
+              {
+                "id": "fec8dba6-d860-423b-8c0b-b6f91708ee6c",
+                "readable_id": "question_4_1_1",
+                "content": "이중 채널 전략·M&A 협상 설계·포트폴리오 원칙·글로벌 전략론을 아우르는 구조화된 사고를 보여주셨습니다. 그 전략들 중 가장 어려웠던 트레이드오프는 무엇이었습니까?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[에세이-1 전략적사고력]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "018dfe00-54d7-4206-84ab-35feaed97395",
+                      "text": "트레이드오프를 어떤 기준으로 판단했는지 구체적으로 확인한다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "dfe38d45-3789-4c7b-a0ec-f66c76ad8565",
+                      "text": "그 판단이 옳았다고 생각하는지, 돌아보면 아쉬운 점은 없는지 묻는다.",
+                      "position": 1
+                    },
+                    {
+                      "id": "d697263e-51d4-4941-bef8-84d1273591f9",
+                      "text": "비슷한 상황이 오면 지금도 같은 선택을 할 것인지 확인한다.",
+                      "position": 2
+                    }
+                  ],
+                  "branches": [
+                    {
+                      "id": "54b3ff32-096e-4e98-9fc4-6c3eae058032",
+                      "if": "트레이드오프가 인력/조직 관련인 경우",
+                      "note": "",
+                      "position": 0,
+                      "checklist": [
+                        {
+                          "id": "65642168-4e2e-473c-b124-f35592a153a2",
+                          "text": "구성원에게 어떻게 설명하고 설득했는지 구체적으로 확인한다.",
+                          "position": 0
+                        },
+                        {
+                          "id": "e75b9bf2-e4e2-4fae-9162-76e95cbedf0f",
+                          "text": "반대 의견은 없었는지, 있었다면 어떻게 처리했는지 묻는다.",
+                          "position": 1
+                        }
+                      ],
+                      "branches": []
+                    },
+                    {
+                      "id": "3cffec99-5b0f-44c4-9836-e840e58d279e",
+                      "if": "트레이드오프가 재무/비용 관련인 경우",
+                      "note": "",
+                      "position": 1,
+                      "checklist": [
+                        {
+                          "id": "f293ce59-261a-4873-942f-37d80594fc2b",
+                          "text": "숫자 기준으로 판단했는지, 질적 판단이 우선이었는지 확인한다.",
+                          "position": 0
+                        },
+                        {
+                          "id": "ab05c4a4-12af-4bf8-aac1-6d255c0e3d34",
+                          "text": "이사회나 상위 조직의 승인 과정은 어떠했는지 묻는다.",
+                          "position": 1
+                        }
+                      ],
+                      "branches": []
+                    }
+                  ]
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              },
+              {
+                "id": "16907287-f876-4a71-b6e7-780407171ef4",
+                "readable_id": "question_4_1_2",
+                "content": "대규모 조직 정비와 사업 재건을 실제로 완수한 이력을 말씀해주셨습니다. 그 실행 중 가장 큰 병목은 어디였고 어떻게 뚫으셨습니까?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[에세이-2 실행력]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "8f8eee32-0a29-4b56-b17b-6563fc9bb4db",
+                      "text": "병목의 원인이 사람·시스템·자원 중 어디였는지 구분해 확인한다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "cc81d838-63eb-4c91-aefb-36a15540441d",
+                      "text": "그 해결 방식이 현재에도 동일하게 적용되는 방식인지 묻는다.",
+                      "position": 1
+                    },
+                    {
+                      "id": "8372ab7b-5b4f-4037-bb80-37012b2f4990",
+                      "text": "실행 과정에서 예상 외로 빠르게 해결된 부분도 있었는지 묻는다.",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              },
+              {
+                "id": "74f8533a-4b4d-413e-beff-87dd6365c4b1",
+                "readable_id": "question_4_1_3",
+                "content": "복합적인 과제를 입체적으로 기획한 역량을 강조하셨습니다. 지금 관점에서 그 기획 중 가장 보완했어야 할 부분은 무엇입니까?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[에세이-3 종합적기획력]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "cb9ee95b-f692-4343-8a56-6842e633a984",
+                      "text": "기획 단계에서 놓쳤던 변수나 가정이 무엇인지 구체적으로 확인한다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "a96cbdfb-77c3-453a-bd37-2af802b68875",
+                      "text": "왜 그 부분을 놓쳤다고 생각하는지 이유를 탐색한다.",
+                      "position": 1
+                    },
+                    {
+                      "id": "b15dae87-675c-4f76-80da-330466167fa6",
+                      "text": "그 교훈이 이후 기획 방식에 어떻게 반영됐는지 묻는다.",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              },
+              {
+                "id": "40d92b1f-e1f4-405b-8852-0b871eeac771",
+                "readable_id": "question_4_1_4",
+                "content": "다양한 도메인 전환과 실패 경험에서 학습 패턴을 보여주셨습니다. 최근 1년 가장 크게 바꾼 본인의 의사결정 방식은 무엇입니까?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[에세이-4 Learning Agility]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "8e03757d-2887-4d5c-965e-d9a83e6bbd9e",
+                      "text": "변화의 계기가 된 구체적인 경험이나 학습을 확인한다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "df309f15-3349-432a-a08d-ca8e6c7dfe9f",
+                      "text": "그 변화가 실제 결과에 어떤 차이를 만들었는지 묻는다.",
+                      "position": 1
+                    },
+                    {
+                      "id": "facdef7f-b95e-497d-8ce7-960d694d0abc",
+                      "text": "앞으로 더 바꾸고 싶은 부분이 있다면 무엇인지 탐색한다.",
+                      "position": 2
+                    }
+                  ],
+                  "branches": [
+                    {
+                      "id": "27d8efdd-547b-4302-8685-7bac0b58e219",
+                      "if": "최근 변화가 AI/기술 관련인 경우",
+                      "note": "",
+                      "position": 0,
+                      "checklist": [
+                        {
+                          "id": "739e5da1-1a51-4bee-b2fa-600904ea9dc7",
+                          "text": "구체적으로 어떤 툴이나 방식을 도입했는지 확인한다.",
+                          "position": 0
+                        },
+                        {
+                          "id": "6d8ba686-293d-43ea-8161-aa8bf7a4613d",
+                          "text": "그 변화가 조직 전체로 확산됐는지, 아니면 본인만 쓰는지 묻는다.",
+                          "position": 1
+                        }
+                      ],
+                      "branches": []
+                    }
+                  ]
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              },
+              {
+                "id": "e6052418-d962-4e95-9ff9-d011fa8d58e6",
+                "readable_id": "question_4_1_5",
+                "content": "위기에서 좌절을 실행으로 전환하는 회복 패턴을 언급해주셨습니다. 그 위기 당시 본인 내면에서 가장 크게 싸운 것은 무엇이었습니까?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[에세이-5 Resilience]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "958fa15a-d8fe-46a1-bbc6-b3149679e748",
+                      "text": "내면의 갈등을 구체적으로 파악한다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "c7ca5117-1f8a-434f-82d9-97b3fec02ca6",
+                      "text": "어떻게 그 갈등을 해소하거나 통제했는지 탐색한다.",
+                      "position": 1
+                    },
+                    {
+                      "id": "236e0fa6-9f36-49b1-917d-f6a86db79d19",
+                      "text": "같은 상황이 다시 온다면 어떻게 다르게 대응하겠는지 묻는다.",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              },
+              {
+                "id": "0582ed52-df56-426a-9994-5a844aaadb8f",
+                "readable_id": "question_4_1_6",
+                "content": "실제 해외 현장 경험과 현지 정부·파트너 관계 구축 역량을 강조하셨습니다. 그 시장에서 가장 예상과 달랐던 현지화의 포인트는 무엇이었습니까?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[에세이-6 Globality]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "9fec91c2-7d4f-420d-b6f2-5f77d5fcc33a",
+                      "text": "기대와 현실의 차이가 구체적으로 나올 때까지 추가 질문한다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "3deaa3d3-a943-4dbc-bfe0-290d8828eef6",
+                      "text": "그 경험이 글로벌 전략 설계에 어떤 변화를 줬는지 확인한다.",
+                      "position": 1
+                    },
+                    {
+                      "id": "57731e13-fc87-4c2e-a9f3-a29d25f166c6",
+                      "text": "현지 파트너 또는 정부와의 신뢰 관계를 어떻게 구축했는지 묻는다.",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              },
+              {
+                "id": "35a589d8-5a29-46ef-943f-d4de87493e46",
+                "readable_id": "question_4_1_7",
+                "content": "위기의 원인을 본인 판단 오류로 명확히 귀인하고 리더십 리스크를 직접 명명하셨습니다. 최근 구성원으로부터 받은 피드백 중 가장 받아들이기 어려웠던 것은 무엇입니까?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[에세이-7 Humility]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "fe18b71f-b1d6-472d-aacb-706c55ae27fb",
+                      "text": "피드백을 어떻게 처리했는지 구체적으로 확인한다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "0032eac9-c4a1-4266-ba8a-e06ad69a0b25",
+                      "text": "그 피드백이 행동 변화로 이어졌는지 묻는다.",
+                      "position": 1
+                    },
+                    {
+                      "id": "0a4555ba-1e34-4c11-934c-25add0e0e591",
+                      "text": "피드백을 주기적으로 받는 구조가 있는지 확인한다.",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              },
+              {
+                "id": "18d032a9-03bd-43bc-9456-bb97e763b854",
+                "readable_id": "question_4_1_8",
+                "content": "원칙을 사전 구조화하는 방식을 보여주셨습니다. 성과와 원칙이 충돌할 때 본인의 기준선은 어디입니까?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[에세이-8 Integrity]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "2b62476e-cef2-4da9-928b-62573e9fdc12",
+                      "text": "기준선이 실제로 적용된 사례를 하나 이상 확인한다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "b7513680-0df4-492a-b9d0-562d399e946b",
+                      "text": "그 기준을 지켰을 때 어떤 결과가 있었는지 묻는다.",
+                      "position": 1
+                    },
+                    {
+                      "id": "87d51240-e1ab-499e-8a36-774b97d444a1",
+                      "text": "주변에서 그 원칙을 어떻게 인식하는지 확인한다.",
+                      "position": 2
+                    }
+                  ],
+                  "branches": [
+                    {
+                      "id": "e5094930-3fea-4086-a951-74e4cb54424c",
+                      "if": "원칙을 지킨 결과 단기 성과에 손해가 있었던 경우",
+                      "note": "",
+                      "position": 0,
+                      "checklist": [
+                        {
+                          "id": "be2f01bd-3123-4440-911c-99958d4581f4",
+                          "text": "그 손해를 어떻게 감수했는지, 주변의 반응은 어떠했는지 확인한다.",
+                          "position": 0
+                        },
+                        {
+                          "id": "1ea5a81c-6ea8-40d0-8e6b-9f55671d83ec",
+                          "text": "장기적으로 그 결정이 옳았다고 생각하는지 묻는다.",
+                          "position": 1
+                        }
+                      ],
+                      "branches": []
+                    }
+                  ]
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              },
+              {
+                "id": "30fd7531-92f8-42bf-a29d-e5dae02266c6",
+                "readable_id": "question_4_1_9",
+                "content": "구체적인 비전과 방향성을 제시하셨습니다. 그 비전을 5년 안에 검증할 수 있는 지표 하나를 말씀해주세요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[에세이-9 비전명확성]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "0602f2ac-64ea-4eaf-9200-1e304082ce77",
+                      "text": "지표가 측정 가능하고 구체적인지 확인한다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "0e32bec6-0234-4072-8595-55fae3a38f2a",
+                      "text": "그 지표가 왜 가장 중요하다고 판단하는지 이유를 묻는다.",
+                      "position": 1
+                    },
+                    {
+                      "id": "5f213005-d7ec-4cf4-b370-a36db516f47e",
+                      "text": "현재 그 지표 달성을 위해 하고 있는 일이 무엇인지 확인한다.",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "3850cff9-aed1-48c6-adbd-69efde971a9b",
+            "readable_id": "topic_4_2",
+            "title": "고정 질문 — 비전 명확성 확인 후 항상 진행",
+            "questions": [
+              {
+                "id": "e9d5b6c7-3249-424d-a0f1-4f513089d7da",
+                "readable_id": "question_4_2_1",
+                "content": "리더로서 당신에게 가장 중요한 것은 무엇입니까? 그리고 왜 그것입니까?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[고정-1]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "3d6be564-ddf1-4f36-a1f9-bca4cc8aee02",
+                      "text": "추상적인 답변이 나오면 구체적인 사례로 연결해 달라고 요청한다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "7efd5e2d-0ecb-4521-bc0b-ecd581756b3b",
+                      "text": "그 가치가 실제 의사결정에서 어떻게 드러났는지 확인한다.",
+                      "position": 1
+                    },
+                    {
+                      "id": "a505e9e2-42ff-4c52-b51d-ac5ba7a0de52",
+                      "text": "그 중요성을 언제 처음 깨달았는지 탐색한다.",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              },
+              {
+                "id": "54e89a7e-f1a2-4fc6-98ce-d411493e2047",
+                "readable_id": "question_4_2_2",
+                "content": "가장 큰 스트레스 상황에서 당신은 어떤 사람이 됩니까? 평소의 자신과 무엇이 달라집니까?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[고정-2]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "c46d4a31-1268-45c1-a0dc-fbb4f20bc717",
+                      "text": "구체적인 행동 변화(언어, 태도, 판단 방식 등)를 물어본다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "757288bb-d447-43e8-82ac-0f6eec34cc53",
+                      "text": "주변 사람들도 그 변화를 알아채는지, 어떻게 알아채는지 확인한다.",
+                      "position": 1
+                    },
+                    {
+                      "id": "241a26a9-2595-4f6e-b754-5929110cd74c",
+                      "text": "스트레스를 관리하는 본인만의 방식이 있는지 묻는다.",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              },
+              {
+                "id": "d543dda0-5706-4c5e-a5e2-9aa0b7d735a4",
+                "readable_id": "question_4_2_3",
+                "content": "밑에서 일하는 사람이 당신에 대해 솔직하게 한마디 한다면, 뭐라고 할 것 같습니까?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[고정-3]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "ef935a97-8c81-4c8c-97c2-a6f5f78c8134",
+                      "text": "긍정적인 면뿐 아니라 부정적인 면도 포함해서 말하도록 유도한다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "e3915d65-e964-4cf1-8a38-69daeed5844d",
+                      "text": "그 인식이 본인이 원하는 리더상과 일치하는지 확인한다.",
+                      "position": 1
+                    },
+                    {
+                      "id": "4e887008-6201-4787-8d57-21e678502add",
+                      "text": "실제로 그런 피드백을 들어본 적이 있는지 묻는다.",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              },
+              {
+                "id": "646df15b-cda7-43e3-afc0-f68c81da5d4c",
+                "readable_id": "question_4_2_4",
+                "content": "CEO라는 자리가 본인에게 어떤 의미입니까? 역할이나 책임과 별개로, 그 자리에 있는 사람으로서 자신을 어떻게 상상하십니까?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[고정-4]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "0a36a7fb-f70c-4050-a4a0-516ab11b9a32",
+                      "text": "역할/책임 이야기가 나오면 '그것이 아닌 자신의 정체성'으로 다시 질문한다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "b33c9388-5abd-4e2e-9375-ad7d72e38c09",
+                      "text": "CEO가 된다는 것의 의미를 본인의 언어로 표현하게 한다.",
+                      "position": 1
+                    },
+                    {
+                      "id": "8fe137ba-0d12-4a05-8efa-939f45553469",
+                      "text": "그 상상이 언제부터 생겼는지 탐색한다.",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              },
+              {
+                "id": "5c48d4dd-68a3-40e9-a1d8-11cd801ebbd0",
+                "readable_id": "question_4_2_5",
+                "content": "CEO가 되면 가장 먼저 포기해야 할 것은 무엇이라 생각하십니까? 그리고 그것을 포기할 준비가 되어 있습니까?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[고정-5]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "e7683434-b1e7-493f-8bdc-e6321a8cc9a5",
+                      "text": "포기해야 할 것이 구체적으로 특정될 때까지 추가 질문한다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "284dd1db-5849-49e7-a9dd-c8e393fdc65a",
+                      "text": "준비가 됐다고 하면 어떻게 준비하고 있는지 증거를 확인한다.",
+                      "position": 1
+                    },
+                    {
+                      "id": "98875d80-ff06-4a7f-ae97-121f161009d8",
+                      "text": "그것을 포기했을 때 어떤 감정이 들 것 같은지 탐색한다.",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              }
+            ]
+          },
+          {
+            "id": "3ee2c81c-fea1-4573-ada2-9c31c5b67573",
+            "readable_id": "topic_4_3",
+            "title": "리더십 리스크 지표 (나르시즘 ~ 포지션 fit)",
+            "questions": [
+              {
+                "id": "8d5aa61a-69ce-46d5-8a33-41ca6192e208",
+                "readable_id": "question_4_3_1",
+                "content": "본인과 의견이 다른 부하직원이 강하게 반대할 때, 보통 어떻게 하십니까?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[에세이-10 나르시즘]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "438ef471-f42e-4780-b549-87ad42f24f09",
+                      "text": "구체적인 상황 사례를 물어본다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "d516649a-f125-459b-99dc-efbaf54bc113",
+                      "text": "결국 어떤 결정이 내려졌는지, 그 과정에서 본인의 역할은 무엇이었는지 확인한다.",
+                      "position": 1
+                    },
+                    {
+                      "id": "0f343cc6-73e2-4ea2-acbf-73f934705afe",
+                      "text": "나중에 그 결정이 맞았는지 틀렸는지, 어떻게 평가하는지 묻는다.",
+                      "position": 2
+                    }
+                  ],
+                  "branches": [
+                    {
+                      "id": "0070ed85-babf-4ae6-98ff-8999d24faa10",
+                      "if": "본인의 의견이 맞았다는 결론으로 흐르는 경우",
+                      "note": "나르시즘 신호 여부 주의",
+                      "position": 0,
+                      "checklist": [
+                        {
+                          "id": "849d0b4a-4f1b-4162-8854-e491389b4457",
+                          "text": "반대 의견에서 배운 점이 있었는지 탐색한다.",
+                          "position": 0
+                        },
+                        {
+                          "id": "65c46588-588b-42f8-8035-eeffe6817685",
+                          "text": "그 부하직원과의 관계가 이후 어떻게 됐는지 확인한다.",
+                          "position": 1
+                        }
+                      ],
+                      "branches": []
+                    },
+                    {
+                      "id": "5c842609-66cc-435a-841c-16b25b10c58a",
+                      "if": "부하직원의 의견을 수용한 사례를 말하는 경우",
+                      "note": "",
+                      "position": 1,
+                      "checklist": [
+                        {
+                          "id": "bb93095c-9544-4275-ac24-31b9ca40a1bd",
+                          "text": "의견을 수용하게 된 결정적 이유가 무엇이었는지 확인한다.",
+                          "position": 0
+                        }
+                      ],
+                      "branches": []
+                    }
+                  ]
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              },
+              {
+                "id": "9c45e4c9-8337-4446-be21-171047eb0105",
+                "readable_id": "question_4_3_2",
+                "content": "팀 프로젝트가 실패했을 때, 본인의 책임과 타인의 책임을 어떻게 나누어 생각하십니까?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[에세이-11 타인조작]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "f0d78e34-3726-474f-9515-631c46c7da51",
+                      "text": "실패 사례를 구체적으로 물어본다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "ddf834c5-bf19-4bc5-bd9e-f137932c7128",
+                      "text": "팀원들은 그 상황을 어떻게 인식했을 것 같은지 묻는다.",
+                      "position": 1
+                    },
+                    {
+                      "id": "5ceb533e-dc70-441d-9ccb-662545128430",
+                      "text": "책임 배분이 공개적으로 논의됐는지 확인한다.",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              },
+              {
+                "id": "a69739dc-3a9f-4e7b-a8cc-4cde3c297f4d",
+                "readable_id": "question_4_3_3",
+                "content": "부하직원이 본인과 다른 방식으로 일을 처리할 때 어느 시점에 개입하십니까?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[에세이-12 미시적관리]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "84ab7672-a278-4a4c-b8a1-8818b8afe625",
+                      "text": "개입 기준이 명확한지, 상황에 따라 달라지는지 확인한다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "9c551cb0-9f38-43e2-88ca-0107b4a79831",
+                      "text": "개입 이후 부하직원의 반응은 어떠했는지 묻는다.",
+                      "position": 1
+                    },
+                    {
+                      "id": "770df719-0d99-4d6b-9793-0b0eba88995d",
+                      "text": "개입을 자제했다가 문제가 발생한 경험이 있는지 탐색한다.",
+                      "position": 2
+                    }
+                  ],
+                  "branches": [
+                    {
+                      "id": "0a300e98-52ee-49cd-a1b5-649f4df4163c",
+                      "if": "결과에 집중해 과정은 개입하지 않는다고 말하는 경우",
+                      "note": "",
+                      "position": 0,
+                      "checklist": [
+                        {
+                          "id": "8dcc5228-e922-4601-81c6-83ea7425724a",
+                          "text": "그 원칙이 실제로 지켜지지 않았던 사례가 있는지 탐색한다.",
+                          "position": 0
+                        }
+                      ],
+                      "branches": []
+                    },
+                    {
+                      "id": "ed36c54b-4a94-40c5-a96b-339e54f075cf",
+                      "if": "초기부터 방향을 맞추는 편이라고 말하는 경우",
+                      "note": "미시적 관리 성향 주의",
+                      "position": 1,
+                      "checklist": [
+                        {
+                          "id": "e0bb2096-25b6-4d45-a97e-94ac59e9b670",
+                          "text": "'방향 맞추기'와 '개입'의 경계를 어떻게 정의하는지 확인한다.",
+                          "position": 0
+                        },
+                        {
+                          "id": "981ff032-a33b-49e0-82c2-2e2f364d1fca",
+                          "text": "팀원이 자율적으로 성장했다고 느끼는 사례가 있는지 묻는다.",
+                          "position": 1
+                        }
+                      ],
+                      "branches": []
+                    }
+                  ]
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              },
+              {
+                "id": "f3bf526b-00e1-4735-b418-30d5d90a680c",
+                "readable_id": "question_4_3_4",
+                "content": "본인이 화가 났을 때, 주변 사람들은 그걸 어떻게 알 수 있습니까?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[에세이-13 공격성]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "e5e0720b-b55e-41aa-92e4-db81046b9e61",
+                      "text": "언어·비언어적 표현이 어떻게 달라지는지 구체적으로 확인한다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "fa9f26a3-e1f6-4386-8827-bccae4e1a186",
+                      "text": "그 상황에서 어떻게 자신을 관리하는지 묻는다.",
+                      "position": 1
+                    },
+                    {
+                      "id": "6ac342ce-eaca-41f6-b936-91434a883ee0",
+                      "text": "화가 난 상태에서 내린 결정 중 후회한 것이 있는지 탐색한다.",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              },
+              {
+                "id": "e1efa173-c69a-488a-b995-32bf63194be1",
+                "readable_id": "question_4_3_5",
+                "content": "조직의 결정에 동의하지 않을 때, 불만을 어떻게 표현하십니까?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[에세이-14 수동공격성]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "be9864e4-73b7-4187-b196-acd48e4584eb",
+                      "text": "공개적으로 표현하는지, 개인적으로 처리하는지 구분해 확인한다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "8f34a6a5-61ec-4515-8b66-7bb523765944",
+                      "text": "그 방식이 조직에 어떤 영향을 줬는지 묻는다.",
+                      "position": 1
+                    },
+                    {
+                      "id": "18c560cd-4b3a-49f3-b567-4fe1c2d0ea14",
+                      "text": "자신의 불만 표현 방식에 대해 어떻게 평가하는지 확인한다.",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              },
+              {
+                "id": "c248e8de-9bcd-4b95-b378-4c4d18c7a4fc",
+                "readable_id": "question_4_3_6",
+                "content": "성과가 떨어지는 팀원이 있을 때, 역량 문제인지 개인 사정인지 어떻게 구분하십니까?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[에세이-15 냉담성]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "efc14a07-d484-48e1-858b-e320a2eb18f0",
+                      "text": "구분 기준이 명확한지, 실제 판단이 다르게 나온 사례가 있는지 확인한다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "08109504-bc5e-46cb-a44e-f9e0752e1945",
+                      "text": "그 판단을 내린 후 어떤 대화를 했는지 탐색한다.",
+                      "position": 1
+                    },
+                    {
+                      "id": "2133ae35-f744-4d55-9eca-f7f82516d28b",
+                      "text": "팀원 입장에서 그 대화는 어떻게 느껴졌을 것 같은지 묻는다.",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              },
+              {
+                "id": "5f43afb3-2c2c-44ae-bf4b-2de8e4e7ede4",
+                "readable_id": "question_4_3_7",
+                "content": "지금 자리보다 더 높은 역할을 원하십니까? 왜 그렇습니까?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[에세이-16 과도한야망]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "b7a176ef-bae7-455b-b9c5-a4aedc65c347",
+                      "text": "원하는 역할에 대한 이유가 내재적 동기인지, 외재적 동기인지 구분해 확인한다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "6cc7c776-3511-47e7-b063-52eedb6173b9",
+                      "text": "그 역할을 맡았을 때 본인이 가장 크게 기여할 수 있는 부분이 무엇인지 묻는다.",
+                      "position": 1
+                    },
+                    {
+                      "id": "3009c7bc-f17e-492b-b425-368ce4750e0d",
+                      "text": "그 야망이 주변 사람들에게 어떻게 보일 것 같은지 탐색한다.",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              },
+              {
+                "id": "794e39d0-cdc3-42a7-83cc-63a7653fabbb",
+                "readable_id": "question_4_3_8",
+                "content": "본인의 강점과 약점을 각각 하나씩 말씀해주세요. 주변 사람들도 같은 걸 꼽을까요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[에세이-17 자기인식정확도]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "27ad9a21-c72b-42dc-af04-522c82ff947f",
+                      "text": "일치하지 않는다면 어느 부분에서 차이가 있을 것 같은지 확인한다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "dcc18aa8-0f92-4b5d-8067-d5946b705029",
+                      "text": "실제로 주변 피드백을 어떻게 확인하고 있는지 묻는다.",
+                      "position": 1
+                    },
+                    {
+                      "id": "9b321d32-20c7-42db-8b95-0b66c8b4fe8d",
+                      "text": "자기인식이 틀렸다고 깨달은 경험이 있는지 탐색한다.",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              },
+              {
+                "id": "4ff963b8-fe6f-4db5-9c46-5d357de7d8ae",
+                "readable_id": "question_4_3_9",
+                "content": "최근 받은 피드백 중 가장 듣기 싫었던 것은 무엇이고, 그것을 어떻게 처리하셨습니까?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[에세이-18 피드백수용성]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "1b63cb77-8dff-4da8-8b0f-147ef9af4ba5",
+                      "text": "피드백에 대한 초기 반응이 어땠는지 구체적으로 확인한다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "fcc6e294-789f-4b61-92a3-9987b338ca6d",
+                      "text": "피드백을 수용했다면 어떻게 행동이 바뀌었는지 묻는다.",
+                      "position": 1
+                    },
+                    {
+                      "id": "66757ba1-791d-465d-a736-0217e5b07623",
+                      "text": "피드백을 거부하거나 무시한 경험이 있는지 탐색한다.",
+                      "position": 2
+                    }
+                  ],
+                  "branches": [
+                    {
+                      "id": "97fa4244-aef7-4610-905c-8596aa39a401",
+                      "if": "피드백을 잘 받아들인다고 말하는 경우",
+                      "note": "",
+                      "position": 0,
+                      "checklist": [
+                        {
+                          "id": "e646842f-d204-40dd-9183-32123ac32573",
+                          "text": "가장 최근의 구체적인 사례를 한 가지 말해달라고 요청한다.",
+                          "position": 0
+                        },
+                        {
+                          "id": "818e8e5a-2e79-4b85-8d17-eac56aee03b6",
+                          "text": "행동 변화가 얼마나 지속됐는지 확인한다.",
+                          "position": 1
+                        }
+                      ],
+                      "branches": []
+                    }
+                  ]
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              },
+              {
+                "id": "12d1783f-4924-4d24-b39e-de7a6713e9bb",
+                "readable_id": "question_4_3_10",
+                "content": "오늘 대화를 돌아보면, 본인이 가장 보완해야 할 역량 하나는 무엇이고 구체적인 개발 계획은 있습니까?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[에세이-19 성장의지]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "d54e9e2a-8c09-4178-856d-8b7ba8e28480",
+                      "text": "개발 계획이 구체적인지, 실행 가능한 수준인지 확인한다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "6b0d0c71-3f89-4bc2-9086-868d36ea182f",
+                      "text": "그 역량 개발이 왜 지금 가장 중요한지 이유를 묻는다.",
+                      "position": 1
+                    },
+                    {
+                      "id": "b8e7edfb-2cc4-4c88-86f6-dadaada2914c",
+                      "text": "계획이 있다면 현재까지 실행한 부분이 있는지 확인한다.",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              },
+              {
+                "id": "17a6b792-1eb5-4a0e-891a-cc32f9c5df19",
+                "readable_id": "question_4_3_11",
+                "content": "지금보다 한 단계 위 역할을 맡는다면 가장 먼저 부딪힐 도전은 무엇이라 생각하십니까?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[에세이-20 포지션fit]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "ccb41854-337c-46f8-b2fc-f402c1d9c540",
+                      "text": "그 도전이 역량 부족에서 오는 것인지, 환경·조직 요인인지 구분해 확인한다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "3e4a1d61-2d67-4940-a780-a52a1cb9d0ee",
+                      "text": "어떻게 준비하고 있는지 또는 준비할 것인지 묻는다.",
+                      "position": 1
+                    },
+                    {
+                      "id": "35e367d2-8de1-4083-bc02-8ee1ae4f2d7a",
+                      "text": "그 도전을 극복한 경험이 이미 있다면 어떤 사례가 있는지 탐색한다.",
+                      "position": 2
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 60,
+                "media": []
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "interview_closing": {
+      "closing_message": "오늘 소중한 시간 내어 주셔서 감사합니다. 추가로 하실 말씀이 있으시면 편하게 말씀해 주시고, 없으시면 '없습니다'라고 해 주셔도 됩니다. 감사합니다!"
+    }
+  }
+}

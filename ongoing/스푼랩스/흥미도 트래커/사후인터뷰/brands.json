@@ -1,0 +1,92 @@
+{
+  "spoonlabs": {
+    "name": "Spoon Labs",
+    "logo": "spoonlabs.jpg",
+    "accent": "4FBD8A",
+    "keywords": ["spoonlabs", "스푼랩스", "spoon"]
+  },
+  "skt": {
+    "name": "SKT",
+    "logo": "skt.jpg",
+    "accent": "E60012",
+    "keywords": ["skt", "sk텔레콤", "sk telecom"]
+  },
+  "lguplus": {
+    "name": "LG U+",
+    "logo": "lguplus.png",
+    "accent": "B51F8C",
+    "keywords": ["lguplus", "lg uplus", "lgu+", "유플러스", "lg u+"]
+  },
+  "kb": {
+    "name": "KB",
+    "logo": "kb.png",
+    "accent": "FFAE00",
+    "keywords": ["kb", "국민은행", "kb금융"]
+  },
+  "musinsa": {
+    "name": "Musinsa",
+    "logo": "musinsa.png",
+    "accent": "222222",
+    "keywords": ["musinsa", "무신사"]
+  },
+  "woowa": {
+    "name": "Woowa Brothers",
+    "logo": "woowa.png",
+    "accent": "15BE8B",
+    "keywords": ["woowa", "우아한형제들", "배달의민족", "baemin"]
+  },
+  "ridi": {
+    "name": "Ridi",
+    "logo": "ridibooks.png",
+    "accent": "1F8CE6",
+    "keywords": ["ridi", "리디", "ridibooks", "리디북스"]
+  },
+  "qanda": {
+    "name": "Qanda",
+    "logo": "qanda.png",
+    "accent": "2563EB",
+    "keywords": ["qanda", "콴다"]
+  },
+  "cjenm": {
+    "name": "CJ ENM",
+    "logo": "cjenm.png",
+    "accent": "D10014",
+    "keywords": ["cjenm", "cj enm", "씨제이"]
+  },
+  "fastventures": {
+    "name": "Fast Ventures",
+    "logo": "fastventures.png",
+    "accent": "5B21B6",
+    "keywords": ["fastventures", "패스트벤처스"]
+  },
+  "gangnamunni": {
+    "name": "강남언니",
+    "logo": "gangnamunni.png",
+    "accent": "F43F5E",
+    "keywords": ["gangnamunni", "강남언니", "힐링페이퍼"]
+  },
+  "nicednr": {
+    "name": "Nice D&R",
+    "logo": "nicednr.png",
+    "accent": "0066CC",
+    "keywords": ["nicednr", "나이스디앤알", "nice d&r"]
+  },
+  "consumerinsight": {
+    "name": "Consumer Insight",
+    "logo": "consumerinsight.png",
+    "accent": "0F766E",
+    "keywords": ["consumerinsight", "컨슈머인사이트"]
+  },
+  "researchlab": {
+    "name": "Research Lab",
+    "logo": "researchlab.png",
+    "accent": "6366F1",
+    "keywords": ["researchlab", "리서치랩"]
+  },
+  "tips": {
+    "name": "TIPS",
+    "logo": "TIPS.png",
+    "accent": "EA580C",
+    "keywords": ["tips", "팁스"]
+  }
+}

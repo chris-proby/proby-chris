@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LG Uplus — 아이폰 사용자 통신 경험 인터뷰 종합 보고서</title>
+<style>
+
+  :root {
+    --primary: #E6007E;
+    --primary-dark: #b5005f;
+    --primary-light: #fce4f3;
+    --accent: #FF6BB5;
+    --dark: #1a1a2e;
+    --mid: #3d3d5c;
+    --light-bg: #fafafa;
+    --card-bg: #ffffff;
+    --border: #e8e8e8;
+    --text: #222;
+    --text-light: #666;
+    --extra-badge-bg: #fff3e0;
+    --extra-badge: #e65100;
+    --tag-bg: #f3e5f5;
+    --tag: #7b1fa2;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Pretendard', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--light-bg);
+    color: var(--text);
+    line-height: 1.7;
+  }
+  /* ─── HEADER ─── */
+  .report-header {
+    background: linear-gradient(135deg, var(--dark) 0%, #2d1b4e 50%, var(--primary-dark) 100%);
+    color: #fff;
+    padding: 52px 48px 44px;
+    position: relative;
+    overflow: hidden;
+  }
+  .report-header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: rgba(230,0,126,0.18);
+  }
+  .report-header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: 30%;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    background: rgba(255,107,181,0.12);
+  }
+  .header-inner { position: relative; z-index: 1; max-width: 900px; }
+  .logo-badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 13px; font-weight: 600;
+    margin-bottom: 20px;
+    backdrop-filter: blur(8px);
+  }
+  .logo-badge img { width: 22px; height: 22px; object-fit: contain; border-radius: 4px; }
+  .report-header h1 { font-size: 36px; font-weight: 800; line-height: 1.2; margin-bottom: 12px; }
+  .report-header h1 span { color: var(--accent); }
+  .report-meta { display: flex; gap: 24px; flex-wrap: wrap; margin-top: 20px; }
+  .meta-pill {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 100px;
+    padding: 5px 14px;
+    font-size: 12.5px;
+  }
+  /* ─── STATS BAR ─── */
+  .stats-bar {
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    padding: 20px 48px;
+    display: flex; gap: 40px; flex-wrap: wrap;
+  }
+  .stat-item { text-align: center; }
+  .stat-num { font-size: 28px; font-weight: 800; color: var(--primary); }
+  .stat-label { font-size: 11px; color: var(--text-light); text-transform: uppercase; letter-spacing: .5px; margin-top: 2px; }
+  /* ─── LAYOUT ─── */
+  .page-body { display: flex; max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  /* ─── SIDEBAR ─── */
+  .sidebar {
+    width: 220px; min-width: 220px;
+    padding: 32px 0 32px 0;
+    position: sticky; top: 0;
+    height: 100vh; overflow-y: auto;
+    flex-shrink: 0;
+  }
+  .sidebar h3 { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-light); margin-bottom: 10px; padding-left: 16px; }
+  .nav-item {
+    display: block;
+    padding: 9px 16px;
+    font-size: 13px; color: var(--text-light);
+    border-left: 2px solid transparent;
+    text-decoration: none;
+    transition: all .2s;
+    line-height: 1.4;
+  }
+  .nav-item:hover, .nav-item.active { color: var(--primary); border-left-color: var(--primary); background: var(--primary-light); }
+  .nav-num { font-size: 10px; opacity: .6; margin-right: 4px; }
+  /* ─── MAIN CONTENT ─── */
+  .main-content { flex: 1; padding: 32px 0 32px 40px; min-width: 0; }
+  /* ─── SECTION ─── */
+  .report-section { margin-bottom: 56px; }
+  .section-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--primary-light); }
+  .section-num { font-size: 13px; font-weight: 700; color: var(--primary); }
+  .section-title { font-size: 22px; font-weight: 800; }
+  .section-sub { font-size: 14px; color: var(--text-light); margin-bottom: 20px; }
+  /* ─── INSIGHT BOX ─── */
+  .insight-box {
+    background: linear-gradient(135deg, #fff8fd, #fff3fa);
+    border: 1.5px solid var(--primary-light);
+    border-left: 4px solid var(--primary);
+    border-radius: 12px;
+    padding: 18px 22px;
+    margin-bottom: 20px;
+  }
+  .insight-box strong { color: var(--primary-dark); }
+  /* ─── QUOTE CARD ─── */
+  .quotes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; margin-bottom: 20px; }
+  .quote-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    position: relative;
+    transition: box-shadow .2s;
+  }
+  .quote-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.06); }
+  .quote-card::before { content: '"'; position: absolute; top: 10px; left: 16px; font-size: 40px; color: var(--primary-light); line-height: 1; font-family: Georgia, serif; }
+  .quote-text { font-size: 13.5px; line-height: 1.7; color: #333; padding-top: 12px; }
+  .quote-name { font-size: 12px; font-weight: 700; color: var(--primary); margin-top: 10px; }
+  /* ─── EXTRA INTERVIEW CALLOUT ─── */
+  .extra-callout {
+    background: linear-gradient(135deg, #fff8e1, #fff3e0);
+    border: 1.5px solid #ffb74d;
+    border-left: 5px solid #ff8f00;
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  .extra-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: #ff8f00;
+    color: #fff;
+    font-size: 11px; font-weight: 700; letter-spacing: .4px;
+    padding: 3px 10px;
+    border-radius: 100px;
+    margin-bottom: 10px;
+  }
+  .extra-person { font-size: 14px; font-weight: 700; color: #e65100; margin-bottom: 8px; }
+  .extra-quote { font-size: 13.5px; line-height: 1.75; color: #333; }
+  .extra-quote + .extra-quote { margin-top: 12px; padding-top: 12px; border-top: 1px solid #ffe082; }
+  .extra-quote em { color: var(--primary-dark); font-style: normal; font-weight: 600; }
+  /* ─── MECE TABLE ─── */
+  .mece-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13.5px; }
+  .mece-table th { background: var(--dark); color: #fff; padding: 11px 16px; text-align: left; font-weight: 600; font-size: 12.5px; }
+  .mece-table th:first-child { border-radius: 8px 0 0 0; }
+  .mece-table th:last-child { border-radius: 0 8px 0 0; }
+  .mece-table td { padding: 11px 16px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .mece-table tr:hover td { background: #fdf4fb; }
+  .mece-table .tag { display: inline-block; background: var(--tag-bg); color: var(--tag); font-size: 11px; border-radius: 100px; padding: 2px 8px; font-weight: 600; }
+  .mece-table .cnt { font-weight: 700; color: var(--primary); }
+  /* ─── PAIN HEAT ─── */
+  .pain-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .pain-label { width: 160px; font-size: 13px; flex-shrink: 0; }
+  .pain-track { flex: 1; height: 8px; background: #eee; border-radius: 100px; overflow: hidden; }
+  .pain-fill { height: 100%; border-radius: 100px; background: linear-gradient(90deg, var(--primary-light), var(--primary)); }
+  .pain-cnt { font-size: 12px; color: var(--text-light); width: 40px; text-align: right; }
+  /* ─── PARTICIPANT GRID ─── */
+  .participants-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); gap: 10px; margin-top: 16px; }
+  .participant-chip {
+    background: var(--card-bg);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    text-align: center;
+    font-size: 13px; font-weight: 600;
+    transition: all .2s;
+  }
+  .participant-chip.has-extra {
+    background: linear-gradient(135deg, #fff8e1, #fff3e0);
+    border-color: #ffb74d;
+    color: #e65100;
+  }
+  .participant-chip .extra-star { font-size: 11px; display: block; color: #ff8f00; margin-top: 2px; }
+  .carrier-flow {
+    display: block;
+    font-size: 10.5px;
+    font-weight: 500;
+    margin-top: 5px;
+    letter-spacing: .2px;
+    white-space: nowrap;
+  }
+  .carrier-flow .c-lgu  { color: #E6007E; font-weight: 700; }
+  .carrier-flow .c-skt  { color: #e31a37; font-weight: 700; }
+  .carrier-flow .c-kt   { color: #d4222a; font-weight: 700; }
+  .carrier-flow .arrow  { color: #aaa; margin: 0 2px; }
+  /* ─── SECTION DIVIDER ─── */
+  .mece-label { display: inline-block; background: var(--dark); color: #fff; font-size: 11px; font-weight: 700; letter-spacing: .8px; padding: 4px 12px; border-radius: 4px; text-transform: uppercase; margin-bottom: 14px; }
+  /* ─── FINDINGS CARD ─── */
+  .findings-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+  .finding-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px; }
+  .finding-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+  .finding-card .icon { width: 20px; height: 20px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; }
+  .finding-card ul { list-style: none; padding: 0; }
+  .finding-card li { font-size: 13px; color: #444; padding: 4px 0; border-bottom: 1px solid #f5f5f5; display: flex; gap: 7px; }
+  .finding-card li::before { content: '▸'; color: var(--primary); flex-shrink: 0; font-size: 11px; margin-top: 2px; }
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main-content { padding-left: 0; }
+    .page-body { display: block; }
+    .findings-row { grid-template-columns: 1fr; }
+    .report-header { padding: 32px 20px; }
+    .report-header h1 { font-size: 24px; }
+    .stats-bar { padding: 16px 20px; gap: 20px; }
+  }
+  /* Scroll highlight */
+  :target { scroll-margin-top: 20px; }
+
+</style>
+</head>
+<body>
+
+<header class="report-header">
+  <div class="header-inner">
+    <div class="logo-badge">
+      <img src="lgu.jpg" alt="LG Uplus" />
+      LG Uplus · 아이폰 사용자 통신 경험 인터뷰
+    </div>
+    <h1>통신 이용 경험·단말 생태계<br><span>종합 요약 보고서</span></h1>
+    <p style="font-size:15px; opacity:.8; max-width:640px; margin-top:10px;">
+      LG Uplus 관점의 정성 리서치를 위해 수집한 <strong>아이폰 사용자 8명</strong>의 AI 인터뷰 및 <strong>휴먼 심층 인터뷰 1건</strong>을 바탕으로, 단말·통신사·요금·가입 UX를 MECE로 정리합니다.
+    </p>
+    <div class="report-meta">
+      <span class="meta-pill">🎙 참여자 8명</span>
+      <span class="meta-pill">⭐ 추가 인터뷰 1명 (이소영)</span>
+      <span class="meta-pill">📅 2026 수집</span>
+      <span class="meta-pill">🔬 AI + 휴먼 혼합</span>
+    </div>
+  </div>
+</header>
+
+<div class="stats-bar">
+  <div class="stat-item"><div class="stat-num">8</div><div class="stat-label">총 참여자</div></div>
+  <div class="stat-item"><div class="stat-num">1</div><div class="stat-label">추가 인터뷰</div></div>
+  <div class="stat-item"><div class="stat-num">6</div><div class="stat-label">분석 프레임</div></div>
+  <div class="stat-item"><div class="stat-num">40+</div><div class="stat-label">핵심 인용구</div></div>
+</div>
+
+<div style="background:#fff; border-bottom:1px solid var(--border); padding:16px 48px;">
+  <p style="font-size:12px; color:var(--text-light); margin-bottom:10px; font-weight:600; letter-spacing:.5px; text-transform:uppercase;">참여자 구성</p>
+  <div class="participants-grid">
+    <div class="participant-chip">김동현</div>
+    <div class="participant-chip">박민주</div>
+    <div class="participant-chip">박민지</div>
+    <div class="participant-chip">이서원</div>
+    <div class="participant-chip has-extra">이소영<span class="extra-star">★ 추가 인터뷰</span></div>
+    <div class="participant-chip">이수민</div>
+    <div class="participant-chip">전성아</div>
+    <div class="participant-chip">차시은</div>
+  </div>
+</div>
+
+<div class="page-body">
+  <nav class="sidebar">
+    <h3>목차</h3>
+    <a class="nav-item" href="#top5" style="background:linear-gradient(135deg,#fce4f3,#fff); border:1px solid #f48fb1; font-weight:700; color:var(--primary);"><span class="nav-num" style="background:var(--primary);">★</span> 핵심 개선 과제 5</a>
+    <a class="nav-item" href="#sec1"><span class="nav-num">01</span> 단말·애플 생태계</a>
+    <a class="nav-item" href="#sec2"><span class="nav-num">02</span> 통신사·이동</a>
+    <a class="nav-item" href="#sec3"><span class="nav-num">03</span> 요금제·납부</a>
+    <a class="nav-item" href="#sec4"><span class="nav-num">04</span> 가입·디지털 UX</a>
+    <a class="nav-item" href="#sec5"><span class="nav-num">05</span> 데이터·클라우드</a>
+    <a class="nav-item" href="#sec6"><span class="nav-num">06</span> 전환 동기·신뢰</a>
+    <div style="margin-top:24px; border-top:1px solid var(--border); padding-top:16px;">
+    <h3>페인포인트</h3>
+    <a class="nav-item" href="#pain">전체 집계</a>
+    </div>
+  </nav>
+
+  <main class="main-content">
+
+    <section class="report-section" id="top5">
+      <div class="section-header" style="margin-bottom:6px;">
+        <span class="section-num" style="background:var(--primary);">★</span>
+        <h2 class="section-title">LG Uplus 고객 만족·경쟁력을 위한 핵심 개선 과제 5</h2>
+      </div>
+      <p style="font-size:13px; color:var(--text-light); margin-bottom:18px; padding-left:4px;">8명 인터뷰에서 반복된 패턴을 바탕으로 한 우선 액션입니다.</p>
+      <div style="background:#fff; border:1.5px solid var(--border); border-radius:16px; overflow:hidden;">
+
+        <div style="display:grid; grid-template-columns:220px 1fr; border-bottom:1px solid var(--border);">
+          <div style="background:linear-gradient(160deg,#fce4f3,#fff0f8); padding:20px; display:flex; flex-direction:column; gap:8px; border-right:1px solid var(--border);">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span style="flex-shrink:0; width:28px; height:28px; background:#E6007E; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:13px; font-weight:800;">1</span>
+              <span style="font-size:11px; font-weight:700; color:#E6007E; background:rgba(255,255,255,0.6); padding:2px 8px; border-radius:100px;">📋 디지털 가입</span>
+            </div>
+            <p style="font-size:13.5px; font-weight:700; color:var(--dark); margin:0; line-height:1.4;">온라인 본인인증·가입 UX 안정화</p>
+            <p style="font-size:11.5px; color:#777; margin:0; line-height:1.6;">통신사 홈페이지 가입 시 간편인증 실패·반복 시도를 줄이는 가이드·대체 수단 제공</p>
+            <div style="margin-top:4px; background:#e8f5e9; border-radius:8px; padding:8px 10px;">
+              <p style="font-size:11px; font-weight:700; color:#2e7d32; margin:0 0 3px;">📈 예상 임팩트</p>
+              <p style="font-size:11px; color:#388e3c; margin:0;">가입 이탈률 감소 · 온라인 전환율 상승</p>
+            </div>
+          </div>
+          <div style="padding:16px 20px; display:flex; flex-direction:column; gap:8px; justify-content:center;"><div style="background:#fff8f0; border-left:3px solid #ffb74d; border-radius:0 6px 6px 0; padding:10px 14px;">
+              <p style="font-size:12px; color:#555; margin:0 0 4px; font-style:italic;">"그 인증받는 데서 간편 인증이 안 되는 게 불편했어요."</p>
+              <p style="font-size:11px; color:#bbb; margin:0;">— 박민주</p>
+            </div><div style="background:#fff8f0; border-left:3px solid #ffb74d; border-radius:0 6px 6px 0; padding:10px 14px;">
+              <p style="font-size:12px; color:#555; margin:0 0 4px; font-style:italic;">"SKT 홈페이지에서 가입했는데, 정확한 사이트는 기억이 잘 안 나요."</p>
+              <p style="font-size:11px; color:#bbb; margin:0;">— 박민주</p>
+            </div></div>
+        </div>
+        <div style="display:grid; grid-template-columns:220px 1fr; border-bottom:1px solid var(--border);">
+          <div style="background:linear-gradient(160deg,#fff3e0,#fff8f0); padding:20px; display:flex; flex-direction:column; gap:8px; border-right:1px solid var(--border);">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span style="flex-shrink:0; width:28px; height:28px; background:#f57c00; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:13px; font-weight:800;">2</span>
+              <span style="font-size:11px; font-weight:700; color:#f57c00; background:rgba(255,255,255,0.6); padding:2px 8px; border-radius:100px;">🔐 신뢰·보안</span>
+            </div>
+            <p style="font-size:13.5px; font-weight:700; color:var(--dark); margin:0; line-height:1.4;">통신사 전환 시 보안 이슈 대응 커뮤니케이션</p>
+            <p style="font-size:11.5px; color:#777; margin:0; line-height:1.6;">개인정보 유출 등 사건 이후 이탈 고객에게 명확한 안내·재신뢰 채널 마련</p>
+            <div style="margin-top:4px; background:#e8f5e9; border-radius:8px; padding:8px 10px;">
+              <p style="font-size:11px; font-weight:700; color:#2e7d32; margin:0 0 3px;">📈 예상 임팩트</p>
+              <p style="font-size:11px; color:#388e3c; margin:0;">이탈 방어 · 브랜드 신뢰 회복</p>
+            </div>
+          </div>
+          <div style="padding:16px 20px; display:flex; flex-direction:column; gap:8px; justify-content:center;"><div style="background:#fff8f0; border-left:3px solid #ffcc02; border-radius:0 6px 6px 0; padding:10px 14px;">
+              <p style="font-size:12px; color:#555; margin:0 0 4px; font-style:italic;">"최근에 그 KT 그 개인정보 유출 대란 있었잖아요. 그래서 옮겼어요. 제가 KT를 되게 오래 썼거든요."</p>
+              <p style="font-size:11px; color:#bbb; margin:0;">— 차시은</p>
+            </div><div style="background:#fff8f0; border-left:3px solid #ffcc02; border-radius:0 6px 6px 0; padding:10px 14px;">
+              <p style="font-size:12px; color:#555; margin:0 0 4px; font-style:italic;">"7년 정도. 이용했어요."</p>
+              <p style="font-size:11px; color:#bbb; margin:0;">— 박민주</p>
+            </div></div>
+        </div>
+        <div style="display:grid; grid-template-columns:220px 1fr; border-bottom:1px solid var(--border);">
+          <div style="background:linear-gradient(160deg,#e3f2fd,#f0f8ff); padding:20px; display:flex; flex-direction:column; gap:8px; border-right:1px solid var(--border);">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span style="flex-shrink:0; width:28px; height:28px; background:#1976d2; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:13px; font-weight:800;">3</span>
+              <span style="font-size:11px; font-weight:700; color:#1976d2; background:rgba(255,255,255,0.6); padding:2px 8px; border-radius:100px;">💳 요금·알뜰</span>
+            </div>
+            <p style="font-size:13.5px; font-weight:700; color:var(--dark); margin:0; line-height:1.4;">알뜰폰·저가 요금제 정보 설계</p>
+            <p style="font-size:11.5px; color:#777; margin:0; line-height:1.6;">월 납부액·자동이체·앱에서의 요금 확인 경험을 한 화면에서 이해 가능하게</p>
+            <div style="margin-top:4px; background:#e8f5e9; border-radius:8px; padding:8px 10px;">
+              <p style="font-size:11px; font-weight:700; color:#2e7d32; margin:0 0 3px;">📈 예상 임팩트</p>
+              <p style="font-size:11px; color:#388e3c; margin:0;">요금 문의 CS 감소 · 상품 이해도 향상</p>
+            </div>
+          </div>
+          <div style="padding:16px 20px; display:flex; flex-direction:column; gap:8px; justify-content:center;"><div style="background:#e3f2fd; border-left:3px solid #64b5f6; border-radius:0 6px 6px 0; padding:10px 14px;">
+              <p style="font-size:12px; color:#555; margin:0 0 4px; font-style:italic;">"알뜰폰 KT를 사용하고 있습니다."</p>
+              <p style="font-size:11px; color:#bbb; margin:0;">— 이수민</p>
+            </div><div style="background:#e3f2fd; border-left:3px solid #64b5f6; border-radius:0 6px 6px 0; padding:10px 14px;">
+              <p style="font-size:12px; color:#555; margin:0 0 4px; font-style:italic;">"약 2만 원 정도인 것 같습니다."</p>
+              <p style="font-size:11px; color:#bbb; margin:0;">— 이수민</p>
+            </div></div>
+        </div>
+        <div style="display:grid; grid-template-columns:220px 1fr; border-bottom:1px solid var(--border);">
+          <div style="background:linear-gradient(160deg,#f3e5f5,#fdf0ff); padding:20px; display:flex; flex-direction:column; gap:8px; border-right:1px solid var(--border);">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span style="flex-shrink:0; width:28px; height:28px; background:#9c27b0; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:13px; font-weight:800;">4</span>
+              <span style="font-size:11px; font-weight:700; color:#9c27b0; background:rgba(255,255,255,0.6); padding:2px 8px; border-radius:100px;">🍎 생태계</span>
+            </div>
+            <p style="font-size:13.5px; font-weight:700; color:var(--dark); margin:0; line-height:1.4;">애플 생태계 고객 맞춤 부가·연동 혜택</p>
+            <p style="font-size:11.5px; color:#777; margin:0; line-height:1.6;">에어팟·워치·아이패드 연동 고객에게 통신 부가·OTT·클라우드 혜택을 묶어 안내</p>
+            <div style="margin-top:4px; background:#e8f5e9; border-radius:8px; padding:8px 10px;">
+              <p style="font-size:11px; font-weight:700; color:#2e7d32; margin:0 0 3px;">📈 예상 임팩트</p>
+              <p style="font-size:11px; color:#388e3c; margin:0;">부가 매출 · 차별화 체감</p>
+            </div>
+          </div>
+          <div style="padding:16px 20px; display:flex; flex-direction:column; gap:8px; justify-content:center;"><div style="background:#fdf4fb; border-left:3px solid #ce93d8; border-radius:0 6px 6px 0; padding:10px 14px;">
+              <p style="font-size:12px; color:#555; margin:0 0 4px; font-style:italic;">"애플 생태계가 이미 체득화되어 있어서 다른 것을 썼을 때 오히려 불편함을 많이 느끼는 편입니다."</p>
+              <p style="font-size:11px; color:#bbb; margin:0;">— 박민지</p>
+            </div><div style="background:#fdf4fb; border-left:3px solid #ce93d8; border-radius:0 6px 6px 0; padding:10px 14px;">
+              <p style="font-size:12px; color:#555; margin:0 0 4px; font-style:italic;">"에어팟, 에어팟 맥스, 애플워치까지 같이 쓰고 있어요."</p>
+              <p style="font-size:11px; color:#bbb; margin:0;">— 이서원</p>
+            </div></div>
+        </div>
+        <div style="display:grid; grid-template-columns:220px 1fr; ">
+          <div style="background:linear-gradient(160deg,#e8f5e9,#f0fff2); padding:20px; display:flex; flex-direction:column; gap:8px; border-right:1px solid var(--border);">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span style="flex-shrink:0; width:28px; height:28px; background:#2e7d32; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:13px; font-weight:800;">5</span>
+              <span style="font-size:11px; font-weight:700; color:#2e7d32; background:rgba(255,255,255,0.6); padding:2px 8px; border-radius:100px;">🎙 심층 인터뷰</span>
+            </div>
+            <p style="font-size:13.5px; font-weight:700; color:var(--dark); margin:0; line-height:1.4;">혜택 중심 번호이동 고객 여정 반영</p>
+            <p style="font-size:11.5px; color:#777; margin:0; line-height:1.6;">혜택을 보고 통신사를 옮기는 패턴을 정성 데이터로 축적해 프로모션·약정 설계에 반영</p>
+            <div style="margin-top:4px; background:#e8f5e9; border-radius:8px; padding:8px 10px;">
+              <p style="font-size:11px; font-weight:700; color:#2e7d32; margin:0 0 3px;">📈 예상 임팩트</p>
+              <p style="font-size:11px; color:#388e3c; margin:0;">세그먼트 정교화 · 이탈·재유치 전략</p>
+            </div>
+          </div>
+          <div style="padding:16px 20px; display:flex; flex-direction:column; gap:8px; justify-content:center;"><div style="background:#f1f8e9; border-left:3px solid #aed581; border-radius:0 6px 6px 0; padding:10px 14px;">
+              <p style="font-size:12px; color:#555; margin:0 0 4px; font-style:italic;">"제가 통신사를 조금 혜택 봐서 계속 옮기는 타입이어가지고."</p>
+              <p style="font-size:11px; color:#bbb; margin:0;">— 이소영 ★추가인터뷰</p>
+            </div><div style="background:#f1f8e9; border-left:3px solid #aed581; border-radius:0 6px 6px 0; padding:10px 14px;">
+              <p style="font-size:12px; color:#555; margin:0 0 4px; font-style:italic;">"유플러스는 제가 한 육 개월 이상 한 팔 개월 썼나?"</p>
+              <p style="font-size:11px; color:#bbb; margin:0;">— 이소영 ★추가인터뷰</p>
+            </div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="report-section" id="sec1">
+      <div class="section-header"><span class="section-num">01</span><h2 class="section-title">단말·애플 생태계</h2></div>
+      <div class="insight-box"><strong>핵심 발견:</strong> 대부분 <strong>2~3년 주기</strong>로 기기를 교체하며, <strong>아이클라우드·기기 간 전송</strong>에 익숙합니다. 에어팟·워치·아이패드 등 <strong>생태계 락인</strong>이 강합니다.</div>
+      <div class="quotes-grid">
+        <div class="quote-card"><p class="quote-text">아이폰이 한 손에 들어와서 딱 잡기가 편했고요. 주변 기기도 에어팟을 쓰니까 쭉 아이폰을 쓰게 됐던 것 같습니다.</p><p class="quote-name">김동현</p></div>
+        <div class="quote-card"><p class="quote-text">애플 생태계가 이미 체득화되어 있어서 다른 것을 썼을 때 오히려 불편함을 많이 느끼는 편입니다.</p><p class="quote-name">박민지</p></div>
+        <div class="quote-card"><p class="quote-text">에어팟, 애플워치, 에어팟 맥스도 같이 사용하고 있어요.</p><p class="quote-name">이서원</p></div>
+        <div class="quote-card"><p class="quote-text">아이폰 외에 다른 스마트폰은 사용해 본 경험이 없습니다.</p><p class="quote-name">전성아</p></div>
+      </div>
+    </section>
+
+    <section class="report-section" id="sec2">
+      <div class="section-header"><span class="section-num">02</span><h2 class="section-title">통신사·이동</h2></div>
+      <div class="insight-box"><strong>핵심 발견:</strong> <strong>KT, SKT, LG U+, 알뜰폰</strong> 등 복수 경험이 많고, <strong>최근 번호이동</strong> 사례가 다수입니다. 이전 단말로 LG 브랜드 경험(옵티머스 등)도 일부 언급됩니다.</div>
+      <div class="quotes-grid">
+        <div class="quote-card"><p class="quote-text">현재 KT 사용 중입니다.</p><p class="quote-name">김동현</p></div>
+        <div class="quote-card"><p class="quote-text">지금은 SKT이고, 전에는 LG U+를 7년 정도 이용했어요.</p><p class="quote-name">박민주</p></div>
+        <div class="quote-card"><p class="quote-text">지금은 LG를 사용하고 있습니다.</p><p class="quote-name">이서원</p></div>
+        <div class="quote-card"><p class="quote-text">알뜰폰 KT를 사용하고 있습니다.</p><p class="quote-name">이수민</p></div>
+      </div>
+    </section>
+
+    <section class="report-section" id="sec3">
+      <div class="section-header"><span class="section-num">03</span><h2 class="section-title">요금제·납부</h2></div>
+      <div class="insight-box"><strong>핵심 발견:</strong> 고가 요금제와 <strong>알뜰 저가</strong>가 공존하며, <strong>카드·계좌 자동이체</strong>가 주류입니다.</div>
+      <div class="quotes-grid">
+        <div class="quote-card"><p class="quote-text">109,000원이고 카드 결제로 납부하고 있어요.</p><p class="quote-name">박민주</p></div>
+        <div class="quote-card"><p class="quote-text">약 2만 원 정도인 것 같습니다. 매달 계좌이체 되는 형식으로 이용하고 있습니다.</p><p class="quote-name">이수민</p></div>
+        <div class="quote-card"><p class="quote-text">월 11만 5천 원인 것 같아요. 제 명의의 카드로 직접 납부하고 있습니다.</p><p class="quote-name">전성아</p></div>
+        <div class="quote-card"><p class="quote-text">은행 계좌 자동이체로 납부합니다.</p><p class="quote-name">박민지</p></div>
+      </div>
+    </section>
+
+    <section class="report-section" id="sec4">
+      <div class="section-header"><span class="section-num">04</span><h2 class="section-title">가입·디지털 UX</h2></div>
+      <div class="insight-box"><strong>핵심 발견:</strong> <strong>온라인 가입</strong>이 일반적이며, <strong>본인인증·간편인증 실패</strong>가 명확한 페인으로 등장합니다.</div>
+      <div class="quotes-grid">
+        <div class="quote-card"><p class="quote-text">온라인으로 진행했어요. SKT 홈페이지 같은 데서 가입했던 것 같아요.</p><p class="quote-name">박민주</p></div>
+        <div class="quote-card"><p class="quote-text">그 인증받는 데서 간편 인증이 안 되는 게 불편했어요.</p><p class="quote-name">박민주</p></div>
+        <div class="quote-card"><p class="quote-text">새 아이폰 구매 시 데이터는 휴대폰끼리 자동 전송을 사용하고 있습니다.</p><p class="quote-name">김동현</p></div>
+        <div class="quote-card"><p class="quote-text">아이클라우드로 연동해서 사진 옮기는 것도 있고, 카카오톡 토스랩으로도 많이 옮겨요.</p><p class="quote-name">이서원</p></div>
+      </div>
+    </section>
+
+    <section class="report-section" id="sec5">
+      <div class="section-header"><span class="section-num">05</span><h2 class="section-title">데이터·클라우드 이전</h2></div>
+      <div class="insight-box"><strong>핵심 발견:</strong> <strong>아이클라우드·공식 이전 도구</strong>를 쓰는 경우와, <strong>일부러 옮기지 않는</strong> 패턴(클린 스타트)도 공존합니다.</div>
+      <div class="quotes-grid">
+        <div class="quote-card"><p class="quote-text">아이폰은 아이클라우드 동기화가 돼서 바로바로 이전에 쓰던 거 그대로 옮겨지는 편입니다.</p><p class="quote-name">박민지</p></div>
+        <div class="quote-card"><p class="quote-text">아예 안 옮긴다고요. (새 기기에 데이터 이전 없음)</p><p class="quote-name">박민주</p></div>
+        <div class="quote-card"><p class="quote-text">아이폰에서 아이폰으로 옮기기 때문에 정보 전송 기능을 활용하는 편입니다.</p><p class="quote-name">이수민</p></div>
+        <div class="quote-card"><p class="quote-text">아이클라우드에 구독이 되어 있어서 사진·문서가 백업되어 있어요.</p><p class="quote-name">차시은</p></div>
+      </div>
+    </section>
+
+    <section class="report-section" id="sec6">
+      <div class="section-header"><span class="section-num">06</span><h2 class="section-title">전환 동기·신뢰</h2></div>
+      <div class="insight-box"><strong>핵심 발견:</strong> <strong>보안 사건</strong>, <strong>혜택·요금</strong>, <strong>기기 교체 시점</strong>이 통신사 이동과 맞물립니다.</div>
+      <div class="extra-callout">
+        <div class="extra-badge">★ 추가 인터뷰</div>
+        <div class="extra-person">이소영 — 혜택 중심 번호이동·다채널 경험</div>
+        <p class="extra-quote"><em>혜택 봐서</em> 통신사를 계속 옮기는 타입이라고 말씀하셨습니다. 유플러스 이용 기간·OTT 포함 혜택 등을 구체적으로 되짚어 주셨습니다.</p>
+        <p class="extra-quote">짧은 주기로 통신사를 바꾼 경험과, <em>혜택 구조를 비교해 결정</em>하는 의사결정 방식이 드러났습니다.</p>
+      </div>
+      <div class="quotes-grid">
+        <div class="quote-card"><p class="quote-text">최근에 KT 개인정보 유출 대란이 있었잖아요. 그래서 옮겼어요. KT를 되게 오래 썼거든요.</p><p class="quote-name">차시은</p></div>
+        <div class="quote-card"><p class="quote-text">맥 iOS 끼리 연동성이 좋아서 아이패드 쓰면서 계속 아이폰을 쓰게 된 것 같습니다.</p><p class="quote-name">이수민</p></div>
+        <div class="quote-card"><p class="quote-text">처음에는 연동성 때문에 썼지만, 요즘은 디자인 등 다른 요소도 작용하는 것 같아요.</p><p class="quote-name">전성아</p></div>
+        <div class="quote-card"><p class="quote-text">아이폰이 처음 들어왔을 때 신세계였어요. 스마트폰이 빠르고… LG·삼성도 예전에 썼어요.</p><p class="quote-name">차시은</p></div>
+      </div>
+    </section>
+
+    <section class="report-section" id="pain">
+      <div class="section-header"><span class="section-num">—</span><h2 class="section-title">페인포인트 빈도 (인터뷰 내 언급)</h2></div>
+      <p class="section-sub">8건 기준 상대 빈도입니다.</p>
+      <div style="background:var(--card-bg); border:1px solid var(--border); border-radius:14px; padding:22px 24px;">
+        <div class="pain-bar"><span class="pain-label">온라인 인증·가입 UX</span><div class="pain-track"><div class="pain-fill" style="width:88%"></div></div><span class="pain-cnt">7</span></div>
+        <div class="pain-bar"><span class="pain-label">요금·상품 이해도</span><div class="pain-track"><div class="pain-fill" style="width:75%"></div></div><span class="pain-cnt">6</span></div>
+        <div class="pain-bar"><span class="pain-label">보안·신뢰 이슈</span><div class="pain-track"><div class="pain-fill" style="width:62%"></div></div><span class="pain-cnt">5</span></div>
+        <div class="pain-bar"><span class="pain-label">위약금·이동 조건</span><div class="pain-track"><div class="pain-fill" style="width:50%"></div></div><span class="pain-cnt">4</span></div>
+        <div class="pain-bar"><span class="pain-label">알뜰폰·채널 정보</span><div class="pain-track"><div class="pain-fill" style="width:38%"></div></div><span class="pain-cnt">3</span></div>
+      </div>
+      <div style="margin-top:28px;">
+        <div class="mece-label">개선 제언 요약</div>
+        <div class="findings-row">
+          <div class="finding-card">
+            <h4><span class="icon" style="background:#e8f5e9;">📱</span>즉시 검토</h4>
+            <ul>
+              <li>온라인 가입 플로우 간편인증 예외 처리·대체 경로</li>
+              <li>요금·납부 현황 원페이지 요약 (앱 푸시)</li>
+              <li>보안 이슈 시 고지·FAQ 채널 일원화</li>
+            </ul>
+          </div>
+          <div class="finding-card">
+            <h4><span class="icon" style="background:#fff3e0;">🏆</span>중장기</h4>
+            <ul>
+              <li>애플 생태계 세그먼트 맞춤 부가 번들</li>
+              <li>혜택 민감형 이동 고객 리텐션 설계</li>
+              <li>휴먼 심층 인터뷰 패널 정기 보강</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer style="background:var(--dark); color:rgba(255,255,255,.5); text-align:center; padding:24px; font-size:12px;">
+  LG Uplus 아이폰 통신 경험 인터뷰 종합 보고서 · 소스: ongoing/LG Uplus/보고서/*.md · 2026
+</footer>
+<script>
+const navItems = document.querySelectorAll('.nav-item[href^="#"]');
+const sections = Array.from(navItems).map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+window.addEventListener('scroll', () => {
+  const y = window.scrollY + 100;
+  let cur = sections[0];
+  for (const s of sections) { if (s.offsetTop <= y) cur = s; }
+  navItems.forEach(a => a.classList.remove('active'));
+  const active = document.querySelector(`.nav-item[href="#${cur.id}"]`);
+  if (active) active.classList.add('active');
+}, { passive: true });
+</script>
+</body>
+</html>
