@@ -78,7 +78,7 @@ body::before {
   display: flex; flex-direction: column; gap: .38rem;
   margin-bottom: 0;
 }
-.upanel-row1 { display: flex; align-items: center; gap: .6rem; }
+.upanel-row1 { display: flex; align-items: center; gap: .6rem; height: 38px; overflow: hidden; }
 .upanel-chevron {
   flex-shrink: 0; width: 30px; height: 30px; border-radius: .38rem;
   background: rgba(0,237,212,.08); border: 1px solid rgba(0,237,212,.28);
@@ -114,21 +114,22 @@ body::before {
   font-size: .62rem; color: rgba(255,255,255,.22); font-style: italic;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.upanel-row2 { display: flex; align-items: stretch; gap: 0; }
+.upanel-row2 { display: flex; align-items: stretch; gap: 0; height: 58px; overflow: hidden; }
 .upanel-cell {
-  flex: 1; min-width: 0; padding: .22rem .7rem;
+  flex: 1; min-width: 0; padding: .22rem .55rem;
   border-right: 1px solid rgba(255,255,255,.055);
   display: flex; flex-direction: column; gap: .1rem;
 }
-.upanel-cell:first-child { padding-left: 0; }
+.upanel-cell:first-child { padding-left: .4rem; }
 .upanel-cell:last-of-type { border-right: none; }
-.upanel-cell-lbl { font-size: .48rem; font-weight: 900; letter-spacing: .09em; text-transform: uppercase; color: rgba(255,255,255,.26); white-space: nowrap; }
-.upanel-cell-val { font-size: .58rem; color: rgba(255,255,255,.58); line-height: 1.35;
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.upanel-cell-lbl { font-size: .46rem; font-weight: 900; letter-spacing: .09em; text-transform: uppercase; color: rgba(255,255,255,.26); white-space: nowrap; }
+.upanel-cell-val { font-size: .56rem; color: rgba(255,255,255,.58); line-height: 1.35;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  min-height: 1.52rem; }
 .upanel-vdivider { width: 1px; background: rgba(255,255,255,.055); flex-shrink: 0; margin: 0 .1rem; align-self: stretch; }
-.upanel-tags-col { display: flex; flex-direction: column; gap: .2rem; padding: .22rem .7rem; min-width: 0; flex-shrink: 0; }
+.upanel-tags-col { display: flex; flex-direction: column; gap: .15rem; padding: .22rem .75rem; flex: 2; min-width: 140px; overflow: hidden; }
 .upanel-tags-lbl { font-size: .46rem; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.22); white-space: nowrap; }
-.upanel-tags-row { display: flex; flex-wrap: wrap; gap: .2rem; }
+.upanel-tags-row { display: flex; flex-wrap: wrap; gap: .22rem .18rem; }
 
 /* ── Left: content thumbnails ── */
 .content-panel {
@@ -197,18 +198,8 @@ body::before {
   box-shadow: inset 0 0 0 1.5px rgba(139,92,246,.2);
 }
 
-/* ── Right: user persona panel ── */
-.user-panel {
-  background: rgba(255,255,255,.02);
-  border: 1px solid rgba(255,255,255,.06);
-  border-radius: 1rem;
-  padding: 1.25rem 1.5rem 1.5rem;
-  display: flex; flex-direction: column; gap: .875rem;
-  overflow-y: auto;
-}
-.user-panel::-webkit-scrollbar { width: 3px; }
-.user-panel::-webkit-scrollbar-track { background: transparent; }
-.user-panel::-webkit-scrollbar-thumb { background: rgba(255,255,255,.08); border-radius: 2px; }
+
+/* ── User avatar / name (shared) ── */
 .user-avatar {
   width: 44px; height: 44px; border-radius: 50%;
   background: linear-gradient(135deg, rgba(0,60,50,.9), rgba(0,100,80,.7));
@@ -278,7 +269,7 @@ body::before {
 }
 .ct-chart-bar-label { font-size: .6rem; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; color: rgba(0,237,212,.35); font-family: 'Silkscreen', monospace; }
 .ct-chart-bar-hint  { font-size: .58rem; color: rgba(255,255,255,.13); }
-.ct-chart-body { display: flex; align-items: stretch; }
+.ct-chart-body { display: flex; align-items: stretch; height: 315px; overflow: hidden; }
 .ct-yaxis-panel { flex-shrink: 0; width: 52px; border-right: 1px solid rgba(37,37,45,.45); }
 
 /* ── Series sidebar (between y-axis and chart scroll) ── */
@@ -341,7 +332,7 @@ body::before {
   background: rgba(255,255,255,.04);
 }
 .ct-yaxis-svg   { display: block; }
-.ct-chart-scroll { flex: 1; overflow-x: auto; overflow-y: hidden; min-width: 0; }
+.ct-chart-scroll { flex: 1; overflow-x: auto; overflow-y: hidden; min-width: 0; height: 315px; scrollbar-gutter: stable; }
 .ct-chart-scroll::-webkit-scrollbar       { height: 5px; }
 .ct-chart-scroll::-webkit-scrollbar-track  { background: rgba(255,255,255,.02); }
 .ct-chart-scroll::-webkit-scrollbar-thumb  { background: rgba(0,237,212,.35); border-radius: 3px; }
@@ -376,7 +367,7 @@ body::before {
   border-top: 1px solid rgba(37,37,45,.45);
 }
 .ct-qsection-scroll {
-  flex: 1; overflow-x: auto; overflow-y: hidden; min-width: 0;
+  flex: 1; overflow-x: auto; overflow-y: hidden; min-width: 0; scrollbar-gutter: stable;
 }
 .ct-qsection-scroll::-webkit-scrollbar       { height: 5px; }
 .ct-qsection-scroll::-webkit-scrollbar-track  { background: rgba(255,255,255,.02); }
@@ -489,16 +480,16 @@ body::before {
           <span class="grad-text">시청 흥미도</span><br>타임라인
         </h1>
         <p style="font-size:.88rem;color:rgba(255,255,255,.42);max-width:480px;line-height:1.75;margin-bottom:.3rem;">
-          Vigloo 유저가 숏드라마를 시청하며 발화한 흥미도 점수를 에피소드 단위로 시각화합니다.
+          숏드라마를 시청하며 발화한 흥미도 점수를 에피소드 단위로 시각화합니다.
         </p>
         <p style="font-size:.75rem;color:rgba(0,237,212,.3);max-width:520px;line-height:1.65;">
           어느 장면에서 몰입이 오르고, 어느 지점에서 이탈 신호가 나타나는지 확인할 수 있습니다.
         </p>
       </div>
       <div style="flex-shrink:0;padding-top:.5rem;">
-        <img src="vigloo.jpg" alt="Vigloo"
+        <img src="../../Brand assets/vigloo.jpg" alt="Vigloo"
              style="height:44px;object-fit:contain;border-radius:.5rem;opacity:.85;"/>
-        <div style="font-size:.52rem;color:rgba(0,237,212,.4);letter-spacing:.12em;text-transform:uppercase;font-family:'Silkscreen',monospace;margin-top:.45rem;text-align:right;">Spoon Labs</div>
+        <div style="font-size:.7rem;color:rgba(0,237,212,.4);letter-spacing:.12em;text-transform:uppercase;font-family:'Silkscreen',monospace;margin-top:.45rem;text-align:right;">Spoon Labs</div>
       </div>
     </div>
   </section>
@@ -911,13 +902,13 @@ function renderUserPanel(){
     </div>`).join('');
 
   const painTagsHtml   = user.painTags.map(t  =>
-    `<span class="persona-tag red"   style="font-size:.48rem;padding:.12rem .38rem;">${t}</span>`).join('');
+    `<span class="persona-tag red"   style="font-size:.46rem;padding:.1rem .35rem;">${t}</span>`).join('');
   const preferTagsHtml = user.preferTags.map(t =>
-    `<span class="persona-tag green" style="font-size:.48rem;padding:.12rem .38rem;">${t}</span>`).join('');
+    `<span class="persona-tag green" style="font-size:.46rem;padding:.1rem .35rem;">${t}</span>`).join('');
 
   panel.innerHTML = `
     <div class="upanel-row1">
-      <img src="vigloo.jpg" alt="Vigloo"
+      <img src="../../Brand assets/vigloo.jpg" alt="Vigloo"
            style="height:22px;object-fit:contain;border-radius:.28rem;flex-shrink:0;opacity:.75;margin-right:.25rem;"/>
       <div style="width:1px;height:18px;background:rgba(0,237,212,.15);flex-shrink:0;margin-right:.15rem;"></div>
       <div class="upanel-nav">
@@ -931,7 +922,7 @@ function renderUserPanel(){
       </div>
       <div class="user-avatar" style="width:30px;height:30px;font-size:.7rem;flex-shrink:0;">${user.initials}</div>
       <div class="upanel-identity">
-        <span class="user-name" style="font-size:.88rem;">${user.fullName}</span>
+        <span class="user-name" style="font-size:.88rem;white-space:nowrap;">${user.fullName}</span>
         <span class="persona-tag purple" style="font-size:.49rem;padding:.11rem .38rem;flex-shrink:0;">${user.personaType}</span>
         <span class="upanel-meta">${user.meta}</span>
       </div>
