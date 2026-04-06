@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { DashboardWidget } from '@/lib/types'
-import { Plus, Pencil, X, ExternalLink, Image, Loader2, Search, Tag, ChevronDown, ArrowUpDown } from 'lucide-react'
+import { Plus, Pencil, X, ExternalLink, Image, Loader2, Search, Tag, ChevronDown, ArrowUpDown, Upload } from 'lucide-react'
 import { toast } from 'sonner'
+import { createClient } from '@/lib/supabase/client'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -74,7 +75,9 @@ function WidgetModal({ widget, onClose, onSaved, companyId, nextOrder }: WidgetM
   const [tags, setTags] = useState<string[]>(widget?.tags ?? [])
   const [saving, setSaving] = useState(false)
   const [fetching, setFetching] = useState(false)
+  const [uploadingThumb, setUploadingThumb] = useState(false)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const thumbInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current)
@@ -101,8 +104,38 @@ function WidgetModal({ widget, onClose, onSaved, companyId, nextOrder }: WidgetM
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [redirectUrl])
 
+  async function handleThumbUpload(file: File) {
+    if (!file.type.startsWith('image/')) { toast.error('이미지 파일만 업로드할 수 있습니다'); return }
+    setUploadingThumb(true)
+    try {
+      const supabase = createClient()
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) { toast.error('로그인이 필요합니다'); return }
+
+      const ext = file.name.split('.').pop()?.toLowerCase() ?? 'jpg'
+      const path = `${companyId}/thumbnails/${crypto.randomUUID()}.${ext}`
+
+      const { error: uploadError } = await supabase.storage.from('files').upload(path, file, {
+        contentType: file.type,
+        cacheControl: '3600',
+        upsert: false,
+      })
+      if (uploadError) throw uploadError
+
+      const { data: urlData, error: urlError } = await supabase.storage.from('files').createSignedUrl(path, 315360000)
+      if (urlError || !urlData?.signedUrl) throw (urlError ?? new Error('URL 생성 실패'))
+
+      setThumbnailUrl(urlData.signedUrl)
+      toast.success('이미지가 업로드됐습니다')
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : '업로드 실패')
+    } finally {
+      setUploadingThumb(false)
+      if (thumbInputRef.current) thumbInputRef.current.value = ''
+    }
+  }
+
   async function handleSave() {
-    if (!title.trim()) { toast.error('제목을 입력해주세요'); return }
     if (!redirectUrl.trim()) { toast.error('URL을 입력해주세요'); return }
     setSaving(true)
 
@@ -199,15 +232,33 @@ function WidgetModal({ widget, onClose, onSaved, companyId, nextOrder }: WidgetM
             <TagChipInput tags={tags} onChange={setTags} />
           </div>
 
-          {/* Thumbnail URL */}
+          {/* Thumbnail */}
           <div>
-            <label className="text-xs font-medium text-zinc-400 block mb-1.5">썸네일 이미지 URL <span className="text-zinc-600">(선택)</span></label>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="text-xs font-medium text-zinc-400">썸네일 이미지 <span className="text-zinc-600">(선택)</span></label>
+              <button
+                type="button"
+                onClick={() => thumbInputRef.current?.click()}
+                disabled={uploadingThumb}
+                className="flex items-center gap-1 text-xs text-indigo-400 hover:text-indigo-300 transition-colors disabled:opacity-50"
+              >
+                {uploadingThumb ? <Loader2 className="w-3 h-3 animate-spin" /> : <Upload className="w-3 h-3" />}
+                {uploadingThumb ? '업로드 중...' : '이미지 업로드'}
+              </button>
+            </div>
             <input
               type="url"
               value={thumbnailUrl}
               onChange={(e) => setThumbnailUrl(e.target.value)}
-              placeholder="자동 추출되거나 직접 입력"
+              placeholder="자동 추출되거나 직접 입력 / 업로드"
               className="w-full h-9 px-3 rounded-lg bg-zinc-800 border border-zinc-700 text-white text-sm placeholder:text-zinc-500 focus:outline-none focus:border-indigo-500"
+            />
+            <input
+              ref={thumbInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => { const f = e.target.files?.[0]; if (f) handleThumbUpload(f) }}
             />
           </div>
 
