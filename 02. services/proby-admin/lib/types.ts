@@ -33,6 +33,12 @@ export interface Database {
         Update: { folder_id?: string; profile_id?: string }
         Relationships: []
       }
+      dashboard_widgets: {
+        Row: { id: string; company_id: string; title: string; description: string | null; thumbnail_url: string | null; redirect_url: string; tags: string[]; display_order: number; created_at: string; updated_at: string }
+        Insert: { id?: string; company_id: string; title: string; description?: string | null; thumbnail_url?: string | null; redirect_url: string; tags?: string[]; display_order?: number; created_at?: string; updated_at?: string }
+        Update: { title?: string; description?: string | null; thumbnail_url?: string | null; redirect_url?: string; tags?: string[]; display_order?: number; updated_at?: string }
+        Relationships: []
+      }
     }
     Views: Record<string, never>
     Functions: Record<string, never>
