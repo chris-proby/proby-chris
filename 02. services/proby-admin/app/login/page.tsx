@@ -77,8 +77,14 @@ export default function LoginPage() {
       return
     }
     setGuestLoading(true)
-    identifyMixpanel(guestEmail, { $email: guestEmail, is_guest: true, marketing_consent: guestConsent })
-    trackMixpanel('Guest_Browse_Started', { email: guestEmail, marketing_consent: guestConsent })
+    if (guestConsent) {
+      // 동의한 경우에만 이메일을 Mixpanel distinct ID로 연결
+      identifyMixpanel(guestEmail, { $email: guestEmail, is_guest: true, marketing_consent: true })
+      trackMixpanel('Guest_Browse_Started', { email: guestEmail, marketing_consent: true })
+    } else {
+      // 미동의 시 이메일 미노출 — 익명 세션으로만 추적
+      trackMixpanel('Guest_Browse_Started', { marketing_consent: false })
+    }
     router.push('/browse')
   }
 

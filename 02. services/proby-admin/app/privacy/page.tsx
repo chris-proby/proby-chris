@@ -156,7 +156,7 @@ export default function PrivacyPage() {
             <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4 text-zinc-400 space-y-1">
               <p><span className="text-zinc-300">회사명:</span> 주식회사 포뮬라엑스</p>
               <p><span className="text-zinc-300">책임자:</span> 대표이사</p>
-              <p><span className="text-zinc-300">이메일:</span> privacy@proby.kr</p>
+              <p><span className="text-zinc-300">이메일:</span> chris@proby.io</p>
             </div>
           </section>
 
