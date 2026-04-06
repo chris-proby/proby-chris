@@ -78,8 +78,19 @@ function WidgetModal({ widget, onClose, onSaved, companyId, nextOrder }: WidgetM
   const [uploadingThumb, setUploadingThumb] = useState(false)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const thumbInputRef = useRef<HTMLInputElement>(null)
+  // Skip auto-fetch on initial mount when editing existing widget
+  const hasInitialized = useRef(false)
+  // Track current thumbnailUrl in closure to prevent stale-read in setTimeout
+  const thumbnailUrlRef = useRef(thumbnailUrl)
+  useEffect(() => { thumbnailUrlRef.current = thumbnailUrl }, [thumbnailUrl])
 
   useEffect(() => {
+    // On first render: skip auto-fetch if editing (widget already has redirect_url)
+    if (!hasInitialized.current) {
+      hasInitialized.current = true
+      if (widget) return
+    }
+
     if (debounceRef.current) clearTimeout(debounceRef.current)
     let valid = false
     try { new URL(redirectUrl); valid = true } catch { /* ignore */ }
@@ -91,7 +102,8 @@ function WidgetModal({ widget, onClose, onSaved, companyId, nextOrder }: WidgetM
         const res = await fetch(`/api/og-preview?url=${encodeURIComponent(redirectUrl)}`)
         if (!res.ok) return
         const data = await res.json()
-        if (data.image) setThumbnailUrl(data.image)
+        // Only overwrite thumbnail if it's currently empty (don't clobber uploaded/existing images)
+        if (data.image && !thumbnailUrlRef.current) setThumbnailUrl(data.image)
         if (data.title && !title) setTitle(data.title)
         if (data.description && !description) setDescription(data.description)
         if (data.keywords?.length && tags.length === 0) setTags(data.keywords)
