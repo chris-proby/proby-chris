@@ -56,3 +56,16 @@ export interface FolderPermission {
 export interface FolderWithPermissions extends Folder {
   allowedUserIds?: string[] // undefined = public (no restrictions)
 }
+
+export interface DashboardWidget {
+  id: string
+  company_id: string
+  title: string
+  description: string | null
+  thumbnail_url: string | null
+  redirect_url: string
+  tags: string[]
+  display_order: number
+  created_at: string
+  updated_at: string
+}

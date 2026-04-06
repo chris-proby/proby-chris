@@ -20,7 +20,7 @@ export default function LoginPage() {
     const supabase = createClient()
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) { toast.error('로그인 실패', { description: error.message }); setLoading(false); return }
-    router.push('/drive')
+    router.push('/drive/dashboard')
     router.refresh()
   }
 

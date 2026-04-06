@@ -94,3 +94,25 @@ CREATE POLICY "Users see own company files" ON files FOR SELECT USING (
 CREATE POLICY "Super admin manages all files" ON files FOR ALL USING (
   (SELECT is_super_admin FROM profiles WHERE id = auth.uid()) = true
 );
+
+-- 11. dashboard_widgets 테이블
+CREATE TABLE IF NOT EXISTS dashboard_widgets (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  company_id UUID NOT NULL REFERENCES companies(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  description TEXT,
+  thumbnail_url TEXT,
+  redirect_url TEXT NOT NULL,
+  tags TEXT[] NOT NULL DEFAULT '{}',
+  display_order INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+ALTER TABLE dashboard_widgets ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users see own company widgets" ON dashboard_widgets FOR SELECT USING (
+  company_id IN (SELECT company_id FROM profiles WHERE id = auth.uid())
+);
+CREATE POLICY "Super admin manages all widgets" ON dashboard_widgets FOR ALL USING (
+  (SELECT is_super_admin FROM profiles WHERE id = auth.uid()) = true
+);

@@ -3,8 +3,9 @@ import { createClient } from '@/lib/supabase/server'
 import { Company, Folder, FileRecord } from '@/lib/types'
 import AdminDriveView from '@/components/admin/AdminDriveView'
 
-export default async function AdminCompanyPage({
-  params, searchParams,
+export default async function AdminCompanyDrivePage({
+  params,
+  searchParams,
 }: {
   params: Promise<{ companyId: string }>
   searchParams: Promise<{ folder?: string }>
@@ -23,7 +24,6 @@ export default async function AdminCompanyPage({
   const filesQuery = supabase.from('files').select('*').eq('company_id', companyId).order('created_at', { ascending: false })
   const { data: filesData } = folderId ? await filesQuery.eq('folder_id', folderId) : await filesQuery.is('folder_id', null)
 
-  // Get restricted folder IDs (folders that have explicit permission entries)
   const folderIds = (foldersData ?? []).map((f: { id: string }) => f.id)
   const { data: permsData } = folderIds.length > 0
     ? await supabase.from('folder_permissions').select('folder_id').in('folder_id', folderIds)
@@ -42,6 +42,8 @@ export default async function AdminCompanyPage({
     }
   }
 
+  const hrefBase = `/admin/${companyId}/drive`
+
   return (
     <AdminDriveView
       company={company}
@@ -50,6 +52,7 @@ export default async function AdminCompanyPage({
       breadcrumbs={breadcrumbs}
       currentFolderId={folderId ?? null}
       restrictedFolderIds={restrictedFolderIds}
+      hrefBase={hrefBase}
     />
   )
 }

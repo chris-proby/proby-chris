@@ -22,9 +22,10 @@ interface AdminDriveViewProps {
   breadcrumbs: { id: string; name: string }[]
   currentFolderId: string | null
   restrictedFolderIds?: Set<string>
+  hrefBase?: string // default: /admin/${company.id}
 }
 
-export default function AdminDriveView({ company, folders, files, breadcrumbs, currentFolderId, restrictedFolderIds = new Set() }: AdminDriveViewProps) {
+export default function AdminDriveView({ company, folders, files, breadcrumbs, currentFolderId, restrictedFolderIds = new Set(), hrefBase: hrefBaseProp }: AdminDriveViewProps) {
   const router = useRouter()
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [searchQuery, setSearchQuery] = useState('')
@@ -100,7 +101,7 @@ export default function AdminDriveView({ company, folders, files, breadcrumbs, c
     }
   }
 
-  const hrefBase = `/admin/${company.id}`
+  const hrefBase = hrefBaseProp ?? `/admin/${company.id}`
 
   return (
     <div

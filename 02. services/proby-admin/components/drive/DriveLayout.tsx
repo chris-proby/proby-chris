@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { User } from '@supabase/supabase-js'
 import { Profile, Company } from '@/lib/types'
-import { LogOut, ChevronDown, HardDrive, Coins, LayoutDashboard } from 'lucide-react'
+import { LogOut, ChevronDown, HardDrive, Coins, LayoutDashboard, ArrowLeft } from 'lucide-react'
 import { hexToRgba } from '@/lib/color-utils'
 
 interface DriveLayoutProps {
@@ -16,14 +16,16 @@ interface DriveLayoutProps {
   profile: Profile | null
   company: Company | null
   children: React.ReactNode
+  basePath?: string      // default: '/drive'
+  isSuperAdmin?: boolean // shows admin back link when true
 }
 
-const NAV_ITEMS = [
-  { label: '대시보드', href: '/drive/dashboard', icon: LayoutDashboard, exact: false },
-  { label: '드라이브', href: '/drive', icon: HardDrive, exact: true },
-]
-
-export default function DriveLayout({ user, profile, company, children }: DriveLayoutProps) {
+export default function DriveLayout({ user, profile, company, children, basePath = '/drive', isSuperAdmin = false }: DriveLayoutProps) {
+  const driveHref = basePath === '/drive' ? '/drive' : `${basePath}/drive`
+  const NAV_ITEMS = [
+    { label: '대시보드', href: `${basePath}/dashboard`, icon: LayoutDashboard, exact: false },
+    { label: '드라이브', href: driveHref, icon: HardDrive, exact: true },
+  ]
   const router = useRouter()
   const pathname = usePathname()
   const [signingOut, setSigningOut] = useState(false)
@@ -63,9 +65,18 @@ export default function DriveLayout({ user, profile, company, children }: DriveL
         {/* 상단 accent line */}
         <div className="h-[2px] shrink-0" style={{ background: `linear-gradient(90deg, ${primary}, ${secondary}, transparent)` }} />
 
+        {/* 어드민 뒤로가기 */}
+        {isSuperAdmin && (
+          <div className="px-3 pt-3 shrink-0">
+            <Link href="/admin" className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg text-zinc-500 hover:text-zinc-300 hover:bg-white/5 transition-colors text-xs">
+              <ArrowLeft className="w-3 h-3" />고객사 목록
+            </Link>
+          </div>
+        )}
+
         {/* 로고 */}
         <div className="px-4 py-4 shrink-0">
-          <Link href="/drive" className="flex items-center gap-2.5 group">
+          <Link href={`${basePath}/dashboard`} className="flex items-center gap-2.5 group">
             <div
               className="w-8 h-8 rounded-lg flex items-center justify-center transition-all group-hover:scale-105 shadow-sm shrink-0"
               style={{ backgroundColor: primary, boxShadow: `0 0 12px ${hexToRgba(primary, 0.4)}` }}
@@ -90,10 +101,9 @@ export default function DriveLayout({ user, profile, company, children }: DriveL
               <Link
                 key={href}
                 href={href}
-                className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all"
+                className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all ${active ? 'text-zinc-100' : ''}`}
                 style={active ? {
                   background: hexToRgba(primary, 0.15),
-                  color: primary,
                   boxShadow: `inset 0 0 0 1px ${hexToRgba(primary, 0.2)}`,
                 } : {
                   color: 'rgb(161 161 170)',
