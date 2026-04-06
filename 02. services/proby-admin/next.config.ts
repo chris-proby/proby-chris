@@ -1,6 +1,11 @@
 import type { NextConfig } from "next";
 
+// Supabase WebSocket URL (와일드카드 ws:/wss: 대신 특정 호스트만 허용)
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+const supabaseWss = supabaseUrl ? supabaseUrl.replace(/^https?:\/\//, "wss://") : "";
+
 const nextConfig: NextConfig = {
+  devIndicators: false,
   experimental: {
     optimizePackageImports: ['lucide-react'],
   },
@@ -16,7 +21,7 @@ const nextConfig: NextConfig = {
           // Referrer 정보 최소화
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           // DNS prefetch 비활성화
-          { key: "X-DNS-Prefetch-Control", value: "on" },
+          { key: "X-DNS-Prefetch-Control", value: "off" },
           // 권한 정책 (마이크/카메라 접근 차단)
           { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
           // XSS 방지 헤더
@@ -28,12 +33,12 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              // Next.js 인라인 스크립트 허용
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-              // Supabase + 외부 스토리지 허용
-              `connect-src 'self' ${process.env.NEXT_PUBLIC_SUPABASE_URL ?? "*"} wss:`,
+              // Next.js 인라인 스크립트 허용 (unsafe-eval 제거)
+              "script-src 'self' 'unsafe-inline' https://cdn.mxpnl.com",
+              // Supabase + Mixpanel (와일드카드 ws: 제거 → Supabase WSS만 허용)
+              `connect-src 'self' ${supabaseUrl} ${supabaseWss} https://api.mixpanel.com https://api-js.mixpanel.com`,
               // 이미지: Supabase storage, data URI
-              `img-src 'self' data: blob: ${process.env.NEXT_PUBLIC_SUPABASE_URL ?? "*"}`,
+              `img-src 'self' data: blob: ${supabaseUrl}`,
               // 스타일 허용
               "style-src 'self' 'unsafe-inline'",
               // 폰트
@@ -43,7 +48,7 @@ const nextConfig: NextConfig = {
               // Office Online 미리보기 허용 (file preview용)
               "frame-src 'self' https://view.officeapps.live.com",
               // 미디어 허용 (영상/음성 파일 프리뷰)
-              `media-src 'self' blob: ${process.env.NEXT_PUBLIC_SUPABASE_URL ?? "*"}`,
+              `media-src 'self' blob: ${supabaseUrl}`,
             ].join("; "),
           },
         ],

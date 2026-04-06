@@ -6,11 +6,14 @@ export async function updateSession(request: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const supabaseAnon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   const isLoginPage = request.nextUrl.pathname.startsWith('/login')
+  const isBrowsePage = request.nextUrl.pathname.startsWith('/browse')
+  const isPrivacyPage = request.nextUrl.pathname.startsWith('/privacy')
   const isAdminRoute = request.nextUrl.pathname.startsWith('/admin')
   const isDriveRoute = request.nextUrl.pathname.startsWith('/drive')
+  const isPublicPage = isLoginPage || isBrowsePage || isPrivacyPage
 
   if (!supabaseUrl || !supabaseAnon) {
-    if (isLoginPage) return NextResponse.next()
+    if (isPublicPage) return NextResponse.next()
     const u = request.nextUrl.clone()
     u.pathname = '/login'
     u.search = ''
@@ -41,7 +44,7 @@ export async function updateSession(request: NextRequest) {
       data: { user },
     } = await supabase.auth.getUser()
 
-    if (!user && !isLoginPage) {
+    if (!user && !isPublicPage) {
       const u = request.nextUrl.clone()
       u.pathname = '/login'
       u.search = ''
@@ -90,6 +93,7 @@ export async function updateSession(request: NextRequest) {
   } catch (err) {
     console.error('[proby-admin proxy]', err)
     if (isLoginPage) return NextResponse.next()
+    if (isBrowsePage) return NextResponse.next()
     const u = request.nextUrl.clone()
     u.pathname = '/login'
     u.search = ''
