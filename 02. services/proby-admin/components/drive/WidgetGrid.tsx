@@ -267,7 +267,7 @@ function WidgetModal({ widget, onClose, onSaved, companyId, nextOrder }: WidgetM
               <img
                 src={thumbnailUrl}
                 alt="미리보기"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
                 onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
               />
             </div>
@@ -525,7 +525,7 @@ export default function WidgetGrid({ widgets: initialWidgets, companyId, isSuper
                     <img
                       src={widget.thumbnail_url}
                       alt={widget.title}
-                      className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-300"
+                      className="w-full h-full object-contain group-hover/card:scale-105 transition-transform duration-300"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
