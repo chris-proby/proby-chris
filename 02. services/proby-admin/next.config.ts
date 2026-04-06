@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 // Supabase WebSocket URL (와일드카드 ws:/wss: 대신 특정 호스트만 허용)
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 const supabaseWss = supabaseUrl ? supabaseUrl.replace(/^https?:\/\//, "wss://") : "";
+const isDev = process.env.NODE_ENV === "development";
 
 const nextConfig: NextConfig = {
   devIndicators: false,
@@ -33,8 +34,8 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              // Next.js 인라인 스크립트 허용 (unsafe-eval 제거)
-              "script-src 'self' 'unsafe-inline' https://cdn.mxpnl.com",
+              // 개발 모드에서만 unsafe-eval 허용 (React devtools용), 프로덕션 제거
+              `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://cdn.mxpnl.com`,
               // Supabase + Mixpanel (와일드카드 ws: 제거 → Supabase WSS만 허용)
               `connect-src 'self' ${supabaseUrl} ${supabaseWss} https://api.mixpanel.com https://api-js.mixpanel.com`,
               // 이미지: Supabase storage, data URI
