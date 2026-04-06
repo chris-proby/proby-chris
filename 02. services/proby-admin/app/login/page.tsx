@@ -71,12 +71,24 @@ export default function LoginPage() {
 
   async function handleGuestBrowse(e: React.FormEvent) {
     e.preventDefault()
-    if (!guestEmail) return
+    if (!guestEmail || !guestConsent) return
     if (isPersonalEmail(guestEmail)) {
       setGuestEmailError('개인 이메일은 사용할 수 없습니다. 회사 도메인 이메일을 입력해주세요.')
       return
     }
     setGuestLoading(true)
+    // 서버에서 회사 도메인 재검증 + HttpOnly 쿠키 발급 (마케팅 동의와 무관)
+    const res = await fetch('/api/guest-consent', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: guestEmail }),
+    })
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}))
+      setGuestEmailError((body as { error?: string }).error ?? '오류가 발생했습니다.')
+      setGuestLoading(false)
+      return
+    }
     if (guestConsent) {
       // 동의한 경우에만 이메일을 Mixpanel distinct ID로 연결
       identifyMixpanel(guestEmail, { $email: guestEmail, is_guest: true, marketing_consent: true })
