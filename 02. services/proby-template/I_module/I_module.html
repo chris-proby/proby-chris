@@ -254,6 +254,177 @@ body::before {
 }
 .upload-zone.has-file .upload-file-name { display: flex; }
 
+/* ── Recruit CTA button (strip) ── */
+.recruit-btn {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-size: .72rem; font-weight: 700; letter-spacing: -.01em;
+  padding: .42rem 1rem; border-radius: .42rem;
+  background: rgba(65,104,175,.12); border: 1px solid rgba(65,104,175,.35);
+  color: rgba(125,163,224,.9); cursor: pointer; transition: all .18s;
+  font-family: inherit;
+}
+.recruit-btn:hover {
+  background: rgba(65,104,175,.22); border-color: rgba(125,163,224,.55);
+  box-shadow: 0 0 14px rgba(65,104,175,.25);
+  color: #A3C2EF;
+}
+
+/* ── Recruit modal overlay ── */
+.recruit-overlay {
+  display: none;
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  align-items: center; justify-content: center;
+}
+.recruit-overlay.open { display: flex; }
+
+.recruit-modal {
+  width: min(520px, 92vw);
+  background: #111114;
+  border: 1px solid rgba(65,104,175,.25);
+  border-radius: 1rem;
+  box-shadow: 0 32px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(65,104,175,.1);
+  overflow: hidden;
+  animation: modal-in .2s cubic-bezier(.34,1.38,.64,1);
+}
+@keyframes modal-in {
+  from { opacity: 0; transform: scale(.94) translateY(8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.recruit-modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.1rem 1.25rem .9rem;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.recruit-modal-title {
+  font-size: .92rem; font-weight: 800; color: rgba(255,255,255,.88);
+  display: flex; align-items: center; gap: .5rem;
+}
+.recruit-modal-sub {
+  font-size: .68rem; color: rgba(125,163,224,.6); margin-top: .12rem;
+}
+.recruit-modal-close {
+  width: 28px; height: 28px; border-radius: .35rem;
+  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08);
+  color: rgba(255,255,255,.4); cursor: pointer; transition: all .15s;
+  display: flex; align-items: center; justify-content: center;
+  font-family: inherit;
+}
+.recruit-modal-close:hover { background: rgba(255,255,255,.1); color: rgba(255,255,255,.7); }
+
+.recruit-modal-body { padding: 1.1rem 1.25rem 1.25rem; }
+
+.recruit-section-lbl {
+  font-size: .52rem; font-weight: 900; letter-spacing: .12em; text-transform: uppercase;
+  color: rgba(255,255,255,.25); margin-bottom: .65rem;
+}
+
+/* 날짜 슬롯 그리드 */
+.recruit-date-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: .4rem; margin-bottom: 1rem;
+}
+.recruit-date-item {
+  background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08);
+  border-radius: .45rem; padding: .55rem .4rem; cursor: pointer; transition: all .15s;
+  text-align: center;
+}
+.recruit-date-item:hover { background: rgba(65,104,175,.1); border-color: rgba(65,104,175,.3); }
+.recruit-date-item.selected {
+  background: rgba(65,104,175,.18); border-color: rgba(125,163,224,.55);
+  box-shadow: 0 0 10px rgba(65,104,175,.2);
+}
+.recruit-date-day {
+  font-size: .58rem; font-weight: 700; color: rgba(255,255,255,.35);
+  text-transform: uppercase; letter-spacing: .06em; margin-bottom: .18rem;
+}
+.recruit-date-num { font-size: .88rem; font-weight: 800; color: rgba(255,255,255,.82); }
+.recruit-date-item.selected .recruit-date-day { color: rgba(125,163,224,.7); }
+.recruit-date-item.selected .recruit-date-num { color: #A3C2EF; }
+
+/* 시간대 슬롯 */
+.recruit-time-row { display: flex; gap: .4rem; margin-bottom: 1.1rem; }
+.recruit-time-item {
+  flex: 1; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08);
+  border-radius: .45rem; padding: .55rem .6rem; cursor: pointer; transition: all .15s;
+  display: flex; align-items: center; gap: .45rem;
+}
+.recruit-time-item:hover { background: rgba(65,104,175,.1); border-color: rgba(65,104,175,.3); }
+.recruit-time-item.selected {
+  background: rgba(65,104,175,.18); border-color: rgba(125,163,224,.55);
+}
+.recruit-time-dot {
+  width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+  background: rgba(125,163,224,.3); transition: background .15s;
+}
+.recruit-time-item.selected .recruit-time-dot { background: rgba(125,163,224,.9); }
+.recruit-time-label { font-size: .72rem; font-weight: 700; color: rgba(255,255,255,.6); }
+.recruit-time-range { font-size: .6rem; color: rgba(255,255,255,.28); margin-top: .06rem; }
+.recruit-time-item.selected .recruit-time-label { color: rgba(255,255,255,.88); }
+
+/* 노트 인풋 */
+.recruit-note {
+  width: 100%; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08);
+  border-radius: .45rem; padding: .55rem .75rem; font-size: .74rem;
+  color: rgba(255,255,255,.7); font-family: inherit; outline: none; resize: none;
+  line-height: 1.6; margin-bottom: 1.1rem; box-sizing: border-box;
+}
+.recruit-note:focus { border-color: rgba(65,104,175,.4); }
+.recruit-note::placeholder { color: rgba(255,255,255,.2); }
+
+.recruit-modal-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: .75rem;
+}
+.recruit-helper { font-size: .62rem; color: rgba(255,255,255,.22); }
+
+.recruit-submit {
+  display: inline-flex; align-items: center; gap: .45rem;
+  font-size: .78rem; font-weight: 800;
+  padding: .6rem 1.35rem; border-radius: .5rem;
+  background: linear-gradient(135deg, #4168AF, #28406E);
+  border: 1px solid rgba(65,104,175,.4); color: rgba(255,255,255,.95);
+  cursor: pointer; transition: all .18s; font-family: inherit;
+}
+.recruit-submit:hover {
+  background: linear-gradient(135deg, #5A84C8, #4168AF);
+  box-shadow: 0 0 20px rgba(65,104,175,.35);
+  transform: translateY(-1px);
+}
+.recruit-submit:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+
+/* 완료 상태 */
+.recruit-success {
+  display: none; flex-direction: column; align-items: center;
+  text-align: center; padding: 2.5rem 1.5rem;
+  gap: .75rem;
+}
+.recruit-success.show { display: flex; }
+.recruit-success-icon {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: rgba(65,104,175,.15); border: 1.5px solid rgba(125,163,224,.4);
+  display: flex; align-items: center; justify-content: center;
+  animation: success-pop .3s cubic-bezier(.34,1.38,.64,1);
+}
+@keyframes success-pop {
+  from { transform: scale(.6); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+.recruit-success-title {
+  font-size: 1rem; font-weight: 900; color: rgba(255,255,255,.9);
+}
+.recruit-success-desc { font-size: .75rem; color: rgba(255,255,255,.45); line-height: 1.7; }
+.recruit-success-close {
+  margin-top: .5rem; font-size: .72rem; font-weight: 700;
+  padding: .5rem 1.4rem; border-radius: .42rem;
+  background: rgba(65,104,175,.12); border: 1px solid rgba(65,104,175,.3);
+  color: rgba(125,163,224,.85); cursor: pointer; font-family: inherit;
+  transition: all .15s;
+}
+.recruit-success-close:hover { background: rgba(65,104,175,.22); }
+
 /* ── Start button ── */
 .start-btn-wrap {
   display: flex;
@@ -866,6 +1037,14 @@ body::before {
       <div class="strip-divider"></div>
       <span class="status-badge done" id="strip-status">수집 완료</span>
       <div class="live-dot" style="margin-left:.5rem;"></div>
+
+      <!-- 후속 인터뷰 CTA -->
+      <div style="margin-left:auto;flex-shrink:0;">
+        <button class="recruit-btn" id="recruit-btn" onclick="openRecruitModal()">
+          <span class="material-symbols-outlined" style="font-size:.85rem;">calendar_add_on</span>
+          후속 인터뷰 섭외 요청
+        </button>
+      </div>
 
     </div><!-- /candidate-strip -->
 
@@ -1689,6 +1868,185 @@ function escH(s) {
 checkStartReady();
 
 
+</script>
+
+<!-- ═══════════ RECRUIT MODAL ═══════════ -->
+<div class="recruit-overlay" id="recruit-overlay" onclick="handleOverlayClick(event)">
+  <div class="recruit-modal" id="recruit-modal">
+
+    <!-- Header -->
+    <div class="recruit-modal-header">
+      <div>
+        <div class="recruit-modal-title">
+          <span class="material-symbols-outlined" style="font-size:1.1rem;color:rgba(125,163,224,.8);">calendar_add_on</span>
+          후속 인터뷰 섭외 요청
+        </div>
+        <div class="recruit-modal-sub" id="recruit-sub">참여자 이름 · 희망 일정을 선택해 주세요</div>
+      </div>
+      <button class="recruit-modal-close" onclick="closeRecruitModal()">
+        <span class="material-symbols-outlined" style="font-size:.95rem;">close</span>
+      </button>
+    </div>
+
+    <!-- Form body -->
+    <div class="recruit-modal-body" id="recruit-form-body">
+
+      <!-- 날짜 선택 -->
+      <div class="recruit-section-lbl">희망 인터뷰 날짜 (복수 선택 가능)</div>
+      <div class="recruit-date-grid" id="recruit-date-grid">
+        <!-- JS로 생성 -->
+      </div>
+
+      <!-- 시간대 선택 -->
+      <div class="recruit-section-lbl">희망 시간대 (복수 선택 가능)</div>
+      <div class="recruit-time-row">
+        <div class="recruit-time-item" onclick="toggleTime(this, 'morning')">
+          <div class="recruit-time-dot"></div>
+          <div>
+            <div class="recruit-time-label">오전</div>
+            <div class="recruit-time-range">10:00 – 12:00</div>
+          </div>
+        </div>
+        <div class="recruit-time-item" onclick="toggleTime(this, 'afternoon')">
+          <div class="recruit-time-dot"></div>
+          <div>
+            <div class="recruit-time-label">오후</div>
+            <div class="recruit-time-range">13:00 – 17:00</div>
+          </div>
+        </div>
+        <div class="recruit-time-item" onclick="toggleTime(this, 'evening')">
+          <div class="recruit-time-dot"></div>
+          <div>
+            <div class="recruit-time-label">저녁</div>
+            <div class="recruit-time-range">18:00 – 20:00</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 메모 -->
+      <div class="recruit-section-lbl">추가 메모 (선택)</div>
+      <textarea class="recruit-note" id="recruit-note" rows="2"
+        placeholder="인터뷰 목적, 소요 시간, 특이사항 등을 입력해 주세요."></textarea>
+
+      <!-- Footer -->
+      <div class="recruit-modal-footer">
+        <span class="recruit-helper" id="recruit-helper">날짜와 시간대를 하나 이상 선택해 주세요</span>
+        <button class="recruit-submit" id="recruit-submit" onclick="submitRecruitRequest()" disabled>
+          <span class="material-symbols-outlined" style="font-size:.9rem;">send</span>
+          요청 보내기
+        </button>
+      </div>
+    </div>
+
+    <!-- Success state -->
+    <div class="recruit-success" id="recruit-success">
+      <div class="recruit-success-icon">
+        <span class="material-symbols-outlined" style="font-size:1.6rem;color:rgba(125,163,224,.9);">check_circle</span>
+      </div>
+      <div class="recruit-success-title">요청이 접수되었습니다</div>
+      <div class="recruit-success-desc" id="recruit-success-desc">
+        담당자가 확인 후 선택하신 일정 중<br>가능한 시간으로 연락드리겠습니다.
+      </div>
+      <button class="recruit-success-close" onclick="closeRecruitModal()">확인</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ═══════════ RECRUIT MODAL JS ═══════════ */
+const selectedDates = new Set();
+const selectedTimes = new Set();
+
+function openRecruitModal() {
+  const p = collectedParticipants[currentIdx];
+  const rawName = p ? p.name.replace(/\s*\(\d+\)/, '').trim() : '참여자';
+  document.getElementById('recruit-sub').textContent = rawName + ' · 희망 일정을 선택해 주세요';
+
+  // 오늘부터 14일 날짜 그리드 생성
+  const grid = document.getElementById('recruit-date-grid');
+  grid.innerHTML = '';
+  selectedDates.clear();
+  selectedTimes.clear();
+  document.querySelectorAll('.recruit-time-item').forEach(el => el.classList.remove('selected'));
+
+  const DAYS = ['일', '월', '화', '수', '목', '금', '토'];
+  const today = new Date();
+  for (let i = 1; i <= 14; i++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() + i);
+    const isSat = d.getDay() === 6, isSun = d.getDay() === 0;
+    const key = d.toISOString().slice(0, 10);
+    const item = document.createElement('div');
+    item.className = 'recruit-date-item';
+    item.dataset.key = key;
+    item.innerHTML = `<div class="recruit-date-day" style="${isSat ? 'color:rgba(125,163,224,.6)' : isSun ? 'color:rgba(248,113,113,.6)' : ''}">${DAYS[d.getDay()]}</div>`
+      + `<div class="recruit-date-num">${d.getMonth()+1}/${d.getDate()}</div>`;
+    item.onclick = function() { toggleDate(this, key); };
+    grid.appendChild(item);
+  }
+
+  // 폼 / 성공 상태 초기화
+  document.getElementById('recruit-form-body').style.display = '';
+  document.getElementById('recruit-success').classList.remove('show');
+  document.getElementById('recruit-note').value = '';
+  updateRecruitSubmit();
+
+  document.getElementById('recruit-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeRecruitModal() {
+  document.getElementById('recruit-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('recruit-overlay')) closeRecruitModal();
+}
+
+function toggleDate(el, key) {
+  if (selectedDates.has(key)) { selectedDates.delete(key); el.classList.remove('selected'); }
+  else { selectedDates.add(key); el.classList.add('selected'); }
+  updateRecruitSubmit();
+}
+
+function toggleTime(el, key) {
+  if (selectedTimes.has(key)) { selectedTimes.delete(key); el.classList.remove('selected'); }
+  else { selectedTimes.add(key); el.classList.add('selected'); }
+  updateRecruitSubmit();
+}
+
+function updateRecruitSubmit() {
+  const ready = selectedDates.size > 0 && selectedTimes.size > 0;
+  document.getElementById('recruit-submit').disabled = !ready;
+  const helper = document.getElementById('recruit-helper');
+  if (selectedDates.size === 0) helper.textContent = '날짜와 시간대를 하나 이상 선택해 주세요';
+  else if (selectedTimes.size === 0) helper.textContent = '시간대를 하나 이상 선택해 주세요';
+  else {
+    const timeLabels = { morning: '오전', afternoon: '오후', evening: '저녁' };
+    const times = [...selectedTimes].map(k => timeLabels[k]).join('·');
+    helper.textContent = selectedDates.size + '일 · ' + times + ' 선택됨';
+    helper.style.color = 'rgba(125,163,224,.55)';
+  }
+}
+
+function submitRecruitRequest() {
+  const p = collectedParticipants[currentIdx];
+  const rawName = p ? p.name.replace(/\s*\(\d+\)/, '').trim() : '참여자';
+  const timeLabels = { morning: '오전(10-12시)', afternoon: '오후(13-17시)', evening: '저녁(18-20시)' };
+  const times = [...selectedTimes].map(k => timeLabels[k]).join(', ');
+
+  // 성공 메시지에 요약 노출
+  const desc = document.getElementById('recruit-success-desc');
+  desc.innerHTML = `<strong style="color:rgba(255,255,255,.7)">${escH(rawName)}</strong> 님의 후속 인터뷰 요청이 접수되었습니다.<br>`
+    + `선택 일정: ${[...selectedDates].join(', ')}<br>`
+    + `희망 시간: ${times}<br><br>`
+    + '담당자가 확인 후 가능한 시간으로 연락드리겠습니다.';
+
+  document.getElementById('recruit-form-body').style.display = 'none';
+  document.getElementById('recruit-success').classList.add('show');
+}
 </script>
 </body>
 </html>
