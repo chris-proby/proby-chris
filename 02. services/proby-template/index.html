@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Proby template · modules</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.css" crossorigin="anonymous"/>
+  <style>
+    :root { --bg:#0A0A0B; --accent:#7DA3E0; --border:#25252D; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Pretendard, system-ui, sans-serif; background: var(--bg); color: rgba(255,255,255,.85); min-height: 100vh; padding: 2.5rem 1.5rem 4rem; }
+    h1 { font-size: 1.35rem; font-weight: 800; letter-spacing: -.02em; margin: 0 0 .35rem; }
+    p { color: rgba(255,255,255,.45); font-size: .88rem; margin: 0 0 1.75rem; max-width: 42rem; line-height: 1.6; }
+    ul { list-style: none; padding: 0; margin: 0; display: grid; gap: .5rem; max-width: 28rem; }
+    a {
+      display: block; padding: .75rem 1rem; border-radius: .5rem;
+      border: 1px solid var(--border); background: rgba(255,255,255,.03);
+      color: var(--accent); text-decoration: none; font-size: .9rem; font-weight: 600;
+      transition: border-color .15s, background .15s;
+    }
+    a:hover { border-color: rgba(125,163,224,.4); background: rgba(65,104,175,.08); }
+    .sub { font-size: .72rem; font-weight: 500; color: rgba(255,255,255,.35); margin-top: .25rem; }
+    footer { margin-top: 2.5rem; font-size: .75rem; color: rgba(255,255,255,.25); }
+  </style>
+</head>
+<body>
+  <h1>proby-template</h1>
+  <p>모듈 HTML 정적 배포용 인덱스입니다. (Vercel <code>cleanUrls</code> — 확장자 없이 열 수 있습니다.)</p>
+  <ul>
+    <li><a href="/A_module/A_module">A_module</a><div class="sub">E-BAT</div></li>
+    <li><a href="/C_module/proby-template/C_module">C_module</a><div class="sub">흥미도 타임라인</div></li>
+    <li><a href="/H_module/H_module">H_module</a><div class="sub">Head Hunter</div></li>
+    <li><a href="/I_module/I_module">I_module</a><div class="sub">IDI with Pre-knowledge</div></li>
+    <li><a href="/J_module/J_module">J_module</a><div class="sub">통신 3사 브랜드 여정 맵</div></li>
+    <li><a href="/O_module/O_module">O_module</a></li>
+    <li><a href="/P_module/P_module">P_module</a></li>
+    <li><a href="/U_module/U_module">U_module</a></li>
+    <li><a href="/00.pds/header-template">header-template</a><div class="sub">00.pds</div></li>
+  </ul>
+  <footer>Brand assets는 이 디렉터리에 복사되어 배포됩니다.</footer>
+</body>
+</html>

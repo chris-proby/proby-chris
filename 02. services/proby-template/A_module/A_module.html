@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link rel="stylesheet" as="style"
+  href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.css"
+  integrity="sha384-y9k2lBaj/ETgBd4674Kql3098euvZU5fWlBcBBrlROBI6c2KDmjWhd508Rfsx9R/"
+  crossorigin="anonymous"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<title>E-BAT | Proby</title>
+<script>
+tailwind.config = {
+  theme: { extend: { fontFamily: { display: ['Pretendard','-apple-system','BlinkMacSystemFont','system-ui','sans-serif'] } } }
+}
+</script>
+<style>
+:root {
+  --bg:          #0A0A0B;
+  --surface:     #111114;
+  --card:        #19191E;
+  --border:      #25252D;
+  --accent-dim:  #1E3050;
+  --accent:      #28406E;
+  --accent-hi:   #4168AF;
+  --accent-text: #7DA3E0;
+  --accent-lt:   #A3C2EF;
+}
+
+body { background: var(--bg); }
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.4;
+}
+
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(140px);
+  pointer-events: none;
+}
+
+.grad-text {
+  background: linear-gradient(135deg, #ffffff 20%, var(--accent-lt) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.section-label {
+  font-size: 0.6rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  color: var(--accent-lt);
+  text-transform: uppercase;
+  opacity: .7;
+}
+
+/* ── Header ──────────────────────────────────────────────── */
+header {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(10,10,11,0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(65,104,175,0.12);
+  will-change: backdrop-filter;
+  z-index: 0;
+  pointer-events: none;
+}
+header > * {
+  position: relative;
+  z-index: 1;
+}
+header {
+  border-bottom: none !important;
+}
+
+/* ── Nav Services Dropdown ── */
+.nav-svc-wrap { position: relative; }
+.nav-svc-btn {
+  font-family: inherit;
+  font-size: .875rem;
+  font-weight: 500;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: .28rem;
+  padding: .5rem 0;
+  line-height: 1;
+  transition: color .15s;
+}
+.nav-svc-chevron { font-size: .9rem !important; transition: transform .2s; }
+.nav-svc-btn.menu-open .nav-svc-chevron { transform: rotate(180deg); }
+.nav-svc-menu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-4px);
+  width: 240px;
+  padding-top: 1.25rem;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  will-change: opacity, transform;
+  transition: opacity .15s ease, visibility .15s, transform .15s ease;
+  z-index: 300;
+}
+.nav-svc-menu::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1.25rem;
+}
+.nav-svc-menu.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+.nav-svc-wrap:hover .nav-svc-chevron { transform: rotate(180deg); }
+.nav-svc-inner {
+  background: rgba(10,10,11,.98);
+  border: 1px solid rgba(65,104,175,.2);
+  border-radius: .875rem;
+  padding: .375rem 0;
+  box-shadow: 0 16px 48px rgba(0,0,0,.7), 0 0 0 1px rgba(65,104,175,.05);
+}
+.nav-svc-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .62rem 1.1rem;
+  font-size: .8rem;
+  font-weight: 500;
+  color: rgba(255,255,255,.45);
+  transition: color .12s, background .12s;
+  text-decoration: none;
+  white-space: nowrap;
+}
+a.nav-svc-item:hover { color: var(--accent-text); background: rgba(65,104,175,.08); }
+a.nav-svc-item.active { color: var(--accent-text); font-weight: 700; }
+.nav-svc-item--soon { color: rgba(255,255,255,.22); cursor: default; pointer-events: none; }
+.nav-svc-item--soon::after {
+  content: 'Soon';
+  font-size: .58rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
+  color: rgba(65,104,175,.4); background: rgba(65,104,175,.08);
+  border-radius: .3rem; padding: .15rem .42rem;
+}
+.nav-svc-btn.active { color: var(--accent-text) !important; font-weight: 700; }
+
+/* ── E-BAT specific styles ── */
+.ebat-section { max-width:1600px; margin:0 auto; padding:0 1.5rem; }
+@media(min-width:768px){ .ebat-section { padding:0 4rem; } }
+.ebat-hero { padding:2.5rem 0 3.5rem; position:relative; overflow:hidden; }
+
+/* ── Sticky user panel (template band) ── */
+.user-panel {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(10,10,11,.93);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  padding: .55rem 1.5rem .5rem;
+  display: flex; flex-direction: column; gap: .38rem;
+  margin-bottom: 2rem;
+}
+@media(min-width:768px){ .user-panel { padding: .55rem 4rem .5rem; } }
+.upanel-row1 { display:flex; align-items:center; gap:.6rem; height:34px; overflow:hidden; }
+.upanel-sep { width:1px; height:20px; background:rgba(255,255,255,.1); flex-shrink:0; }
+.upanel-title {
+  font-size:.58rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+  color:rgba(255,255,255,.55); flex-shrink:0;
+}
+.upanel-stat { display:flex; align-items:baseline; gap:.28rem; flex-shrink:0; }
+.upanel-stat-val {
+  font-size:.75rem; font-weight:800; color:rgba(65,104,175,.85);
+  
+}
+.upanel-stat-lbl { font-size:.5rem; color:rgba(255,255,255,.28); letter-spacing:.06em; text-transform:uppercase; }
+.upanel-spacer { flex:1; min-width:0; }
+@keyframes upanel-nav-glow {
+  0%,100% { box-shadow:0 0 0 1px rgba(65,104,175,.1),0 0 8px rgba(65,104,175,.06); }
+  50%      { box-shadow:0 0 0 1px rgba(65,104,175,.22),0 0 16px rgba(65,104,175,.14); }
+}
+.upanel-logo-wrap {
+  display:flex; flex-direction:column; align-items:flex-end; gap:.25rem; flex-shrink:0;
+  animation: upanel-nav-glow 3s ease-in-out infinite;
+  border: 1px solid rgba(65,104,175,.15); border-radius:.42rem;
+  padding: .2rem .45rem;
+}
+.upanel-logo-sub {
+  font-size:.42rem; color:rgba(65,104,175,.35); letter-spacing:.14em;
+  text-transform:uppercase; line-height:1;
+}
+
+.ebat-stats {
+  display:grid; grid-template-columns:repeat(4,1fr);
+  gap:1px; background:rgba(65,104,175,.08);
+  border:1px solid rgba(65,104,175,.12); border-radius:1rem; overflow:hidden; margin-bottom:2rem;
+}
+.ebat-stat { background:var(--card); padding:1.6rem 1.6rem 1.35rem; transition:background .2s; }
+.ebat-stat:hover { background:rgba(30,48,80,.35); }
+.ebat-stat-label { font-size:.7rem; color:rgba(255,255,255,.32); margin-bottom:.45rem; line-height:1.4;  letter-spacing:.06em; }
+.ebat-stat-val { font-size:2.4rem; font-weight:800; letter-spacing:-.04em; line-height:1; color:rgba(255,255,255,.92); margin-bottom:.3rem; }
+.ebat-stat-val.hl { color:var(--accent-text); text-shadow: 0 0 20px rgba(65,104,175,.4); }
+.ebat-stat-sub { font-size:.7rem; color:rgba(255,255,255,.25);  }
+
+.ebat-chart-card {
+  background:var(--card); border:1px solid rgba(65,104,175,.1);
+  border-radius:1.25rem; padding:2rem 2rem 1.75rem; margin-bottom:5rem;
+  box-shadow: 0 0 60px rgba(65,104,175,.04);
+}
+canvas#ebat-canvas { width:100%; display:block; border-radius:.5rem; }
+
+.ebat-toolbar {
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:.75rem; margin-bottom:1.25rem;
+}
+.ebat-chart-title { font-size:.78rem; font-weight:600; color:rgba(255,255,255,.3);  letter-spacing:.04em; }
+
+.ebat-btn-row { display:flex; align-items:center; gap:.5rem; }
+.ebat-icon-btn {
+  display:inline-flex; align-items:center; gap:.4rem; font-family:inherit; font-size:.78rem; font-weight:700;
+  border-radius:.6rem; padding:.42rem .85rem; cursor:pointer; transition:all .2s; border:1px solid;
+}
+.ebat-btn-ghost { color:var(--accent-lt); background:rgba(30,48,80,.4); border-color:rgba(65,104,175,.25); }
+.ebat-btn-ghost:hover { background:rgba(30,48,80,.7); border-color:rgba(65,104,175,.5); box-shadow:0 0 16px rgba(65,104,175,.1); }
+.ebat-btn-ghost .material-symbols-outlined { font-size:15px; }
+.ebat-btn-auto { color:rgba(255,255,255,.5); background:rgba(255,255,255,.04); border-color:rgba(255,255,255,.1); }
+.ebat-btn-auto:hover { background:rgba(255,255,255,.08); color:rgba(255,255,255,.75); border-color:rgba(255,255,255,.18); }
+.ebat-btn-auto.running { color:var(--accent-text); background:rgba(65,104,175,.1); border-color:rgba(65,104,175,.35); animation:pulse-btn 1.8s ease-in-out infinite; }
+.ebat-btn-auto .material-symbols-outlined { font-size:15px; }
+@keyframes pulse-btn { 0%,100%{ box-shadow:0 0 0 0 rgba(65,104,175,.3); } 50%{ box-shadow:0 0 0 6px rgba(65,104,175,.0); } }
+
+.ebat-filters {
+  display:flex; align-items:center; gap:0; flex-wrap:wrap;
+  padding:.875rem 0 1.25rem; border-bottom:1px solid rgba(65,104,175,.1); margin-bottom:1.25rem;
+  row-gap:.625rem;
+}
+.ebat-filter-section { display:flex; align-items:center; gap:.35rem; }
+.ebat-filter-section + .ebat-filter-section { margin-left:.75rem; padding-left:.75rem; border-left:1px solid rgba(65,104,175,.1); }
+.ebat-filter-group-label {
+  font-size:.6rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+  color:rgba(255,255,255,.2); margin-right:.25rem; white-space:nowrap; 
+}
+.ebat-tab {
+  font-family:inherit; font-size:.75rem; font-weight:600; padding:.32rem .75rem;
+  border-radius:999px; border:1px solid rgba(65,104,175,.12); background:transparent;
+  color:rgba(255,255,255,.35); cursor:pointer; transition:all .18s; white-space:nowrap;
+  position:relative;
+}
+.ebat-tab:hover { background:rgba(65,104,175,.06); color:rgba(255,255,255,.65); border-color:rgba(65,104,175,.25); }
+.ebat-tab.active {
+  background:rgba(30,48,80,.6); color:var(--accent-text);
+  border-color:rgba(65,104,175,.4); font-weight:800;
+  box-shadow: 0 0 12px rgba(65,104,175,.1);
+}
+.ebat-tab.active-male { background:rgba(59,130,246,.12); color:#93c5fd; border-color:rgba(59,130,246,.35); }
+.ebat-tab.active-female { background:rgba(236,72,153,.1); color:#f9a8d4; border-color:rgba(236,72,153,.3); }
+.ebat-tab .tab-count {
+  display:inline-block; font-size:.6rem; font-weight:800; margin-left:.3rem;
+  opacity:.5; vertical-align:baseline; 
+}
+.ebat-tab.active .tab-count, .ebat-tab.active-male .tab-count, .ebat-tab.active-female .tab-count { opacity:.7; }
+
+.ebat-filter-info {
+  display:flex; align-items:center; gap:.5rem; margin-bottom:1rem;
+  font-size:.72rem; color:rgba(255,255,255,.3); min-height:18px;
+}
+.filter-info-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+.filter-info-empty { color:rgba(255,255,255,.2); font-style:italic; }
+
+.live-badge {
+  display:none; align-items:center; gap:.35rem; font-size:.62rem; font-weight:800;
+  letter-spacing:.1em; text-transform:uppercase;
+  color:var(--accent-text); padding:.2rem .65rem; border-radius:999px;
+  background:rgba(65,104,175,.1); border:1px solid rgba(65,104,175,.3);
+  
+}
+.live-badge.show { display:inline-flex; }
+.live-dot { width:5px; height:5px; border-radius:50%; background:var(--accent-text); animation:blink 1s step-start infinite; box-shadow: 0 0 6px var(--accent-text); }
+@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:.1;} }
+
+.timer-wrap { height:2px; background:rgba(65,104,175,.1); border-radius:1px; overflow:hidden; margin-top:1rem; display:none; }
+.timer-wrap.show { display:block; }
+.timer-fill { height:100%; background:linear-gradient(90deg,rgba(65,104,175,.3),var(--accent-text)); border-radius:1px; width:0%; }
+
+.ebat-legend {
+  display:flex; align-items:center; gap:1.25rem; flex-wrap:wrap;
+  margin-top:1.25rem; padding-top:1.25rem; border-top:1px solid rgba(65,104,175,.08);
+}
+.ebat-legend-item { display:flex; align-items:center; gap:.4rem; font-size:.7rem; color:rgba(255,255,255,.35); }
+.ebat-legend-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+
+#ebat-tooltip {
+  position:fixed; pointer-events:none; z-index:200;
+  background:rgba(10,10,11,.97); border:1px solid rgba(65,104,175,.3); border-radius:.625rem;
+  padding:.75rem 1rem;  font-size:.78rem; color:rgba(255,255,255,.85);
+  min-width:170px; backdrop-filter:blur(16px); box-shadow:0 8px 32px rgba(0,0,0,.6), 0 0 20px rgba(65,104,175,.08);
+  opacity:0; transition:opacity .15s;
+}
+#ebat-tooltip.show { opacity:1; }
+
+#brand-panel-backdrop {
+  position:fixed; inset:0; background:rgba(10,10,11,.7); backdrop-filter:blur(6px);
+  z-index:300; opacity:0; pointer-events:none; transition:opacity .3s;
+}
+#brand-panel-backdrop.show { opacity:1; pointer-events:all; }
+
+#brand-panel {
+  position:fixed; top:0; right:0; bottom:0; width:400px; max-width:100vw;
+  background:#0A0A0B; border-left:1px solid rgba(65,104,175,.15);
+  z-index:301; display:flex; flex-direction:column; overflow:hidden;
+  transform:translateX(100%); transition:transform .38s cubic-bezier(.16,1,.3,1);
+  box-shadow:-24px 0 80px rgba(0,0,0,.6), -4px 0 40px rgba(65,104,175,.05);
+}
+#brand-panel.open { transform:translateX(0); }
+
+.bp-header {
+  display:flex; align-items:flex-start; justify-content:space-between;
+  padding:1.5rem 1.5rem 1.25rem; border-bottom:1px solid rgba(65,104,175,.1); flex-shrink:0;
+}
+.bp-brand-rank {
+  font-size:.6rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--accent-text); margin-bottom:.35rem; 
+}
+.bp-brand-name { font-size:1.6rem; font-weight:800; letter-spacing:-.03em; color:#fff; line-height:1; margin-bottom:.5rem; }
+.bp-badges { display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; }
+.bp-badge {
+  font-size:.6rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  padding:.22rem .65rem; border-radius:999px; border:1px solid; 
+}
+.bp-badge-conf-high   { background:rgba(65,104,175,.12); border-color:rgba(65,104,175,.35);  color:var(--accent-text); }
+.bp-badge-conf-medium { background:rgba(251,191,36,.12);  border-color:rgba(251,191,36,.35);  color:#fde68a; }
+.bp-badge-conf-low    { background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.15); color:rgba(255,255,255,.45); }
+.bp-badge-time        { background:rgba(30,48,80,.5);     border-color:rgba(65,104,175,.25);   color:var(--accent-lt); }
+.bp-badge-count       { background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.1);  color:rgba(255,255,255,.4); }
+
+.bp-close {
+  width:32px; height:32px; background:rgba(255,255,255,.05); border:1px solid rgba(65,104,175,.1);
+  border-radius:.5rem; display:flex; align-items:center; justify-content:center;
+  cursor:pointer; transition:background .2s; flex-shrink:0; color:rgba(255,255,255,.5);
+}
+.bp-close:hover { background:rgba(65,104,175,.1); color:var(--accent-text); }
+.bp-close .material-symbols-outlined { font-size:16px; }
+
+.bp-body { flex:1; overflow-y:auto; padding:1.25rem 1.5rem 2rem; display:flex; flex-direction:column; gap:1.5rem; }
+.bp-body::-webkit-scrollbar { width:3px; }
+.bp-body::-webkit-scrollbar-thumb { background:rgba(65,104,175,.1); border-radius:2px; }
+
+.bp-video-wrap {
+  border-radius:.875rem; overflow:hidden; background:#000;
+  border:1px solid rgba(65,104,175,.12); position:relative;
+}
+.bp-video-wrap video { width:100%; display:block; max-height:220px; object-fit:cover; }
+.bp-video-label {
+  position:absolute; bottom:0; left:0; right:0;
+  padding:.6rem 1rem; background:linear-gradient(transparent,rgba(0,0,0,.8));
+  font-size:.68rem; font-weight:700; color:rgba(255,255,255,.7);
+  display:flex; align-items:center; gap:.4rem;
+}
+.bp-video-label .material-symbols-outlined { font-size:13px; color:var(--accent-text); }
+
+.bp-section-title {
+  font-size:.6rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase;
+  color:rgba(255,255,255,.2); margin-bottom:.875rem;
+  display:flex; align-items:center; gap:.5rem; 
+}
+.bp-section-title::after { content:''; flex:1; height:1px; background:rgba(65,104,175,.1); }
+
+.bp-quote {
+  background:rgba(17,17,20,.8); border:1px solid rgba(65,104,175,.08);
+  border-left:2px solid rgba(65,104,175,.4); border-radius:.75rem;
+  padding:1rem 1.125rem; margin-bottom:.75rem; transition:border-color .2s;
+}
+.bp-quote:hover { border-color:rgba(65,104,175,.15); border-left-color:rgba(65,104,175,.7); }
+.bp-quote:last-child { margin-bottom:0; }
+
+.bp-quote-icon {
+  font-size:1.5rem; line-height:1; color:rgba(65,104,175,.3);
+  font-family:Georgia,serif; margin-bottom:.5rem; display:block;
+}
+.bp-quote-text {
+  font-size:.82rem; color:rgba(255,255,255,.72); line-height:1.7; margin-bottom:.75rem;
+  font-style:italic;
+}
+.bp-quote-user { display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; }
+.bp-user-chip {
+  display:inline-flex; align-items:center; gap:.3rem;
+  font-size:.62rem; font-weight:700; padding:.18rem .55rem;
+  border-radius:999px; background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08); color:rgba(255,255,255,.4);
+  
+}
+.bp-user-chip .material-symbols-outlined { font-size:11px; }
+.bp-user-chip.chip-male   { background:rgba(59,130,246,.1);  border-color:rgba(59,130,246,.25);  color:#93c5fd; }
+.bp-user-chip.chip-female { background:rgba(236,72,153,.1);  border-color:rgba(236,72,153,.25);  color:#f9a8d4; }
+
+.bp-hint {
+  display:flex; align-items:center; gap:.5rem; justify-content:center;
+  font-size:.68rem; color:rgba(255,255,255,.2); margin-top:-.5rem; margin-bottom:1.25rem;
+  animation:hint-fade 2s ease-in-out 1.5s forwards;
+}
+@keyframes hint-fade { to { opacity:0; } }
+.bp-hint .material-symbols-outlined { font-size:14px; }
+
+@media(max-width:768px){
+  .ebat-stats{ grid-template-columns:repeat(2,1fr); }
+  .ebat-stat-val{ font-size:1.8rem; }
+  .ebat-chart-card{ padding:1.25rem; }
+  .ebat-filter-section+.ebat-filter-section{ margin-left:.5rem; padding-left:.5rem; }
+  #brand-panel{ width:100vw; }
+}
+@media(prefers-reduced-motion:reduce){ *{ transition-duration:.01ms !important; animation-duration:.01ms !important; } }
+</style>
+</head>
+<body class="font-display text-white antialiased overflow-x-hidden">
+
+<!-- ═══ HERO ═══ -->
+<section class="ebat-hero">
+  <div class="blob w-[600px] h-[600px] opacity-10" style="background:#1E3050;top:-200px;left:-150px;filter:blur(180px);"></div>
+  <div class="blob w-[400px] h-[400px] opacity-8" style="background:#25252D;top:100px;right:-100px;filter:blur(160px);"></div>
+  <div class="ebat-section relative" style="display:flex;align-items:flex-start;gap:2.5rem;flex-wrap:wrap;">
+
+    <!-- Left: title + description -->
+    <div style="flex:1;min-width:260px;">
+      <div class="section-label mb-3" style="opacity:.9;">VIGLOO × PROBY · 인지도 조사</div>
+      <h1 style="font-size:2.6rem;font-weight:900;letter-spacing:-.03em;line-height:1.15;margin-bottom:.75rem;">
+        <span class="grad-text">E-BAT</span>
+      </h1>
+      <p style="font-size:.88rem;color:var(--accent-text);opacity:.55;max-width:480px;line-height:1.75;margin-bottom:.4rem;">
+        Enhanced Brand Awareness Tracking
+      </p>
+      <p style="font-size:.75rem;color:rgba(255,255,255,.3);max-width:520px;line-height:1.65;">
+        AI 인터뷰 중 응답자가 브랜드를 연상하는 순서, 속도, 확신도를 시계열로 시각화합니다.<br/>
+        왼쪽에 위치할수록 질문 직후 즉각 떠오른 Top of Mind 브랜드입니다.
+      </p>
+    </div>
+
+    <!-- Right: Proby logo -->
+    <div style="flex-shrink:0;padding-top:.5rem;display:flex;flex-direction:column;align-items:flex-end;gap:.75rem;">
+      <img src="../Brand assets/proby/logo-text-white.png" alt="Proby"
+           style="height:22px;object-fit:contain;opacity:.55;"/>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ STICKY BAND ═══ -->
+<div class="user-panel">
+  <div class="upanel-row1">
+    <div id="live-badge" class="live-badge" style="flex-shrink:0;"></div>
+    <div class="upanel-title">E-BAT Session</div>
+    <div class="upanel-sep"></div>
+    <div class="upanel-stat">
+      <span class="upanel-stat-val" id="upanel-samples">0</span>
+      <span class="upanel-stat-lbl">샘플</span>
+    </div>
+    <div class="upanel-sep"></div>
+    <div class="upanel-stat">
+      <span class="upanel-stat-val" id="upanel-brands">0</span>
+      <span class="upanel-stat-lbl">브랜드</span>
+    </div>
+    <div class="upanel-sep"></div>
+    <div class="upanel-stat">
+      <span class="upanel-stat-val" id="upanel-top">—</span>
+      <span class="upanel-stat-lbl">Top of Mind</span>
+    </div>
+    <div class="upanel-spacer"></div>
+    <div class="upanel-logo-wrap">
+      <img src="../Brand assets/proby/logo-text-white.png" alt="Proby"
+           style="height:14px;object-fit:contain;opacity:.55;"/>
+      <div class="upanel-logo-sub">Live</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MAIN ═══ -->
+<section class="ebat-section" style="padding-bottom:6rem;">
+
+  <!-- stats -->
+  <div class="ebat-stats">
+    <div class="ebat-stat">
+      <p class="ebat-stat-label">총 샘플 <span id="stat-filter-label" style="color:rgba(255,255,255,.18);"></span></p>
+      <p class="ebat-stat-val" id="stat-samples">0<span style="font-size:1.2rem">명</span></p>
+      <p class="ebat-stat-sub">응답자 수</p>
+    </div>
+    <div class="ebat-stat">
+      <p class="ebat-stat-label">고유 브랜드 수</p>
+      <p class="ebat-stat-val" id="stat-brands">0<span style="font-size:1.2rem">개</span></p>
+      <p class="ebat-stat-sub">연상 브랜드</p>
+    </div>
+    <div class="ebat-stat">
+      <p class="ebat-stat-label">ToM 1순위</p>
+      <p class="ebat-stat-val" style="font-size:2rem" id="stat-tom">—</p>
+      <p class="ebat-stat-sub">가장 빠른 평균 발화</p>
+    </div>
+    <div class="ebat-stat">
+      <p class="ebat-stat-label">인지-구매 정렬</p>
+      <p class="ebat-stat-val hl" id="stat-align">—</p>
+      <p class="ebat-stat-sub">ToM ≈ 구매 고려</p>
+    </div>
+  </div>
+
+  <!-- chart card -->
+  <div class="ebat-chart-card">
+
+    <!-- toolbar -->
+    <div class="ebat-toolbar">
+      <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;">
+        <p class="ebat-chart-title">브랜드 연상 타임라인 — x: 발화 시점(초) · y: 확신도 · 크기: 언급 응답자 수</p>
+        <div class="live-badge" id="live-badge"><div class="live-dot"></div>LIVE</div>
+      </div>
+      <div class="ebat-btn-row">
+        <button class="ebat-icon-btn ebat-btn-ghost" id="btn-replay" style="display:none">
+          <span class="material-symbols-outlined">replay</span>재생
+        </button>
+      </div>
+    </div>
+
+    <!-- filter tabs -->
+    <div class="ebat-filters" id="filter-row">
+      <div class="ebat-filter-section">
+        <button class="ebat-tab active" data-type="all" data-val="">전체<span class="tab-count" id="tc-all"></span></button>
+      </div>
+      <div class="ebat-filter-section">
+        <span class="ebat-filter-group-label">성별</span>
+        <button class="ebat-tab" data-type="gender" data-val="남">남성<span class="tab-count" id="tc-male"></span></button>
+        <button class="ebat-tab" data-type="gender" data-val="여">여성<span class="tab-count" id="tc-female"></span></button>
+      </div>
+      <div class="ebat-filter-section">
+        <span class="ebat-filter-group-label">연령대</span>
+        <button class="ebat-tab" data-type="age" data-val="20">20대<span class="tab-count" id="tc-20"></span></button>
+        <button class="ebat-tab" data-type="age" data-val="30">30대<span class="tab-count" id="tc-30"></span></button>
+        <button class="ebat-tab" data-type="age" data-val="40">40대<span class="tab-count" id="tc-40"></span></button>
+        <button class="ebat-tab" data-type="age" data-val="50">50대+<span class="tab-count" id="tc-50"></span></button>
+      </div>
+    </div>
+
+    <!-- filter info -->
+    <div class="ebat-filter-info" id="filter-info"></div>
+
+    <canvas id="ebat-canvas" height="400"></canvas>
+
+    <div class="ebat-legend">
+      <div class="ebat-legend-item"><div class="ebat-legend-dot" style="background:#7DA3E0;box-shadow:0 0 8px rgba(65,104,175,.5);"></div>높은 확신</div>
+      <div class="ebat-legend-item"><div class="ebat-legend-dot" style="background:transparent;border:2px solid rgba(65,104,175,.4);"></div>보통</div>
+      <div class="ebat-legend-item"><div class="ebat-legend-dot" style="background:rgba(255,255,255,.2);"></div>낮은 확신</div>
+      <div class="ebat-legend-item" style="margin-left:auto;font-size:.68rem;color:rgba(65,104,175,.25);">← ToM (즉각 연상)</div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ═══ BRAND DETAIL PANEL ═══ -->
+<div id="brand-panel-backdrop"></div>
+<aside id="brand-panel" role="dialog" aria-modal="true" aria-label="브랜드 상세">
+
+  <div class="bp-header">
+    <div>
+      <p class="bp-brand-rank" id="bp-rank">—</p>
+      <p class="bp-brand-name" id="bp-name">—</p>
+      <div class="bp-badges" id="bp-badges"></div>
+    </div>
+    <button class="bp-close" id="bp-close" aria-label="닫기">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </div>
+
+  <div class="bp-body">
+
+    <!-- video clip -->
+    <div>
+      <p class="bp-section-title">인터뷰 클립</p>
+      <div class="bp-video-wrap">
+        <video id="bp-video" src="" playsinline muted controls
+               preload="metadata" style="background:#000;"></video>
+        <div class="bp-video-label">
+          <span class="material-symbols-outlined">videocam</span>
+          <span id="bp-video-caption">응답자 인터뷰 영상</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- quotes -->
+    <div>
+      <p class="bp-section-title">연상 응답</p>
+      <p style="font-size:.68rem;color:rgba(255,255,255,.28);margin-bottom:.875rem;margin-top:-.5rem;">
+        Q. 해당 브랜드를 생각하면 어떤게 연상되시나요?
+      </p>
+      <div id="bp-quotes-list"></div>
+    </div>
+
+  </div>
+</aside>
+
+<div id="ebat-tooltip"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   E-BAT — chart + demographic filters + auto collection
+   ═══════════════════════════════════════════════════════ */
+
+const FASHION_BRANDS = [
+  '나이키','아디다스','자라','유니클로','노스페이스',
+  'H&M','MLB','뉴발란스','폴로','구찌',
+  '루이비통','샤넬','아크테릭스','빈폴','코오롱스포츠',
+  '무신사스탠다드','커버낫','마르디메크르디','디스커버리','앤더슨벨',
+];
+
+const TIME_BIAS = {
+  '나이키':1.5,'아디다스':2.2,'자라':3.5,'유니클로':3.8,'노스페이스':4.5,
+  'H&M':5.3,'MLB':5.8,'뉴발란스':6.5,'폴로':7.5,'구찌':8.0,
+  '루이비통':8.6,'샤넬':9.2,'아크테릭스':10.5,'빈폴':11.2,'코오롱스포츠':12.0,
+  '무신사스탠다드':12.8,'커버낫':13.8,'마르디메크르디':14.8,'디스커버리':15.5,'앤더슨벨':17.0,
+};
+
+const GENDER_ADJ = {
+  '남': { '나이키':.88,'아디다스':.90,'노스페이스':.84,'MLB':.80,'아크테릭스':.75,'커버낫':.82,'뉴발란스':.90,'샤넬':1.15,'자라':1.10,'마르디메크르디':1.20 },
+  '여': { '자라':.80,'H&M':.82,'샤넬':.80,'구찌':.85,'마르디메크르디':.78,'유니클로':.88,'루이비통':.88,'MLB':1.10,'아크테릭스':1.20,'커버낫':1.15 },
+};
+const AGE_ADJ = {
+  young:  { 'MLB':.72,'커버낫':.75,'마르디메크르디':.70,'나이키':.88,'아디다스':.88,'뉴발란스':.85,'무신사스탠다드':.80,'앤더슨벨':.82,'빈폴':1.20,'코오롱스포츠':1.25 },
+  middle: { '나이키':.90,'아디다스':.90,'자라':.88,'유니클로':.85,'노스페이스':.86,'루이비통':.88,'구찌':.90,'MLB':1.10,'마르디메크르디':1.18,'앤더슨벨':1.15 },
+  older:  { '빈폴':.80,'코오롱스포츠':.82,'폴로':.85,'유니클로':.86,'샤넬':.85,'루이비통':.87,'MLB':1.25,'커버낫':1.30,'마르디메크르디':1.35,'앤더슨벨':1.40 },
+};
+
+let DATA = [
+  { rid:'R1', brand:'나이키',         time:1.4,  conf:.91, gender:'여', age:28 },
+  { rid:'R1', brand:'아디다스',        time:2.6,  conf:.85, gender:'여', age:28 },
+  { rid:'R1', brand:'자라',           time:4.0,  conf:.82, gender:'여', age:28 },
+  { rid:'R1', brand:'마르디메크르디',   time:9.8,  conf:.71, gender:'여', age:28 },
+  { rid:'R1', brand:'커버낫',          time:14.2, conf:.44, gender:'여', age:28 },
+  { rid:'R2', brand:'나이키',          time:1.2,  conf:.93, gender:'남', age:24 },
+  { rid:'R2', brand:'아디다스',        time:2.4,  conf:.88, gender:'남', age:24 },
+  { rid:'R2', brand:'MLB',            time:4.2,  conf:.80, gender:'남', age:24 },
+  { rid:'R2', brand:'커버낫',          time:7.5,  conf:.70, gender:'남', age:24 },
+  { rid:'R2', brand:'앤더슨벨',        time:12.1, conf:.48, gender:'남', age:24 },
+  { rid:'R3', brand:'나이키',          time:1.6,  conf:.88, gender:'여', age:44 },
+  { rid:'R3', brand:'유니클로',         time:3.0,  conf:.85, gender:'여', age:44 },
+  { rid:'R3', brand:'샤넬',           time:7.8,  conf:.74, gender:'여', age:44 },
+  { rid:'R3', brand:'루이비통',         time:9.5,  conf:.68, gender:'여', age:44 },
+  { rid:'R3', brand:'빈폴',           time:12.4, conf:.50, gender:'여', age:44 },
+  { rid:'R4', brand:'나이키',          time:1.5,  conf:.90, gender:'남', age:51 },
+  { rid:'R4', brand:'아디다스',        time:2.8,  conf:.84, gender:'남', age:51 },
+  { rid:'R4', brand:'폴로',           time:6.8,  conf:.72, gender:'남', age:51 },
+  { rid:'R4', brand:'빈폴',           time:9.5,  conf:.63, gender:'남', age:51 },
+  { rid:'R4', brand:'코오롱스포츠',     time:13.0, conf:.45, gender:'남', age:51 },
+  { rid:'R5', brand:'자라',           time:2.2,  conf:.90, gender:'여', age:33 },
+  { rid:'R5', brand:'나이키',          time:3.5,  conf:.84, gender:'여', age:33 },
+  { rid:'R5', brand:'H&M',           time:5.0,  conf:.78, gender:'여', age:33 },
+  { rid:'R5', brand:'구찌',           time:8.8,  conf:.62, gender:'여', age:33 },
+  { rid:'R6', brand:'나이키',          time:1.3,  conf:.92, gender:'남', age:37 },
+  { rid:'R6', brand:'아디다스',        time:2.5,  conf:.86, gender:'남', age:37 },
+  { rid:'R6', brand:'노스페이스',       time:4.8,  conf:.79, gender:'남', age:37 },
+  { rid:'R6', brand:'아크테릭스',       time:8.2,  conf:.66, gender:'남', age:37 },
+  { rid:'R6', brand:'무신사스탠다드',   time:11.6, conf:.50, gender:'남', age:37 },
+];
+let nextRID = 7;
+
+let activeFilter = { type:'all', val:'' };
+
+function getAgeGroup(age){ return age<30?'young':age<45?'middle':'older'; }
+
+function getFilteredData(){
+  if(activeFilter.type==='all') return DATA;
+  if(activeFilter.type==='gender') return DATA.filter(r=>r.gender===activeFilter.val);
+  if(activeFilter.type==='age'){
+    const d=parseInt(activeFilter.val);
+    if(d===50) return DATA.filter(r=>r.age>=50);
+    return DATA.filter(r=>r.age>=d&&r.age<d+10);
+  }
+  return DATA;
+}
+
+const CONF_KO   = { high:'높음', medium:'보통', low:'낮음' };
+const CONF_TIER = v=>v>.65?'high':v>.35?'medium':'low';
+
+function aggregate(){
+  const data=getFilteredData();
+  const map={};
+  data.forEach(r=>{
+    if(!r.brand) return;
+    if(!map[r.brand]) map[r.brand]={name:r.brand,times:[],confs:[],rids:new Set()};
+    map[r.brand].times.push(r.time);
+    map[r.brand].confs.push(r.conf);
+    map[r.brand].rids.add(r.rid);
+  });
+  return Object.values(map)
+    .map(b=>{
+      const t=b.times.reduce((a,c)=>a+c,0)/b.times.length;
+      const c=b.confs.reduce((a,c)=>a+c,0)/b.confs.length;
+      return{name:b.name,t,conf:c,count:b.rids.size,tier:CONF_TIER(c)};
+    })
+    .sort((a,b)=>a.t-b.t)
+    .map((b,i)=>({...b,rank:i+1}));
+}
+
+const canvas  = document.getElementById('ebat-canvas');
+const ctx     = canvas.getContext('2d');
+const tooltip = document.getElementById('ebat-tooltip');
+
+let W,H,CW,CH;
+const PAD={top:32,right:56,bottom:54,left:68};
+
+let vizBubbles=[],targetBubbles=[],animRaf=null;
+let introProgress=0,introStart=null;
+const INTRO_DUR=1600, LERP_SPD=0.09;
+
+let vizXMax=20,targetXMax=20;
+let vizYMin=0,vizYMax=1,targetYMin=0,targetYMax=1;
+
+function lerp(a,b,t){return a+(b-a)*t;}
+function easeOutBack(t){const c1=1.70158,c3=c1+1;return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2);}
+
+function xToC(t)   {return PAD.left+((t-0)/(vizXMax-0))*CW;}
+function yToC(conf){const n=(conf-vizYMin)/(vizYMax-vizYMin||1);return PAD.top+(1-n)*CH;}
+
+function getTargetXMax(){
+  const agg=aggregate(); if(!agg.length)return 20;
+  return Math.max(20,Math.ceil(Math.max(...agg.map(b=>b.t))+4));
+}
+function getTargetYRange(){
+  const agg=aggregate(); if(!agg.length)return{min:0,max:1};
+  const cs=agg.map(b=>b.conf);
+  const mn=Math.min(...cs),mx=Math.max(...cs),pd=0.15;
+  return{min:Math.max(0,mn-pd),max:Math.min(1,mx+pd)};
+}
+
+function buildTargets(){
+  return aggregate().map(b=>{
+    const maxR=W<480?30:44,minR=W<480?16:20;
+    const r=minR+Math.log1p(b.count-1)/Math.log1p(14)*(maxR-minR);
+    return{...b,tx:xToC(b.t),ty:yToC(b.conf),tr:r};
+  });
+}
+
+function resizeCanvas(){
+  const dpr=window.devicePixelRatio||1;
+  const cssW=canvas.parentElement.getBoundingClientRect().width;
+  const cssH=Math.max(260,Math.min(400,cssW*0.42));
+  canvas.style.width=cssW+'px'; canvas.style.height=cssH+'px';
+  canvas.width=Math.round(cssW*dpr); canvas.height=Math.round(cssH*dpr);
+  ctx.scale(dpr,dpr);
+  W=cssW; H=cssH; CW=W-PAD.left-PAD.right; CH=H-PAD.top-PAD.bottom;
+}
+
+function getBubbleColors(vb){
+  if(activeFilter.type==='gender'&&activeFilter.val==='남'){
+    if(vb.tier==='high')   return{fill:'grad-blue', stroke:null};
+    if(vb.tier==='medium') return{fill:'rgba(96,165,250,.13)',stroke:'#60a5fa'};
+    return{fill:'rgba(255,255,255,.05)',stroke:'rgba(255,255,255,.2)'};
+  }
+  if(activeFilter.type==='gender'&&activeFilter.val==='여'){
+    if(vb.tier==='high')   return{fill:'grad-pink',stroke:null};
+    if(vb.tier==='medium') return{fill:'rgba(244,114,182,.13)',stroke:'#f472b6'};
+    return{fill:'rgba(255,255,255,.05)',stroke:'rgba(255,255,255,.2)'};
+  }
+  if(vb.tier==='high')   return{fill:'grad-navy',stroke:null};
+  if(vb.tier==='medium') return{fill:'rgba(65,104,175,.1)',stroke:'#7DA3E0'};
+  return{fill:'rgba(255,255,255,.05)',stroke:'rgba(255,255,255,.22)'};
+}
+
+function drawFrame(){
+  const isEmpty=getFilteredData().length===0;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='rgba(17,17,20,.6)';
+  ctx.beginPath(); ctx.roundRect(0,0,W,H,8); ctx.fill();
+
+  const fSz=W<480?9:10;
+  const yRefs=[
+    {conf:vizYMin+(vizYMax-vizYMin)*.85,label:'높은 확신'},
+    {conf:vizYMin+(vizYMax-vizYMin)*.5, label:'보통'},
+    {conf:vizYMin+(vizYMax-vizYMin)*.15,label:'불확실'},
+  ];
+  yRefs.forEach(({conf,label})=>{
+    const cy=yToC(conf);
+    ctx.strokeStyle='rgba(65,104,175,.05)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(PAD.left,cy); ctx.lineTo(PAD.left+CW,cy); ctx.stroke();
+    ctx.fillStyle='rgba(255,255,255,.15)';
+    ctx.font=`500 ${fSz}px "Pretendard",monospace`;
+    ctx.textAlign='right'; ctx.fillText(label,PAD.left-8,cy+3.5);
+  });
+
+  const step=vizXMax<=20?2:vizXMax<=35?4:vizXMax<=50?5:10;
+  ctx.fillStyle='rgba(255,255,255,.15)';
+  ctx.font=`500 ${fSz}px "Pretendard",monospace`;
+  ctx.textAlign='center';
+  for(let t=0;t<=vizXMax;t+=step){
+    const cx=xToC(t);
+    ctx.fillText(t===0?'0s':`${Math.round(t)}`,cx,PAD.top+CH+20);
+    ctx.strokeStyle='rgba(65,104,175,.04)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(cx,PAD.top); ctx.lineTo(cx,PAD.top+CH); ctx.stroke();
+  }
+  ctx.fillStyle='rgba(255,255,255,.15)';
+  ctx.fillText(`${Math.round(vizXMax)}s`,xToC(vizXMax),PAD.top+CH+20);
+
+  ctx.fillStyle='rgba(65,104,175,.2)'; ctx.font='500 9px "Pretendard",monospace';
+  ctx.textAlign='left'; ctx.fillText('← ToM',PAD.left+4,PAD.top-12);
+
+  if(isEmpty){
+    ctx.fillStyle='rgba(255,255,255,.16)'; ctx.font='600 13px "Pretendard",sans-serif';
+    ctx.textAlign='center';
+    ctx.fillText('이 그룹의 응답 데이터가 아직 없습니다',W/2,H/2-10);
+    ctx.font='500 11px "Pretendard",sans-serif'; ctx.fillStyle='rgba(65,104,175,.2)';
+    ctx.fillText('자동 수집을 시작하거나 데이터가 쌓이면 자동으로 표시됩니다',W/2,H/2+12);
+    return;
+  }
+
+  vizBubbles.forEach((vb,idx)=>{
+    const alpha=vb.valpha*Math.min(1,introProgress*3-idx*0.12);
+    if(alpha<=0) return;
+    const sp=easeOutBack(Math.min(1,Math.max(0,introProgress*2.5-idx*0.2)));
+    const r=vb.vr*sp;
+    const colors=getBubbleColors(vb);
+
+    if(vb.tier==='high'&&r>0){
+      const glowColor=activeFilter.val==='남'?'59,130,246':activeFilter.val==='여'?'236,72,153':'65,104,175';
+      const g=ctx.createRadialGradient(vb.vx,vb.vy,0,vb.vx,vb.vy,r*2.4);
+      g.addColorStop(0,`rgba(${glowColor},${.16*alpha})`);
+      g.addColorStop(1,`rgba(${glowColor},0)`);
+      ctx.fillStyle=g; ctx.beginPath(); ctx.arc(vb.vx,vb.vy,r*2.4,0,Math.PI*2); ctx.fill();
+    }
+
+    ctx.save(); ctx.globalAlpha=alpha;
+
+    if(colors.fill==='grad-navy'){
+      const g=ctx.createRadialGradient(vb.vx-r*.2,vb.vy-r*.25,0,vb.vx,vb.vy,r);
+      g.addColorStop(0,'#A3C2EF'); g.addColorStop(1,'#28406E');
+      ctx.fillStyle=g;
+    } else if(colors.fill==='grad-blue'){
+      const g=ctx.createRadialGradient(vb.vx-r*.2,vb.vy-r*.25,0,vb.vx,vb.vy,r);
+      g.addColorStop(0,'#93c5fd'); g.addColorStop(1,'#1d4ed8');
+      ctx.fillStyle=g;
+    } else if(colors.fill==='grad-pink'){
+      const g=ctx.createRadialGradient(vb.vx-r*.2,vb.vy-r*.25,0,vb.vx,vb.vy,r);
+      g.addColorStop(0,'#f9a8d4'); g.addColorStop(1,'#be185d');
+      ctx.fillStyle=g;
+    } else {
+      ctx.fillStyle=colors.fill;
+    }
+    ctx.beginPath(); ctx.arc(vb.vx,vb.vy,r,0,Math.PI*2); ctx.fill();
+    if(colors.stroke){
+      ctx.strokeStyle=colors.stroke; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.arc(vb.vx,vb.vy,r,0,Math.PI*2); ctx.stroke();
+    }
+
+    if(vb.count>1){
+      ctx.strokeStyle='rgba(255,255,255,.1)'; ctx.lineWidth=1;
+      ctx.setLineDash([2,3]); ctx.beginPath(); ctx.arc(vb.vx,vb.vy,r+5,0,Math.PI*2); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    const fs=W<480?8:10,fsN=W<480?9:12;
+    const textColor=vb.tier==='high'?'#000':colors.stroke||'rgba(255,255,255,.6)';
+    ctx.fillStyle=textColor;
+    ctx.font=`900 ${fs}px "Pretendard",sans-serif`; ctx.textAlign='center';
+    ctx.fillText(`#${vb.rank}`,vb.vx,vb.vy-5);
+    ctx.font=`800 ${fsN}px "Pretendard",sans-serif`;
+    ctx.fillText(vb.name,vb.vx,vb.vy+9);
+
+    if(vb.count>1&&W>=480){
+      const bx=vb.vx+r-1,by=vb.vy-r+1;
+      ctx.fillStyle='rgba(10,10,11,.95)';
+      ctx.beginPath(); ctx.arc(bx,by,9,0,Math.PI*2); ctx.fill();
+      ctx.strokeStyle='rgba(65,104,175,.5)'; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.arc(bx,by,9,0,Math.PI*2); ctx.stroke();
+      ctx.fillStyle='#7DA3E0'; ctx.font='800 8px "Pretendard",monospace';
+      ctx.fillText(vb.count,bx,by+3);
+    }
+    ctx.restore();
+  });
+}
+
+function tickLerp(){
+  let moving=false;
+  const axD=Math.abs(vizXMax-targetXMax)+Math.abs(vizYMin-targetYMin)+Math.abs(vizYMax-targetYMax);
+  if(axD>.001) moving=true;
+  vizXMax=lerp(vizXMax,targetXMax,LERP_SPD);
+  vizYMin=lerp(vizYMin,targetYMin,LERP_SPD);
+  vizYMax=lerp(vizYMax,targetYMax,LERP_SPD);
+
+  const fresh=buildTargets();
+  const tNames=new Set(fresh.map(b=>b.name));
+  vizBubbles=vizBubbles.filter(vb=>{
+    if(!tNames.has(vb.name)){
+      vb.valpha=lerp(vb.valpha,0,.14);
+      if(vb.valpha>.008){moving=true;return true;}
+      return false;
+    }
+    return true;
+  });
+  fresh.forEach(tb=>{
+    let vb=vizBubbles.find(v=>v.name===tb.name);
+    if(!vb){vb={name:tb.name,vx:tb.tx,vy:tb.ty,vr:0,valpha:0,rank:tb.rank,tier:tb.tier,count:tb.count};vizBubbles.push(vb);}
+    const d=Math.abs(vb.vx-tb.tx)+Math.abs(vb.vy-tb.ty)+Math.abs(vb.vr-tb.tr)+Math.abs(vb.valpha-1);
+    if(d>.15) moving=true;
+    vb.vx=lerp(vb.vx,tb.tx,LERP_SPD); vb.vy=lerp(vb.vy,tb.ty,LERP_SPD);
+    vb.vr=lerp(vb.vr,tb.tr,LERP_SPD); vb.valpha=lerp(vb.valpha,1,LERP_SPD);
+    vb.rank=tb.rank; vb.tier=tb.tier; vb.count=tb.count;
+  });
+  return moving;
+}
+
+function renderLoop(ts){
+  if(!introStart) introStart=ts;
+  introProgress=Math.min(1,(ts-introStart)/INTRO_DUR);
+  const moving=tickLerp();
+  drawFrame();
+  if(introProgress<1||moving){animRaf=requestAnimationFrame(renderLoop);}
+  else{drawFrame();animRaf=null;}
+}
+
+function startRender(resetIntro=false){
+  if(resetIntro){introStart=null;introProgress=0;}
+  targetXMax=getTargetXMax();
+  const yr=getTargetYRange(); targetYMin=yr.min; targetYMax=yr.max;
+  if(!animRaf) animRaf=requestAnimationFrame(renderLoop);
+}
+
+function easeOutFn(t){return 1-(1-t)**3;}
+function countUp(id,target,suffix=''){
+  const el=document.getElementById(id),t0=performance.now(),dur=450;
+  (function tick(now){
+    const p=Math.min(1,(now-t0)/dur);
+    el.innerHTML=`${Math.round(easeOutFn(p)*target)}<span style="font-size:1.2rem">${suffix}</span>`;
+    if(p<1) requestAnimationFrame(tick);
+  })(performance.now());
+}
+
+function getSegmentCount(type,val){
+  if(type==='all') return new Set(DATA.map(r=>r.rid)).size;
+  if(type==='gender') return new Set(DATA.filter(r=>r.gender===val).map(r=>r.rid)).size;
+  if(type==='age'){
+    const d=parseInt(val);
+    const f=d===50?DATA.filter(r=>r.age>=50):DATA.filter(r=>r.age>=d&&r.age<d+10);
+    return new Set(f.map(r=>r.rid)).size;
+  }
+  return 0;
+}
+
+function updateTabCounts(){
+  const tabs=[
+    {elId:'tc-all',   type:'all',   val:''},
+    {elId:'tc-male',  type:'gender',val:'남'},
+    {elId:'tc-female',type:'gender',val:'여'},
+    {elId:'tc-20',    type:'age',   val:'20'},
+    {elId:'tc-30',    type:'age',   val:'30'},
+    {elId:'tc-40',    type:'age',   val:'40'},
+    {elId:'tc-50',    type:'age',   val:'50'},
+  ];
+  tabs.forEach(({elId,type,val})=>{
+    const cnt=getSegmentCount(type,val);
+    const el=document.getElementById(elId);
+    if(el) el.textContent=cnt>0?` ${cnt}`:'';
+  });
+}
+
+function updateFilterInfo(){
+  const info=document.getElementById('filter-info');
+  const filtered=getFilteredData();
+  const rids=new Set(filtered.map(r=>r.rid));
+  const agg=aggregate();
+  if(rids.size===0){
+    info.innerHTML='<span class="filter-info-empty">데이터 없음</span>';return;
+  }
+  let color='rgba(163,194,239,.6)',dotColor='rgba(65,104,175,.7)';
+  if(activeFilter.type==='gender'&&activeFilter.val==='남'){color='rgba(147,197,253,.7)';dotColor='#60a5fa';}
+  if(activeFilter.type==='gender'&&activeFilter.val==='여'){color='rgba(249,168,212,.7)';dotColor='#f472b6';}
+  const label=activeFilter.type==='all'?'전체':activeFilter.type==='gender'?`${activeFilter.val}성`:`${activeFilter.val}대${activeFilter.val==='50'?'+':''}`;
+  info.innerHTML=`
+    <div class="filter-info-dot" style="background:${dotColor};"></div>
+    <span style="color:${color};font-weight:700;">${label}</span>
+    <span>응답자 ${rids.size}명 ·</span>
+    <span>브랜드 ${agg.length}종 분석 중</span>
+  `;
+  document.getElementById('stat-filter-label').textContent=activeFilter.type!=='all'?`(${label})`:'';
+}
+
+function updateStats(){
+  const agg=aggregate();
+  const rids=new Set(getFilteredData().map(r=>r.rid)).size;
+  countUp('stat-samples',rids,'명');
+  countUp('stat-brands',agg.length,'개');
+  document.getElementById('stat-tom').textContent  =agg.length?agg[0].name:'—';
+  document.getElementById('stat-align').textContent=agg.length&&agg[0].tier==='high'?'높음':agg.length?'보통':'—';
+  // update sticky band
+  document.getElementById('upanel-samples').textContent=rids;
+  document.getElementById('upanel-brands').textContent=agg.length;
+  document.getElementById('upanel-top').textContent=agg.length?agg[0].name:'—';
+  updateTabCounts();
+  updateFilterInfo();
+}
+
+document.querySelectorAll('.ebat-tab').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.ebat-tab').forEach(b=>b.classList.remove('active','active-male','active-female'));
+    const type=btn.dataset.type, val=btn.dataset.val||'';
+    activeFilter={type,val};
+    if(type==='gender'&&val==='남') btn.classList.add('active-male');
+    else if(type==='gender'&&val==='여') btn.classList.add('active-female');
+    else btn.classList.add('active');
+    const yr=getTargetYRange(); targetYMin=yr.min; targetYMax=yr.max;
+    targetXMax=getTargetXMax();
+    startRender(true);
+    updateStats();
+  });
+});
+
+let updateTimer=null;
+function onDataChange(){
+  clearTimeout(updateTimer);
+  updateTimer=setTimeout(()=>{startRender();updateStats();},80);
+}
+
+/* ═══ AUTO COLLECTION ════════════════════════════════════ */
+const GENDER_OPT=['남','여'];
+
+function rnd(a,b){return Math.random()*(b-a)+a;}
+function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
+
+function getAdjustedBias(brand,gender,age){
+  let bias=TIME_BIAS[brand]||10;
+  const gAdj=(GENDER_ADJ[gender]||{})[brand]; if(gAdj) bias*=gAdj;
+  const ageGroup=getAgeGroup(age);
+  const aAdj=(AGE_ADJ[ageGroup]||{})[brand]; if(aAdj) bias*=aAdj;
+  return Math.max(0.5,bias);
+}
+
+function generateBatch(){
+  const rid=`R${nextRID++}`;
+  const n=Math.floor(rnd(3,8));
+  const gender=pick(GENDER_OPT);
+  const age=Math.floor(rnd(22,63));
+
+  const brands=[...FASHION_BRANDS].sort(()=>Math.random()-.5).slice(0,n);
+  brands.sort((a,b)=>getAdjustedBias(a,gender,age)-getAdjustedBias(b,gender,age));
+
+  let lastTime=0;
+  return brands.map(brand=>{
+    const adjBias=getAdjustedBias(brand,gender,age);
+    const raw=adjBias*(0.72+Math.random()*0.56);
+    const t=parseFloat(Math.max(lastTime+0.4,raw).toFixed(1));
+    lastTime=t;
+
+    let conf=adjBias<=3?rnd(.80,.98):adjBias<=6?rnd(.58,.90):adjBias<=11?rnd(.32,.68):rnd(.10,.48);
+    if(gender==='남'&&['나이키','아디다스','노스페이스','아크테릭스','MLB'].includes(brand)) conf+=.08;
+    if(gender==='여'&&['자라','샤넬','구찌','마르디메크르디','H&M'].includes(brand))       conf+=.10;
+    if(age<30&&['MLB','커버낫','마르디메크르디','앤더슨벨','무신사스탠다드'].includes(brand)) conf+=.09;
+    if(age>=45&&['빈폴','코오롱스포츠','폴로','유니클로','샤넬'].includes(brand))           conf+=.07;
+    conf=Math.max(.05,Math.min(.99,conf+(Math.random()-.5)*.1));
+
+    return{rid,brand,time:t,conf,gender,age};
+  });
+}
+
+let autoRunning=false,autoTimer=null,timerRaf=null;
+const liveBadge=document.getElementById('live-badge');
+
+function scheduleNext(){
+  if(!autoRunning) return;
+  const delay=Math.round(rnd(1000,5000));
+  autoTimer=setTimeout(()=>{
+    if(!autoRunning) return;
+    generateBatch().forEach(r=>DATA.push(r));
+    onDataChange(); scheduleNext();
+  },delay);
+}
+function startAuto(){
+  autoRunning=true;
+  liveBadge.classList.add('show');
+  scheduleNext();
+}
+function stopAuto(){
+  autoRunning=false; clearTimeout(autoTimer); cancelAnimationFrame(timerRaf);
+  liveBadge.classList.remove('show');
+}
+
+/* ════════════════════════════════════════════════════════
+   BRAND QUOTES
+   ════════════════════════════════════════════════════════ */
+const BRAND_QUOTES = {
+  '나이키': [
+    { text:'나이키 하면 "Just Do It"이 제일 먼저 떠오르죠. 운동화도 좋고, 뭔가 입으면 활동적인 느낌이 나요. 에어맥스나 조던 같은 한정판은 줄 서서 사는 문화도 있잖아요.', rid:'R2', gender:'남', age:24 },
+    { text:'나이키는 워낙 국민 브랜드라서요. 운동할 때도 일상에서도 자연스럽게 입게 되는 것 같아요. 특별히 고민 없이 "나이키 사면 되겠다" 하는 신뢰감이 있어요.', rid:'R1', gender:'여', age:28 },
+    { text:'스포츠 브랜드 중에서 제일 먼저 떠오르는 건 역시 나이키죠. 디자인도 세련되고 품질도 믿을 수 있어서 오래 신게 되더라고요.', rid:'R6', gender:'남', age:37 },
+  ],
+  '아디다스': [
+    { text:'아디다스 하면 삼선 로고가 딱 떠오르죠. 나이키랑 항상 비교되는데, 저는 아디다스가 좀 더 클래식하고 유럽 감성이라 좋아요.', rid:'R6', gender:'남', age:37 },
+    { text:'스탠스미스나 슈퍼스타 같은 클래식 모델이 생각나요. 뭐든지 트렌드 타지 않고 오래 신을 수 있는 게 좋더라고요.', rid:'R1', gender:'여', age:28 },
+    { text:'아디다스는 스포츠 기능성도 좋지만 패션 아이템으로도 활용하기 좋아요. 조거 팬츠 같은 거 편하고 멋있게 입을 수 있잖아요.', rid:'R4', gender:'남', age:51 },
+  ],
+  '자라': [
+    { text:'자라 하면 최신 트렌드를 빠르게 따라잡는 이미지예요. 매장 들어가면 항상 새 상품이 있고, 사이즈도 많고 가격도 합리적이라서 자주 가게 되더라고요.', rid:'R5', gender:'여', age:33 },
+    { text:'패스트 패션 하면 자라가 제일 먼저 생각나요. 디자인이 고급스러운데 가격이 의외로 적당해서 여기저기 쓸 수 있어요.', rid:'R1', gender:'여', age:28 },
+    { text:'자라는 비슷한 가격대에서 퀄리티가 꽤 좋은 편이에요. 회사에 입고 갈 옷 찾을 때 자주 들르게 되는 것 같아요.', rid:'R3', gender:'여', age:44 },
+  ],
+  '유니클로': [
+    { text:'유니클로는 베이직 아이템이 진짜 훌륭하죠. 히트텍이나 에어리즘 같은 기능성 라인은 매년 사게 되더라고요. 심플하고 질 좋은 기본템이 많아요.', rid:'R3', gender:'여', age:44 },
+    { text:'유니클로 하면 가성비 최강이라는 생각이 드는데, 요즘은 디자인도 많이 좋아진 것 같아요. 콜라보 라인은 항상 기대하게 되고요.', rid:'R5', gender:'여', age:33 },
+    { text:'기본 옷은 다 유니클로에서 사는 것 같아요. 면바지, 스웨트셔츠, 이런 기본템이 질이 좋고 오래가더라고요.', rid:'R4', gender:'남', age:51 },
+  ],
+  '노스페이스': [
+    { text:'노스페이스는 한국에서 진짜 국민 아웃도어 브랜드잖아요. 패딩 하면 노스페이스 제일 먼저 떠오르고, 등산이나 캠핑할 때 믿고 입을 수 있는 브랜드요.', rid:'R6', gender:'남', age:37 },
+    { text:'학창 시절엔 노스페이스 패딩이 필수품 같은 분위기였어요. 지금도 기능성은 최고라고 생각해요. 방수되고 따뜻하고요.', rid:'R4', gender:'남', age:51 },
+    { text:'아웃도어 액티비티 할 때 가장 믿음직한 브랜드예요. 재킷이나 플리스 같은 거 입으면 추운 날도 거뜬하더라고요.', rid:'R2', gender:'남', age:24 },
+  ],
+  'H&M': [
+    { text:'H&M은 트렌디하면서도 가격이 착해서 자주 가게 돼요. 특히 시즌 세일 때 가면 진짜 득템을 많이 할 수 있더라고요.', rid:'R1', gender:'여', age:28 },
+    { text:'H&M 하면 빠른 트렌드 대응과 합리적인 가격이 먼저 떠올라요. 디자이너 콜라보 라인은 항상 기대하게 되고 금방 품절되더라고요.', rid:'R5', gender:'여', age:33 },
+  ],
+  'MLB': [
+    { text:'MLB 하면 뉴욕 양키스 볼캡이 제일 먼저 떠오르죠. 요즘 젊은 친구들이 엄청 많이 쓰더라고요. 스트리트 패션에 잘 어울리는 것 같아요.', rid:'R2', gender:'남', age:24 },
+    { text:'뭔가 캐주얼하고 스포티한 느낌이에요. 모자가 유독 인기 많은 것 같고, 의류도 편하고 실용적이라 좋더라고요.', rid:'R1', gender:'여', age:28 },
+    { text:'요즘 MLB가 젊은 층 사이에서 엄청 유행하더라고요. 트렌디한 이미지가 강하고, 가격도 나쁘지 않은 것 같아요.', rid:'R6', gender:'남', age:37 },
+  ],
+  '뉴발란스': [
+    { text:'뉴발란스는 러닝화로 오랫동안 신어왔는데, 요즘은 패션 아이템으로도 많이 입더라고요. 574 같은 클래식 모델이 코디하기 좋아요.', rid:'R6', gender:'남', age:37 },
+    { text:'뉴발란스 하면 뭔가 아메리칸 캐주얼 감성이에요. 두꺼운 솔에 볼이 넉넉해서 오래 신어도 편하더라고요.', rid:'R5', gender:'여', age:33 },
+  ],
+  '폴로': [
+    { text:'폴로 하면 말 타는 사람 로고가 딱 떠오르죠. 고전적이고 클래식한 스타일인데, 아버지 세대부터 좋아하던 브랜드 같은 느낌이에요.', rid:'R4', gender:'남', age:51 },
+    { text:'폴로 라코스테 같은 브랜드랑 비슷한 이미지예요. 품질이 좋고 클래식한 프레피 스타일이라 질리지 않는 것 같아요.', rid:'R3', gender:'여', age:44 },
+  ],
+  '구찌': [
+    { text:'구찌 하면 럭셔리 중에서도 화려한 이미지가 강해요. GG 로고나 독특한 패턴이 멀리서도 눈에 확 들어오죠. 한 번쯤 가지고 싶은 브랜드예요.', rid:'R5', gender:'여', age:33 },
+    { text:'구찌는 뭔가 과감하고 독창적인 느낌이에요. 알레산드로 미켈레 시절 디자인이 엄청 개성 있었는데, 지금도 그 이미지가 강하게 남아 있어요.', rid:'R1', gender:'여', age:28 },
+    { text:'명품 하면 구찌나 루이비통을 제일 먼저 떠올리게 되죠. 직접 살 수 있는 건 아니지만 브랜드 자체에서 오는 고급스러운 이미지가 있어요.', rid:'R3', gender:'여', age:44 },
+  ],
+  '루이비통': [
+    { text:'루이비통 하면 LV 모노그램 가방이 바로 떠오르죠. 명품 중에서도 제일 대중적으로 인지되는 브랜드인 것 같아요.', rid:'R3', gender:'여', age:44 },
+    { text:'루이비통은 패션계의 아이콘 같은 느낌이에요. 세대를 불문하고 알아보는 로고가 있다는 게 대단한 것 같아요.', rid:'R5', gender:'여', age:33 },
+  ],
+  '샤넬': [
+    { text:'샤넬 하면 2.55 백이 제일 먼저 생각나요. 코코 샤넬의 스토리도 멋있고, 세월이 지나도 빛나는 클래식 브랜드라는 이미지가 있어요.', rid:'R3', gender:'여', age:44 },
+    { text:'샤넬은 여성스럽고 우아한 느낌이에요. 향수에서부터 가방, 의류까지 하나의 세계관이 잘 잡혀 있는 브랜드 같아요.', rid:'R1', gender:'여', age:28 },
+    { text:'명품 브랜드 중에서도 가장 여성적인 감성을 대표하는 게 샤넬 같아요. 가격이 계속 오르는데도 수요가 많다는 게 브랜드 파워를 보여주죠.', rid:'R5', gender:'여', age:33 },
+  ],
+  '아크테릭스': [
+    { text:'아크테릭스는 아웃도어 브랜드 중에서도 프리미엄 중의 프리미엄이죠. 진지하게 등산하는 사람들 사이에서 인정받는 브랜드예요. 가격이 진짜 세긴 한데 품질은 최고라고 하더라고요.', rid:'R6', gender:'남', age:37 },
+    { text:'테크웨어나 고어텍스 같은 기능성 소재 하면 아크테릭스가 생각나요. 요즘은 패션 아이템으로도 많이 입더라고요.', rid:'R2', gender:'남', age:24 },
+  ],
+  '빈폴': [
+    { text:'빈폴은 한국 대표 클래식 패션 브랜드죠. 자전거 로고가 트레이드마크인데, 뭔가 세련되고 단정한 이미지가 있어요.', rid:'R4', gender:'남', age:51 },
+    { text:'빈폴 하면 캐주얼이지만 격식 있는 느낌이에요. 부모님 세대에서도, 요즘 세대에서도 좋아하는 것 같더라고요.', rid:'R3', gender:'여', age:44 },
+  ],
+  '코오롱스포츠': [
+    { text:'코오롱스포츠는 한국 아웃도어 브랜드잖아요. 등산이나 캠핑 좋아하는 분들이 많이 입는 이미지예요. 아버지가 좋아하시는 브랜드이기도 하고요.', rid:'R4', gender:'남', age:51 },
+    { text:'코오롱은 한국 아웃도어 시장에서 오랫동안 입지를 다져온 브랜드예요. 최근에는 디자인도 더 세련되게 바뀐 것 같더라고요.', rid:'R6', gender:'남', age:37 },
+  ],
+  '무신사스탠다드': [
+    { text:'무신사스탠다드 하면 합리적인 가격에 퀄리티 좋은 베이직 아이템이 떠올라요. 무신사에서 직접 만든 PB 브랜드잖아요. 요즘 정말 많이 사게 되더라고요.', rid:'R2', gender:'남', age:24 },
+    { text:'무신사스탠다드는 젊은 사람들한테 엄청 인기 있죠. 트렌디하면서도 가격이 착하고, 온라인으로 쉽게 살 수 있어서 자주 이용하게 돼요.', rid:'R6', gender:'남', age:37 },
+  ],
+  '커버낫': [
+    { text:'커버낫은 한국 스트리트 캐주얼 브랜드죠. 아메리칸 캐주얼 감성인데, 가격 대비 품질이 괜찮고 디자인도 군더더기 없어서 좋아요.', rid:'R2', gender:'남', age:24 },
+    { text:'커버낫 하면 배달의민족이랑 콜라보한 것도 생각나고, 힙하지만 부담 없는 브랜드 이미지가 있어요. 무신사에서 많이 보이더라고요.', rid:'R6', gender:'남', age:37 },
+  ],
+  '마르디메크르디': [
+    { text:'마르디메크르디 하면 꽃 그래픽 티셔츠가 제일 먼저 떠올라요. 요즘 진짜 많이 보이더라고요. 감성적이고 여성스러운 무드가 있어서 좋아요.', rid:'R1', gender:'여', age:28 },
+    { text:'한국 브랜드 중에서 유독 감각적인 편이라고 생각해요. 프랑스어 이름도 뭔가 세련된 느낌이고, 화요일 수요일 뜻이 있다는 것도 귀엽고요.', rid:'R5', gender:'여', age:33 },
+  ],
+  '디스커버리': [
+    { text:'디스커버리는 TV 채널 이름이랑 같아서 처음엔 좀 신기했어요. 아웃도어 캐주얼 느낌인데, 가벼운 아웃도어 룩을 찾을 때 선택지 중 하나로 떠오르는 브랜드예요.', rid:'R4', gender:'남', age:51 },
+    { text:'캐주얼 아웃도어 스타일을 좋아하는 분들이 많이 입는 브랜드인 것 같아요. 가격도 크게 부담스럽지 않고요.', rid:'R3', gender:'여', age:44 },
+  ],
+  '앤더슨벨': [
+    { text:'앤더슨벨은 한국 디자이너 브랜드 중에서도 해외에서도 인정받는 브랜드라고 알고 있어요. 유니크한 실루엣이나 소재 활용이 인상적이더라고요.', rid:'R2', gender:'남', age:24 },
+    { text:'패션에 관심 있는 친구들 사이에서 자주 언급되는 브랜드예요. 독창적인 디자인이 강점인 것 같은데, 대중적이기보다는 마니아층이 있는 느낌이에요.', rid:'R1', gender:'여', age:28 },
+  ],
+};
+
+/* ════════════════════════════════════════════════════════
+   BRAND PANEL
+   ════════════════════════════════════════════════════════ */
+const panel     = document.getElementById('brand-panel');
+const backdrop  = document.getElementById('brand-panel-backdrop');
+const bpClose   = document.getElementById('bp-close');
+const bpVideo   = document.getElementById('bp-video');
+
+function closePanel(){
+  panel.classList.remove('open');
+  backdrop.classList.remove('show');
+  bpVideo.pause();
+}
+
+function openPanel(brandName){
+  const agg   = aggregate();
+  const brand = agg.find(b=>b.name===brandName);
+  if(!brand) return;
+
+  document.getElementById('bp-rank').textContent = `#${brand.rank} · ${CONF_KO[brand.tier]} 확신`;
+  document.getElementById('bp-name').textContent = brand.name;
+
+  const confClass = brand.tier==='high'?'bp-badge-conf-high':brand.tier==='medium'?'bp-badge-conf-medium':'bp-badge-conf-low';
+  document.getElementById('bp-badges').innerHTML = `
+    <span class="bp-badge ${confClass}">확신도 ${(brand.conf*100).toFixed(0)}%</span>
+    <span class="bp-badge bp-badge-time">평균 ${brand.t.toFixed(1)}초</span>
+    <span class="bp-badge bp-badge-count">${brand.count}명 언급</span>
+  `;
+
+  document.getElementById('bp-video-caption').textContent = `${brandName} — 응답자 인터뷰 클립`;
+  bpVideo.currentTime = 0;
+  bpVideo.play().catch(()=>{});
+
+  const allQuotes  = BRAND_QUOTES[brandName] || [];
+  let filtered = allQuotes;
+  if(activeFilter.type==='gender'){
+    const gq = allQuotes.filter(q=>q.gender===activeFilter.val);
+    if(gq.length) filtered = gq;
+  } else if(activeFilter.type==='age'){
+    const d=parseInt(activeFilter.val);
+    const aq = allQuotes.filter(q=>d===50?q.age>=50:(q.age>=d&&q.age<d+10));
+    if(aq.length) filtered = aq;
+  }
+  const showQuotes = filtered.slice(0,3);
+
+  const listEl = document.getElementById('bp-quotes-list');
+  if(showQuotes.length===0){
+    listEl.innerHTML = `<p style="font-size:.78rem;color:rgba(255,255,255,.25);text-align:center;padding:1.5rem 0;">이 구간의 인용 응답이 없습니다</p>`;
+  } else {
+    listEl.innerHTML = showQuotes.map(q=>{
+      const gClass = q.gender==='남'?'chip-male':'chip-female';
+      const decade  = Math.floor(q.age/10)*10;
+      return `
+        <div class="bp-quote">
+          <span class="bp-quote-icon">"</span>
+          <p class="bp-quote-text">${q.text}"</p>
+          <div class="bp-quote-user">
+            <span class="bp-user-chip ${gClass}">
+              <span class="material-symbols-outlined">${q.gender==='남'?'man':'woman'}</span>
+              ${q.gender}성
+            </span>
+            <span class="bp-user-chip">
+              <span class="material-symbols-outlined">person</span>
+              ${decade}대 · ${q.age}세
+            </span>
+            <span class="bp-user-chip">
+              <span class="material-symbols-outlined">tag</span>
+              ${q.rid}
+            </span>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  panel.classList.add('open');
+  backdrop.classList.add('show');
+}
+
+bpClose.addEventListener('click', closePanel);
+backdrop.addEventListener('click', closePanel);
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closePanel(); });
+
+canvas.addEventListener('click', e=>{
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+  let hit = null;
+  vizBubbles.forEach(vb=>{ if(Math.hypot(mx-vb.vx, my-vb.vy)<vb.vr+8) hit=vb; });
+  if(hit) openPanel(hit.name);
+});
+
+canvas.addEventListener('mousemove',e=>{
+  const rect=canvas.getBoundingClientRect();
+  const mx=e.clientX-rect.left,my=e.clientY-rect.top;
+  let hit=null;
+  vizBubbles.forEach(vb=>{if(Math.hypot(mx-vb.vx,my-vb.vy)<vb.vr+8)hit=vb;});
+  if(hit){
+    const ab=aggregate().find(b=>b.name===hit.name);
+    const filtered=getFilteredData().filter(r=>r.brand===hit.name);
+    const gSplit={남:0,여:0}; filtered.forEach(r=>{if(gSplit[r.gender]!==undefined)gSplit[r.gender]++;});
+    tooltip.innerHTML=`
+      <div style="font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-text);margin-bottom:.3rem;">#${hit.rank} · ${CONF_KO[hit.tier]}</div>
+      <div style="font-size:.92rem;font-weight:800;color:#fff;margin-bottom:.35rem;">${hit.name}</div>
+      <div style="font-size:.72rem;color:rgba(255,255,255,.4);">avg <b style="color:rgba(65,104,175,.8)">${ab?ab.t.toFixed(1):'?'}s</b></div>
+      <div style="font-size:.72rem;color:rgba(255,255,255,.3);margin-top:.2rem;">n=${hit.count}
+        ${activeFilter.type==='all'?`· M:${gSplit['남']} F:${gSplit['여']}`:''}
+      </div>
+      <div style="margin-top:.55rem;padding-top:.55rem;border-top:1px solid rgba(65,104,175,.1);font-size:.65rem;color:rgba(65,104,175,.3);display:flex;align-items:center;gap:.3rem;">
+        <span class="material-symbols-outlined" style="font-size:11px;">touch_app</span>클릭하면 인터뷰 클립 보기
+      </div>
+    `;
+    tooltip.classList.add('show');
+    tooltip.style.left=(e.clientX+16)+'px'; tooltip.style.top=(e.clientY-14)+'px';
+    canvas.style.cursor='pointer';
+  } else { tooltip.classList.remove('show'); canvas.style.cursor='default'; }
+});
+canvas.addEventListener('mouseleave',()=>tooltip.classList.remove('show'));
+
+document.getElementById('btn-replay').addEventListener('click',()=>startRender(true));
+
+const observer=new IntersectionObserver(entries=>{
+  if(entries[0].isIntersecting){
+    resizeCanvas(); updateStats(); startRender(true);
+    observer.disconnect();
+  }
+},{threshold:.15});
+observer.observe(canvas);
+
+window.addEventListener('resize',()=>{
+  resizeCanvas();
+  targetXMax=getTargetXMax();
+  const yr=getTargetYRange(); targetYMin=yr.min; targetYMax=yr.max;
+  if(!animRaf) animRaf=requestAnimationFrame(renderLoop);
+});
+
+/* ── Nav dropdown (inlined from nav.js) ── */
+(function () {
+  'use strict';
+  function initDropdown() {
+    var wrap = document.querySelector('.nav-svc-wrap');
+    if (!wrap) return;
+    var menu = wrap.querySelector('.nav-svc-menu');
+    var btn  = wrap.querySelector('.nav-svc-btn');
+    var closeTimer = null;
+    function openMenu() {
+      clearTimeout(closeTimer);
+      menu.classList.add('open');
+      if (btn) btn.classList.add('menu-open');
+    }
+    function scheduleClose() {
+      closeTimer = setTimeout(function () {
+        menu.classList.remove('open');
+        if (btn) btn.classList.remove('menu-open');
+      }, 300);
+    }
+    wrap.addEventListener('mouseenter', openMenu);
+    wrap.addEventListener('mouseleave', scheduleClose);
+    menu.addEventListener('mouseenter', openMenu);
+    menu.addEventListener('mouseleave', scheduleClose);
+    document.addEventListener('click', function (e) {
+      if (!wrap.contains(e.target)) {
+        clearTimeout(closeTimer);
+        menu.classList.remove('open');
+      }
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initDropdown);
+  } else {
+    initDropdown();
+  }
+})();
+
+startAuto();
+resizeCanvas();
+startRender(true);
+</script>
+</body>
+</html>

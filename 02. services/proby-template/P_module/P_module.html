@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link rel="stylesheet" as="style"
+  href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.css"
+  integrity="sha384-y9k2lBaj/ETgBd4674Kql3098euvZU5fWlBcBBrlROBI6c2KDmjWhd508Rfsx9R/"
+  crossorigin="anonymous"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<title>Promotion Tracker | Proby</title>
+<script>
+tailwind.config = {
+  theme: { extend: { fontFamily: { display: ['Pretendard','-apple-system','BlinkMacSystemFont','system-ui','sans-serif'] } } }
+}
+</script>
+<style>
+/* ════════════════════════════════════════════════
+   DESIGN TOKENS — Proby (dark navy)
+   ════════════════════════════════════════════════ */
+:root {
+  --bg:          #0A0A0B;
+  --surface:     #111114;
+  --card:        #19191E;
+  --border:      #25252D;
+  --accent-dim:  #1E3050;
+  --accent:      #28406E;
+  --accent-hi:   #4168AF;
+  --accent-text: #7DA3E0;
+  --accent-lt:   #A3C2EF;
+
+  /* Participant palette */
+  --pa-bg: rgba(65,104,175,.18);  --pa-fg: #7DA3E0;
+  --pb-bg: rgba(168,85,247,.18);  --pb-fg: #C084FC;
+  --pc-bg: rgba(16,185,129,.18);  --pc-fg: #34D399;
+  --pd-bg: rgba(251,191,36,.18);  --pd-fg: #FCD34D;
+  --pe-bg: rgba(249,115,22,.18);  --pe-fg: #FB923C;
+}
+
+/* ── Base ── */
+* { box-sizing: border-box; }
+body { background: var(--bg); margin: 0; }
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 1; opacity: 0.5;
+}
+
+.page {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 0 6rem;
+  position: relative; z-index: 2;
+}
+
+/* body content uses its own horizontal padding (hero uses .ct-hero's own padding) */
+.body-content {
+  padding: 0 2rem;
+}
+@media(min-width:768px){ .body-content { padding: 0 2rem; } }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { height: 4px; width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+/* ════════════════════════════════════════════════
+   HERO
+   ════════════════════════════════════════════════ */
+.ct-hero {
+  padding: 2.5rem 2rem 3.5rem;
+  position: relative; overflow: hidden;
+}
+.section-label {
+  font-size: .6rem; font-weight: 900; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--accent-text); opacity: .7;
+  margin-bottom: .875rem;
+}
+.grad-text {
+  background: linear-gradient(135deg, #ffffff 20%, var(--accent-lt) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.blob {
+  position: absolute; border-radius: 50%;
+  filter: blur(140px); pointer-events: none;
+}
+
+/* ════════════════════════════════════════════════
+   SESSION META PILL
+   ════════════════════════════════════════════════ */
+.session-meta {
+  display: flex; align-items: center; flex-wrap: wrap; gap: .5rem;
+  margin-bottom: 2.5rem;
+}
+.meta-pill {
+  display: inline-flex; align-items: center; gap: .4rem;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 999px; padding: .3rem .75rem;
+  font-size: .72rem; color: rgba(255,255,255,.45); font-weight: 500;
+}
+.meta-pill .material-symbols-outlined { font-size: 13px; color: var(--accent-text); }
+
+/* ════════════════════════════════════════════════
+   STATS GRID
+   ════════════════════════════════════════════════ */
+.stats-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 1px; background: rgba(37,37,45,.6);
+  border: 1px solid rgba(37,37,45,.6); border-radius: 1rem; overflow: hidden;
+  margin-bottom: 3rem;
+}
+@media(min-width:640px){ .stats-grid { grid-template-columns: repeat(4, 1fr); } }
+.stat-cell { background: var(--card); padding: 1.5rem 1.5rem 1.25rem; transition: background .2s; }
+.stat-cell:hover { background: rgba(30,48,80,.25); }
+.stat-label { font-size: .65rem; color: rgba(255,255,255,.3); margin-bottom: .4rem; letter-spacing: .05em; text-transform: uppercase; }
+.stat-val { font-size: 2.2rem; font-weight: 900; letter-spacing: -.04em; line-height: 1; color: rgba(255,255,255,.9); margin-bottom: .25rem; }
+.stat-val.hl { color: var(--accent-lt); }
+.stat-sub { font-size: .68rem; color: rgba(255,255,255,.25); }
+
+/* ════════════════════════════════════════════════
+   CATEGORY BLOCKS
+   ════════════════════════════════════════════════ */
+.category-block {
+  margin-bottom: 2.5rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  overflow: hidden;
+}
+
+.cat-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 1rem; padding: 1.5rem 1.75rem 1.25rem;
+  border-bottom: 1px solid rgba(37,37,45,.7);
+  flex-wrap: wrap;
+}
+.cat-header-left { display: flex; align-items: flex-start; gap: 1rem; }
+.cat-icon-wrap {
+  width: 42px; height: 42px; border-radius: .75rem; flex-shrink: 0;
+  background: var(--accent-dim); border: 1px solid rgba(65,104,175,.25);
+  display: flex; align-items: center; justify-content: center;
+}
+.cat-icon-wrap .material-symbols-outlined { font-size: 20px; color: var(--accent-text); }
+.cat-tag {
+  font-size: .58rem; font-weight: 900; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--accent-text); opacity: .6; margin-bottom: .35rem;
+}
+.cat-question { font-size: 1.05rem; font-weight: 800; color: rgba(255,255,255,.88); line-height: 1.35; }
+.cat-brand-count {
+  flex-shrink: 0; background: rgba(37,37,45,.7); border: 1px solid var(--border);
+  border-radius: 999px; padding: .25rem .75rem;
+  font-size: .7rem; color: rgba(255,255,255,.35); font-weight: 600; white-space: nowrap;
+  align-self: flex-start;
+}
+
+/* ── Brands scroll container ── */
+.brands-scroll {
+  display: flex; gap: 1px;
+  overflow-x: auto; background: rgba(37,37,45,.5);
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+}
+.brands-scroll::-webkit-scrollbar { height: 3px; }
+
+/* ── Brand Card ── */
+.brand-card {
+  flex: 0 0 240px;
+  background: var(--card);
+  padding: 1.25rem 1.5rem 1.5rem;
+  scroll-snap-align: start;
+  transition: background .2s;
+  position: relative;
+}
+@media(min-width:768px){ .brand-card { flex-basis: 280px; } }
+.brand-card:hover { background: rgba(30,48,80,.18); }
+.brand-card.is-top { flex-basis: 290px; background: rgba(30,48,80,.22); }
+@media(min-width:768px){ .brand-card.is-top { flex-basis: 340px; } }
+
+/* rank + count row */
+.brand-meta-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: .7rem;
+}
+.brand-rank-badge {
+  font-size: .58rem; font-weight: 900; letter-spacing: .1em; text-transform: uppercase;
+  padding: .22rem .6rem; border-radius: 999px;
+  background: rgba(37,37,45,.8); border: 1px solid var(--border);
+  color: rgba(255,255,255,.3);
+}
+.brand-rank-badge.rank-1 {
+  background: rgba(252,211,77,.12); border-color: rgba(252,211,77,.35);
+  color: #FCD34D;
+}
+.mention-count-badge {
+  display: inline-flex; align-items: center; gap: .3rem;
+  font-size: .7rem; font-weight: 700;
+  padding: .22rem .6rem; border-radius: 999px;
+  background: rgba(65,104,175,.15); border: 1px solid rgba(65,104,175,.25);
+  color: var(--accent-text);
+}
+.mention-count-badge .material-symbols-outlined { font-size: 12px; }
+
+/* brand name */
+.brand-name {
+  font-size: 1.05rem; font-weight: 800; letter-spacing: -.02em;
+  color: rgba(255,255,255,.9); line-height: 1.2; margin-bottom: 1rem;
+}
+.brand-card.is-top .brand-name { font-size: 1.2rem; color: #ffffff; }
+
+/* mention list */
+.mention-list { display: flex; flex-direction: column; gap: .6rem; }
+
+.mention-row { display: flex; gap: .6rem; align-items: flex-start; }
+.person-chip {
+  flex-shrink: 0; width: 24px; height: 24px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .62rem; font-weight: 900; letter-spacing: 0;
+  border: 1px solid transparent;
+}
+.person-chip.pa { background: var(--pa-bg); color: var(--pa-fg); border-color: rgba(65,104,175,.3); }
+.person-chip.pb { background: var(--pb-bg); color: var(--pb-fg); border-color: rgba(168,85,247,.3); }
+.person-chip.pc { background: var(--pc-bg); color: var(--pc-fg); border-color: rgba(16,185,129,.3); }
+.person-chip.pd { background: var(--pd-bg); color: var(--pd-fg); border-color: rgba(251,191,36,.3); }
+.person-chip.pe { background: var(--pe-bg); color: var(--pe-fg); border-color: rgba(249,115,22,.3); }
+
+.mention-quote {
+  font-size: .76rem; color: rgba(255,255,255,.45); line-height: 1.55;
+  font-style: italic;
+}
+.brand-card.is-top .mention-quote { color: rgba(255,255,255,.55); }
+
+/* top-brand glow border */
+.brand-card.is-top::before {
+  content: '';
+  position: absolute; inset: 0;
+  border-radius: 0;
+  box-shadow: inset 0 0 0 1px rgba(252,211,77,.15);
+  pointer-events: none;
+}
+
+/* ════════════════════════════════════════════════
+   CROSS-CATEGORY ANALYSIS
+   ════════════════════════════════════════════════ */
+.analysis-section { margin-top: 3.5rem; }
+.analysis-title {
+  font-size: .6rem; font-weight: 900; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--accent-text); opacity: .5; margin-bottom: 1.25rem;
+}
+
+.analysis-grid {
+  display: grid; gap: 1.25rem;
+  grid-template-columns: 1fr;
+}
+@media(min-width:768px){ .analysis-grid { grid-template-columns: 1fr 1fr; } }
+@media(min-width:1024px){ .analysis-grid { grid-template-columns: 2fr 1fr 1fr; } }
+
+.analysis-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 1.25rem; padding: 1.5rem;
+}
+.analysis-card-title { font-size: .72rem; font-weight: 700; color: rgba(255,255,255,.38); margin-bottom: 1.25rem; letter-spacing: .03em; }
+
+/* leaderboard */
+.leaderboard-row {
+  display: flex; align-items: center; gap: .75rem;
+  padding: .5rem 0;
+  border-bottom: 1px solid rgba(37,37,45,.7);
+}
+.leaderboard-row:last-child { border-bottom: none; padding-bottom: 0; }
+.lb-rank { width: 20px; font-size: .7rem; font-weight: 900; color: rgba(255,255,255,.2); text-align: center; flex-shrink: 0; }
+.lb-rank.top { color: #FCD34D; }
+.lb-name { flex: 1; font-size: .82rem; font-weight: 700; color: rgba(255,255,255,.8); }
+.lb-cat-tag {
+  font-size: .6rem; font-weight: 600; padding: .18rem .5rem; border-radius: 999px;
+  background: rgba(30,48,80,.5); color: var(--accent-text); border: 1px solid rgba(65,104,175,.2);
+}
+.lb-bar-wrap { width: 60px; height: 4px; background: rgba(37,37,45,.8); border-radius: 99px; overflow: hidden; flex-shrink: 0; }
+.lb-bar { height: 100%; border-radius: 99px; background: var(--accent-hi); transition: width .6s ease; }
+.lb-bar.gold { background: #FCD34D; }
+
+/* participant card */
+.participant-row {
+  display: flex; align-items: center; gap: .75rem;
+  padding: .55rem 0;
+  border-bottom: 1px solid rgba(37,37,45,.7);
+}
+.participant-row:last-child { border-bottom: none; }
+.p-chip-lg {
+  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .75rem; font-weight: 900; border: 1px solid transparent;
+}
+.p-chip-lg.pa { background: var(--pa-bg); color: var(--pa-fg); border-color: rgba(65,104,175,.3); }
+.p-chip-lg.pb { background: var(--pb-bg); color: var(--pb-fg); border-color: rgba(168,85,247,.3); }
+.p-chip-lg.pc { background: var(--pc-bg); color: var(--pc-fg); border-color: rgba(16,185,129,.3); }
+.p-chip-lg.pd { background: var(--pd-bg); color: var(--pd-fg); border-color: rgba(251,191,36,.3); }
+.p-chip-lg.pe { background: var(--pe-bg); color: var(--pe-fg); border-color: rgba(249,115,22,.3); }
+
+.p-detail { flex: 1; min-width: 0; }
+.p-name { font-size: .82rem; font-weight: 700; color: rgba(255,255,255,.75); }
+.p-top-brand { font-size: .7rem; color: rgba(255,255,255,.3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: .1rem; }
+.p-mention-count {
+  font-size: .78rem; font-weight: 800; color: var(--accent-text);
+}
+
+/* diversity badge */
+.diversity-badge {
+  display: inline-flex; align-items: center; gap: .3rem;
+  font-size: .64rem; font-weight: 700; padding: .2rem .55rem; border-radius: 999px;
+  background: rgba(52,211,153,.1); border: 1px solid rgba(52,211,153,.2); color: #34D399;
+}
+</style>
+</head>
+<body class="font-display text-white antialiased overflow-x-hidden">
+
+<div class="page">
+
+  <!-- ═══════════════════════════════════════════ HERO ═══ -->
+  <section class="ct-hero">
+    <div class="blob w-[700px] h-[700px]"
+         style="background:#1E3050;opacity:0.18;top:-200px;left:-150px;"></div>
+    <div class="blob w-[400px] h-[400px]"
+         style="background:#25252D;opacity:0.15;top:100px;right:-100px;"></div>
+
+    <div class="relative" style="display:flex;align-items:flex-start;gap:2.5rem;flex-wrap:wrap;">
+      <div style="flex:1;min-width:260px;">
+        <div class="section-label">PROBY · Promotion Module</div>
+        <h1 style="font-size:2.6rem;font-weight:900;letter-spacing:-.03em;line-height:1.15;margin-bottom:.75rem;">
+          <span class="grad-text">Promotion</span><br>Tracker
+        </h1>
+        <p style="font-size:.88rem;color:rgba(255,255,255,.42);max-width:480px;line-height:1.75;margin-bottom:.3rem;">
+          카테고리별 Top of Mind 추천 브랜드 분석 — 사람들이 자연스럽게 떠올리는 브랜드를 발견합니다.
+        </p>
+        <p style="font-size:.75rem;color:var(--accent-text);opacity:.5;max-width:520px;line-height:1.65;">
+          "그 브랜드 어때?" 없이, 자연스러운 추천 대화에서 수집된 비보조 회상(Unaided Recall) 데이터
+        </p>
+      </div>
+      <div style="flex-shrink:0;padding-top:.5rem;display:flex;flex-direction:column;align-items:flex-end;gap:.75rem;">
+        <img src="../Brand assets/proby/logo-text-white.png" alt="Proby"
+             style="height:22px;object-fit:contain;opacity:.7;"/>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ BODY CONTENT ═══ -->
+  <div class="body-content">
+
+    <!-- SESSION META -->
+    <div class="session-meta" id="session-meta-el"></div>
+
+    <!-- STATS -->
+    <div class="stats-grid" id="stats-el"></div>
+
+    <!-- CATEGORIES -->
+    <div id="categories-el"></div>
+
+    <!-- ANALYSIS -->
+    <section class="analysis-section" id="analysis-el"></section>
+
+  </div>
+
+</div><!-- /page -->
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   DATA  — 실제 조사 결과로 교체하세요
+   ═══════════════════════════════════════════════════════════════ */
+const DATA = {
+  session: {
+    date: "2025년 4월 3일",
+    context: "서울 거주 20-30대 소비자 그룹",
+    location: "합정 카페 포커스 그룹",
+    note: "비보조 회상(Unaided Recall) 방식"
+  },
+  participants: [
+    { id: "A", cls: "pa", label: "참여자 A", topBrand: "무신사 스탠다드", mentions: 4 },
+    { id: "B", cls: "pb", label: "참여자 B", topBrand: "더플레이스",      mentions: 4 },
+    { id: "C", cls: "pc", label: "참여자 C", topBrand: "블루보틀",        mentions: 4 },
+    { id: "D", cls: "pd", label: "참여자 D", topBrand: "야놀자",          mentions: 4 }
+  ],
+  categories: [
+    {
+      id: "fashion",
+      icon: "checkroom",
+      tag: "패션",
+      question: "나 옷 브랜드 하나 추천해줘?",
+      brands: [
+        {
+          name: "무신사 스탠다드",
+          mentions: [
+            { person: "A", cls: "pa", quote: "요즘 퀄리티 많이 올라갔어. 기본 아이템은 여기서 다 사" },
+            { person: "C", cls: "pc", quote: "가성비가 진짜 좋고 사이즈도 다양해서 편해" }
+          ]
+        },
+        {
+          name: "아더에러",
+          mentions: [
+            { person: "B", cls: "pb", quote: "독특한 감성이 있어, 입었을 때 그냥 달라보여" }
+          ]
+        },
+        {
+          name: "나이키",
+          mentions: [
+            { person: "D", cls: "pd", quote: "스포츠 캐주얼로 나이키만한 게 없지, 어디서나 입기 편함" }
+          ]
+        }
+      ]
+    },
+    {
+      id: "dining",
+      icon: "restaurant",
+      tag: "외식",
+      question: "나 데이트 식사 장소 추천해줘?",
+      brands: [
+        {
+          name: "더플레이스",
+          mentions: [
+            { person: "B", cls: "pb", quote: "분위기 있고 파스타가 맛있어. 데이트하기 딱이야" },
+            { person: "D", cls: "pd", quote: "인테리어가 예뻐서 사진도 잘 나오고 음식도 맛있음" }
+          ]
+        },
+        {
+          name: "온더보더",
+          mentions: [
+            { person: "A", cls: "pa", quote: "멕시칸 음식 먹고 싶을 때 여기지. 분위기도 괜찮아" }
+          ]
+        },
+        {
+          name: "팔공커피 레스토랑",
+          mentions: [
+            { person: "C", cls: "pc", quote: "브런치 데이트하기 좋아. 커피도 맛있고 여유로워" }
+          ]
+        }
+      ]
+    },
+    {
+      id: "cafe",
+      icon: "local_cafe",
+      tag: "카페",
+      question: "나 카페 브랜드 추천해줘?",
+      brands: [
+        {
+          name: "블루보틀",
+          mentions: [
+            { person: "A", cls: "pa", quote: "커피 퀄리티가 확실히 달라. 스페셜티 원두 쓰는 게 느껴져" },
+            { person: "B", cls: "pb", quote: "공간이 미니멀하고 작업하기 좋아" }
+          ]
+        },
+        {
+          name: "스타벅스",
+          mentions: [
+            { person: "C", cls: "pc", quote: "어디서나 있고 음료 종류가 많아서 취향 타지 않음" },
+            { person: "D", cls: "pd", quote: "굿즈도 예쁘고 리워드 포인트 쌓이는 게 은근 쏠쏠해" }
+          ]
+        }
+      ]
+    },
+    {
+      id: "travel",
+      icon: "travel_explore",
+      tag: "여행",
+      question: "나 숙소 예약 앱 추천해줘?",
+      brands: [
+        {
+          name: "야놀자",
+          mentions: [
+            { person: "B", cls: "pb", quote: "국내 여행이면 야놀자지. 할인 쿠폰도 많고 빠른 예약이 좋아" },
+            { person: "C", cls: "pc", quote: "앱 쓰기 편하고 리뷰가 상세해서 고르기 좋아" },
+            { person: "D", cls: "pd", quote: "가격 비교하기 편하고 당일 예약도 돼" }
+          ]
+        },
+        {
+          name: "에어비앤비",
+          mentions: [
+            { person: "A", cls: "pa", quote: "해외 여행할 때는 에어비앤비. 독특한 숙소 경험이 여행의 묘미지" }
+          ]
+        }
+      ]
+    },
+    {
+      id: "delivery",
+      icon: "delivery_dining",
+      tag: "배달",
+      question: "나 배달 앱 추천해줘?",
+      brands: [
+        {
+          name: "배달의민족",
+          mentions: [
+            { person: "A", cls: "pa", quote: "UI가 편하고 배민클럽 되면 배달비 절약이 꽤 돼" },
+            { person: "B", cls: "pb", quote: "입점 가게가 많아서 선택지가 다양해" },
+            { person: "C", cls: "pc", quote: "배민1플러스 쓰면 빠른 배달에 무료 배달이라 자주 써" }
+          ]
+        },
+        {
+          name: "쿠팡이츠",
+          mentions: [
+            { person: "D", cls: "pd", quote: "쿠팡이랑 연계되어 있고 배달 시간이 진짜 빠름" }
+          ]
+        }
+      ]
+    }
+  ]
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   HELPERS
+   ═══════════════════════════════════════════════════════════════ */
+function getAllBrands() {
+  const map = {};
+  DATA.categories.forEach(cat => {
+    cat.brands.forEach(brand => {
+      if (!map[brand.name]) map[brand.name] = { name: brand.name, total: 0, cats: [] };
+      map[brand.name].total += brand.mentions.length;
+      map[brand.name].cats.push(cat.tag);
+    });
+  });
+  return Object.values(map).sort((a,b) => b.total - a.total);
+}
+
+function getTopBrandPerCat() {
+  return DATA.categories.map(cat => {
+    const top = [...cat.brands].sort((a,b) => b.mentions.length - a.mentions.length)[0];
+    return { catTag: cat.tag, brandName: top.name, count: top.mentions.length };
+  });
+}
+
+function totalMentions() {
+  return DATA.categories.reduce((s, cat) =>
+    s + cat.brands.reduce((s2, b) => s2 + b.mentions.length, 0), 0);
+}
+
+function uniqueBrandCount() {
+  const s = new Set();
+  DATA.categories.forEach(cat => cat.brands.forEach(b => s.add(b.name)));
+  return s.size;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RENDER: SESSION META
+   ═══════════════════════════════════════════════════════════════ */
+function renderMeta() {
+  const el = document.getElementById('session-meta-el');
+  const s = DATA.session;
+  el.innerHTML = `
+    <span class="meta-pill"><span class="material-symbols-outlined">calendar_today</span>${s.date}</span>
+    <span class="meta-pill"><span class="material-symbols-outlined">location_on</span>${s.location}</span>
+    <span class="meta-pill"><span class="material-symbols-outlined">group</span>${DATA.participants.length}명 참여</span>
+    <span class="meta-pill"><span class="material-symbols-outlined">psychology</span>${s.note}</span>
+  `;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RENDER: STATS
+   ═══════════════════════════════════════════════════════════════ */
+function renderStats() {
+  const el = document.getElementById('stats-el');
+  const allBrands = getAllBrands();
+  const topBrand = allBrands[0];
+  el.innerHTML = `
+    <div class="stat-cell">
+      <div class="stat-label">카테고리</div>
+      <div class="stat-val hl">${DATA.categories.length}</div>
+      <div class="stat-sub">질문 카테고리 수</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">언급 브랜드</div>
+      <div class="stat-val">${uniqueBrandCount()}</div>
+      <div class="stat-sub">중복 제거 기준</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">총 언급 수</div>
+      <div class="stat-val">${totalMentions()}</div>
+      <div class="stat-sub">${DATA.participants.length}명 × ${DATA.categories.length}개 카테고리</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">전체 Top Brand</div>
+      <div class="stat-val" style="font-size:1.3rem;margin-top:.2rem;color:#FCD34D;">${topBrand.name}</div>
+      <div class="stat-sub">${topBrand.total}회 언급</div>
+    </div>
+  `;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RENDER: CATEGORIES
+   ═══════════════════════════════════════════════════════════════ */
+function renderCategories() {
+  const el = document.getElementById('categories-el');
+  el.innerHTML = DATA.categories.map(cat => {
+    const sorted = [...cat.brands].sort((a,b) => b.mentions.length - a.mentions.length);
+    const maxMentions = sorted[0].mentions.length;
+
+    const brandCards = sorted.map((brand, idx) => {
+      const isTop = brand.mentions.length === maxMentions && idx === 0;
+      const rankLabel = idx === 0 ? '#1 TOP' : `#${idx + 1}`;
+      const rankClass = idx === 0 ? 'rank-1' : '';
+
+      const quotes = brand.mentions.map(m => `
+        <div class="mention-row">
+          <div class="person-chip ${m.cls}">${m.person}</div>
+          <div class="mention-quote">"${m.quote}"</div>
+        </div>
+      `).join('');
+
+      return `
+        <div class="brand-card ${isTop ? 'is-top' : ''}">
+          <div class="brand-meta-row">
+            <span class="brand-rank-badge ${rankClass}">${rankLabel}</span>
+            <span class="mention-count-badge">
+              <span class="material-symbols-outlined">record_voice_over</span>
+              ${brand.mentions.length}명
+            </span>
+          </div>
+          <div class="brand-name">${brand.name}</div>
+          <div class="mention-list">${quotes}</div>
+        </div>
+      `;
+    }).join('');
+
+    return `
+      <div class="category-block">
+        <div class="cat-header">
+          <div class="cat-header-left">
+            <div class="cat-icon-wrap">
+              <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">${cat.icon}</span>
+            </div>
+            <div>
+              <div class="cat-tag">${cat.tag}</div>
+              <div class="cat-question">"${cat.question}"</div>
+            </div>
+          </div>
+          <span class="cat-brand-count">${cat.brands.length}개 브랜드 언급</span>
+        </div>
+        <div class="brands-scroll">${brandCards}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RENDER: ANALYSIS
+   ═══════════════════════════════════════════════════════════════ */
+function renderAnalysis() {
+  const el = document.getElementById('analysis-el');
+  const allBrands = getAllBrands();
+  const topPerCat = getTopBrandPerCat();
+  const maxTotal = allBrands[0].total;
+
+  /* Leaderboard */
+  const leaderboardRows = allBrands.slice(0, 7).map((b, i) => {
+    const pct = Math.round((b.total / maxTotal) * 100);
+    const isTop = i === 0;
+    const catTags = [...new Set(b.cats)].map(t =>
+      `<span class="lb-cat-tag">${t}</span>`
+    ).join(' ');
+    return `
+      <div class="leaderboard-row">
+        <div class="lb-rank ${isTop ? 'top' : ''}">${isTop ? '🏆' : i + 1}</div>
+        <div class="lb-name">${b.name}</div>
+        ${catTags}
+        <div class="lb-bar-wrap">
+          <div class="lb-bar ${isTop ? 'gold' : ''}" style="width:${pct}%"></div>
+        </div>
+        <div style="font-size:.72rem;font-weight:800;color:${isTop ? '#FCD34D' : 'rgba(255,255,255,.35)'};min-width:24px;text-align:right;">${b.total}</div>
+      </div>
+    `;
+  }).join('');
+
+  /* Participant summary */
+  const participantRows = DATA.participants.map(p => `
+    <div class="participant-row">
+      <div class="p-chip-lg ${p.cls}">${p.id}</div>
+      <div class="p-detail">
+        <div class="p-name">${p.label}</div>
+        <div class="p-top-brand">즐겨 추천 · ${p.topBrand}</div>
+      </div>
+      <div class="p-mention-count">${p.mentions}회</div>
+    </div>
+  `).join('');
+
+  /* Category winners */
+  const winnerRows = topPerCat.map(w => `
+    <div class="leaderboard-row">
+      <span class="lb-cat-tag" style="min-width:44px;text-align:center;">${w.catTag}</span>
+      <div class="lb-name">${w.brandName}</div>
+      <div style="font-size:.72rem;font-weight:800;color:var(--accent-text);min-width:24px;text-align:right;">${w.count}</div>
+    </div>
+  `).join('');
+
+  el.innerHTML = `
+    <div class="analysis-title">종합 분석 · Summary</div>
+    <div class="analysis-grid">
+      <div class="analysis-card">
+        <div class="analysis-card-title">전체 브랜드 언급 순위</div>
+        ${leaderboardRows}
+      </div>
+      <div class="analysis-card">
+        <div class="analysis-card-title">카테고리별 1위 브랜드</div>
+        ${winnerRows}
+      </div>
+      <div class="analysis-card">
+        <div class="analysis-card-title">참여자 요약</div>
+        ${participantRows}
+        <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid rgba(37,37,45,.7);">
+          <span class="diversity-badge">
+            <span class="material-symbols-outlined" style="font-size:12px;">auto_awesome</span>
+            ${uniqueBrandCount()}개 브랜드 발굴
+          </span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════════════════════════════ */
+renderMeta();
+renderStats();
+renderCategories();
+renderAnalysis();
+</script>
+
+</body>
+</html>

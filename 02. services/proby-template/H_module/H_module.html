@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link rel="stylesheet" as="style"
+  href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.css"
+  integrity="sha384-y9k2lBaj/ETgBd4674Kql3098euvZU5fWlBcBBrlROBI6c2KDmjWhd508Rfsx9R/"
+  crossorigin="anonymous"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<title>Head Hunter | Proby</title>
+<script>
+tailwind.config = {
+  theme: { extend: { fontFamily: { display: ['Pretendard','-apple-system','BlinkMacSystemFont','system-ui','sans-serif'] } } }
+}
+</script>
+<style>
+:root {
+  --bg:          #0A0A0B;
+  --surface:     #111114;
+  --card:        #19191E;
+  --border:      #25252D;
+  --accent-dim:  #1E3050;
+  --accent:      #28406E;
+  --accent-hi:   #4168AF;
+  --accent-text: #7DA3E0;
+  --accent-lt:   #A3C2EF;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  margin: 0;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  color: rgba(255,255,255,.82);
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 1; opacity: 0.5;
+}
+
+.page { max-width: 1600px; margin: 0 auto; padding: 0 0 6rem; position: relative; z-index: 2; }
+
+/* ── Hero ── */
+.hh-hero {
+  padding: 2.5rem 2rem 3.5rem; position: relative; overflow: hidden;
+}
+.section-label {
+  font-size: .6rem; font-weight: 900; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--accent-text); opacity: .7; margin-bottom: .875rem;
+}
+.grad-text {
+  background: linear-gradient(135deg, #ffffff 20%, var(--accent-lt) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.blob {
+  position: absolute; border-radius: 50%; filter: blur(140px); pointer-events: none;
+}
+
+/* ── Candidate selector strip ── */
+.candidate-strip {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(10,10,11,.93);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  padding: .55rem 1.5rem .5rem;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+}
+
+@keyframes strip-glow {
+  0%, 100% { box-shadow: 0 0 0 1px rgba(65,104,175,.12), 0 0 8px rgba(65,104,175,.07); }
+  50%       { box-shadow: 0 0 0 1px rgba(65,104,175,.28), 0 0 16px rgba(65,104,175,.15); }
+}
+.candidate-nav {
+  display: flex; align-items: center; gap: .3rem; flex-shrink: 0;
+  background: rgba(65,104,175,.07);
+  border: 1px solid rgba(65,104,175,.2);
+  border-radius: .52rem; padding: .2rem .28rem;
+  animation: strip-glow 3s ease-in-out infinite;
+}
+.nav-btn {
+  flex-shrink: 0; width: 30px; height: 30px; border-radius: .38rem;
+  background: rgba(65,104,175,.09); border: 1px solid rgba(65,104,175,.28);
+  color: rgba(125,163,224,.7); cursor: pointer; transition: all .18s;
+  display: flex; align-items: center; justify-content: center;
+  font-family: inherit;
+}
+.nav-btn:hover { background: rgba(65,104,175,.2); color: #A3C2EF; border-color: rgba(65,104,175,.65); box-shadow: 0 0 10px rgba(65,104,175,.22); }
+.nav-btn:disabled { opacity: .15; cursor: default; pointer-events: none; }
+.nav-btn .material-symbols-outlined { font-size: 1.1rem !important; }
+
+.nav-counter {
+  font-size: .52rem; font-weight: 700; color: rgba(125,163,224,.6);
+  letter-spacing: .06em; min-width: 26px; text-align: center;
+  line-height: 1;
+}
+
+.candidate-identity {
+  display: flex; align-items: center; gap: .55rem;
+}
+.candidate-avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: linear-gradient(135deg, rgba(14,24,48,.95), rgba(30,48,80,.8));
+  border: 1.5px solid rgba(65,104,175,.45);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .82rem; font-weight: 900; color: rgba(125,163,224,.9);
+  letter-spacing: -.02em; flex-shrink: 0;
+}
+.candidate-name {
+  font-size: .88rem; font-weight: 800; color: rgba(255,255,255,.88);
+}
+.candidate-sub {
+  font-size: .58rem; color: rgba(255,255,255,.3); margin-top: .08rem;
+}
+
+.strip-divider { width: 1px; height: 28px; background: rgba(255,255,255,.08); flex-shrink: 0; }
+
+.strip-meta {
+  display: flex; align-items: center; gap: 1.25rem;
+}
+.strip-meta-item { display: flex; flex-direction: column; gap: .05rem; }
+.strip-meta-lbl {
+  font-size: .46rem; font-weight: 900; letter-spacing: .1em; text-transform: uppercase;
+  color: rgba(255,255,255,.22);
+}
+.strip-meta-val {
+  font-size: .62rem; color: rgba(255,255,255,.55);
+}
+
+.status-badge {
+  font-size: .52rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  padding: .18rem .55rem; border-radius: .32rem;
+}
+.status-badge.pass    { background: rgba(52,211,153,.12); border: 1px solid rgba(52,211,153,.25); color: rgba(52,211,153,.85); }
+.status-badge.hold    { background: rgba(251,191,36,.1);  border: 1px solid rgba(251,191,36,.22); color: rgba(251,191,36,.8); }
+.status-badge.reject  { background: rgba(248,65,65,.12);  border: 1px solid rgba(248,65,65,.22);  color: rgba(248,113,113,.8); }
+.status-badge.review  { background: rgba(65,104,175,.12);  border: 1px solid rgba(65,104,175,.28);  color: rgba(125,163,224,.9); }
+
+/* ── Widget grid ── */
+.widget-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+}
+
+/* ── Widget shell ── */
+.widget {
+  background: rgba(255,255,255,.02);
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 1rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.widget.span-full { grid-column: 1 / -1; }
+
+.widget-header {
+  display: flex; align-items: center; gap: .5rem;
+  padding: .75rem 1rem .65rem;
+  border-bottom: 1px solid rgba(255,255,255,.05);
+}
+.widget-icon {
+  width: 28px; height: 28px; border-radius: .4rem;
+  background: rgba(65,104,175,.08); border: 1px solid rgba(65,104,175,.2);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.widget-icon .material-symbols-outlined { font-size: .95rem !important; color: rgba(125,163,224,.7); }
+.widget-title {
+  font-size: .68rem; font-weight: 900; letter-spacing: .12em; text-transform: uppercase;
+  color: rgba(255,255,255,.35);
+}
+.widget-badge {
+  margin-left: auto;
+  font-size: .48rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  padding: .12rem .42rem; border-radius: .24rem;
+  background: rgba(65,104,175,.09); border: 1px solid rgba(65,104,175,.2);
+  color: rgba(125,163,224,.6);
+}
+.widget-body { flex: 1; padding: 1rem; }
+
+/* ── Video widget ── */
+.video-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: rgba(0,0,0,.6);
+  border-radius: .65rem;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.06);
+}
+.video-container iframe,
+.video-container video {
+  position: absolute; inset: 0; width: 100%; height: 100%; border: none;
+}
+.video-placeholder {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: .65rem;
+}
+.video-placeholder .material-symbols-outlined {
+  font-size: 2.8rem !important; color: rgba(65,104,175,.3);
+}
+.video-placeholder-text {
+  font-size: .72rem; color: rgba(255,255,255,.2); letter-spacing: .06em;
+}
+
+.video-meta {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: .5rem;
+  margin-top: .75rem;
+}
+.video-meta-cell {
+  background: rgba(255,255,255,.025); border: 1px solid rgba(255,255,255,.055);
+  border-radius: .5rem; padding: .42rem .6rem;
+}
+.video-meta-lbl {
+  font-size: .46rem; font-weight: 900; letter-spacing: .1em; text-transform: uppercase;
+  color: rgba(255,255,255,.22); margin-bottom: .12rem;
+}
+.video-meta-val {
+  font-size: .64rem; color: rgba(255,255,255,.55);
+}
+
+/* ── Transcript widget ── */
+.transcript-search {
+  display: flex; align-items: center; gap: .5rem;
+  background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08);
+  border-radius: .5rem; padding: .35rem .6rem;
+  margin-bottom: .75rem;
+}
+.transcript-search .material-symbols-outlined { font-size: .95rem !important; color: rgba(255,255,255,.22); }
+.transcript-search input {
+  background: none; border: none; outline: none;
+  font-size: .68rem; color: rgba(255,255,255,.65); width: 100%;
+  font-family: inherit;
+}
+.transcript-search input::placeholder { color: rgba(255,255,255,.2); }
+
+.transcript-scroll {
+  height: 340px; overflow-y: auto;
+  display: flex; flex-direction: column; gap: .5rem;
+  padding-right: .25rem;
+}
+.transcript-scroll::-webkit-scrollbar { width: 3px; }
+.transcript-scroll::-webkit-scrollbar-track { background: transparent; }
+.transcript-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,.08); border-radius: 2px; }
+
+.tx-line {
+  display: flex; gap: .65rem; align-items: flex-start;
+}
+.tx-time {
+  flex-shrink: 0; font-size: .52rem; font-weight: 700;
+  color: rgba(125,163,224,.45);
+  padding-top: .1rem; width: 38px;
+}
+.tx-speaker {
+  flex-shrink: 0; font-size: .55rem; font-weight: 700;
+  color: rgba(255,255,255,.28); width: 56px; padding-top: .12rem;
+  text-transform: uppercase; letter-spacing: .04em;
+}
+.tx-text {
+  font-size: .7rem; color: rgba(255,255,255,.55); line-height: 1.58;
+}
+.tx-line.highlighted .tx-text {
+  color: rgba(255,255,255,.82); background: rgba(65,104,175,.09);
+  border-radius: .3rem; padding: .1rem .35rem; margin-left: -.35rem;
+}
+
+.tx-section-divider {
+  display: flex; align-items: center; gap: .5rem; margin: .25rem 0;
+}
+.tx-section-divider-line { flex: 1; height: 1px; background: rgba(255,255,255,.05); }
+.tx-section-label {
+  font-size: .48rem; font-weight: 900; letter-spacing: .1em; text-transform: uppercase;
+  color: rgba(255,255,255,.16); white-space: nowrap;
+}
+
+/* ── Evaluation widget ── */
+.eval-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.eval-summary {
+  font-size: .78rem; color: rgba(255,255,255,.55); line-height: 1.75;
+  border-left: 2px solid rgba(65,104,175,.45); padding-left: .85rem;
+  margin-bottom: 1rem;
+}
+.eval-summary strong { color: rgba(255,255,255,.8); font-weight: 700; }
+
+.eval-section-lbl {
+  font-size: .52rem; font-weight: 900; letter-spacing: .12em; text-transform: uppercase;
+  color: rgba(255,255,255,.22); margin-bottom: .5rem;
+}
+
+.eval-points {
+  display: flex; flex-direction: column; gap: .45rem;
+}
+.eval-point {
+  display: flex; align-items: flex-start; gap: .55rem;
+  background: rgba(255,255,255,.025); border: 1px solid rgba(255,255,255,.055);
+  border-radius: .55rem; padding: .55rem .7rem;
+}
+.eval-point-icon .material-symbols-outlined { font-size: 1rem !important; }
+.eval-point.positive .eval-point-icon .material-symbols-outlined { color: rgba(52,211,153,.7); }
+.eval-point.caution  .eval-point-icon .material-symbols-outlined { color: rgba(251,191,36,.7); }
+.eval-point.negative .eval-point-icon .material-symbols-outlined { color: rgba(248,113,113,.7); }
+.eval-point-body { flex: 1; min-width: 0; }
+.eval-point-label {
+  font-size: .56rem; font-weight: 900; letter-spacing: .06em; text-transform: uppercase;
+  color: rgba(255,255,255,.3); margin-bottom: .15rem;
+}
+.eval-point.positive .eval-point-label { color: rgba(52,211,153,.5); }
+.eval-point.caution  .eval-point-label { color: rgba(251,191,36,.45); }
+.eval-point.negative .eval-point-label { color: rgba(248,113,113,.45); }
+.eval-point-text { font-size: .68rem; color: rgba(255,255,255,.52); line-height: 1.55; }
+
+/* Score panel */
+.score-panel {
+  display: flex; flex-direction: column; gap: .65rem;
+}
+.score-card {
+  background: rgba(255,255,255,.025); border: 1px solid rgba(255,255,255,.06);
+  border-radius: .65rem; padding: .65rem .8rem;
+}
+.score-card-lbl {
+  font-size: .5rem; font-weight: 900; letter-spacing: .1em; text-transform: uppercase;
+  color: rgba(255,255,255,.25); margin-bottom: .35rem;
+}
+.score-bar-wrap {
+  display: flex; align-items: center; gap: .6rem;
+}
+.score-bar-bg {
+  flex: 1; height: 5px; background: rgba(255,255,255,.06); border-radius: 3px; overflow: hidden;
+}
+.score-bar-fill {
+  height: 100%; border-radius: 3px; transition: width .6s cubic-bezier(.4,0,.2,1);
+}
+.score-bar-fill.green  { background: linear-gradient(90deg, rgba(52,211,153,.5), rgba(52,211,153,.85)); }
+.score-bar-fill.cyan   { background: linear-gradient(90deg, rgba(65,104,175,.45), rgba(65,104,175,.9)); }
+.score-bar-fill.amber  { background: linear-gradient(90deg, rgba(251,191,36,.4), rgba(251,191,36,.8)); }
+.score-bar-fill.purple { background: linear-gradient(90deg, rgba(167,139,250,.4), rgba(167,139,250,.85)); }
+.score-bar-fill.red    { background: linear-gradient(90deg, rgba(248,113,113,.4), rgba(248,113,113,.8)); }
+.score-num {
+  font-size: .68rem; font-weight: 700; color: rgba(255,255,255,.55);
+  flex-shrink: 0; min-width: 24px; text-align: right;
+}
+
+.verdict-box {
+  background: rgba(65,104,175,.07); border: 1px solid rgba(65,104,175,.25);
+  border-radius: .65rem; padding: .75rem .85rem;
+}
+.verdict-lbl {
+  font-size: .48rem; font-weight: 900; letter-spacing: .12em; text-transform: uppercase;
+  color: rgba(125,163,224,.5); margin-bottom: .4rem;
+}
+.verdict-text {
+  font-size: .82rem; font-weight: 800; line-height: 1.45;
+}
+.verdict-sub {
+  font-size: .62rem; color: rgba(125,163,224,.5); margin-top: .3rem; line-height: 1.55;
+}
+
+/* ── Tag chips ── */
+.tag-chip {
+  display: inline-flex; align-items: center; gap: .22rem;
+  font-size: .58rem; font-weight: 600; padding: .18rem .52rem;
+  border-radius: .32rem;
+}
+.tag-chip.cyan   { background: rgba(65,104,175,.12); border: 1px solid rgba(65,104,175,.22); color: rgba(163,194,239,.85); }
+.tag-chip.green  { background: rgba(52,211,153,.1);  border: 1px solid rgba(52,211,153,.2); color: rgba(52,211,153,.8); }
+.tag-chip.amber  { background: rgba(251,191,36,.1);  border: 1px solid rgba(251,191,36,.2); color: rgba(251,191,36,.8); }
+.tag-chip.purple { background: rgba(167,139,250,.1); border: 1px solid rgba(167,139,250,.2); color: rgba(167,139,250,.8); }
+.tag-chip.red    { background: rgba(248,113,113,.1); border: 1px solid rgba(248,113,113,.2); color: rgba(248,113,113,.8); }
+
+.tags-row { display: flex; flex-wrap: wrap; gap: .3rem; margin-bottom: .65rem; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ═══ HERO ═══ -->
+  <section class="hh-hero">
+    <div class="blob w-[700px] h-[700px]" style="background:#1E3050;opacity:0.18;top:-200px;left:-150px;"></div>
+    <div class="blob w-[400px] h-[400px]" style="background:#25252D;opacity:0.15;top:100px;right:-100px;"></div>
+    <div class="relative" style="display:flex;align-items:flex-start;gap:2.5rem;flex-wrap:wrap;">
+      <div style="flex:1;min-width:260px;">
+        <div class="section-label" style="opacity:.9;">PROBY · Candidate Review</div>
+        <h1 style="font-size:2.6rem;font-weight:900;letter-spacing:-.03em;line-height:1.15;margin-bottom:.75rem;">
+          <span class="grad-text">Head</span> Hunter
+        </h1>
+        <p style="font-size:.88rem;color:rgba(255,255,255,.42);max-width:480px;line-height:1.75;margin-bottom:.3rem;">
+          지원자 인터뷰 영상, 전사록, 총평을 한 화면에서 조회합니다.
+        </p>
+        <p style="font-size:.75rem;color:var(--accent-text);opacity:.45;max-width:520px;line-height:1.65;">
+          영역별 위젯으로 구성되어 있으며 지원자를 선택해 전환할 수 있습니다.
+        </p>
+      </div>
+      <div style="flex-shrink:0;padding-top:.5rem;display:flex;flex-direction:column;align-items:flex-end;gap:.75rem;">
+        <img src="../Brand assets/proby/logo-text-white.png" alt="Proby"
+             style="height:22px;object-fit:contain;opacity:.55;"/>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CANDIDATE STRIP ═══ -->
+  <div class="candidate-strip" id="candidate-strip">
+    <div class="candidate-nav">
+      <button class="nav-btn" id="prev-btn" onclick="navigate(-1)">
+        <span class="material-symbols-outlined">chevron_left</span>
+      </button>
+      <span class="nav-counter" id="nav-counter">1 / 3</span>
+      <button class="nav-btn" id="next-btn" onclick="navigate(1)">
+        <span class="material-symbols-outlined">chevron_right</span>
+      </button>
+    </div>
+
+    <div class="candidate-identity">
+      <div class="candidate-avatar" id="strip-avatar">K</div>
+      <div>
+        <div class="candidate-name" id="strip-name">김민준</div>
+        <div class="candidate-sub" id="strip-pos">프론트엔드 개발자 · 경력 4년</div>
+      </div>
+    </div>
+
+    <div class="strip-divider"></div>
+
+    <div class="strip-meta">
+      <div class="strip-meta-item">
+        <div class="strip-meta-lbl">인터뷰 일시</div>
+        <div class="strip-meta-val" id="strip-date">2026-04-02</div>
+      </div>
+      <div class="strip-meta-item">
+        <div class="strip-meta-lbl">포지션</div>
+        <div class="strip-meta-val" id="strip-role">FE Engineer</div>
+      </div>
+      <div class="strip-meta-item">
+        <div class="strip-meta-lbl">면접관</div>
+        <div class="strip-meta-val" id="strip-interviewer">이지은, 박세준</div>
+      </div>
+    </div>
+
+    <div class="strip-divider"></div>
+
+    <span class="status-badge" id="strip-status">검토 중</span>
+  </div>
+
+  <!-- ═══ WIDGET GRID ═══ -->
+  <div class="widget-grid">
+
+    <!-- VIDEO WIDGET -->
+    <div class="widget" id="widget-video">
+      <div class="widget-header">
+        <div class="widget-icon"><span class="material-symbols-outlined">videocam</span></div>
+        <span class="widget-title">인터뷰 영상</span>
+        <span class="widget-badge" id="video-duration">37:14</span>
+      </div>
+      <div class="widget-body">
+        <div class="video-container" id="video-container">
+          <div class="video-placeholder" id="video-placeholder">
+            <span class="material-symbols-outlined">play_circle</span>
+            <div class="video-placeholder-text">영상 파일을 연결하거나 URL을 입력하세요</div>
+          </div>
+        </div>
+        <div class="video-meta">
+          <div class="video-meta-cell">
+            <div class="video-meta-lbl">녹화 품질</div>
+            <div class="video-meta-val" id="vm-quality">HD 1080p</div>
+          </div>
+          <div class="video-meta-cell">
+            <div class="video-meta-lbl">언어</div>
+            <div class="video-meta-val" id="vm-lang">한국어</div>
+          </div>
+          <div class="video-meta-cell">
+            <div class="video-meta-lbl">진행 방식</div>
+            <div class="video-meta-val" id="vm-format">화상 · Zoom</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRANSCRIPT WIDGET -->
+    <div class="widget" id="widget-transcript">
+      <div class="widget-header">
+        <div class="widget-icon"><span class="material-symbols-outlined">description</span></div>
+        <span class="widget-title">전사록</span>
+        <span class="widget-badge" id="tx-count">42 segments</span>
+      </div>
+      <div class="widget-body">
+        <div class="transcript-search">
+          <span class="material-symbols-outlined">search</span>
+          <input type="text" placeholder="키워드로 검색..." id="tx-search" oninput="filterTranscript(this.value)"/>
+        </div>
+        <div class="transcript-scroll" id="tx-scroll">
+          <!-- filled by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- EVALUATION WIDGET -->
+    <div class="widget span-full" id="widget-eval">
+      <div class="widget-header">
+        <div class="widget-icon"><span class="material-symbols-outlined">rate_review</span></div>
+        <span class="widget-title">총평</span>
+        <span class="widget-badge" id="eval-date-badge">2026-04-02 작성</span>
+      </div>
+      <div class="widget-body">
+        <div class="tags-row" id="eval-tags"></div>
+        <div class="eval-grid">
+          <div>
+            <div class="eval-section-lbl">종합 소견</div>
+            <p class="eval-summary" id="eval-summary"></p>
+            <div class="eval-section-lbl">세부 평가</div>
+            <div class="eval-points" id="eval-points"></div>
+          </div>
+          <div class="score-panel">
+            <div class="eval-section-lbl">역량 점수</div>
+            <div id="score-cards"></div>
+            <div class="verdict-box" id="verdict-box">
+              <div class="verdict-lbl">최종 의견</div>
+              <div class="verdict-text" id="verdict-text"></div>
+              <div class="verdict-sub" id="verdict-sub"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /widget-grid -->
+</div><!-- /page -->
+
+<script>
+/* ══════════════════════════════════════════
+   DATA
+══════════════════════════════════════════ */
+const CANDIDATES = [
+  {
+    id: 'kmj',
+    name: '김민준',
+    initials: 'K',
+    position: '프론트엔드 개발자 · 경력 4년',
+    date: '2026-04-02',
+    role: 'FE Engineer',
+    interviewer: '이지은, 박세준',
+    status: { label: '검토 중', cls: 'review' },
+    video: {
+      url: '',   /* YouTube embed URL or mp4 */
+      duration: '37:14',
+      quality: 'HD 1080p',
+      lang: '한국어',
+      format: '화상 · Zoom',
+    },
+    transcript: [
+      { time: '00:12', speaker: '면접관', text: '간단하게 자기소개 부탁드립니다.' },
+      { time: '00:22', speaker: '김민준', text: '안녕하세요. 저는 4년차 프론트엔드 개발자 김민준입니다. 주로 React와 TypeScript 기반의 프로덕트를 담당해왔고, 최근 2년은 디자인 시스템 구축에 집중했습니다.', highlight: false },
+      { section: '기술 역량' },
+      { time: '03:40', speaker: '면접관', text: 'React 상태 관리는 어떤 방식을 선호하시나요?' },
+      { time: '03:51', speaker: '김민준', text: '프로젝트 규모에 따라 다르게 접근합니다. 소규모면 Context API와 useReducer 조합, 중대형에선 Zustand나 Jotai를 씁니다. Redux는 보일러플레이트 비용이 크다고 생각해서 새 프로젝트에선 지양합니다.', highlight: true },
+      { time: '05:20', speaker: '면접관', text: '성능 최적화 경험이 있으신가요?' },
+      { time: '05:31', speaker: '김민준', text: 'Core Web Vitals 개선 작업을 리드한 경험이 있습니다. LCP를 3.8초에서 1.4초로 줄였고, 이미지 최적화, 코드 스플리팅, 사전 렌더링 전략을 혼합했습니다.' },
+      { section: '협업 및 문화' },
+      { time: '14:05', speaker: '면접관', text: '팀 내 코드 리뷰 문화는 어떻게 만들어가셨나요?' },
+      { time: '14:18', speaker: '김민준', text: '팀에 리뷰 체크리스트를 직접 만들어서 도입했습니다. 처음엔 저항이 있었지만, 결국 PR 사이클이 30% 단축됐습니다.', highlight: true },
+      { time: '18:33', speaker: '면접관', text: '의견 충돌이 있을 때 어떻게 해결하시나요?' },
+      { time: '18:44', speaker: '김민준', text: '기술적인 부분은 항상 데이터로 대화합니다. 측정 가능한 지표가 없으면 작은 실험부터 제안하는 편입니다.' },
+      { section: '커리어 방향' },
+      { time: '28:10', speaker: '면접관', text: '5년 후 어떤 모습을 그리고 계신가요?' },
+      { time: '28:22', speaker: '김민준', text: '기술 리드로서 팀의 생산성을 높이는 역할을 하고 싶습니다. 개인 퍼포먼스보다 팀 전체의 레벨업에 기여하는 게 더 의미 있다고 생각합니다.', highlight: true },
+    ],
+    eval: {
+      date: '2026-04-02',
+      tags: [
+        { label: 'React 전문가', color: 'cyan' },
+        { label: '성능 최적화', color: 'green' },
+        { label: '문서화 강점', color: 'cyan' },
+        { label: '리더십 잠재력', color: 'purple' },
+        { label: '영어 소통 보완 필요', color: 'amber' },
+      ],
+      summary: '전반적으로 <strong>기술 깊이와 팀 협업 역량</strong>이 균형 잡혀 있는 지원자입니다. 프론트엔드 핵심 영역에서 실전 경험이 풍부하며, 특히 성능 지표 중심의 사고방식이 인상적입니다. 다만 영어 기술 문서 작성 경험은 부족해 보이며, 글로벌 팀 협업 시 초기 적응 기간이 필요할 수 있습니다.',
+      points: [
+        { type: 'positive', icon: 'check_circle', label: '강점', text: 'Core Web Vitals 개선 사례가 구체적이며 수치 기반으로 성과를 설명함. 실행력과 데이터 사고가 명확히 드러남.' },
+        { type: 'positive', icon: 'check_circle', label: '강점', text: '코드 리뷰 문화 도입 경험에서 팀 개선 이니셔티브를 능동적으로 주도하는 태도 확인.' },
+        { type: 'caution', icon: 'warning', label: '보완 사항', text: '영어 기술 문서 및 커뮤니케이션 경험 부족. 글로벌 팀에 합류할 경우 초기 온보딩 지원이 필요할 수 있음.' },
+        { type: 'negative', icon: 'cancel', label: '리스크', text: '백엔드 연동 경험이 제한적이며, 풀스택 과제 대응 시 자립도가 낮을 가능성 있음.' },
+      ],
+      scores: [
+        { label: '기술 역량', value: 88, color: 'cyan' },
+        { label: '커뮤니케이션', value: 78, color: 'green' },
+        { label: '문제 해결력', value: 84, color: 'purple' },
+        { label: '성장 가능성', value: 90, color: 'cyan' },
+        { label: '문화 적합도', value: 75, color: 'amber' },
+      ],
+      verdict: '합격 권고',
+      verdictSub: '기술 역량과 팀 기여 의지가 충분합니다. 온보딩 프로그램에서 영어 커뮤니케이션 보강을 권장합니다.',
+      verdictStatus: 'pass',
+    },
+  },
+
+  {
+    id: 'lsh',
+    name: '이수현',
+    initials: 'L',
+    position: '백엔드 개발자 · 경력 6년',
+    date: '2026-04-03',
+    role: 'BE Engineer',
+    interviewer: '박세준',
+    status: { label: '보류', cls: 'hold' },
+    video: {
+      url: '',
+      duration: '44:02',
+      quality: 'HD 1080p',
+      lang: '한국어',
+      format: '화상 · Google Meet',
+    },
+    transcript: [
+      { time: '00:08', speaker: '면접관', text: '자기소개 부탁드립니다.' },
+      { time: '00:18', speaker: '이수현', text: '안녕하세요, 이수현입니다. 주로 Node.js와 Go 기반의 마이크로서비스 아키텍처를 설계하고 운영해왔습니다.' },
+      { section: '아키텍처 경험' },
+      { time: '04:15', speaker: '면접관', text: '가장 복잡했던 시스템 설계 경험을 말씀해 주세요.' },
+      { time: '04:28', speaker: '이수현', text: '일일 트랜잭션 500만 건을 처리하는 결제 시스템을 모놀리스에서 마이크로서비스로 전환했습니다. 가장 어려웠던 부분은 분산 트랜잭션 처리와 서비스 간 데이터 정합성 유지였습니다.', highlight: true },
+      { section: '기술 깊이' },
+      { time: '18:50', speaker: '면접관', text: 'Redis를 어떤 방식으로 활용하셨나요?' },
+      { time: '19:03', speaker: '이수현', text: '세션 관리, 분산 락, 캐싱 레이어로 다양하게 사용했습니다. 특히 Lua 스크립트로 원자적 연산을 구현해 레이스 컨디션을 방지한 경험이 있습니다.' },
+      { time: '24:40', speaker: '면접관', text: '장애 대응 경험이 있으신가요?' },
+      { time: '24:52', speaker: '이수현', text: 'DB 커넥션 풀 고갈로 인한 서비스 다운을 경험했습니다. 온콜 상황에서 30분 내 롤백하고, 근본 원인을 72시간 내에 분석해 재발 방지 조치를 완료했습니다.', highlight: true },
+    ],
+    eval: {
+      date: '2026-04-03',
+      tags: [
+        { label: '마이크로서비스', color: 'cyan' },
+        { label: '분산 시스템', color: 'purple' },
+        { label: '장애 대응', color: 'green' },
+        { label: '연봉 기대치 높음', color: 'amber' },
+      ],
+      summary: '<strong>시스템 설계 역량이 탁월</strong>하며, 대규모 트래픽 환경에서의 실전 경험이 풍부합니다. 기술적 판단력과 장애 대응 역량은 팀에 즉각적인 기여가 가능한 수준입니다. 다만 연봉 기대치가 밴드 상단을 초과하여 보상 협의가 필요합니다.',
+      points: [
+        { type: 'positive', icon: 'check_circle', label: '강점', text: '분산 트랜잭션 설계와 대용량 시스템 마이그레이션 경험이 매우 구체적이고 실전적임.' },
+        { type: 'positive', icon: 'check_circle', label: '강점', text: 'Redis Lua 스크립트 활용 등 기술 깊이가 시니어 레벨 이상으로 확인됨.' },
+        { type: 'caution', icon: 'warning', label: '보완 사항', text: '연봉 기대치가 현재 밴드 상단보다 약 15% 높음. 보상 구조 논의 필요.' },
+      ],
+      scores: [
+        { label: '기술 역량', value: 94, color: 'cyan' },
+        { label: '커뮤니케이션', value: 80, color: 'green' },
+        { label: '문제 해결력', value: 92, color: 'purple' },
+        { label: '성장 가능성', value: 85, color: 'cyan' },
+        { label: '문화 적합도', value: 82, color: 'amber' },
+      ],
+      verdict: '보류 — 조건 협의 필요',
+      verdictSub: '기술 역량은 최상위권입니다. 연봉 조건 협의 후 재검토를 권장합니다.',
+      verdictStatus: 'hold',
+    },
+  },
+
+  {
+    id: 'cjh',
+    name: '최지현',
+    initials: 'C',
+    position: '프로덕트 디자이너 · 경력 3년',
+    date: '2026-04-04',
+    role: 'Product Designer',
+    interviewer: '이지은',
+    status: { label: '불합격', cls: 'reject' },
+    video: {
+      url: '',
+      duration: '28:47',
+      quality: 'HD 720p',
+      lang: '한국어',
+      format: '대면 · 서울 오피스',
+    },
+    transcript: [
+      { time: '00:10', speaker: '면접관', text: '자기소개 부탁드립니다.' },
+      { time: '00:20', speaker: '최지현', text: '안녕하세요, 최지현입니다. 스타트업 두 곳에서 프로덕트 디자이너로 일했고, 현재는 B2B SaaS 대시보드를 주로 담당하고 있습니다.' },
+      { section: '포트폴리오 리뷰' },
+      { time: '05:30', speaker: '면접관', text: '이 대시보드 프로젝트에서 본인의 역할은 무엇이었나요?' },
+      { time: '05:42', speaker: '최지현', text: '전체 UI 디자인을 담당했습니다. Figma로 와이어프레임부터 프로토타입까지 진행했습니다.' },
+      { time: '07:15', speaker: '면접관', text: '사용자 리서치는 어떻게 진행하셨나요?' },
+      { time: '07:28', speaker: '최지현', text: '팀에 리서처가 따로 있어서 저는 주로 디자인 작업에 집중했습니다. 리서치 결과를 전달받아 반영하는 방식이었습니다.' },
+      { section: '문제 해결' },
+      { time: '18:00', speaker: '면접관', text: '디자인 결정에 대해 개발팀과 갈등이 있었던 경험이 있나요?' },
+      { time: '18:14', speaker: '최지현', text: '크게 갈등이 있었던 경험은 없었습니다. 개발팀이 어렵다고 하면 대부분 디자인을 조정했습니다.' },
+    ],
+    eval: {
+      date: '2026-04-04',
+      tags: [
+        { label: 'Figma 숙련', color: 'cyan' },
+        { label: '리서치 경험 부족', color: 'red' },
+        { label: '주도성 낮음', color: 'red' },
+      ],
+      summary: '비주얼 디자인 역량은 기본기 수준을 갖추고 있으나, <strong>사용자 리서치 주도 경험과 의사결정 근거 제시 능력이 부족</strong>합니다. 팀 내 갈등 상황에서 자신의 관점을 설득력 있게 유지하는 역량이 기대 수준에 미치지 못했습니다.',
+      points: [
+        { type: 'positive', icon: 'check_circle', label: '강점', text: 'Figma 툴 활용 수준은 양호하며 시각적 완성도는 준수함.' },
+        { type: 'negative', icon: 'cancel', label: '리스크', text: '사용자 리서치를 주도한 경험이 없으며, 데이터 기반 디자인 결정 프로세스에 대한 이해가 부족함.' },
+        { type: 'negative', icon: 'cancel', label: '리스크', text: '개발팀과의 협상에서 디자인 원칙을 지키지 못하는 패턴이 확인됨. 주도성과 설득력이 요구 수준에 미달.' },
+      ],
+      scores: [
+        { label: '비주얼 역량', value: 70, color: 'amber' },
+        { label: '커뮤니케이션', value: 62, color: 'amber' },
+        { label: '문제 해결력', value: 55, color: 'red' },
+        { label: '성장 가능성', value: 65, color: 'amber' },
+        { label: '문화 적합도', value: 68, color: 'amber' },
+      ],
+      verdict: '불합격',
+      verdictSub: '현재 요구되는 시니어급 디자인 오너십 역량에 미치지 못합니다.',
+      verdictStatus: 'reject',
+    },
+  },
+];
+
+/* ══════════════════════════════════════════
+   STATE
+══════════════════════════════════════════ */
+let currentIdx = 0;
+
+/* ══════════════════════════════════════════
+   RENDER
+══════════════════════════════════════════ */
+function render() {
+  const c = CANDIDATES[currentIdx];
+
+  /* Strip */
+  document.getElementById('strip-avatar').textContent     = c.initials;
+  document.getElementById('strip-name').textContent       = c.name;
+  document.getElementById('strip-pos').textContent        = c.position;
+  document.getElementById('strip-date').textContent       = c.date;
+  document.getElementById('strip-role').textContent       = c.role;
+  document.getElementById('strip-interviewer').textContent = c.interviewer;
+  document.getElementById('nav-counter').textContent      = `${currentIdx + 1} / ${CANDIDATES.length}`;
+  document.getElementById('prev-btn').disabled            = currentIdx === 0;
+  document.getElementById('next-btn').disabled            = currentIdx === CANDIDATES.length - 1;
+
+  const sb = document.getElementById('strip-status');
+  sb.textContent = c.status.label;
+  sb.className = `status-badge ${c.status.cls}`;
+
+  /* Video */
+  document.getElementById('video-duration').textContent = c.video.duration;
+  document.getElementById('vm-quality').textContent     = c.video.quality;
+  document.getElementById('vm-lang').textContent        = c.video.lang;
+  document.getElementById('vm-format').textContent      = c.video.format;
+
+  const vc = document.getElementById('video-container');
+  if (c.video.url) {
+    vc.innerHTML = `<iframe src="${c.video.url}" allowfullscreen></iframe>`;
+  } else {
+    vc.innerHTML = `
+      <div class="video-placeholder">
+        <span class="material-symbols-outlined">play_circle</span>
+        <div class="video-placeholder-text">${c.name}의 인터뷰 영상</div>
+      </div>`;
+  }
+
+  /* Transcript */
+  renderTranscript(c.transcript, '');
+
+  /* Eval */
+  const ev = c.eval;
+  document.getElementById('eval-date-badge').textContent = `${ev.date} 작성`;
+  document.getElementById('eval-summary').innerHTML = ev.summary;
+
+  /* Tags */
+  document.getElementById('eval-tags').innerHTML =
+    ev.tags.map(t => `<span class="tag-chip ${t.color}">${t.label}</span>`).join('');
+
+  /* Points */
+  document.getElementById('eval-points').innerHTML =
+    ev.points.map(p => `
+      <div class="eval-point ${p.type}">
+        <div class="eval-point-icon"><span class="material-symbols-outlined">${p.icon}</span></div>
+        <div class="eval-point-body">
+          <div class="eval-point-label">${p.label}</div>
+          <div class="eval-point-text">${p.text}</div>
+        </div>
+      </div>`).join('');
+
+  /* Scores */
+  document.getElementById('score-cards').innerHTML =
+    ev.scores.map(s => `
+      <div class="score-card" style="margin-bottom:.5rem;">
+        <div class="score-card-lbl">${s.label}</div>
+        <div class="score-bar-wrap">
+          <div class="score-bar-bg">
+            <div class="score-bar-fill ${s.color}" style="width:${s.value}%"></div>
+          </div>
+          <span class="score-num">${s.value}</span>
+        </div>
+      </div>`).join('');
+
+  /* Verdict */
+  const vb = document.getElementById('verdict-box');
+  document.getElementById('verdict-text').textContent = ev.verdict;
+  document.getElementById('verdict-sub').textContent  = ev.verdictSub;
+  const verdictColors = {
+    pass:   'rgba(52,211,153,.85)',
+    hold:   'rgba(251,191,36,.8)',
+    reject: 'rgba(248,113,113,.8)',
+    review: 'rgba(125,163,224,.9)',
+  };
+  document.getElementById('verdict-text').style.color = verdictColors[ev.verdictStatus] || verdictColors.review;
+}
+
+function renderTranscript(lines, query) {
+  const scroll = document.getElementById('tx-scroll');
+  const q = query.trim().toLowerCase();
+
+  let html = '';
+  let visible = 0;
+  lines.forEach(line => {
+    if (line.section !== undefined) {
+      html += `<div class="tx-section-divider">
+        <div class="tx-section-divider-line"></div>
+        <div class="tx-section-label">${line.section}</div>
+        <div class="tx-section-divider-line"></div>
+      </div>`;
+      return;
+    }
+    if (q && !line.text.toLowerCase().includes(q) && !line.speaker.toLowerCase().includes(q)) return;
+
+    const hl = line.highlight ? 'highlighted' : '';
+    const text = q
+      ? line.text.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi'), '<mark style="background:rgba(65,104,175,.28);color:inherit;border-radius:2px;">$1</mark>')
+      : line.text;
+
+    html += `
+      <div class="tx-line ${hl}">
+        <span class="tx-time">${line.time}</span>
+        <span class="tx-speaker">${line.speaker}</span>
+        <span class="tx-text">${text}</span>
+      </div>`;
+    visible++;
+  });
+
+  scroll.innerHTML = html || `<div style="color:rgba(255,255,255,.2);font-size:.72rem;text-align:center;padding:2rem 0;">"${query}"에 해당하는 내용이 없습니다.</div>`;
+  document.getElementById('tx-count').textContent = `${lines.filter(l => !l.section).length} segments`;
+}
+
+function filterTranscript(val) {
+  renderTranscript(CANDIDATES[currentIdx].transcript, val);
+}
+
+function navigate(dir) {
+  currentIdx = Math.max(0, Math.min(CANDIDATES.length - 1, currentIdx + dir));
+  document.getElementById('tx-search').value = '';
+  render();
+}
+
+/* init */
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link rel="stylesheet" as="style"
+  href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.css"
+  integrity="sha384-y9k2lBaj/ETgBd4674Kql3098euvZU5fWlBcBBrlROBI6c2KDmjWhd508Rfsx9R/"
+  crossorigin="anonymous"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<title>OOZE UNIVERSE 팝업 효과 분석 | Proby</title>
+<script>
+tailwind.config = {
+  theme: { extend: { fontFamily: { display: ['Pretendard','-apple-system','BlinkMacSystemFont','system-ui','sans-serif'] } } }
+}
+</script>
+<style>
+/* ════════════════════════════════════════════════
+   DESIGN TOKENS — Proby (dark navy)
+   Black/2  #0A0A0B · Black/5  #111114 · Black/10  #19191E · Black/20  #25252D
+   Navy/30  #1E3050 · Navy/40  #28406E · Navy/60  #4168AF · Navy/80  #7DA3E0 · Navy/90  #A3C2EF
+   ════════════════════════════════════════════════ */
+:root {
+  --bg:          #0A0A0B;
+  --surface:     #111114;
+  --card:        #19191E;
+  --border:      #25252D;
+  --accent-dim:  #1E3050;
+  --accent:      #28406E;
+  --accent-hi:   #4168AF;
+  --accent-text: #7DA3E0;
+  --accent-lt:   #A3C2EF;
+}
+
+/* ════════ BASE ════════ */
+* { box-sizing: border-box; }
+body { background: var(--bg); margin: 0; }
+
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 1; opacity: 0.5;
+}
+
+.page {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 0 6rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* ════════ HERO ════════ */
+.ct-hero {
+  padding: 2.5rem 2rem 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.section-label {
+  font-size: .6rem; font-weight: 900; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--accent-text); opacity: .7;
+  margin-bottom: .875rem;
+}
+
+.grad-text {
+  background: linear-gradient(135deg, #ffffff 20%, var(--accent-lt) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+.blob { position: absolute; border-radius: 50%; filter: blur(140px); pointer-events: none; }
+
+/* ════════ SECTION DIVIDER ════════ */
+.section-header {
+  padding: 1.5rem 1.5rem .5rem;
+  display: flex; align-items: center; gap: .75rem;
+}
+.section-header-line { flex: 1; height: 1px; background: rgba(255,255,255,.05); }
+.section-header-label {
+  font-size: .52rem; font-weight: 900; letter-spacing: .18em;
+  text-transform: uppercase; color: rgba(255,255,255,.18);
+}
+
+/* ════════ WIDGET ════════ */
+.widget-grid   { display: grid; grid-template-columns: 1fr 1fr;       gap: 1rem; padding: .5rem 1.5rem; }
+.widget-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr;   gap: 1rem; padding: .5rem 1.5rem; }
+.widget-grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1rem; padding: .5rem 1.5rem; }
+
+.widget {
+  background: rgba(255,255,255,.02); border: 1px solid rgba(255,255,255,.07);
+  border-radius: 1rem; overflow: hidden; display: flex; flex-direction: column;
+}
+.widget.span-full { grid-column: 1 / -1; }
+
+.widget-header {
+  display: flex; align-items: center; gap: .5rem;
+  padding: .75rem 1rem .65rem; border-bottom: 1px solid rgba(255,255,255,.05);
+}
+.widget-icon {
+  width: 28px; height: 28px; border-radius: .4rem;
+  background: rgba(65,104,175,.08); border: 1px solid rgba(65,104,175,.2);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.widget-icon .material-symbols-outlined { font-size: .95rem !important; color: rgba(125,163,224,.7); }
+.widget-title {
+  font-size: .68rem; font-weight: 900; letter-spacing: .12em;
+  text-transform: uppercase; color: rgba(255,255,255,.35);
+}
+.widget-badge {
+  margin-left: auto; font-size: .48rem; font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; padding: .12rem .42rem; border-radius: .24rem;
+  background: rgba(65,104,175,.09); border: 1px solid rgba(65,104,175,.2); color: rgba(125,163,224,.6);
+}
+.widget-body { flex: 1; padding: 1rem; }
+
+/* ════════ STATUS BADGE ════════ */
+.status-badge {
+  font-size: .52rem; font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; padding: .18rem .55rem; border-radius: .32rem;
+}
+.status-badge.pass   { background: rgba(52,211,153,.12); border: 1px solid rgba(52,211,153,.25); color: rgba(52,211,153,.85); }
+.status-badge.hold   { background: rgba(251,191,36,.1);  border: 1px solid rgba(251,191,36,.22); color: rgba(251,191,36,.8); }
+.status-badge.reject { background: rgba(248,65,65,.12);  border: 1px solid rgba(248,65,65,.22);  color: rgba(248,113,113,.8); }
+.status-badge.review { background: rgba(65,104,175,.12); border: 1px solid rgba(65,104,175,.28); color: rgba(125,163,224,.9); }
+
+/* ════════ TAG CHIP ════════ */
+.tag-chip {
+  display: inline-flex; align-items: center; gap: .22rem;
+  font-size: .58rem; font-weight: 600; padding: .18rem .52rem; border-radius: .32rem;
+}
+.tag-chip.cyan   { background: rgba(65,104,175,.12);  border: 1px solid rgba(65,104,175,.22);  color: rgba(163,194,239,.85); }
+.tag-chip.green  { background: rgba(52,211,153,.1);   border: 1px solid rgba(52,211,153,.2);   color: rgba(52,211,153,.8); }
+.tag-chip.amber  { background: rgba(251,191,36,.1);   border: 1px solid rgba(251,191,36,.2);   color: rgba(251,191,36,.8); }
+.tag-chip.purple { background: rgba(167,139,250,.1);  border: 1px solid rgba(167,139,250,.2);  color: rgba(167,139,250,.8); }
+.tag-chip.red    { background: rgba(248,113,113,.1);  border: 1px solid rgba(248,113,113,.2);  color: rgba(248,113,113,.8); }
+.tags-row { display: flex; flex-wrap: wrap; gap: .3rem; margin-bottom: .65rem; }
+
+/* ════════ SCORE BAR ════════ */
+.score-card {
+  background: rgba(255,255,255,.025); border: 1px solid rgba(255,255,255,.06);
+  border-radius: .65rem; padding: .65rem .8rem; margin-bottom: .45rem;
+}
+.score-card-lbl { font-size: .5rem; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.25); margin-bottom: .35rem; }
+.score-row { display: flex; align-items: center; gap: .5rem; }
+.score-bar-bg   { flex: 1; height: 5px; background: rgba(255,255,255,.06); border-radius: 3px; overflow: hidden; }
+.score-bar-fill { height: 100%; border-radius: 3px; transition: width .7s cubic-bezier(.4,0,.2,1); }
+.score-bar-fill.green  { background: linear-gradient(90deg, rgba(52,211,153,.5),  rgba(52,211,153,.85)); }
+.score-bar-fill.cyan   { background: linear-gradient(90deg, rgba(65,104,175,.45), rgba(65,104,175,.9)); }
+.score-bar-fill.amber  { background: linear-gradient(90deg, rgba(251,191,36,.4),  rgba(251,191,36,.8)); }
+.score-bar-fill.purple { background: linear-gradient(90deg, rgba(167,139,250,.4), rgba(167,139,250,.85)); }
+.score-bar-fill.red    { background: linear-gradient(90deg, rgba(248,113,113,.4), rgba(248,113,113,.8)); }
+.score-num { font-size: .68rem; font-weight: 700; color: rgba(255,255,255,.55); flex-shrink: 0; min-width: 30px; text-align: right; }
+
+/* ════════ EVAL POINT ════════ */
+.eval-point {
+  display: flex; align-items: flex-start; gap: .55rem;
+  background: rgba(255,255,255,.025); border: 1px solid rgba(255,255,255,.055);
+  border-radius: .55rem; padding: .55rem .7rem; margin-bottom: .45rem;
+}
+.eval-point.positive .eval-point-icon .material-symbols-outlined { color: rgba(52,211,153,.7); }
+.eval-point.caution  .eval-point-icon .material-symbols-outlined { color: rgba(251,191,36,.7); }
+.eval-point.negative .eval-point-icon .material-symbols-outlined { color: rgba(248,113,113,.7); }
+.eval-point-icon .material-symbols-outlined { font-size: 1rem !important; }
+.eval-point-label { font-size: .56rem; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; margin-bottom: .15rem; }
+.eval-point.positive .eval-point-label { color: rgba(52,211,153,.5); }
+.eval-point.caution  .eval-point-label { color: rgba(251,191,36,.45); }
+.eval-point.negative .eval-point-label { color: rgba(248,113,113,.45); }
+.eval-point-text { font-size: .68rem; color: rgba(255,255,255,.52); line-height: 1.55; }
+
+/* ════════ EVAL SUMMARY ════════ */
+.eval-summary {
+  font-size: .78rem; color: rgba(255,255,255,.55); line-height: 1.75;
+  border-left: 2px solid rgba(65,104,175,.45); padding-left: .85rem; margin-bottom: 1rem;
+}
+.eval-summary strong { color: rgba(255,255,255,.8); font-weight: 700; }
+.eval-section-lbl {
+  font-size: .52rem; font-weight: 900; letter-spacing: .12em; text-transform: uppercase;
+  color: rgba(255,255,255,.22); margin-bottom: .5rem;
+}
+
+/* ════════ VERDICT BOX ════════ */
+.verdict-box {
+  background: rgba(65,104,175,.07); border: 1px solid rgba(65,104,175,.25);
+  border-radius: .65rem; padding: .75rem .85rem;
+}
+.verdict-lbl  { font-size: .48rem; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; color: rgba(125,163,224,.5); margin-bottom: .4rem; }
+.verdict-text { font-size: .8rem; font-weight: 800; line-height: 1.45; }
+.verdict-sub  { font-size: .62rem; color: rgba(125,163,224,.5); margin-top: .3rem; line-height: 1.55; }
+
+/* ════════ KPI BIG NUMBER ════════ */
+.kpi-num { font-size: 2.2rem; font-weight: 900; letter-spacing: -.04em; line-height: 1; color: #fff; margin-bottom: .25rem; }
+.kpi-unit { font-size: 1rem; font-weight: 600; color: rgba(255,255,255,.45); margin-left: .1rem; }
+.kpi-label { font-size: .58rem; font-weight: 700; color: rgba(255,255,255,.28); text-transform: uppercase; letter-spacing: .1em; }
+.kpi-sub { font-size: .65rem; color: rgba(255,255,255,.35); margin-top: .4rem; line-height: 1.55; }
+
+/* ════════ TABLE ════════ */
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th {
+  font-size: .48rem; font-weight: 900; letter-spacing: .1em; text-transform: uppercase;
+  color: rgba(255,255,255,.22); padding: .5rem .75rem; text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.data-table td {
+  font-size: .68rem; color: rgba(255,255,255,.52); padding: .6rem .75rem;
+  border-bottom: 1px solid rgba(255,255,255,.04); line-height: 1.5;
+}
+.data-table tr:last-child td { border-bottom: none; }
+.data-table td.hl  { color: rgba(255,255,255,.82); font-weight: 600; }
+.data-table td.pos { color: rgba(52,211,153,.8); }
+.data-table td.neg { color: rgba(248,113,113,.8); }
+.data-table td.amb { color: rgba(251,191,36,.8); }
+
+/* ════════ QUOTE CARD ════════ */
+.quote-card {
+  background: rgba(255,255,255,.025); border: 1px solid rgba(255,255,255,.055);
+  border-radius: .65rem; padding: .7rem .9rem; margin-bottom: .5rem;
+}
+.quote-text { font-size: .72rem; color: rgba(255,255,255,.6); line-height: 1.65; }
+.quote-attr { font-size: .52rem; color: rgba(255,255,255,.25); margin-top: .35rem; }
+.quote-card.featured { background: rgba(65,104,175,.07); border-color: rgba(65,104,175,.22); }
+.quote-card.featured .quote-text { color: rgba(255,255,255,.75); }
+
+/* ════════ TRANSCRIPT LINE ════════ */
+.tx-line { display: flex; gap: .65rem; align-items: flex-start; margin-bottom: .42rem; }
+.tx-speaker { flex-shrink: 0; font-size: .55rem; font-weight: 700; color: rgba(255,255,255,.28); width: 56px; text-transform: uppercase; padding-top: .15rem; }
+.tx-text    { font-size: .7rem; color: rgba(255,255,255,.55); line-height: 1.58; }
+.tx-line.highlighted .tx-text {
+  color: rgba(255,255,255,.82); background: rgba(65,104,175,.09);
+  border-radius: .3rem; padding: .1rem .35rem; margin-left: -.35rem;
+}
+
+/* ════════ META CELL ════════ */
+.meta-row { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.1rem; }
+.meta-cell {
+  background: rgba(255,255,255,.025); border: 1px solid rgba(255,255,255,.055);
+  border-radius: .5rem; padding: .42rem .7rem;
+}
+.meta-lbl { font-size: .46rem; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.22); margin-bottom: .12rem; }
+.meta-val  { font-size: .64rem; color: rgba(255,255,255,.55); }
+
+/* ════════ PRIORITY BADGE ════════ */
+.priority-badge {
+  display: inline-flex; align-items: center; gap: .2rem;
+  font-size: .5rem; font-weight: 800; letter-spacing: .04em;
+  padding: .14rem .45rem; border-radius: .28rem;
+}
+.priority-1 { background: rgba(248,113,113,.12); border: 1px solid rgba(248,113,113,.25); color: rgba(248,113,113,.8); }
+.priority-2 { background: rgba(251,191,36,.1);   border: 1px solid rgba(251,191,36,.22);  color: rgba(251,191,36,.75); }
+.priority-3 { background: rgba(65,104,175,.1);   border: 1px solid rgba(65,104,175,.22);  color: rgba(125,163,224,.75); }
+
+/* ════════ RANK ITEM ════════ */
+.rank-item {
+  display: flex; align-items: center; gap: .55rem;
+  padding: .45rem .65rem; background: rgba(255,255,255,.025);
+  border: 1px solid rgba(255,255,255,.055); border-radius: .45rem; margin-bottom: .38rem;
+}
+
+/* ════════ RECOMMENDATION CARD ════════ */
+.rec-card {
+  padding: .65rem .8rem; background: rgba(255,255,255,.02);
+  border-radius: .65rem; border: 1px solid rgba(255,255,255,.055);
+}
+.rec-num {
+  flex-shrink: 0; width: 24px; height: 24px; border-radius: 50%;
+  background: rgba(65,104,175,.1); border: 1px solid rgba(65,104,175,.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .58rem; font-weight: 900; color: rgba(125,163,224,.7);
+}
+
+/* ════════ ANIMATE BARS ON LOAD ════════ */
+.score-bar-fill { width: 0 !important; }
+</style>
+</head>
+<body class="font-display text-white antialiased overflow-x-hidden">
+
+<div class="page">
+
+  <!-- ═══════════════════════════════════════════
+       HERO
+       ═══════════════════════════════════════════ -->
+  <section class="ct-hero">
+    <div class="blob w-[700px] h-[700px]" style="background:#1E3050;opacity:0.18;top:-200px;left:-150px;"></div>
+    <div class="blob w-[400px] h-[400px]" style="background:#25252D;opacity:0.15;top:80px;right:-100px;"></div>
+    <div class="blob w-[280px] h-[280px]" style="background:#1E3050;opacity:0.1;bottom:-80px;right:250px;"></div>
+
+    <div class="relative" style="display:flex;align-items:flex-start;gap:2.5rem;flex-wrap:wrap;">
+      <div style="flex:1;min-width:260px;">
+        <div class="section-label">PROBY · OFFLINE EVENT ANALYTICS</div>
+        <h1 style="font-size:2.6rem;font-weight:900;letter-spacing:-.03em;line-height:1.15;margin-bottom:.75rem;">
+          <span class="grad-text">OOZE UNIVERSE</span><br>팝업 효과 분석
+        </h1>
+        <p style="font-size:.88rem;color:rgba(255,255,255,.42);max-width:520px;line-height:1.75;margin-bottom:.3rem;">
+          AI 인터뷰 기반 — 브랜드 인지 전환, 구매 의향, 공간 경험을 현장에서 실시간 측정한 리포트
+        </p>
+        <p style="font-size:.75rem;color:var(--accent-text);opacity:.5;max-width:520px;line-height:1.65;">
+          Proby AI 인터뷰어가 방문자와 함께 행사장을 이동하며 수집한 자연발화 데이터를 분석합니다.
+        </p>
+
+        <div class="meta-row">
+          <div class="meta-cell">
+            <div class="meta-lbl">행사 기간</div>
+            <div class="meta-val">2026.04.03 FRI – 04.11 SAT</div>
+          </div>
+          <div class="meta-cell">
+            <div class="meta-lbl">장소</div>
+            <div class="meta-val">LECT 성수 · 성동구 연무장길 65</div>
+          </div>
+          <div class="meta-cell">
+            <div class="meta-lbl">운영 시간</div>
+            <div class="meta-val">11:00 – 20:00</div>
+          </div>
+          <div class="meta-cell">
+            <div class="meta-lbl">인터뷰 참여자</div>
+            <div class="meta-val">3명 · 동행 방문 · 개별 녹음</div>
+          </div>
+          <div class="meta-cell">
+            <div class="meta-lbl">입점 브랜드</div>
+            <div class="meta-val">누미 · 아이미미 · 리볼 외</div>
+          </div>
+          <div class="meta-cell">
+            <div class="meta-lbl">조사 방식</div>
+            <div class="meta-val">AI 인터뷰어 + Vlog 현장 녹음</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 로고 컬럼 — Proby 최하단 고정 -->
+      <div style="flex-shrink:0;padding-top:.5rem;display:flex;flex-direction:column;align-items:flex-end;gap:.75rem;">
+        <img src="../Brand assets/proby/logo-text-white.png" alt="Proby"
+             style="height:22px;object-fit:contain;opacity:.7;"/>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       KPI 4-CARD ROW
+       ═══════════════════════════════════════════ -->
+  <div class="section-header">
+    <div class="section-header-label">핵심 성과 지표</div>
+    <div class="section-header-line"></div>
+  </div>
+
+  <div class="widget-grid-4">
+
+    <div class="widget">
+      <div class="widget-header">
+        <div class="widget-icon"><span class="material-symbols-outlined">trending_up</span></div>
+        <span class="widget-title">브랜드 인지 전환율</span>
+      </div>
+      <div class="widget-body">
+        <div class="kpi-num">100<span class="kpi-unit">%</span></div>
+        <div class="kpi-label">Brand Awareness Lift</div>
+        <div class="kpi-sub">방문 전 인지 0–1명 → 방문 후 <strong style="color:rgba(52,211,153,.8)">3명 전원</strong> 재구매 탐색 의향 보유. 사전 인지 제로에서 팬덤 전환 달성.</div>
+      </div>
+    </div>
+
+    <div class="widget">
+      <div class="widget-header">
+        <div class="widget-icon"><span class="material-symbols-outlined">shopping_bag</span></div>
+        <span class="widget-title">현장 구매 전환</span>
+      </div>
+      <div class="widget-body">
+        <div class="kpi-num">2<span class="kpi-unit">/3</span></div>
+        <div class="kpi-label">Purchase Conversion</div>
+        <div class="kpi-sub">조연우 5만원+ 즉시 구매, 조연서 선크림 구매. 고명지는 색조 조건부 의향 — 재방문 시 구매 전환 예상.</div>
+      </div>
+    </div>
+
+    <div class="widget">
+      <div class="widget-header">
+        <div class="widget-icon"><span class="material-symbols-outlined">emoji_objects</span></div>
+        <span class="widget-title">1위 기억 앵커</span>
+      </div>
+      <div class="widget-body">
+        <div style="font-size:1.8rem;font-weight:900;letter-spacing:-.02em;line-height:1.1;margin-bottom:.25rem;">
+          <span class="grad-text">김 컨셉</span>
+        </div>
+        <div class="kpi-label">Top Memory Anchor · 3/3명 공통 1위</div>
+        <div class="kpi-sub">브랜드명보다 컨셉 오브제가 강한 기억 형성. 서로 독립적으로 동일한 요소를 1순위 언급.</div>
+      </div>
+    </div>
+
+    <div class="widget">
+      <div class="widget-header">
+        <div class="widget-icon"><span class="material-symbols-outlined">price_change</span></div>
+        <span class="widget-title">가격 경쟁력</span>
+      </div>
+      <div class="widget-body">
+        <div class="kpi-num">−<span class="kpi-unit">약</span>1<span class="kpi-unit">만원</span></div>
+        <div class="kpi-label">vs. 올리브영 체감 우위</div>
+        <div class="kpi-sub">3명 공통 올리브영 대비 체감 가격 우위 언급. 풍부한 증정품 구매 허들을 낮추는 핵심 드라이버로 작동.</div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════
+       브랜드 인지 변화 + 기억 포인트 순위
+       ═══════════════════════════════════════════ -->
+  <div class="section-header">
+    <div class="section-header-label">브랜드 인지 변화 & 기억 형성</div>
+    <div class="section-header-line"></div>
+  </div>
+
+  <div class="widget-grid">
+
+    <!-- 브랜드 인지 변화 -->
+    <div class="widget">
+      <div class="widget-header">
+        <div class="widget-icon"><span class="material-symbols-outlined">psychology</span></div>
+        <span class="widget-title">브랜드 인지 변화</span>
+        <span class="widget-badge">방문 전 → 방문 후</span>
+      </div>
+      <div class="widget-body">
+        <table class="data-table" style="margin-bottom:.85rem;">
+          <thead>
+            <tr>
+              <th>참여자</th>
+              <th>방문 전 인지</th>
+              <th>방문 후 발화</th>
+              <th>전환</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="hl">조연우</td>
+              <td>아이미미만 인지<br><span style="color:rgba(255,255,255,.3);font-size:.6rem;">나머지 미인지</span></td>
+              <td style="font-size:.65rem;">"앞으로 조금 더 써보고 결정. 지금 경험은 나쁘지 않은 경험"</td>
+              <td class="pos">긍정 전환</td>
+            </tr>
+            <tr>
+              <td class="hl">고명지</td>
+              <td>누미 이름만<br><span style="color:rgba(255,255,255,.3);font-size:.6rem;">희미하게 인지</span></td>
+              <td style="font-size:.65rem;">"모르는 브랜드에 대해 좋은 이미지를 갖게 됐고. 꾸준하게 다가올 수 있었던 느낌"</td>
+              <td class="pos">긍정 전환</td>
+            </tr>
+            <tr>
+              <td class="hl">조연서</td>
+              <td>전혀 없음<br><span style="color:rgba(255,255,255,.3);font-size:.6rem;">0개 브랜드 인지</span></td>
+              <td style="font-size:.65rem;">"경험이 좋아서 브랜드 평가가 올라가는. 판다 그러면 한번 찾아서 사는 거"</td>
+              <td class="pos">적극 전환</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="verdict-box">
+          <div class="verdict-lbl">종합 평가</div>
+          <div class="verdict-text" style="color:rgba(52,211,153,.85);font-size:.78rem;">
+            인지 제로 상태에서 3명 전원 구매 재탐색 의향으로 전환
+          </div>
+          <div class="verdict-sub">팝업 경험만으로 브랜드 인지 0 → 팬덤 형성 가능성을 입증. 스킨케어 팝업의 교과서적 전환 패턴.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 기억 포인트 순위 -->
+    <div class="widget">
+      <div class="widget-header">
+        <div class="widget-icon"><span class="material-symbols-outlined">workspace_premium</span></div>
+        <span class="widget-title">기억에 남는 요소 순위</span>
+        <span class="widget-badge">3명 응답 기준</span>
+      </div>
+      <div class="widget-body">
+
+        <!-- #1 — 강조 -->
+        <div style="background:rgba(65,104,175,.07);border:1px solid rgba(65,104,175,.22);border-radius:.65rem;padding:.75rem .9rem;margin-bottom:.75rem;">
+          <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.55rem;">
+            <div style="font-size:1.15rem;font-weight:900;color:rgba(251,191,36,.8);">#1</div>
+            <div style="font-size:.78rem;font-weight:800;color:rgba(255,255,255,.85);">김(海苔) 컨셉 브랜딩</div>
+            <span class="status-badge pass" style="margin-left:auto;">3/3명</span>
+          </div>
+          <div class="tx-line highlighted">
+            <div class="tx-speaker">조연우</div>
+            <div class="tx-text">"다른 건 기억 안 나도 김은 기억나. 이 브랜드가 아니라 그냥 김이 기억날 것 같은데."</div>
+          </div>
+          <div class="tx-line highlighted">
+            <div class="tx-speaker">고명지</div>
+            <div class="tx-text">"이 브랜드가 아니라 그냥 김이 기억이 나. 그런 느낌."</div>
+          </div>
+          <div class="tx-line highlighted">
+            <div class="tx-speaker">조연서</div>
+            <div class="tx-text">"나는 김. 귀엽잖아. 김 친절하고 웃기고."</div>
+          </div>
+        </div>
+
+        <!-- #2–#5 compact -->
+        <div class="rank-item">
+          <div style="font-size:.72rem;font-weight:900;color:rgba(255,255,255,.3);min-width:20px;">#2</div>
+          <div style="flex:1;font-size:.68rem;color:rgba(255,255,255,.6);">스쿱 이벤트 (직접 참여형 체험)</div>
+          <span class="tag-chip cyan">1명 실참여·구매 상승 트리거</span>
+        </div>
+        <div class="rank-item">
+          <div style="font-size:.72rem;font-weight:900;color:rgba(255,255,255,.3);min-width:20px;">#3</div>
+          <div style="flex:1;font-size:.68rem;color:rgba(255,255,255,.6);">직원 친절도 + 젊은 남성 배치</div>
+          <span class="tag-chip green">3명 언급</span>
+        </div>
+        <div class="rank-item">
+          <div style="font-size:.72rem;font-weight:900;color:rgba(255,255,255,.3);min-width:20px;">#4</div>
+          <div style="flex:1;font-size:.68rem;color:rgba(255,255,255,.6);">올리브영 대비 가격 우위 체감</div>
+          <span class="tag-chip green">3명 언급</span>
+        </div>
+        <div class="rank-item">
+          <div style="font-size:.72rem;font-weight:900;color:rgba(255,255,255,.3);min-width:20px;">#5</div>
+          <div style="flex:1;font-size:.68rem;color:rgba(255,255,255,.6);">증정품 풍부 ("다 퍼주더라")</div>
+          <span class="tag-chip amber">2명 언급</span>
+        </div>
+
+        <div style="margin-top:.85rem;padding:.65rem .75rem;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:.55rem;">
+          <div style="font-size:.52rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.2);margin-bottom:.3rem;">마케터 시사점</div>
+          <div style="font-size:.68rem;color:rgba(255,255,255,.45);line-height:1.6;">팝업 기억의 핵심은 <strong style="color:rgba(163,194,239,.8)">제품·할인이 아닌 감각적 컨셉 오브제</strong>. 브랜드명보다 컨셉 이미지가 먼저 연상되는 구조 → 다음 팝업도 메인 컨셉 오브제 기획이 최우선.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════
+       브랜드별 분석 (3-column)
+       ═══════════════════════════════════════════ -->
+  <div class="section-header">
+    <div class="section-header-label">브랜드별 반응 분석</div>
+    <div class="section-header-line"></div>
+  </div>
+
+  <div class="widget-grid-3">
+
+    <!-- 누미 -->
+    <div class="widget">
+      <div class="widget-header">
+        <div class="widget-icon"><span class="material-symbols-outlined">spa</span></div>
+        <span class="widget-title">누미 (Numi)</span>
+        <span class="status-badge pass" style="margin-left:auto;">최강 인상</span>
+      </div>
+      <div class="widget-body">
+        <div class="tags-row">
+          <span class="tag-chip green">김 컨셉</span>
+          <span class="tag-chip cyan">스킨케어</span>
+          <span class="tag-chip cyan">마스크 · 패드</span>
+          <span class="tag-chip green">스쿱 이벤트</span>
+        </div>
+
+        <div class="eval-section-lbl">브랜드 인상 강도</div>
+        <div class="score-card">
+          <div class="score-card-lbl">기억도</div>
+          <div class="score-row"><div class="score-bar-bg"><div class="score-bar-fill green" data-w="100"></div></div><div class="score-num">5/5</div></div>
+        </div>
+        <div class="score-card">
+          <div class="score-card-lbl">현장 구매 전환</div>
+          <div class="score-row"><div class="score-bar-bg"><div class="score-bar-fill green" data-w="80"></div></div><div class="score-num">4/5</div></div>
+        </div>
+        <div class="score-card">
+          <div class="score-card-lbl">재탐색·재구매 의향</div>
+          <div class="score-row"><div class="score-bar-bg"><div class="score-bar-fill green" data-w="100"></div></div><div class="score-num">5/5</div></div>
+        </div>
+
+        <div class="eval-section-lbl" style="margin-top:.85rem;">핵심 드라이버</div>
+        <div class="eval-point positive">
+          <div class="eval-point-icon"><span class="material-symbols-outlined">check_circle</span></div>
+          <div>
+            <div class="eval-point-label">김 컨셉 브랜딩</div>
+            <div class="eval-point-text">완도 수산시장 테마 — 브랜드명보다 강한 기억 앵커 형성. 3명 전원 최고 인상 포인트 1위 독립 언급.</div>
+          </div>
+        </div>
+        <div class="eval-point positive">
+          <div class="eval-point-icon"><span class="material-symbols-outlined">check_circle</span></div>
+          <div>
+            <div class="eval-point-label">스쿱 이벤트</div>
+            <div class="eval-point-text">5만원+ 구매 시 본품 직접 퍼담기 — 조연우 구매금액 상승 직접 트리거. 참여 만족도 상승.</div>
+          </div>
+        </div>
+        <div class="eval-point caution">
+          <div class="eval-point-icon"><span class="material-symbols-outlined">warning</span></div>
+          <div>
+            <div class="eval-point-label">브랜드명 각인 약점</div>
+            <div class="eval-point-text">"김은 기억나는데 Numi는 기억 못하는" 구조 → 2차 구매 연결 위해 브랜드명 각인 보완 필요.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 아이미미 -->
+    <div class="widget">
+      <div class="widget-header">
+        <div class="widget-icon"><span class="material-symbols-outlined">palette</span></div>
+        <span class="widget-title">아이미미 (i'm meme)</span>
+        <span class="status-badge hold" style="margin-left:auto;">혼재 반응</span>
+      </div>
+      <div class="widget-body">
+        <div class="tags-row">
+          <span class="tag-chip cyan">색조 전문</span>
+          <span class="tag-chip cyan">크림 제형</span>
+          <span class="tag-chip amber">컬러 적합성 이슈</span>
+        </div>
+
+        <div class="eval-section-lbl">브랜드 인상 강도</div>
+        <div class="score-card">
+          <div class="score-card-lbl">기억도</div>
+          <div class="score-row"><div class="score-bar-bg"><div class="score-bar-fill amber" data-w="60"></div></div><div class="score-num">3/5</div></div>
+        </div>
+        <div class="score-card">
+          <div class="score-card-lbl">현장 구매 전환</div>
+          <div class="score-row"><div class="score-bar-bg"><div class="score-bar-fill amber" data-w="60"></div></div><div class="score-num">3/5</div></div>
+        </div>
+        <div class="score-card">
+          <div class="score-card-lbl">재탐색·재구매 의향</div>
+          <div class="score-row"><div class="score-bar-bg"><div class="score-bar-fill amber" data-w="60"></div></div><div class="score-num">3/5</div></div>
+        </div>
+
+        <div class="eval-section-lbl" style="margin-top:.85rem;">핵심 드라이버</div>
+        <div class="eval-point positive">
+          <div class="eval-point-icon"><span class="material-symbols-outlined">check_circle</span></div>
+          <div>
+            <div class="eval-point-label">크림 제형 호감</div>
+            <div class="eval-point-text">블러셔·하이라이터 크림 제형에 3명 공통 관심. 스틱 쉐딩도 "턱 깎고 싶어서" 3명 공통 탐색.</div>
+          </div>
+        </div>
+        <div class="eval-point caution">
+          <div class="eval-point-icon"><span class="material-symbols-outlined">warning</span></div>
+          <div>
+            <div class="eval-point-label">개인 컬러 적합성 허들</div>
+            <div class="eval-point-text">블러셔 핑크톤 불일치(조연서), 형광기 지적(조연우) — 피부톤별 컬러 컨설팅이 구매 전환 변수.</div>
+          </div>
+        </div>
+        <div class="eval-point negative">
+          <div class="eval-point-icon"><span class="material-symbols-outlined">cancel</span></div>
+          <div>
+            <div class="eval-point-label">전용 이벤트 부재</div>
+            <div class="eval-point-text">누미 스쿱 대비 아이미미 전용 이벤트 없음 → 체험 밀도 낮아 기억 차별화 포인트 부족.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 리볼 -->
+    <div class="widget">
+      <div class="widget-header">
+        <div class="widget-icon"><span class="material-symbols-outlined">water_drop</span></div>
+        <span class="widget-title">리볼 (Revol)</span>
+        <span class="status-badge hold" style="margin-left:auto;">중간</span>
+      </div>
+      <div class="widget-body">
+        <div class="tags-row">
+          <span class="tag-chip cyan">립오일 전문</span>
+          <span class="tag-chip green">1+1 행사</span>
+          <span class="tag-chip purple">5분 발색</span>
+        </div>
+
+        <div class="eval-section-lbl">브랜드 인상 강도</div>
+        <div class="score-card">
+          <div class="score-card-lbl">기억도</div>
+          <div class="score-row"><div class="score-bar-bg"><div class="score-bar-fill amber" data-w="60"></div></div><div class="score-num">3/5</div></div>
+        </div>
+        <div class="score-card">
+          <div class="score-card-lbl">현장 구매 전환</div>
+          <div class="score-row"><div class="score-bar-bg"><div class="score-bar-fill amber" data-w="60"></div></div><div class="score-num">3/5</div></div>
+        </div>
+        <div class="score-card">
+          <div class="score-card-lbl">재탐색·재구매 의향</div>
+          <div class="score-row"><div class="score-bar-bg"><div class="score-bar-fill cyan" data-w="40"></div></div><div class="score-num">2/5</div></div>
+        </div>
+
+        <div class="eval-section-lbl" style="margin-top:.85rem;">핵심 드라이버</div>
+        <div class="eval-point positive">
+          <div class="eval-point-icon"><span class="material-symbols-outlined">check_circle</span></div>
+          <div>
+            <div class="eval-point-label">5분 후 발색 체험</div>
+            <div class="eval-point-text">오일 제형 특성(얇은 발림 → 시간 경과 발색 상승) — 현장 즉각 "신기함" 반응 유발. 직원 설명 품질이 기여.</div>
+          </div>
+        </div>
+        <div class="eval-point positive">
+          <div class="eval-point-icon"><span class="material-symbols-outlined">check_circle</span></div>
+          <div>
+            <div class="eval-point-label">1+1 가격 인센티브</div>
+            <div class="eval-point-text">"싸긴 진짜 싸" — 행사가 구매 진입장벽 낮추는 효과 확인.</div>
+          </div>
+        </div>
+        <div class="eval-point caution">
+          <div class="eval-point-icon"><span class="material-symbols-outlined">warning</span></div>
+          <div>
+            <div class="eval-point-label">행사 정보 구두 의존</div>
+            <div class="eval-point-text">1+1 등 행사 정보가 직원 설명에만 의존 → 자발 탐색 제한. 시각화 필요.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════
+       공간·운영 경험 평가
+       ═══════════════════════════════════════════ -->
+  <div class="section-header">
+    <div class="section-header-label">공간 & 운영 경험 평가</div>
+    <div class="section-header-line"></div>
+  </div>
+
+  <div class="widget-grid">
+
+    <!-- 긍정 요소 -->
+    <div class="widget">
+      <div class="widget-header">
+        <div class="widget-icon"><span class="material-symbols-outlined">thumb_up</span></div>
+        <span class="widget-title">긍정 요소</span>
+        <span class="widget-badge">6개 항목</span>
+      </div>
+      <div class="widget-body">
+        <div class="eval-point positive">
+          <div class="eval-point-icon"><span class="material-symbols-outlined">check_circle</span></div>
+          <div>
+            <div class="eval-point-label">자유 동선</div>
+            <div class="eval-point-text">이동 경로 미지정 → 부담 없는 탐색. "자유도를 오히려 높이니까 더 편해" — 고명지·조연우 공통 선호.</div>
+          </div>
+        </div>
+        <div class="eval-point positive">
+          <div class="eval-point-icon"><span class="material-symbols-outlined">check_circle</span></div>
+          <div>
+            <div class="eval-point-label">이벤트 다양성</div>
+            <div class="eval-point-text">룰렛 · 스쿱 이벤트 · 포토존 · 라운지 인증 등 다층 참여 구조 → 체류 시간·만족도 상승.</div>
+          </div>
+        </div>
+        <div class="eval-point positive">
+          <div class="eval-point-icon"><span class="material-symbols-outlined">check_circle</span></div>
+          <div>
+            <div class="eval-point-label">직원 친절도</div>
+            <div class="eval-point-text">전 브랜드 섹션 공통 3명 긍정. "해주시는 분들도 친절하셔가지고 기억에 남습니다" — 고명지.</div>
+          </div>
+        </div>
+        <div class="eval-point positive">
+          <div class="eval-point-icon"><span class="material-symbols-outlined">check_circle</span></div>
+          <div>
+            <div class="eval-point-label">젊은 남성 직원 배치</div>
+            <div class="eval-point-text">마케팅 전략으로 명확히 인식하나 부정 반응 없음. "김총각. 귀엽다" — 친근감 형성에도 기여.</div>
+          </div>
+        </div>
+        <div class="eval-point positive">
+          <div class="eval-point-icon"><span class="material-symbols-outlined">check_circle</span></div>
+          <div>
+            <div class="eval-point-label">올리브영 대비 가격 우위</div>
+            <div class="eval-point-text">"올리브영보다 거의 만 원 저렴하게 샀어요" — 고명지. 3명 공통 체감. 구매 결정 핵심 요인.</div>
+          </div>
+        </div>
+        <div class="eval-point positive">
+          <div class="eval-point-icon"><span class="material-symbols-outlined">check_circle</span></div>
+          <div>
+            <div class="eval-point-label">후한 증정품</div>
+            <div class="eval-point-text">"사면은 쿨하게 다 주더라. 다 퍼주더라" — 고명지·조연우 공통. 구매 저항을 낮추는 핵심 드라이버.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 개선 필요 -->
+    <div class="widget">
+      <div class="widget-header">
+        <div class="widget-icon"><span class="material-symbols-outlined">build</span></div>
+        <span class="widget-title">개선 필요 항목</span>
+        <span class="widget-badge">4개 항목</span>
+      </div>
+      <div class="widget-body">
+        <div class="eval-point negative">
+          <div class="eval-point-icon"><span class="material-symbols-outlined">cancel</span></div>
+          <div>
+            <div class="eval-point-label">바구니 구멍 — 최우선 즉시 개선</div>
+            <div class="eval-point-text"><strong style="color:rgba(248,113,113,.7)">3명 전원 독립 언급.</strong> "구멍이 너무 커가지고 자꾸 빠진다" — 입장 첫인상에 부정 경험 직접 유발. 전체 개선 항목 중 단일 최고 우선순위.</div>
+          </div>
+        </div>
+        <div class="eval-point negative">
+          <div class="eval-point-icon"><span class="material-symbols-outlined">cancel</span></div>
+          <div>
+            <div class="eval-point-label">브랜드 안내물 부족</div>
+            <div class="eval-point-text">"이게 뭔지를 모르겠네. 설명이 좀 있었으면" — 조연우·고명지. 구두 설명만으로는 한계. 안내 패널·브랜드 구분선 보강 필요.</div>
+          </div>
+        </div>
+        <div class="eval-point caution">
+          <div class="eval-point-icon"><span class="material-symbols-outlined">warning</span></div>
+          <div>
+            <div class="eval-point-label">참여 이벤트 부족</div>
+            <div class="eval-point-text">"참여 이벤트 좀 더 있어도 괜찮을 듯" — 조연우. 룰렛 외 추가 이벤트 요청.</div>
+          </div>
+        </div>
+        <div class="eval-point caution">
+          <div class="eval-point-icon"><span class="material-symbols-outlined">warning</span></div>
+          <div>
+            <div class="eval-point-label">Proby 앱 UX 개선 필요</div>
+            <div class="eval-point-text">이어폰 한쪽 착용 불편(2명), 세션 전환 화면 혼선(2명), 핸드폰 발열(1명), 녹음 끊김(2명) — 현장 수집 도구 개선 필요.</div>
+          </div>
+        </div>
+
+        <!-- 우선순위 액션 플랜 -->
+        <div style="margin-top:.85rem;">
+          <div class="eval-section-lbl">행동 우선순위</div>
+          <div style="display:flex;flex-direction:column;gap:.35rem;">
+            <div style="display:flex;align-items:flex-start;gap:.55rem;padding:.5rem .65rem;background:rgba(255,255,255,.02);border-radius:.5rem;border:1px solid rgba(248,113,113,.12);">
+              <div class="rec-num" style="border-color:rgba(248,113,113,.25);">1</div>
+              <div>
+                <span class="priority-badge priority-1">즉시 개선</span>
+                <div style="font-size:.66rem;color:rgba(255,255,255,.45);margin-top:.22rem;">바구니 → 구멍 없는 타입 교체, 입장 첫인상 복구</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:.55rem;padding:.5rem .65rem;background:rgba(255,255,255,.02);border-radius:.5rem;border:1px solid rgba(251,191,36,.1);">
+              <div class="rec-num">2</div>
+              <div>
+                <span class="priority-badge priority-2">단기 개선</span>
+                <div style="font-size:.66rem;color:rgba(255,255,255,.45);margin-top:.22rem;">브랜드 구분 안내판 · 제품 정보 패널 설치</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:.55rem;padding:.5rem .65rem;background:rgba(255,255,255,.02);border-radius:.5rem;border:1px solid rgba(65,104,175,.12);">
+              <div class="rec-num">3</div>
+              <div>
+                <span class="priority-badge priority-3">중기 개선</span>
+                <div style="font-size:.66rem;color:rgba(255,255,255,.45);margin-top:.22rem;">누미 브랜드명 각인 강화 — 김 컨셉과 Numi 연결 시각물</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:.55rem;padding:.5rem .65rem;background:rgba(255,255,255,.02);border-radius:.5rem;border:1px solid rgba(65,104,175,.12);">
+              <div class="rec-num">4</div>
+              <div>
+                <span class="priority-badge priority-3">중기 개선</span>
+                <div style="font-size:.66rem;color:rgba(255,255,255,.45);margin-top:.22rem;">아이미미·리볼 전용 체험 이벤트 도입 (컬러 컨설팅존, Before/After 체험존)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════
+       제품별 반응 + 가격·가치 인식
+       ═══════════════════════════════════════════ -->
+  <div class="section-header">
+    <div class="section-header-label">제품 반응 & 가치 인식</div>
+    <div class="section-header-line"></div>
+  </div>
+
+  <div class="widget-grid">
+
+    <!-- 제품별 반응 테이블 -->
+    <div class="widget">
+      <div class="widget-header">
+        <div class="widget-icon"><span class="material-symbols-outlined">inventory_2</span></div>
+        <span class="widget-title">제품별 반응 요약</span>
+        <span class="widget-badge">8개 카테고리</span>
+      </div>
+      <div class="widget-body" style="padding:.5rem;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>제품</th>
+              <th>주요 반응</th>
+              <th>언급</th>
+              <th>전환</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="hl">김 패드·굿즈</td>
+              <td>최고 인상 포인트 전원 언급. 조연우 실구매</td>
+              <td>3/3명</td>
+              <td class="pos">구매↑</td>
+            </tr>
+            <tr>
+              <td class="hl">선크림 (톤업)</td>
+              <td>아침 데일리 활용 구상. 조연우·조연서 구매 의향 명시</td>
+              <td>2/3명</td>
+              <td class="pos">의향↑</td>
+            </tr>
+            <tr>
+              <td class="hl">스틱 쉐딩</td>
+              <td>"턱 깎고 싶어서" 공통 관심</td>
+              <td>2/3명</td>
+              <td class="amb">탐색</td>
+            </tr>
+            <tr>
+              <td>블러셔 (크림)</td>
+              <td>크림 제형 호감. 형광기·핑크톤 이슈로 전환 엇갈림</td>
+              <td>3/3명</td>
+              <td class="amb">조건부</td>
+            </tr>
+            <tr>
+              <td>립오일 (리볼)</td>
+              <td>5분 발색 신기함 반응. 투명 계열 선호. 1+1 효과</td>
+              <td>3/3명</td>
+              <td class="amb">탐색</td>
+            </tr>
+            <tr>
+              <td>하이라이터 (크림)</td>
+              <td>크림 제형 호평 / "너무 반짝거려" 일부 의견으로 엇갈림</td>
+              <td>2/3명</td>
+              <td class="amb">조건부</td>
+            </tr>
+            <tr>
+              <td>클렌징 패드 (양면)</td>
+              <td>양면 구조 신기. 80매 증정 이벤트 긍정 반응</td>
+              <td>2/3명</td>
+              <td class="amb">탐색</td>
+            </tr>
+            <tr>
+              <td>노워시 마스크</td>
+              <td>간편함 긍정</td>
+              <td>1/3명</td>
+              <td style="color:rgba(255,255,255,.3);">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 가격·가치 인식 -->
+    <div class="widget">
+      <div class="widget-header">
+        <div class="widget-icon"><span class="material-symbols-outlined">monetization_on</span></div>
+        <span class="widget-title">가격·가치 인식</span>
+      </div>
+      <div class="widget-body">
+        <div class="eval-summary">
+          올리브영 대비 <strong>약 1만원 이상 저렴</strong>한 가격 체감이 3명 공통 구매 결정 요인으로 작동. 상술 구조를 인지하면서도 <strong>유쾌하게 수용</strong> — 브랜드 신뢰 손상 없음.
+        </div>
+
+        <div class="eval-section-lbl">가치 요소 평가</div>
+        <div class="score-card">
+          <div class="score-card-lbl">가격 경쟁력 (vs 올리브영 체감)</div>
+          <div class="score-row"><div class="score-bar-bg"><div class="score-bar-fill green" data-w="92"></div></div><div class="score-num">92%</div></div>
+        </div>
+        <div class="score-card">
+          <div class="score-card-lbl">증정품 만족도</div>
+          <div class="score-row"><div class="score-bar-bg"><div class="score-bar-fill green" data-w="88"></div></div><div class="score-num">88%</div></div>
+        </div>
+        <div class="score-card">
+          <div class="score-card-lbl">스쿱 이벤트 구매 유도 효과</div>
+          <div class="score-row"><div class="score-bar-bg"><div class="score-bar-fill cyan" data-w="80"></div></div><div class="score-num">80%</div></div>
+        </div>
+        <div class="score-card">
+          <div class="score-card-lbl">브랜드 상술 거부감 (낮을수록 좋음)</div>
+          <div class="score-row"><div class="score-bar-bg"><div class="score-bar-fill green" data-w="8"></div></div><div class="score-num">낮음</div></div>
+        </div>
+
+        <div class="eval-section-lbl" style="margin-top:.85rem;">대표 발화</div>
+        <div class="quote-card featured">
+          <div class="quote-text">"나 상술에 당했다. 이렇게 당해."</div>
+          <div class="quote-attr">— 조연우 (부정이 아닌 유쾌한 인식으로 발화 — 브랜드 신뢰 손상 없음)</div>
+        </div>
+        <div class="quote-card">
+          <div class="quote-text">"올리브영보다 거의 만 원 저렴하게 샀어요."</div>
+          <div class="quote-attr">— 고명지</div>
+        </div>
+        <div class="quote-card">
+          <div class="quote-text">"사면은 쿨하게 다 주더라. 다 퍼주더라."</div>
+          <div class="quote-attr">— 고명지·조연우 공통</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════
+       참여자 주요 발화 (VOC)
+       ═══════════════════════════════════════════ -->
+  <div class="section-header">
+    <div class="section-header-label">참여자 대표 발화 (VOC)</div>
+    <div class="section-header-line"></div>
+  </div>
+
+  <div style="padding:.5rem 1.5rem;">
+    <div class="widget">
+      <div class="widget-header">
+        <div class="widget-icon"><span class="material-symbols-outlined">record_voice_over</span></div>
+        <span class="widget-title">현장 실시간 녹음 — 주요 인용구</span>
+        <span class="widget-badge">AI 인터뷰어 + Vlog</span>
+      </div>
+      <div class="widget-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.25rem;">
+
+          <!-- 조연우 -->
+          <div>
+            <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;">
+              <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,rgba(14,24,48,.95),rgba(30,48,80,.8));border:1.5px solid rgba(65,104,175,.45);display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:900;color:rgba(125,163,224,.9);">연</div>
+              <div>
+                <div style="font-size:.72rem;font-weight:800;color:rgba(255,255,255,.82);">조연우</div>
+                <div style="font-size:.54rem;color:rgba(255,255,255,.3);">세션 2 · 화학과 재학 · 큰손 구매자</div>
+              </div>
+              <span class="tag-chip green" style="margin-left:auto;">5만원+ 구매</span>
+            </div>
+            <div class="quote-card featured">
+              <div class="quote-text">"완도 돌김 왜 이렇게 웃기냐" → 실구매로 이어짐</div>
+            </div>
+            <div class="quote-card">
+              <div class="quote-text">"다른 건 기억 안 나도 김은 기억나. 이 브랜드가 아니라 그냥 김이 기억날 것 같은데."</div>
+            </div>
+            <div class="quote-card">
+              <div class="quote-text">"올리브영보다 낫네."</div>
+            </div>
+            <div class="quote-card">
+              <div class="quote-text">"나 상술에 당했다. 이렇게 당해."</div>
+            </div>
+            <div class="quote-card">
+              <div class="quote-text">"구멍이 너무 커가지고 자꾸 빠진다."</div>
+              <div class="quote-attr">바구니 문제 언급</div>
+            </div>
+          </div>
+
+          <!-- 고명지 -->
+          <div>
+            <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;">
+              <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,rgba(14,24,48,.95),rgba(30,48,80,.8));border:1.5px solid rgba(65,104,175,.45);display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:900;color:rgba(125,163,224,.9);">명</div>
+              <div>
+                <div style="font-size:.72rem;font-weight:800;color:rgba(255,255,255,.82);">고명지</div>
+                <div style="font-size:.54rem;color:rgba(255,255,255,.3);">세션 5 · 자유 동선 선호 · 중간 구매</div>
+              </div>
+              <span class="tag-chip amber" style="margin-left:auto;">조건부 구매</span>
+            </div>
+            <div class="quote-card featured">
+              <div class="quote-text">"모르는 브랜드에 대해 좋은 이미지를 갖게 됐고. 꾸준하게 다가올 수 있었던 느낌"</div>
+            </div>
+            <div class="quote-card">
+              <div class="quote-text">"이 브랜드가 아니라 그냥 김이 기억이 나. 그런 느낌."</div>
+            </div>
+            <div class="quote-card">
+              <div class="quote-text">"자유도를 오히려 높이니까 더 편해."</div>
+            </div>
+            <div class="quote-card">
+              <div class="quote-text">"해주시는 분들도 친절하셔가지고 기억에 남습니다."</div>
+            </div>
+            <div class="quote-card">
+              <div class="quote-text">"올리브영보다 거의 만 원 저렴하게 샀어요."</div>
+            </div>
+          </div>
+
+          <!-- 조연서 -->
+          <div>
+            <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;">
+              <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,rgba(14,24,48,.95),rgba(30,48,80,.8));border:1.5px solid rgba(65,104,175,.45);display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:900;color:rgba(125,163,224,.9);">서</div>
+              <div>
+                <div style="font-size:.72rem;font-weight:800;color:rgba(255,255,255,.82);">조연서</div>
+                <div style="font-size:.54rem;color:rgba(255,255,255,.3);">세션 7 · 앱 세션 오류 경험 · 적극 긍정 전환</div>
+              </div>
+              <span class="tag-chip green" style="margin-left:auto;">적극 전환</span>
+            </div>
+            <div class="quote-card featured">
+              <div class="quote-text">"경험이 좋아서 브랜드 평가가 올라가는. 판다 그러면 한번 찾아서 사는 거"</div>
+            </div>
+            <div class="quote-card">
+              <div class="quote-text">"나는 김. 귀엽잖아. 김 친절하고 웃기고."</div>
+            </div>
+            <div class="quote-card">
+              <div class="quote-text">"김총각. 귀엽다."</div>
+            </div>
+            <div class="quote-card">
+              <div class="quote-text">"크림 제형이 좋아. 대박."</div>
+            </div>
+            <div class="quote-card">
+              <div class="quote-text">"나한테 너무 핑크빛이야."</div>
+              <div class="quote-attr">블러셔 컬러 적합성 이슈</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════
+       종합 제언
+       ═══════════════════════════════════════════ -->
+  <div class="section-header">
+    <div class="section-header-label">종합 제언 & 다음 팝업 액션</div>
+    <div class="section-header-line"></div>
+  </div>
+
+  <div style="padding:.5rem 1.5rem 1rem;">
+    <div class="widget">
+      <div class="widget-header">
+        <div class="widget-icon"><span class="material-symbols-outlined">lightbulb</span></div>
+        <span class="widget-title">다음 팝업을 위한 제언</span>
+        <span class="widget-badge">4개 항목</span>
+      </div>
+      <div class="widget-body">
+
+        <div class="eval-summary">
+          이 팝업은 <strong>브랜드 인지 전환</strong>이라는 핵심 목표를 높은 수준으로 달성했습니다. 인지 제로에서 출발한 3명이 전원 구매 재탐색 의향으로 전환된 것은 팝업 마케팅의 모범 사례입니다. 단, <strong>감각 컨셉(김) → 브랜드명(Numi) 연결</strong>이 약하고, <strong>입장 첫인상(바구니)</strong> 개선이 남은 과제입니다.
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+
+          <div class="rec-card">
+            <div style="display:flex;align-items:flex-start;gap:.6rem;">
+              <div class="rec-num" style="border-color:rgba(248,113,113,.25);">1</div>
+              <div>
+                <div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.3rem;">
+                  <span class="priority-badge priority-1">즉시 개선</span>
+                </div>
+                <div style="font-size:.74rem;font-weight:800;color:rgba(255,255,255,.82);margin-bottom:.25rem;">바구니 교체 — 팝업 첫인상 복구</div>
+                <div style="font-size:.66rem;color:rgba(255,255,255,.4);line-height:1.6;">3명 전원 독립 언급한 유일한 공통 불만. 입장 직후 첫 경험에서 부정 반응 유발 → 구멍 없는 바구니로 즉시 교체. 비용 대비 기대 효과가 가장 높은 개선 항목.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="rec-card">
+            <div style="display:flex;align-items:flex-start;gap:.6rem;">
+              <div class="rec-num">2</div>
+              <div>
+                <div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.3rem;">
+                  <span class="priority-badge priority-2">단기 개선</span>
+                </div>
+                <div style="font-size:.74rem;font-weight:800;color:rgba(255,255,255,.82);margin-bottom:.25rem;">브랜드 정보 시각화 강화</div>
+                <div style="font-size:.66rem;color:rgba(255,255,255,.4);line-height:1.6;">구두 설명에만 의존하는 정보 전달 구조 탈피. 각 브랜드 구분 안내판, 주요 제품 정보 패널, 행사 혜택 시각화 — 특히 아이미미·리볼 섹션 중점 보강.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="rec-card">
+            <div style="display:flex;align-items:flex-start;gap:.6rem;">
+              <div class="rec-num">3</div>
+              <div>
+                <div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.3rem;">
+                  <span class="priority-badge priority-3">중기 개선</span>
+                </div>
+                <div style="font-size:.74rem;font-weight:800;color:rgba(255,255,255,.82);margin-bottom:.25rem;">김 컨셉 → Numi 브랜드명 연결 각인</div>
+                <div style="font-size:.66rem;color:rgba(255,255,255,.4);line-height:1.6;">"김은 기억나는데 Numi는 기억 못하는" 구조 탈피가 핵심 과제. 김 컨셉 오브제에 Numi 로고·브랜드명을 명확히 결합한 시각물로 2차 구매 연결 강화.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="rec-card">
+            <div style="display:flex;align-items:flex-start;gap:.6rem;">
+              <div class="rec-num">4</div>
+              <div>
+                <div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.3rem;">
+                  <span class="priority-badge priority-3">중기 개선</span>
+                </div>
+                <div style="font-size:.74rem;font-weight:800;color:rgba(255,255,255,.82);margin-bottom:.25rem;">아이미미·리볼 전용 체험 이벤트 도입</div>
+                <div style="font-size:.66rem;color:rgba(255,255,255,.4);line-height:1.6;">누미 스쿱 이벤트 대비 타 브랜드의 기억 차별화 한계 노출. 아이미미 피부톤별 컬러 컨설팅존, 리볼 "5분 발색" Before/After 체험존 신설 — 브랜드별 기억 앵커 형성 필요.</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 총평 verdict -->
+        <div class="verdict-box" style="margin-top:1rem;">
+          <div class="verdict-lbl">Proby 분석 총평</div>
+          <div class="verdict-text" style="color:rgba(163,194,239,.9);">
+            감각 컨셉 중심 팝업 마케팅의 높은 효과를 데이터로 검증
+          </div>
+          <div class="verdict-sub">브랜드 인지 전환율 100%, 현장 구매 전환 2/3명, 재방문 의향 3/3명. 핵심 성공 요인은 단연 '김 컨셉 오브제' — 제품보다 컨셉이 구매를 이끄는 팝업 마케팅의 본질을 입증했습니다. 다음 팝업에서 브랜드명 각인과 입장 경험 개선이 추가된다면 전환율이 더 높아질 것으로 예측됩니다.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+</div><!-- /page -->
+
+<script>
+/* 스코어 바 애니메이션 — DOM 로드 후 실행 */
+document.addEventListener('DOMContentLoaded', () => {
+  const bars = document.querySelectorAll('.score-bar-fill[data-w]');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const bar = entry.target;
+        const w = bar.getAttribute('data-w');
+        requestAnimationFrame(() => {
+          bar.style.width = w + '%';
+        });
+        observer.unobserve(bar);
+      }
+    });
+  }, { threshold: 0.2 });
+
+  bars.forEach(bar => observer.observe(bar));
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link rel="stylesheet" as="style"
+  href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.css"
+  integrity="sha384-y9k2lBaj/ETgBd4674Kql3098euvZU5fWlBcBBrlROBI6c2KDmjWhd508Rfsx9R/"
+  crossorigin="anonymous"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<title>PAGE TITLE | Proby</title>
+<script>
+tailwind.config = {
+  theme: { extend: { fontFamily: { display: ['Pretendard','-apple-system','BlinkMacSystemFont','system-ui','sans-serif'] } } }
+}
+</script>
+<style>
+/* ════════════════════════════════════════════════
+   DESIGN TOKENS — Proby (dark navy)
+
+   Backgrounds / Surfaces  → Black series (neutral cool dark)
+   Accents / Interactive   → Dark Navy series (ocean navy)
+
+   Black/2       #0A0A0B  ← page background
+   Black/5       #111114  ← elevated surface
+   Black/10      #19191E  ← card / glass base
+   Black/20      #25252D  ← border / divider
+   Dark Navy/30  #1E3050  ← muted accent
+   Dark Navy/40  #28406E  ← accent (buttons, highlights)
+   Dark Navy/60  #4168AF  ← bright accent (sparingly)
+   Dark Navy/80  #7DA3E0  ← accent text
+   Dark Navy/90  #A3C2EF  ← light accent text
+   ════════════════════════════════════════════════ */
+:root {
+  --bg:          #0A0A0B;
+  --surface:     #111114;
+  --card:        #19191E;
+  --border:      #25252D;
+  --accent-dim:  #1E3050;
+  --accent:      #28406E;
+  --accent-hi:   #4168AF;
+  --accent-text: #7DA3E0;
+  --accent-lt:   #A3C2EF;
+}
+
+/* ════════════════════════════════════════════════
+   BASE
+   ════════════════════════════════════════════════ */
+* { box-sizing: border-box; }
+body { background: var(--bg); margin: 0; }
+
+/* subtle noise texture overlay */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 1; opacity: 0.5;
+}
+
+/* ── Page container ── */
+.page {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 0 6rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* ════════════════════════════════════════════════
+   HERO SECTION
+   ════════════════════════════════════════════════ */
+.ct-hero {
+  padding: 2.5rem 2rem 3.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* "PROBY · Subtitle" label */
+.section-label {
+  font-size: .6rem;
+  font-weight: 900;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+  opacity: .7;
+  margin-bottom: .875rem;
+}
+
+/* gradient headline text — white → Proby navy light */
+.grad-text {
+  background: linear-gradient(135deg, #ffffff 20%, var(--accent-lt) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* decorative radial blobs */
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(140px);
+  pointer-events: none;
+}
+</style>
+</head>
+<body class="font-display text-white antialiased overflow-x-hidden">
+
+<div class="page">
+
+  <!-- ═══════════════════════════════════════════
+       HERO
+       · section-label : "PROBY · Subtitle"
+       · h1            : page title (use .grad-text on key words)
+       · desc          : 1–2 lines of description
+       · top-right     : Proby logo (+ optional client brand logo)
+       ═══════════════════════════════════════════ -->
+  <section class="ct-hero">
+    <!-- blob 1 — large ambient, top-left (Proby navy) -->
+    <div class="blob w-[700px] h-[700px]"
+         style="background:#1E3050;opacity:0.18;top:-200px;left:-150px;"></div>
+    <!-- blob 2 — smaller, bottom-right -->
+    <div class="blob w-[400px] h-[400px]"
+         style="background:#25252D;opacity:0.15;top:100px;right:-100px;"></div>
+
+    <div class="relative" style="display:flex;align-items:flex-start;gap:2.5rem;flex-wrap:wrap;">
+
+      <!-- Left: title + description -->
+      <div style="flex:1;min-width:260px;">
+        <div class="section-label">PROBY · Page Subtitle</div>
+        <h1 style="font-size:2.6rem;font-weight:900;letter-spacing:-.03em;line-height:1.15;margin-bottom:.75rem;">
+          <span class="grad-text">페이지</span><br>제목
+        </h1>
+        <p style="font-size:.88rem;color:rgba(255,255,255,.42);max-width:480px;line-height:1.75;margin-bottom:.3rem;">
+          페이지 주요 설명 — 한 줄 요약.
+        </p>
+        <p style="font-size:.75rem;color:var(--accent-text);opacity:.5;max-width:520px;line-height:1.65;">
+          보조 설명 또는 사용 안내 문구.
+        </p>
+      </div>
+
+      <!-- Right: Proby logo (+ client brand logo if co-branded) -->
+      <div style="flex-shrink:0;padding-top:.5rem;display:flex;flex-direction:column;align-items:flex-end;gap:.75rem;">
+        <img src="../Brand assets/proby/logo-text-white.png" alt="Proby"
+             style="height:22px;object-fit:contain;opacity:.7;"/>
+        <!-- 클라이언트 브랜드가 있는 경우 아래 주석 해제 -->
+        <!-- <img src="../Brand assets/vigloo.jpg" alt="Client Brand"
+             style="height:44px;object-fit:contain;border-radius:.5rem;opacity:.85;"/> -->
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       PAGE BODY  — insert page-specific content below
+       ═══════════════════════════════════════════ -->
+
+</div><!-- /page -->
+
+</body>
+</html>
