@@ -1703,7 +1703,6 @@ async function render() {
       /* 일반 URL 또는 상대경로 */
       videoContainer.innerHTML =
         '<video controls src="' + externalUrl + '" style="width:100%;height:100%;object-fit:contain;background:#000;border-radius:.5rem;" onerror="this.parentElement.innerHTML=\'<div class=video-placeholder><span class=material-symbols-outlined>videocam_off</span><div class=video-placeholder-text>영상 로드 실패</div></div>\'"></video>';
-    }.5rem;"></video>';
     }
     document.getElementById('video-duration').textContent = '영상 있음';
   } else if (rawVidName) {
