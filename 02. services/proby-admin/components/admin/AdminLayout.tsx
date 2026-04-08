@@ -8,6 +8,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { User } from '@supabase/supabase-js'
 import { Profile } from '@/lib/types'
 import { LogOut, ChevronDown, Shield, Building2, Users } from 'lucide-react'
+import { trackMixpanel, identifyMixpanel, registerMixpanelSuper } from '@/lib/analytics/mixpanel'
+import { useEffect } from 'react'
 
 export default function AdminLayout({ user, profile, children }: { user: User; profile: Profile | null; children: React.ReactNode }) {
   const router = useRouter()
@@ -15,8 +17,18 @@ export default function AdminLayout({ user, profile, children }: { user: User; p
   const [signingOut, setSigningOut] = useState(false)
   const userInitials = (profile?.full_name ?? user.email ?? 'A').split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2)
 
+  useEffect(() => {
+    identifyMixpanel(user.email ?? user.id, {
+      $email: user.email ?? undefined,
+      full_name: profile?.full_name ?? undefined,
+      is_super_admin: profile?.is_super_admin ?? false,
+    })
+    registerMixpanelSuper({ app: 'proby-admin', shell: 'AdminLayout' })
+  }, [user.id, user.email, profile?.full_name, profile?.is_super_admin])
+
   async function handleSignOut() {
     setSigningOut(true)
+    trackMixpanel('Admin_User_Signed_Out', {})
     await createClient().auth.signOut()
     router.push('/login')
   }
@@ -59,7 +71,7 @@ export default function AdminLayout({ user, profile, children }: { user: User; p
           {tabs.map((tab) => {
             const isActive = tab.exact ? pathname === tab.href : pathname.startsWith(tab.href)
             return (
-              <Link key={tab.href} href={tab.href} className={`flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium border-b-2 transition-colors ${isActive ? 'border-indigo-500 text-white' : 'border-transparent text-zinc-500 hover:text-zinc-300'}`}>
+              <Link key={tab.href} href={tab.href} onClick={() => trackMixpanel('Admin_Nav_Tab_Clicked', { label: tab.label, href: tab.href })} className={`flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium border-b-2 transition-colors ${isActive ? 'border-indigo-500 text-white' : 'border-transparent text-zinc-500 hover:text-zinc-300'}`}>
                 <tab.icon className="w-3.5 h-3.5" />{tab.label}
               </Link>
             )

@@ -5,6 +5,7 @@ import { DashboardWidget } from '@/lib/types'
 import { Plus, Pencil, X, ExternalLink, Image, Loader2, Search, Tag, ChevronDown, ArrowUpDown, Upload } from 'lucide-react'
 import { toast } from 'sonner'
 import { createClient } from '@/lib/supabase/client'
+import { trackMixpanel } from '@/lib/analytics/mixpanel'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -15,6 +16,25 @@ interface WidgetGridProps {
 }
 
 type SortKey = 'order' | 'title_asc' | 'title_desc' | 'newest'
+
+/** macOS 등에서 .svg 선택 시 File.type이 빈 문자열인 경우가 많아 확장자로 보완 */
+function thumbnailContentType(file: File): string | null {
+  if (file.type.startsWith('image/')) return file.type
+  const ext = file.name.split('.').pop()?.toLowerCase() ?? ''
+  const map: Record<string, string> = {
+    svg: 'image/svg+xml',
+    png: 'image/png',
+    jpg: 'image/jpeg',
+    jpeg: 'image/jpeg',
+    gif: 'image/gif',
+    webp: 'image/webp',
+    avif: 'image/avif',
+    bmp: 'image/bmp',
+    ico: 'image/x-icon',
+    heic: 'image/heic',
+  }
+  return map[ext] ?? null
+}
 
 // ─── Tag input chip ───────────────────────────────────────────────────────────
 
@@ -117,7 +137,8 @@ function WidgetModal({ widget, onClose, onSaved, companyId, nextOrder }: WidgetM
   }, [redirectUrl])
 
   async function handleThumbUpload(file: File) {
-    if (!file.type.startsWith('image/')) { toast.error('이미지 파일만 업로드할 수 있습니다'); return }
+    const contentType = thumbnailContentType(file)
+    if (!contentType) { toast.error('이미지 파일만 업로드할 수 있습니다'); return }
     setUploadingThumb(true)
     try {
       const supabase = createClient()
@@ -128,7 +149,7 @@ function WidgetModal({ widget, onClose, onSaved, companyId, nextOrder }: WidgetM
       const path = `${companyId}/thumbnails/${crypto.randomUUID()}.${ext}`
 
       const { error: uploadError } = await supabase.storage.from('files').upload(path, file, {
-        contentType: file.type,
+        contentType,
         cacheControl: '3600',
         upsert: false,
       })
@@ -268,7 +289,7 @@ function WidgetModal({ widget, onClose, onSaved, companyId, nextOrder }: WidgetM
             <input
               ref={thumbInputRef}
               type="file"
-              accept="image/*"
+              accept="image/*,.svg,image/svg+xml"
               className="hidden"
               onChange={(e) => { const f = e.target.files?.[0]; if (f) handleThumbUpload(f) }}
             />
@@ -390,6 +411,14 @@ export default function WidgetGrid({ widgets: initialWidgets, companyId, isSuper
   }, [widgets, search, selectedTag, sortBy])
 
   function handleSaved(saved: DashboardWidget) {
+    const isEdit = widgets.some((w) => w.id === saved.id)
+    trackMixpanel(isEdit ? 'Dashboard_Widget_Edited' : 'Dashboard_Widget_Created', {
+      widget_id: saved.id,
+      widget_title: saved.title,
+      company_id: companyId,
+      has_thumbnail: !!saved.thumbnail_url,
+      tag_count: saved.tags?.length ?? 0,
+    })
     setWidgets((prev) => {
       const exists = prev.find((w) => w.id === saved.id)
       return exists ? prev.map((w) => w.id === saved.id ? saved : w) : [...prev, saved]
@@ -402,6 +431,12 @@ export default function WidgetGrid({ widgets: initialWidgets, companyId, isSuper
     try {
       const res = await fetch(`/api/widgets/${id}`, { method: 'DELETE' })
       if (!res.ok) { toast.error('삭제 실패'); return }
+      const deleted = widgets.find((w) => w.id === id)
+      trackMixpanel('Dashboard_Widget_Deleted', {
+        widget_id: id,
+        widget_title: deleted?.title ?? null,
+        company_id: companyId,
+      })
       setWidgets((prev) => prev.filter((w) => w.id !== id))
       toast.success('위젯이 삭제됐습니다')
     } finally {
@@ -421,7 +456,12 @@ export default function WidgetGrid({ widgets: initialWidgets, companyId, isSuper
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-500 pointer-events-none" />
             <input
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value)
+                if (e.target.value.length >= 2) {
+                  trackMixpanel('Dashboard_Widget_Search_Typed', { query: e.target.value, company_id: companyId })
+                }
+              }}
               placeholder="제목, 설명, 태그 검색..."
               className="w-full h-8 pl-8 pr-3 rounded-lg bg-zinc-800 border border-zinc-700 text-white text-sm placeholder:text-zinc-500 focus:outline-none focus:border-indigo-500 transition-colors"
             />
@@ -435,12 +475,18 @@ export default function WidgetGrid({ widgets: initialWidgets, companyId, isSuper
           <div className="flex-1" />
 
           {/* Sort */}
-          <SortDropdown value={sortBy} onChange={setSortBy} />
+          <SortDropdown value={sortBy} onChange={(v) => {
+            setSortBy(v)
+            trackMixpanel('Dashboard_Widget_Sort_Changed', { sort_key: v, company_id: companyId })
+          }} />
 
           {/* Add widget (admin only) */}
           {isSuperAdmin && (
             <button
-              onClick={() => setModalWidget(null)}
+              onClick={() => {
+                setModalWidget(null)
+                trackMixpanel('Dashboard_Widget_Add_Button_Clicked', { company_id: companyId })
+              }}
               className="flex items-center gap-1.5 h-8 px-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium transition-colors"
             >
               <Plus className="w-3.5 h-3.5" />위젯 추가
@@ -461,7 +507,11 @@ export default function WidgetGrid({ widgets: initialWidgets, companyId, isSuper
             {allTags.map((tag) => (
               <button
                 key={tag}
-                onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
+                onClick={() => {
+                  const next = selectedTag === tag ? null : tag
+                  setSelectedTag(next)
+                  trackMixpanel('Dashboard_Widget_Tag_Filter_Clicked', { tag, action: next ? 'selected' : 'deselected', company_id: companyId })
+                }}
                 className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${selectedTag === tag ? 'bg-indigo-600 text-white' : 'bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700'}`}
               >
                 {tag}
@@ -508,7 +558,10 @@ export default function WidgetGrid({ widgets: initialWidgets, companyId, isSuper
               {isSuperAdmin && (
                 <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
                   <button
-                    onClick={() => setModalWidget(widget)}
+                    onClick={() => {
+                      setModalWidget(widget)
+                      trackMixpanel('Dashboard_Widget_Edit_Button_Clicked', { widget_id: widget.id, widget_title: widget.title, company_id: companyId })
+                    }}
                     className="p-1.5 rounded-lg bg-zinc-900/80 border border-zinc-700 text-zinc-400 hover:text-white hover:border-zinc-500 backdrop-blur-sm transition-colors"
                     title="수정"
                   >
@@ -529,6 +582,13 @@ export default function WidgetGrid({ widgets: initialWidgets, companyId, isSuper
                 href={widget.redirect_url}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackMixpanel(`Dashboard_Widget_Card_Clicked | ${widget.title}`, {
+                  widget_id: widget.id,
+                  widget_title: widget.title,
+                  redirect_url: widget.redirect_url,
+                  company_id: companyId,
+                  tags: widget.tags ?? [],
+                })}
                 className="flex flex-col flex-1 rounded-xl overflow-hidden border border-zinc-800 hover:border-zinc-600 transition-all hover:shadow-lg hover:shadow-black/30 group/card"
               >
                 {/* Thumbnail */}
@@ -557,7 +617,12 @@ export default function WidgetGrid({ widgets: initialWidgets, companyId, isSuper
                       {widget.tags.slice(0, 3).map((tag) => (
                         <button
                           key={tag}
-                          onClick={(e) => { e.preventDefault(); setSelectedTag(selectedTag === tag ? null : tag) }}
+                          onClick={(e) => {
+                            e.preventDefault()
+                            const next = selectedTag === tag ? null : tag
+                            setSelectedTag(next)
+                            trackMixpanel('Dashboard_Widget_Card_Tag_Clicked', { tag, action: next ? 'selected' : 'deselected', widget_id: widget.id, company_id: companyId })
+                          }}
                           className={`px-1.5 py-0.5 rounded text-[10px] font-medium transition-colors ${selectedTag === tag ? 'bg-indigo-600 text-white' : 'bg-zinc-800 text-zinc-500 hover:text-indigo-300 hover:bg-indigo-600/20'}`}
                         >
                           {tag}

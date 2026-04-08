@@ -1,0 +1,52 @@
+,,,,,,,,,,,,,,,
+,□ 6Frame 기준 ELP data,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,Table,seq,frame_lv1,frame_lv2,frame_lv3,variable_name,variable_label,variable_description,data_type,input_type,allowed_values,AI_gen_fl,AI_q_a_fl,essay_q_a_fl,Others
+,,,기본 정보,,,user_id,ID,user 구분 key ID,text,text_short,,,,,
+,ELP_CAREER,1,경험,전문성,,responsibility_domain_type,주요 경력 구분,주요 경력 내용 구분,categorical,single_select,Biz. 도메인 | 기능 도메인,Y,,,"ELP데이터를 통해 받은 주요 경력이 Biz 도메인인지, 기능 도메인인지 분류"
+,ELP_CAREER,2,경험,전문성,,responsibility_domain_type_cat,주요 경력 영역,"주요 경력 내용(Biz. Or 기능)에 따른 상세 내용(ex. 반도체, 에너지 for Biz., 재무, 인사 for 기능)",text,text_short,,Y,,,
+,ELP_CAREER,3,경험,전문성,,responsibility_domain_duration,경험 기간(개월),주요 경력 경험 기간(개월),numeric,number_input,,Y,,,
+,PRO,1,경험,전문성,Biz. 도메인,expertise_domain_depth_question,전문 영역 이해 질문,AI가 후보자의 전문 분야에 대한 검증을 위해 생성한 질문,text,text_long,,,Y,,
+,PRO,2,경험,전문성,Biz. 도메인,expertise_domain_depth_response,전문 영역 이해 응답,후보자가 본인의 전문 분야로 제시한 영역에 대해 AI가 생성한 검증 질문에 응답한 서술 내용.,text,text_long,,,Y,,
+,PRO,3,경험,전문성,Biz. 도메인,expertise_domain_depth_score,전문 영역 이해 깊이 Y/N,전문 분야에 대한 AI 질문 응답을 기반으로 해당 영역에 대한 이해의 깊이와 응용 수준을 평가한 N점 척도 점수,ordinal,slider,0 | 1 | 2 | … | N,Y,,,
+,PRO,4,경험,전문성,Biz. 도메인,external_speaking_engagements,외부 세미나·강연 이력,업무 전문성과 관련하여 외부 기관·학회·산업 행사 등에서 세미나 또는 강연을 진행한 이력에 대한 사실 정보,text,text_short,,,,Y,
+,SUCCESS_EXP,1,경험,성공 경험,,success_experience_cat1,성공 경험 평가 축,성공경험의 성격을 구분하기 위한 변수,categorical,single_select,전략적 확장 | 사업 운영 최적화 | 위기 Turn-around | Global/AX 경험,,,Y,
+,SUCCESS_EXP,2,경험,성공 경험,,success_experience_cat1_N,성공 경험 평가 축(N),성공경험의 성격을 구분하기 위한 변수(N),numeric,single_select,1 | 2 | 3 | 4,,,Y,
+,SUCCESS_EXP,3,경험,성공 경험,,success_experience_cat2,성공 경험,성공 경험 성격의 세부 구분을 위한 변수,categorical,single_select,사업 성장 | 사업 발굴 및 런칭 | 인수합병 | 사업 P&L 및 포트폴리오 관리 | 프로세스 혁신 기반 운영 개선 | 고객(체널) 확장 | 저성과/위기 사업 관리 | 조직 및 인력 개편 | 재무 위기 극복 | 글로벌 사업 운영 | 디지털/AI혁신,,,Y,
+,SUCCESS_EXP,4,경험,성공 경험,,success_experience_cat2_N,성공 경험(N),성공 경험 성격의 세부 구분을 위한 변수(N),numeric,single_select,1 | 2 | 3 | 4 | … | 11,,,Y,
+,SUCCESS_EXP,5,경험,성공 경험,,success_experience_cat3,성공 경험 세부 요인,성공 경험 성격의 세부 구분을 위한 세부 요인,text,text_long,"기존 사업을 사업성과(매출, Market, Share) 관점에서 크게 성장시켰던 경험 | …",,,Y,세부 질문 작업 마무리 중
+,SUCCESS_EXP,6,경험,성공 경험,,success_experience_cat3_N,성공 경험 세부 요인(N),성공 경험 성격의 세부 구분을 위한 세부 요인(N),categorical,single_select,1-1 | 1-2 | … |11-1 | …,,,Y,세부 질문 작업 마무리 중
+,SUCCESS_EXP,7,경험,성공 경험,,success_experience_engagement,역할/Engagement,경험과 관련한 본인의 역할 및 수행 정도 (Engagement),categorical,single_select,①전혀 경험 못했다 | ②일부 관련 업무 지원 | ③과제 내 독자적인 분야를 맡아 수행 | ④과제 전범위에 걸쳐 리더로서 주도적으로 수행 | ⑤CEO 수준으로 의사결정하거나 리더로 수행,,,Y,
+,SUCCESS_EXP,8,경험,성공 경험,,success_experience_impact,Impact,해당 경험이 회사(그룹)에 영향을 준 범위 (Impact),categorical,single_select,①전혀 경험 못했다 | ②담당 조직 일부에 영향 | ③Single 사업부 단위에 영향 | ④전사 또는 여러 사업부에 영향 | ⑤그룹 전체에 영향,,,Y,
+,SUCCESS_EXP,9,경험,성공 경험,,success_experience_level,난이도,해당 경험의 양상 (난이도),categorical,single_select,①전혀 경험 못했다 | ②기존 방식대 로 성장 | ③기존 방식에 대한 수정/보완을 통해 성장 | ④새로운 접근법이나 개념을 도입하여 전면적으로 개선하여 성장 | ⑤기존에 존재하지 않았던 혁신적인 방식을 도입하여 성장,,,Y,
+,SUCCESS_EXP,10,경험,성공 경험,,success_experience_detail,구체적 서술,"Engagement, Impact, 난이도 중 3~5점으로 응답한 경우 경험에 대하여 구체적으로 서술",text,text_long,,,,Y,
+,COMPETECY_RES,1,역량,Design 역량,문제 구조화,design_problem_structuring_score,문제 구조화 파악 Y/N,"에세이 기반 '문제 구조화' - ""본질을 꿰뚫고 해결 가능한 구조로 재설계하는가?""역량이 있는지 여부
+(문제 상황 본질 파악, 자원·제약 파악 및 재배치, 문제 재정의 여부 중심)",boolean,single_select,Y | N,Y,,,
+,COMPETECY_RES,2,역량,Design 역량,종합적 Planning,design_integrated_planning_score,종합적 Planning 역량 Y/N,"에세이 기반 '종합적 Planning' - ""고객과 이해관계자가 움직이는 혁신적 해법인가?"" 역량이 있는지 여부
+(고객 중심 가치 설계, 이해관계자 기반 인센티브·룰 설계 (고객, 구성원, 파트너, 사회 등), 전체 시스템 설계 (End-to-End Design) 여부 중심)",boolean,single_select,Y | N,Y,,,
+,COMPETECY_RES,3,역량,Design 역량,Deep Change 실행,design_deep_change_execution_score,Deep Change 실행 Y/N,"에세이 기반 'Deep Change 실행' - ""변화를 주도하고 끝까지 완성해내는가?""역량이 있는지 여부
+(구조적 혁신, Agile Pivoting, 공감/스토리텔링 여부 중심)",boolean,single_select,Y | N,Y,,,
+,COMPETECY_RES,4,역량,Learning Agility,미래 준비 역량,self_development_plan,자기 역량 개발 계획,향후 본인의 역량 강화를 위해 계획하고 있는 학습·개발 방향에 대한 서술,text,text_long,,,,Y,
+,COMPETECY_RES,5,역량,Learning Agility,미래 준비 역량,learning_related_training_experience,관련 교육 참여,업무 또는 미래 역량 강화를 위해 참여한 교육·학습 활동의 내용,text,text_long,,,,Y,
+,COMPETECY_RES,6,역량,Learning Agility,미래 준비 역량,learning_agility_future_readiness_score,미래 준비 역량 Y/N,"에세이 기반으로 미래의 불확실한 환경 변화를 선제적으로 준비하고 대응하는 역량이 있는지 여부
+(새로운 상황 학습력, 지속적 자기 개발 노력 중심)",ordinal,slider,Y | N,Y,,,
+,COMPETECY_RES,7,역량,Learning Agility,Globality,learning_agility_global_execution_score,글로벌 실행 역량 Y/N,"에세이 기반으로 언어·문화·네트워크 차이를 고려해 글로벌 시장 또는 환경에서 기회를 발굴하고 실행한 역량이 있는지 여부
+(글로벌 시장 통찰력, 글로벌 비즈니스 실행력 중심)",ordinal,slider,Y | N,Y,,,
+,COMPETECY_RES,8,역량,Learning Agility,AX 혁신,learning_agility_ax_innovation_score,AX 혁신 역량 Y/N,"에세이 기반으로 AI 및 디지털 기술의 산업·사업적 영향을 구조적으로 이해하고, 조직이 활용 가능한 방향으로 내재화·전환한 역량이 있는지 여부
+(AI 산업 통찰력, AI 전환 실행력 중심)",ordinal,slider,Y | N,Y,,,
+,VALUES_RES,1,자질,Attitude,Humility (겸손),attitude_humility_score,겸손 점수,"에세이 기반으로 자신의 한계를 명확히 인식하고, 타인의 관점과 피드백을 적극적으로 수용하는 태도가 있는지에 대한 N점 척도 점수
+(자기 인식, 피드백 수용성, 타인인정)",ordinal,slider,0 | 1 | 2 | … | N,Y,,,
+,VALUES_RES,2,자질,Attitude,Integrity (청렴성),attitude_integrity_score,청렴성 점수,"에세이 기반으로 도덕적 원칙을 일관되게 지키고, 단기적 이익보다 장기적 신뢰를 우선해 신뢰 구축/유지 자질이 있는지에 대한 N점 척도 점수
+(투명성, 언행일치, 윤리의식)",ordinal,slider,0 | 1 | 2 | … | N,Y,,,
+,VALUES_RES,3,자질,Attitude,Resilience (회복 탄력성),attitude_resilience_score,회복 탄력성 점수,"에세이 기반으로 역경/스트레스-실패/위기 상황에서 상황에서도 무너지지 않고 빠르게 회복하여 돌파구를 찾아 실행/성과를 창출하는 능력이 있는지에 대한 N점 척도 점수
+(정서 안정성, 회복 속도, 성장 전환력)",ordinal,slider,0 | 1 | 2 | … | N,Y,,,
+,VALUES_RES,4,자질,Attitude,Derailment (리더십 탈선),attitude_derailment_risk_score,리더십 탈선 위험 점수,"에세이 기반으로 스트레스·압박 상황에서 나타나는 조직 가치/신뢰를 훼손하는 부적응적 행동 패턴 및 잠재적 위험 요소에 대한 N점 척도 점수
+(자르시즘, 타인 조작, 미시적 과리, 공격성, 수동 공격성, 냉담성, 과도한 야망)",ordinal,slider,0 | 1 | 2 | … | N,Y,,,
+,ESSAY_Q_A,1,"역량, 자질","Design 역량, Learning Agility, Attitude",,seq_essay,순번,Sequence for ESSAY_Q_A,numeric,number_input,,,,Y,
+,ESSAY_Q_A,2,"역량, 자질","Design 역량, Learning Agility, Attitude",,essay_cat,에세이 질문 카테고리,에세이 문항 카테고리,categorical,single_select,Design 역량 | Learning Agility | Attitude,,,Y,
+,ESSAY_Q_A,3,"역량, 자질","Design 역량, Learning Agility, Attitude",,essay_question,에세이 질문,셀프 에세이에서 후보자에게 제시된 원문 질문 텍스트.,text,text_long,,,,Y,
+,ESSAY_Q_A,4,"역량, 자질","Design 역량, Learning Agility, Attitude",,essay_answer,에세이 질문 답변,후보자가 에세이 질문에 대해 작성한 원문 답변 텍스트. 전문성·역량·태도 평가를 위한 1차 원자료로 저장됨.,text,text_long,,,,Y,
+,AI_Q_A,1,"역량, 자질","Design 역량, Learning Agility, Attitude",,seq_ai,순번,Sequence for AI_Q_A,numeric,number_input,,,Y,,
+,AI_Q_A,2,"역량, 자질","Design 역량, Learning Agility, Attitude",,AI_cat,에세이 기반 AI 질문 카테고리,에세이 기반 AI 질문 카테고리,categorical,single_select,Design 역량 | Learning Agility | Attitude,,Y,,
+,AI_Q_A,3,"역량, 자질","Design 역량, Learning Agility, Attitude",,AI_question,에세이 기반 AI 질문,후보자의 에세이 답변 및 프로필 정보를 바탕으로 AI가 생성한 후속 검증 질문 텍스트. (전문성/사고 깊이 확인 목적),text,text_long,,,Y,,
+,AI_Q_A,4,"역량, 자질","Design 역량, Learning Agility, Attitude",,AI_answer,에세이 기반 AI 질문 답변,AI 후속 질문에 대해 후보자가 작성한 원문 답변 텍스트. 에세이 답변의 보완 검증을 위한 추가 원자료로 저장됨.,text,text_long,,,Y,,

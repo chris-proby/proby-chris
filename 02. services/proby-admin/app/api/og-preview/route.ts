@@ -73,6 +73,12 @@ function extractKeywords(title: string | null, description: string | null, metaK
 }
 
 export async function GET(request: NextRequest) {
+  // Auth check — only authenticated users may trigger server-side URL fetches
+  const { createClient } = await import('@/lib/supabase/server')
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return NextResponse.json({ error: '인증이 필요합니다' }, { status: 401 })
+
   const url = request.nextUrl.searchParams.get('url')
   if (!url) return NextResponse.json({ error: 'url required' }, { status: 400 })
 

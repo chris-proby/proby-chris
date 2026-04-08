@@ -15,8 +15,8 @@ const nextConfig: NextConfig = {
       {
         source: "/(.*)",
         headers: [
-          // 클릭재킹 방지
-          { key: "X-Frame-Options", value: "DENY" },
+          // 클릭재킹 방지 — iframe 임베드 허용 (Proby U-module 연동)
+          { key: "X-Frame-Options", value: "ALLOWALL" },
           // MIME 스니핑 방지
           { key: "X-Content-Type-Options", value: "nosniff" },
           // Referrer 정보 최소화
@@ -44,8 +44,8 @@ const nextConfig: NextConfig = {
               "style-src 'self' 'unsafe-inline'",
               // 폰트
               "font-src 'self' data:",
-              // iframe 차단 (클릭재킹 이중 방어)
-              "frame-ancestors 'none'",
+              // iframe 임베드 허용 (Proby 내부 툴용)
+              "frame-ancestors *",
               // Office Online 미리보기 허용 (file preview용)
               "frame-src 'self' https://view.officeapps.live.com",
               // 미디어 허용 (영상/음성 파일 프리뷰)

@@ -8,8 +8,9 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import AddCompanyModal from './AddCompanyModal'
 import EditCompanyModal from './EditCompanyModal'
-import { Building2, Plus, Search, Files, Coins, Check, Pencil, Settings2, Archive, ArchiveRestore } from 'lucide-react'
+import { Building2, Plus, Search, Files, Coins, Check, Pencil, Settings2, Archive, ArchiveRestore, Copy } from 'lucide-react'
 import { toast } from 'sonner'
+import { trackMixpanel } from '@/lib/analytics/mixpanel'
 
 function CreditsEditor({ company, onUpdated }: { company: Company; onUpdated: (newCredits: number) => void }) {
   const [editing, setEditing] = useState(false)
@@ -34,6 +35,7 @@ function CreditsEditor({ company, onUpdated }: { company: Company; onUpdated: (n
     const { error } = await createClient().from('companies').update({ credits: num }).eq('id', company.id)
     setSaving(false)
     if (error) { toast.error('저장 실패', { description: error.message }); return }
+    trackMixpanel('Admin_Company_Credits_Updated', { company_id: company.id, company_name: company.name, old_credits: company.credits ?? 0, new_credits: num })
     toast.success(`${company.name} 크레딧: ${num}개`)
     setEditing(false)
     onUpdated(num)
@@ -81,6 +83,7 @@ export default function AdminCompanyList({ companies: initialCompanies, fileCoun
   const [archivingId, setArchivingId] = useState<string | null>(null)
   const [confirmArchiveId, setConfirmArchiveId] = useState<string | null>(null)
   const [showArchived, setShowArchived] = useState(false)
+  const [duplicatingId, setDuplicatingId] = useState<string | null>(null)
 
   const active = companies.filter((c) => !c.is_archived && c.name.toLowerCase().includes(search.toLowerCase()))
   const archived = companies.filter((c) => c.is_archived && c.name.toLowerCase().includes(search.toLowerCase()))
@@ -91,13 +94,35 @@ export default function AdminCompanyList({ companies: initialCompanies, fileCoun
   }
 
   function handleCompanyUpdated(updated: Company) {
+    trackMixpanel('Admin_Company_Edited', { company_id: updated.id, company_name: updated.name })
     setCompanies((prev) => prev.map((c) => c.id === updated.id ? updated : c))
     setEditingCompany(null)
+  }
+
+  async function handleDuplicate(company: Company) {
+    setDuplicatingId(company.id)
+    try {
+      const res = await fetch('/api/admin/duplicate-company', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ companyId: company.id }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || '복제 실패')
+      trackMixpanel('Admin_Company_Duplicated', { source_company_id: company.id, source_company_name: company.name, new_company_id: data.company?.id })
+      toast.success(`"${company.name}" 복제 완료 → "${data.company?.name}"`)
+      setCompanies((prev) => [...prev, data.company])
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : '복제 실패')
+    } finally {
+      setDuplicatingId(null)
+    }
   }
 
   async function handleArchive(company: Company, restore = false) {
     if (!restore && confirmArchiveId !== company.id) {
       setConfirmArchiveId(company.id)
+      trackMixpanel('Admin_Company_Archive_Confirm_Shown', { company_id: company.id, company_name: company.name })
       return
     }
     setArchivingId(company.id)
@@ -110,6 +135,7 @@ export default function AdminCompanyList({ companies: initialCompanies, fileCoun
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || '처리 실패')
+      trackMixpanel(restore ? 'Admin_Company_Restored' : 'Admin_Company_Archived', { company_id: company.id, company_name: company.name })
       setCompanies((prev) => prev.map((c) => c.id === company.id ? { ...c, is_archived: !restore } : c))
       toast.success(restore ? `${company.name} 복원됐습니다` : `${company.name} 보관됐습니다`)
     } catch (err) {
@@ -157,15 +183,32 @@ export default function AdminCompanyList({ companies: initialCompanies, fileCoun
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {filtered.map((c) => (
               <div key={c.id} className={`group relative bg-zinc-900 border rounded-2xl transition-all ${showArchived ? 'border-zinc-700 opacity-70' : 'border-zinc-800 hover:border-zinc-700 hover:bg-zinc-800/50'}`}>
-                {/* 수정 버튼 (보관 중엔 숨김) */}
+                {/* 수정 + 복제 버튼 (보관 중엔 숨김) */}
                 {!showArchived && (
-                  <button
-                    onClick={() => setEditingCompany(c)}
-                    className="absolute top-3 right-10 p-1.5 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-500 hover:text-white hover:border-zinc-600 opacity-0 group-hover:opacity-100 transition-all z-10"
-                    title="고객사 정보 수정"
-                  >
-                    <Settings2 className="w-3.5 h-3.5" />
-                  </button>
+                  <>
+                    {/* 복제 */}
+                    <button
+                      onClick={(e) => { e.preventDefault(); handleDuplicate(c) }}
+                      disabled={duplicatingId === c.id}
+                      className="absolute top-3 right-[4.5rem] p-1.5 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-500 hover:text-indigo-400 hover:border-indigo-500/50 opacity-0 group-hover:opacity-100 transition-all z-10 disabled:opacity-50"
+                      title="고객사 복제"
+                    >
+                      {duplicatingId === c.id
+                        ? <span className="w-3.5 h-3.5 block border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        : <Copy className="w-3.5 h-3.5" />}
+                    </button>
+                    {/* 수정 */}
+                    <button
+                      onClick={() => {
+                        setEditingCompany(c)
+                        trackMixpanel('Admin_Company_Edit_Button_Clicked', { company_id: c.id, company_name: c.name })
+                      }}
+                      className="absolute top-3 right-10 p-1.5 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-500 hover:text-white hover:border-zinc-600 opacity-0 group-hover:opacity-100 transition-all z-10"
+                      title="고객사 정보 수정"
+                    >
+                      <Settings2 className="w-3.5 h-3.5" />
+                    </button>
+                  </>
                 )}
                 {/* 보관 / 복원 버튼 */}
                 <button
@@ -186,7 +229,7 @@ export default function AdminCompanyList({ companies: initialCompanies, fileCoun
                     : showArchived ? <ArchiveRestore className="w-3.5 h-3.5" /> : <Archive className="w-3.5 h-3.5" />
                   }
                 </button>
-                <Link href={`/admin/${c.id}`} className="block p-5">
+                <Link href={`/admin/${c.id}`} onClick={() => trackMixpanel('Admin_Company_Card_Clicked', { company_id: c.id, company_name: c.name, file_count: fileCounts[c.id] ?? 0 })} className="block p-5">
                   <div className="flex items-start gap-3 mb-4">
                     <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: c.primary_color + '30', border: `1px solid ${c.primary_color}40` }}>
                       {c.logo_url ? <img src={c.logo_url} alt={c.name} className="w-7 h-7 object-contain" /> : <Building2 className="w-5 h-5" style={{ color: c.primary_color }} />}
@@ -209,7 +252,11 @@ export default function AdminCompanyList({ companies: initialCompanies, fileCoun
           </div>
         )}
       </div>
-      {showAdd && <AddCompanyModal onClose={() => setShowAdd(false)} onCreated={() => { setShowAdd(false); router.refresh() }} />}
+      {showAdd && <AddCompanyModal onClose={() => setShowAdd(false)} onCreated={() => {
+        setShowAdd(false)
+        trackMixpanel('Admin_Company_Created', {})
+        router.refresh()
+      }} />}
       {editingCompany && <EditCompanyModal company={editingCompany} onClose={() => setEditingCompany(null)} onUpdated={handleCompanyUpdated} />}
     </div>
   )

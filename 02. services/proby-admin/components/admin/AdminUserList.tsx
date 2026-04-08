@@ -11,6 +11,7 @@ import { Building2, Shield, UserRound, UserPlus, Pencil } from 'lucide-react'
 import { formatDate } from '@/lib/file-utils'
 import AddUserModal from './AddUserModal'
 import EditUserModal from './EditUserModal'
+import { trackMixpanel } from '@/lib/analytics/mixpanel'
 
 type UserRow = {
   id: string; email: string; full_name: string | null
@@ -29,7 +30,10 @@ export default function AdminUserList({ users, companies }: { users: UserRow[]; 
         <h1 className="text-white font-semibold text-lg">유저 관리</h1>
         <Badge variant="secondary" className="bg-zinc-800 text-zinc-400 border-zinc-700">{users.length}명</Badge>
         <div className="flex-1" />
-        <Button size="sm" onClick={() => setShowAddUser(true)} className="h-8 bg-indigo-600 hover:bg-indigo-500 text-white">
+        <Button size="sm" onClick={() => {
+          setShowAddUser(true)
+          trackMixpanel('Admin_User_Add_Button_Clicked', {})
+        }} className="h-8 bg-indigo-600 hover:bg-indigo-500 text-white">
           <UserPlus className="w-3.5 h-3.5 mr-1.5" />유저 추가
         </Button>
       </div>
@@ -97,7 +101,10 @@ export default function AdminUserList({ users, companies }: { users: UserRow[]; 
                     {/* Edit button */}
                     <td className="px-4 py-3.5">
                       <button
-                        onClick={() => setEditingUser(user)}
+                        onClick={() => {
+                          setEditingUser(user)
+                          trackMixpanel('Admin_User_Edit_Button_Clicked', { target_user_id: user.id, target_email: user.email })
+                        }}
                         className="p-1.5 rounded-lg hover:bg-zinc-700 text-zinc-600 hover:text-zinc-300 transition-colors opacity-0 group-hover:opacity-100"
                         title="유저 수정"
                       >
@@ -126,7 +133,11 @@ export default function AdminUserList({ users, companies }: { users: UserRow[]; 
         <AddUserModal
           companies={companies}
           onClose={() => setShowAddUser(false)}
-          onCreated={() => { setShowAddUser(false); router.refresh() }}
+          onCreated={() => {
+            setShowAddUser(false)
+            trackMixpanel('Admin_User_Created', {})
+            router.refresh()
+          }}
         />
       )}
 
@@ -135,7 +146,11 @@ export default function AdminUserList({ users, companies }: { users: UserRow[]; 
           user={editingUser}
           companies={companies}
           onClose={() => setEditingUser(null)}
-          onUpdated={() => { setEditingUser(null); router.refresh() }}
+          onUpdated={() => {
+            trackMixpanel('Admin_User_Edited', { target_user_id: editingUser?.id, target_email: editingUser?.email })
+            setEditingUser(null)
+            router.refresh()
+          }}
         />
       )}
     </div>

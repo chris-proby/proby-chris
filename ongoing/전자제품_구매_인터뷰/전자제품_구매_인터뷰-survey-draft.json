@@ -1,0 +1,546 @@
+{
+  "survey_draft": {
+    "title": "전자제품 구매 경험 인터뷰 (약 40분)",
+    "description": "최근 전자제품·가전·IT 구매 여정을 대화형으로 탐색한다. 오프닝 → 니즈·탐색·비교 → 채널·가격·사회적 증거 → 결제·첫 경험·만족 → 재구매·습관까지.",
+    "welcome_title": "인터뷰에 참여해 주셔서 감사합니다",
+    "welcome_message": "오늘은 전자제품을 사 보신 경험을 편한 속도로 이야기만 나눌 거예요. 부담 없이 말씀해 주세요.",
+    "goal": "구매 동기, 정보 탐색, 결정 기준, 채널·가격, 결제 순간, 첫 사용·만족, 재구매 의도까지 경험 데이터를 수집한다",
+    "target_audience": "최근 1~2년 내 전자제품·가전·IT 기기 구매 경험이 있는 성인 소비자",
+    "quota": 10,
+    "user_groups": [],
+    "user_inputs": [
+      {
+        "id": "32def866-a07c-4b6f-aea8-8656547d2afa",
+        "readable_id": "user_input_1",
+        "label": "편하실 때 어떻게 불러드리면 될까요? (닉네임·이니셜도 괜찮아요)"
+      }
+    ],
+    "screener_questions": [],
+    "interview_opening": "안녕하세요, 오늘 인터뷰를 진행할 모더레이터입니다.\n오늘은 전자제품이나 가전, IT 기기를 사 보신 경험을 ‘정답 찾기’가 아니라 그냥 대화처럼 편하게 듣고 싶어요.\n말씀이 길어져도 괜찮고, 잠깐 생각하시는 시간도 충분히 가져가셔도 돼요.\n준비되셨으면 시작할게요라고 말씀해 주세요.",
+    "fixed_questions_note": "",
+    "interview_chapters": [
+      {
+        "id": "364a5c22-b4a4-4aaf-a39e-302960ff8d15",
+        "readable_id": "chapter_1",
+        "title": "워밍업 & 한 번의 구매 떠올리기",
+        "topics": [
+          {
+            "id": "a9f27dc2-b6a6-4355-ba2c-a7605926f98d",
+            "readable_id": "topic_1",
+            "title": "라포·사례 확정·니즈",
+            "questions": [
+              {
+                "id": "847700df-436d-4a8f-8d76-3b67af4304cc",
+                "readable_id": "question_1",
+                "content": "안녕하세요. 오늘은 전자제품 사 보신 경험을, 친구랑 수다 떨듯이 편하게만 이야기 나누면 돼요. 정답 같은 건 없어요. 혹시 요즘, 평소에 자주 눈여겨보는 전자제품이나 가전, IT 쪽 기기 같은 게 있으세요? 없어도 괜찮아요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[오프닝·라포]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "4ef5c493-5d3a-4eaa-a763-aa3460499958",
+                      "text": "최근에 관심 가져본 카테고리가 있다면 그 이유까지 자연스럽게 이어지게 한다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "1d1551b7-d776-4304-ae5d-9db6af8d6fb6",
+                      "text": "부담스러우면 ‘요즘은 특별히 없다’도 충분한 답으로 받아들인다.",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 120,
+                "media": []
+              },
+              {
+                "id": "da0f7477-8f86-43b4-8d42-c5bcba3986ec",
+                "readable_id": "question_2",
+                "content": "그럼 최근 1년 안에, 새로 사 보신 전자제품이나 가전·IT 기기 중에 지금 떠오르는 ‘그때 그거’ 한 번이 있을까요? 있으면 그 한 번을 기준으로 천천히 따라가 볼게요. 없다면 비슷하게 ‘거의 샀던’ 순간이 있어도 괜찮아요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[사례 확정]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "29ee7a8d-b267-4639-b6d9-6c11e97de4f5",
+                      "text": "어떤 제품인지, 대략 언제쯤인지 구체화한다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "869bfa4c-944f-48cb-932e-ae7a7e839257",
+                      "text": "기억이 흐릿하면 ‘가장 최근에 돈 쓴 전자제품’으로 범위를 좁혀 본다.",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 150,
+                "media": []
+              },
+              {
+                "id": "dde606bc-6ce8-48f9-b837-906cac0559db",
+                "readable_id": "question_3",
+                "content": "그걸 ‘사야겠다’고 느끼게 된 첫 순간이 있었을 것 같은데요. 그때 주변 상황이랑 기분이 어땠는지, 조금만 더 생생하게 말씀해 주실 수 있을까요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[니즈 발생]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "1fd9fd75-61a2-47fa-86da-dd05a6aee53a",
+                      "text": "니즈가 ‘고장·교체’인지 ‘성능 업’인지 ‘선물·가족’인지 등 맥락을 짚는다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "13d55a53-84c7-46fe-8a4c-56e3d307a9ce",
+                      "text": "당시 기대했던 변화나 해결하고 싶었던 불편을 한 문장으로 요약해 보도록 돕는다.",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 180,
+                "media": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "bf0fe0a7-7424-40f8-bd23-38dd7fc534e1",
+        "readable_id": "chapter_2",
+        "title": "탐색에서 결정까지",
+        "topics": [
+          {
+            "id": "9212e3b1-052c-47f5-a17b-587fab7d43b3",
+            "readable_id": "topic_2",
+            "title": "정보·기준·채널·가격·리뷰·망설임",
+            "questions": [
+              {
+                "id": "7ddca21c-2471-4b89-8a28-9a01805c2643",
+                "readable_id": "question_4",
+                "content": "그때부터 실제로 사기까지, 정보는 주로 어디서 어떻게 찾아보셨어요? 검색, 유튜브·숏폼, 커뮤니티, 매장 직원 설명 같은 것도 다 포함해서 편하게 말씀해 주세요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[정보 탐색]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "05f3cd28-50df-41e5-9c03-dac475f1d5d0",
+                      "text": "정보 채널의 순서(먼저 본 것 → 나중에 본 것)를 묻는다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "fb670c0e-5c3a-408c-8939-ccc732f15445",
+                      "text": "‘믿음이 갔던 소스’와 ‘의심이 들었던 소스’를 구분해 본다.",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 180,
+                "media": []
+              },
+              {
+                "id": "0999c0a9-3505-4b2f-889a-17bf17b28429",
+                "readable_id": "question_5",
+                "content": "후보가 몇 가지 있을 때, ‘이걸로 가자’고 결정에 가장 크게 작용한 기준은 뭐였어요? 스펙, 가격, 브랜드, 디자인, 배송·AS, 친구 추천 같은 것 중에서요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[결정 기준]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "61df2b30-ca5f-479d-bd0b-0e68391f7c59",
+                      "text": "기준을 한 가지로만 말하면, ‘두 번째로 중요했던 것’을 가볍게 묻는다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "6ef3cced-8ecd-444b-9fe2-e0ebaa5c613c",
+                      "text": "트레이드오프가 있었다면 무엇을 포기했는지 확인한다.",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 180,
+                "media": []
+              },
+              {
+                "id": "09c0d3db-22db-4e87-acdf-aa4502fed206",
+                "readable_id": "question_6",
+                "content": "그때 최종적으로는 온라인에서 끝내셨어요, 아니면 매장에서 사셨어요? 그 선택이 왜 그쪽이었는지도 궁금해요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[구매 채널]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [],
+                  "branches": [
+                    {
+                      "id": "0e0c30d3-a448-4b30-bd38-bac0e2f96caa",
+                      "if": "온라인으로 구매한 경우,",
+                      "note": "",
+                      "position": 0,
+                      "checklist": [
+                        {
+                          "id": "7f0e173a-82d1-45c7-a449-27457657747a",
+                          "text": "배송·반품 정책이 결정에 얼마나 영향을 줬는지 묻는다.",
+                          "position": 0
+                        },
+                        {
+                          "id": "acba84eb-d878-401d-9f26-fd732ce2c45b",
+                          "text": "앱·웹 중 어디서 샀는지, 결제 수단은 무엇이었는지 자연스럽게 확인한다.",
+                          "position": 1
+                        },
+                        {
+                          "id": "142c540b-c67c-443f-9d45-26a7f6058844",
+                          "text": "‘픽업’이나 ‘당일 배송’ 같은 옵션을 썼는지 탐색한다.",
+                          "position": 2
+                        }
+                      ],
+                      "branches": []
+                    },
+                    {
+                      "id": "f5117754-3f79-44f7-82d9-d8d30fd6ddf2",
+                      "if": "오프라인 매장에서 구매한 경우,",
+                      "note": "",
+                      "position": 1,
+                      "checklist": [
+                        {
+                          "id": "3d189783-8a0a-4527-8d92-146626a9a50c",
+                          "text": "매장에서 직접 보고 만져본 것이 신뢰에 어떤 영향을 줬는지 묻는다.",
+                          "position": 0
+                        },
+                        {
+                          "id": "117d6741-09fd-4a9b-9c9b-8e5b57f971b1",
+                          "text": "직원 설명이나 시연을 얼마나 믿고 참고했는지 확인한다.",
+                          "position": 1
+                        },
+                        {
+                          "id": "4321a1b1-f2df-4035-9f26-b491a283c257",
+                          "text": "온라인 가격과 비교했는지, 매장만의 혜택이 있었는지 묻는다.",
+                          "position": 2
+                        }
+                      ],
+                      "branches": []
+                    },
+                    {
+                      "id": "6afd4568-5a7a-4114-9168-00bd3a68af39",
+                      "if": "온라인과 오프라인을 섞어 진행한 경우,",
+                      "note": "",
+                      "position": 2,
+                      "checklist": [
+                        {
+                          "id": "42abcf23-45de-484d-a6a8-cb8aa16303cd",
+                          "text": "어느 단계에서 채널을 바꿨는지(탐색·시연·결제) 순서를 짚는다.",
+                          "position": 0
+                        },
+                        {
+                          "id": "7035f713-13a2-40fc-94c5-fe73654e06f9",
+                          "text": "각 채널이 맡은 역할이 무엇이었는지 정리해 본다.",
+                          "position": 1
+                        }
+                      ],
+                      "branches": []
+                    }
+                  ]
+                },
+                "response_type": "episode",
+                "duration_sec": 200,
+                "media": []
+              },
+              {
+                "id": "133395dc-daeb-4c05-9f4c-519293bb1e53",
+                "readable_id": "question_7",
+                "content": "가격이나 할인, 카드·멤버십 혜택 같은 건 그 과정에서 어느 정도 영향을 줬어요? 솔직한 체감으로 말씀해 주셔도 좋아요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[가격·프로모션]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "bcd42b97-b30d-450a-a288-5bfd5e921e91",
+                      "text": "‘싸서 샀다’와 ‘비싸도 이유가 있어서 샀다’ 중 어느 쪽에 가까웠는지 확인한다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "a2a0d132-52c7-4ccb-b213-98e406800f35",
+                      "text": "숨은 비용(액세서리, 보험, 구독)이 있었는지 묻는다.",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 150,
+                "media": []
+              },
+              {
+                "id": "18d6f047-0dff-4e21-8024-c448f677c283",
+                "readable_id": "question_8",
+                "content": "리뷰나 지인 말, 커뮤니티 댓글 같은 ‘다른 사람의 목소리’는 얼마나 믿고 참고하셨어요? 기억에 남는 한 줄이나 장면이 있으면 그것도 좋아요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[사회적 증거]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "293d3d97-61ca-41e2-9d4e-6ca828d76258",
+                      "text": "부정 리뷰를 봤을 때 어떻게 해석했는지 묻는다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "e84cdfc5-58a1-47a1-bdce-b83b1c05c91b",
+                      "text": "반대로 광고나 인플루언서 말은 어느 정도로 걸러 냈는지 확인한다.",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 150,
+                "media": []
+              },
+              {
+                "id": "d7d19db1-84f9-448b-bccf-77d45ca6a9f2",
+                "readable_id": "question_9",
+                "content": "거의 샀는데 손 놓은 적도 있으셨나요? 있었다면 무엇이 발목을 잡았는지, 그때 기분은 어땠는지도 궁금해요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[이탈·망설임]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "343a56a6-9ca0-4678-b5e4-a1325dc6d8ae",
+                      "text": "없다면 ‘그런 순간이 없었다’로 받고, 대신 ‘비슷하게 망설였던 지점’을 묻는다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "b737d14a-ce48-42bc-bf42-aea3685418b2",
+                      "text": "있다면 포기 이유가 정보 부족인지 가격인지 신뢰인지 구분한다.",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 150,
+                "media": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "ecb598cb-d903-4d50-8f2c-2b4d4cd71b67",
+        "readable_id": "chapter_3",
+        "title": "결제·받은 뒤 첫 경험",
+        "topics": [
+          {
+            "id": "fe8302db-45f6-4f59-a496-f3ac1330c9c9",
+            "readable_id": "topic_3",
+            "title": "결제 순간·언박싱·만족",
+            "questions": [
+              {
+                "id": "48328d34-ea02-4f0f-936d-63cbcddca3e2",
+                "readable_id": "question_10",
+                "content": "실제로 결제하시기 직전, 그 순간 기분이 어땠는지 떠올려 볼 수 있을까요? 설레였는지, 불안했는지, ‘그냥 빨리 끝내자’였는지도 다 괜찮아요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[결제 순간]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "8950467f-537c-411e-b2df-709f8b02db8c",
+                      "text": "장바구니에 오래 둔 적이 있는지, ‘지금 살까’ 망설인 시간이 있었는지 묻는다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "4e52cc98-6395-4391-b98c-fd3ba98d29bc",
+                      "text": "구매 후 바로 느낀 감정(후회·안도)이 있었는지 확인한다.",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 150,
+                "media": []
+              },
+              {
+                "id": "adfec03b-ae65-4e59-a6c8-af61aa5c898c",
+                "readable_id": "question_11",
+                "content": "제품을 받아서 처음 써 보실 때까지요—포장, 설명서, 앱 연결이나 업데이트 같은 것도 포함해서—전체적으로 어떠셨어요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[첫 경험·온보딩]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "471ddac3-417b-403c-9700-44b3fcdb6b13",
+                      "text": "기대와 달랐던 디테일이 있었는지 묻는다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "736cea1d-13a4-4809-8b50-12b24c52e43c",
+                      "text": "설정이 번거로웠다면 어디서 막혔는지 구체화한다.",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 180,
+                "media": []
+              },
+              {
+                "id": "2b095015-8698-48a0-a985-49bd0fa8ca33",
+                "readable_id": "question_12",
+                "content": "지금 돌이켜보면, 특히 마음에 들었던 점이랑 아쉬웠던 점을 나눠서 말씀해 주신다면요? 짧게라도 좋아요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[만족·불만]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "8fe1b664-a54c-4608-99c9-35065c734788",
+                      "text": "AS나 고객센터를 써 본 경험이 있다면 그때 느낌을 묻는다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "acf2d20d-abbf-4364-9144-24c29e791a70",
+                      "text": "불만이 있었다면 ‘다음엔 어떻게 할 것 같다’를 가볍게 연결한다.",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 180,
+                "media": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "a96c546b-68c5-4e61-9d78-9ba25bfb946c",
+        "readable_id": "chapter_4",
+        "title": "다음에 산다면 & 마무리",
+        "topics": [
+          {
+            "id": "fe1e76b3-ba39-473e-9ec4-085c1ba52f01",
+            "readable_id": "topic_4",
+            "title": "재구매·습관·추가 코멘트",
+            "questions": [
+              {
+                "id": "1caeae9e-8e62-4e6d-9ffe-431fb906d423",
+                "readable_id": "question_13",
+                "content": "비슷한 걸 또 산다면, 그때와 똑같이 하실 것 같아요? 아니면 탐색 방식이나 채널, 기준 중에서 바꾸고 싶은 게 있을까요?",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[재구매 시나리오]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "157483b3-2f47-4f04-99d6-5562300a913f",
+                      "text": "바꾸고 싶은 이유가 시간·돈·스트레스 중 어디에 가까운지 짚는다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "5968fb63-4cf5-4138-bc8c-857c93baedb7",
+                      "text": "‘절대 안 바꿀 습관’이 있다면 그것도 듣는다.",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 150,
+                "media": []
+              },
+              {
+                "id": "eaf27d8c-8b3e-4850-8019-f2163ced14ad",
+                "readable_id": "question_14",
+                "content": "전자제품 살 때만의 나만의 루틴이나 습관 같은 게 있으세요? 있다면 어떤 건지, 그게 언제부터 굳어졌는지도 편하게 말씀해 주세요.",
+                "question_type": "open_text",
+                "options": null,
+                "rating_min": null,
+                "rating_max": null,
+                "probing_guide": "[개인 루틴]",
+                "probing_plan": {
+                  "root_note": "",
+                  "root_checklist": [
+                    {
+                      "id": "a830bc9c-27be-4bb1-a736-5638cfc1790f",
+                      "text": "없다면 ‘특별한 루틴은 없고 매번 다르다’도 답으로 받는다.",
+                      "position": 0
+                    },
+                    {
+                      "id": "4ec93e36-ae3e-47d8-9de6-ed5dfd4a2c3d",
+                      "text": "루틴이 있다면 그게 실수를 줄여 준 적이 있는지 묻는다.",
+                      "position": 1
+                    }
+                  ],
+                  "branches": []
+                },
+                "response_type": "episode",
+                "duration_sec": 120,
+                "media": []
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "interview_closing": {
+      "closing_message": "오늘 소중한 시간 내어 주셔서 정말 감사합니다. 방금 이야기 중에 우리가 놓친 것 같지만, 전자제품 살 때 꼭 중요하다고 느끼시는 게 있다면 마지막으로 한 마디만 더 해 주셔도 좋아요. 없으시면 ‘없습니다’라고 말씀해 주셔도 됩니다. 감사합니다!"
+    }
+  }
+}

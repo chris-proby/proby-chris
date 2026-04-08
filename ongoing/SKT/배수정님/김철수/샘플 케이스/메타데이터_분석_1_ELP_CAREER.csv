@@ -1,4 +1,0 @@
-﻿Table,seq,frame_lv1,frame_lv2,variable_name,variable_label,값_김철수
-ELP_CAREER,1,경험,전문성,responsibility_domain_type,주요 경력 구분,Biz. 도메인
-ELP_CAREER,2,경험,전문성,responsibility_domain_type_cat,주요 경력 영역,통신·디지털플랫폼·AI
-ELP_CAREER,3,경험,전문성,responsibility_domain_duration,경험 기간(개월),300개월 (25년)

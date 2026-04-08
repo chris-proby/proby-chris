@@ -7,6 +7,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { toast } from 'sonner'
 import { Video, FileText, Image, Music, File, MoreVertical, Download, Eye, Trash2, MoveRight, Check } from 'lucide-react'
 import MoveModal from './MoveModal'
+import { trackMixpanel } from '@/lib/analytics/mixpanel'
 
 const iconMap = { video: Video, document: FileText, image: Image, audio: Music, file: File }
 const colorMap = { video: 'text-blue-400 bg-blue-500/10', document: 'text-green-400 bg-green-500/10', image: 'text-purple-400 bg-purple-500/10', audio: 'text-pink-400 bg-pink-500/10', file: 'text-zinc-400 bg-zinc-500/10' }
@@ -15,12 +16,13 @@ interface FileItemProps {
   file: FileRecord
   viewMode: 'grid' | 'list'
   onPreview: () => void
-  onDeleted: () => void
+  onDeleted?: () => void
   isSelected?: boolean
   onSelect?: (id: string, checked: boolean) => void
+  isReadOnly?: boolean
 }
 
-export default function FileItem({ file, viewMode, onPreview, onDeleted, isSelected = false, onSelect }: FileItemProps) {
+export default function FileItem({ file, viewMode, onPreview, onDeleted, isSelected = false, onSelect, isReadOnly = false }: FileItemProps) {
   const [downloading, setDownloading] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [showMove, setShowMove] = useState(false)
@@ -33,6 +35,7 @@ export default function FileItem({ file, viewMode, onPreview, onDeleted, isSelec
     try {
       const { data, error } = await createClient().storage.from(file.storage_bucket).createSignedUrl(file.storage_path, 3600)
       if (error || !data) throw error ?? new Error('URL 생성 실패')
+      trackMixpanel('Drive_File_Downloaded', { file_id: file.id, file_name: file.name, file_type: file.file_type, file_size: file.file_size })
       const a = document.createElement('a'); a.href = data.signedUrl; a.download = file.original_name; a.click()
     } catch { toast.error('다운로드 실패') } finally { setDownloading(false) }
   }
@@ -44,7 +47,8 @@ export default function FileItem({ file, viewMode, onPreview, onDeleted, isSelec
       await createClient().storage.from(file.storage_bucket).remove([file.storage_path])
       const { error } = await createClient().from('files').delete().eq('id', file.id)
       if (error) throw error
-      toast.success('파일이 삭제됐습니다'); onDeleted()
+      trackMixpanel('Drive_File_Deleted', { file_id: file.id, file_name: file.name, file_type: file.file_type })
+      toast.success('파일이 삭제됐습니다'); onDeleted?.()
     } catch { toast.error('삭제 실패'); setDeleting(false) }
   }
 
@@ -55,11 +59,27 @@ export default function FileItem({ file, viewMode, onPreview, onDeleted, isSelec
 
   const contextMenu = (
     <DropdownMenuContent align="end" className="w-40 bg-zinc-900 border-zinc-800">
-      <DropdownMenuItem onClick={onPreview} className="text-zinc-300 focus:bg-zinc-800 focus:text-white cursor-pointer"><Eye className="w-4 h-4 mr-2" />미리보기</DropdownMenuItem>
-      <DropdownMenuItem onClick={handleDownload} disabled={downloading} className="text-zinc-300 focus:bg-zinc-800 focus:text-white cursor-pointer"><Download className="w-4 h-4 mr-2" />{downloading ? '다운로드 중...' : '다운로드'}</DropdownMenuItem>
-      <DropdownMenuItem onClick={() => setShowMove(true)} className="text-zinc-300 focus:bg-zinc-800 focus:text-white cursor-pointer"><MoveRight className="w-4 h-4 mr-2" />이동</DropdownMenuItem>
-      <DropdownMenuSeparator className="bg-zinc-800" />
-      <DropdownMenuItem onClick={handleDelete} className="text-red-400 focus:bg-zinc-800 focus:text-red-300 cursor-pointer"><Trash2 className="w-4 h-4 mr-2" />삭제</DropdownMenuItem>
+      <DropdownMenuItem onClick={() => {
+        trackMixpanel('Drive_File_Preview_Opened', { file_id: file.id, file_name: file.name, file_type: file.file_type })
+        onPreview()
+      }} className="text-zinc-300 focus:bg-zinc-800 focus:text-white cursor-pointer"><Eye className="w-4 h-4 mr-2" />미리보기</DropdownMenuItem>
+      {isReadOnly ? (
+        <DropdownMenuItem onClick={() => { window.location.href = '/login' }} className="text-zinc-500 focus:bg-zinc-800 cursor-pointer">
+          <Download className="w-4 h-4 mr-2 shrink-0" />로그인 후 다운로드
+        </DropdownMenuItem>
+      ) : (
+        <DropdownMenuItem onClick={handleDownload} disabled={downloading} className="text-zinc-300 focus:bg-zinc-800 focus:text-white cursor-pointer"><Download className="w-4 h-4 mr-2" />{downloading ? '다운로드 중...' : '다운로드'}</DropdownMenuItem>
+      )}
+      {!isReadOnly && (
+        <>
+          <DropdownMenuItem onClick={() => {
+            setShowMove(true)
+            trackMixpanel('Drive_File_Move_Modal_Opened', { file_id: file.id, file_name: file.name })
+          }} className="text-zinc-300 focus:bg-zinc-800 focus:text-white cursor-pointer"><MoveRight className="w-4 h-4 mr-2" />이동</DropdownMenuItem>
+          <DropdownMenuSeparator className="bg-zinc-800" />
+          <DropdownMenuItem onClick={handleDelete} className="text-red-400 focus:bg-zinc-800 focus:text-red-300 cursor-pointer"><Trash2 className="w-4 h-4 mr-2" />삭제</DropdownMenuItem>
+        </>
+      )}
     </DropdownMenuContent>
   )
 
@@ -67,8 +87,8 @@ export default function FileItem({ file, viewMode, onPreview, onDeleted, isSelec
     return (
       <>
         <div
-          draggable
-          onDragStart={handleDragStart}
+          draggable={!isReadOnly}
+          onDragStart={!isReadOnly ? handleDragStart : undefined}
           onClick={onPreview}
           className={`flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-zinc-800 transition-colors group cursor-pointer ${deleting ? 'opacity-50' : ''} ${isSelected ? 'bg-indigo-600/10 ring-1 ring-indigo-500/30' : ''}`}
         >
@@ -89,7 +109,7 @@ export default function FileItem({ file, viewMode, onPreview, onDeleted, isSelec
           <span className="text-zinc-600 text-xs shrink-0 hidden sm:block">{formatDate(file.created_at)}</span>
           <DropdownMenu><DropdownMenuTrigger render={<button onClick={(e) => e.stopPropagation()} className="p-1 rounded hover:bg-zinc-700 text-zinc-500 hover:text-zinc-300 transition-colors opacity-0 group-hover:opacity-100"><MoreVertical className="w-4 h-4" /></button>} />{contextMenu}</DropdownMenu>
         </div>
-        {showMove && <MoveModal files={[file]} onClose={() => setShowMove(false)} onMoved={() => { setShowMove(false); onDeleted() }} />}
+        {showMove && <MoveModal files={[file]} onClose={() => setShowMove(false)} onMoved={() => { setShowMove(false); onDeleted?.() }} />}
       </>
     )
   }
@@ -97,8 +117,8 @@ export default function FileItem({ file, viewMode, onPreview, onDeleted, isSelec
   return (
     <>
       <div
-        draggable
-        onDragStart={handleDragStart}
+        draggable={!isReadOnly}
+        onDragStart={!isReadOnly ? handleDragStart : undefined}
         onClick={onPreview}
         className={`flex flex-col gap-2.5 p-3 rounded-xl hover:bg-zinc-800 transition-colors group relative cursor-pointer ${deleting ? 'opacity-50' : ''} ${isSelected ? 'bg-indigo-600/10 ring-1 ring-indigo-500/30' : ''}`}
       >
@@ -121,7 +141,7 @@ export default function FileItem({ file, viewMode, onPreview, onDeleted, isSelec
           <DropdownMenu><DropdownMenuTrigger render={<button onClick={(e) => e.stopPropagation()} className="p-1 rounded-md bg-zinc-900 border border-zinc-700 text-zinc-400 hover:text-white transition-colors"><MoreVertical className="w-3.5 h-3.5" /></button>} />{contextMenu}</DropdownMenu>
         </div>
       </div>
-      {showMove && <MoveModal files={[file]} onClose={() => setShowMove(false)} onMoved={() => { setShowMove(false); onDeleted() }} />}
+      {showMove && <MoveModal files={[file]} onClose={() => setShowMove(false)} onMoved={() => { setShowMove(false); onDeleted?.() }} />}
     </>
   )
 }

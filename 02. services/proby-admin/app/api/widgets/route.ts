@@ -13,7 +13,24 @@ export async function GET(request: NextRequest) {
   const companyId = request.nextUrl.searchParams.get('company_id')
   if (!companyId) return NextResponse.json({ error: 'company_id required' }, { status: 400 })
 
+  // Auth check — caller must be logged in and belong to this company (or be super admin)
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return NextResponse.json({ error: '인증이 필요합니다' }, { status: 401 })
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('company_id, is_super_admin')
+    .eq('id', user.id)
+    .single()
+
+  const isSuperAdmin = !!(profile as { is_super_admin: boolean } | null)?.is_super_admin
+  const userCompanyId = (profile as { company_id: string | null } | null)?.company_id
+
+  if (!isSuperAdmin && userCompanyId !== companyId) {
+    return NextResponse.json({ error: '권한이 없습니다' }, { status: 403 })
+  }
+
   const { data, error } = await supabase
     .from('dashboard_widgets')
     .select('*')
