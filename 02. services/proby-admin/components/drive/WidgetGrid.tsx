@@ -371,6 +371,85 @@ function SortDropdown({ value, onChange }: { value: SortKey; onChange: (v: SortK
   )
 }
 
+// ─── P-module text thumbnail ─────────────────────────────────────────────────
+
+function PModuleThumbnail() {
+  return (
+    <div
+      className="w-full h-full relative overflow-hidden flex flex-col justify-center group-hover/card:scale-105 transition-transform duration-300"
+      style={{ background: 'linear-gradient(145deg, #05071a 0%, #0a0e24 60%, #060a1c 100%)' }}
+    >
+      {/* Top-right corner accent */}
+      <div
+        className="absolute top-0 right-0 opacity-25"
+        style={{ width: 64, height: 64, background: 'linear-gradient(225deg, #4f46e5, transparent)' }}
+      />
+      {/* Soft bottom-left glow */}
+      <div
+        className="absolute bottom-0 left-0 opacity-[0.08] rounded-full"
+        style={{ width: 90, height: 90, background: '#6366f1', filter: 'blur(28px)', transform: 'translate(-30%, 30%)' }}
+      />
+      {/* Left vertical accent line */}
+      <div
+        className="absolute left-0 inset-y-0 w-px"
+        style={{ background: 'linear-gradient(to bottom, transparent 10%, #6366f1 50%, transparent 90%)' }}
+      />
+      {/* Content */}
+      <div className="pl-4 pr-3">
+        {/* Module tag */}
+        <div
+          className="text-indigo-400 mb-2"
+          style={{ fontSize: '0.48rem', letterSpacing: '0.3em', fontWeight: 600, textTransform: 'uppercase' }}
+        >
+          P · MODULE
+        </div>
+        {/* Main title */}
+        <div
+          style={{
+            fontFamily: '"Arial Black", "Impact", "Helvetica Neue", system-ui, sans-serif',
+            fontWeight: 900,
+            fontSize: '0.92rem',
+            letterSpacing: '0.1em',
+            lineHeight: 1.1,
+            color: '#ffffff',
+            textTransform: 'uppercase',
+          }}
+        >
+          Promotion
+          <br />
+          Tracker
+        </div>
+        {/* Gradient separator */}
+        <div
+          className="my-2"
+          style={{ height: 1, width: '65%', background: 'linear-gradient(to right, #4f46e5, transparent)' }}
+        />
+        {/* Korean subtitle */}
+        <div
+          style={{ fontSize: '0.58rem', letterSpacing: '0.1em', color: 'rgba(165, 180, 252, 0.7)', fontWeight: 400 }}
+        >
+          추천의향자 측정조사
+        </div>
+      </div>
+      {/* Large "P" watermark bottom-right */}
+      <div
+        className="absolute bottom-1 right-2 select-none"
+        style={{
+          fontFamily: '"Arial Black", "Impact", system-ui, sans-serif',
+          fontWeight: 900,
+          fontSize: '2.2rem',
+          color: '#6366f1',
+          opacity: 0.08,
+          lineHeight: 1,
+          letterSpacing: '-0.02em',
+        }}
+      >
+        P
+      </div>
+    </div>
+  )
+}
+
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export default function WidgetGrid({ widgets: initialWidgets, companyId, isSuperAdmin }: WidgetGridProps) {
@@ -593,7 +672,9 @@ export default function WidgetGrid({ widgets: initialWidgets, companyId, isSuper
               >
                 {/* Thumbnail */}
                 <div className="aspect-video bg-zinc-800 overflow-hidden shrink-0">
-                  {widget.thumbnail_url ? (
+                  {widget.tags?.some((t) => t.toLowerCase() === 'p-module') ? (
+                    <PModuleThumbnail />
+                  ) : widget.thumbnail_url ? (
                     <img
                       src={widget.thumbnail_url}
                       alt={widget.title}
