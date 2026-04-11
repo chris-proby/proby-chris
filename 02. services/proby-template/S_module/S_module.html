@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" as="style"
+  href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.css"
+  integrity="sha384-y9k2lBaj/ETgBd4674Kql3098euvZU5fWlBcBBrlROBI6c2KDmjWhd508Rfsx9R/"
+  crossorigin="anonymous"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<title>S Module · 정량 분석 | Proby</title>
+<script>tailwind.config={theme:{extend:{fontFamily:{display:['Pretendard','-apple-system','BlinkMacSystemFont','system-ui','sans-serif']}}}}</script>
+<style>
+/* ── Design Tokens ── */
+:root{
+  --bg:#0A0A0B; --surface:#111114; --card:#19191E; --border:#25252D;
+  --accent-dim:#1E3050; --accent:#28406E; --accent-hi:#4168AF;
+  --accent-text:#7DA3E0; --accent-lt:#A3C2EF;
+  --user:#4168AF; --leaver:#C0748A; --user-lt:#7DA3E0; --leaver-lt:#D99AAF;
+  --green:#5B9E7A; --amber:#E0A85A;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);margin:0;color:rgba(255,255,255,.82);font-family:Pretendard,-apple-system,sans-serif}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:1;opacity:.5}
+.page{max-width:1440px;margin:0 auto;padding:0 0 6rem;position:relative;z-index:2}
+
+/* ── Hero ── */
+.ct-hero{padding:2.5rem 2rem 3rem;position:relative;overflow:hidden}
+.section-label{font-size:.6rem;font-weight:900;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-text);opacity:.7;margin-bottom:.875rem}
+.grad-text{background:linear-gradient(135deg,#fff 20%,var(--accent-lt) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.blob{position:absolute;border-radius:50%;filter:blur(140px);pointer-events:none}
+
+/* ── Sticky strip ── */
+.candidate-strip{position:sticky;top:0;z-index:50;background:rgba(10,10,11,.93);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.06);padding:.55rem 1.5rem .5rem;display:flex;align-items:center;gap:.75rem;margin:0 0 1.5rem}
+.strip-meta-lbl{font-size:.46rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.22)}
+.strip-meta-val{font-size:.62rem;color:rgba(255,255,255,.55)}
+.strip-pill{margin-left:auto;display:flex;gap:.5rem}
+.pill{font-size:.46rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:.18rem .5rem;border-radius:.24rem;background:rgba(65,104,175,.1);border:1px solid rgba(65,104,175,.22);color:rgba(125,163,224,.65)}
+.pill.g{background:rgba(91,158,122,.1);border-color:rgba(91,158,122,.28);color:rgba(91,198,142,.7)}
+
+/* ── Widget grid ── */
+.widget-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;padding:0 2rem 2rem}
+@media(max-width:960px){.widget-grid{grid-template-columns:1fr}}
+.widget{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.07);border-radius:1rem;overflow:hidden;display:flex;flex-direction:column}
+.widget.span-full{grid-column:1/-1}
+.widget-header{display:flex;align-items:center;gap:.5rem;padding:.75rem 1rem .65rem;border-bottom:1px solid rgba(255,255,255,.05)}
+.widget-icon{width:28px;height:28px;border-radius:.4rem;background:rgba(65,104,175,.08);border:1px solid rgba(65,104,175,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.widget-icon .material-symbols-outlined{font-size:.95rem!important;color:rgba(125,163,224,.7)}
+.widget-title{font-size:.68rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35)}
+.widget-badge{margin-left:auto;font-size:.48rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.12rem .42rem;border-radius:.24rem;background:rgba(65,104,175,.09);border:1px solid rgba(65,104,175,.2);color:rgba(125,163,224,.6)}
+.widget-badge.sig{background:rgba(91,158,122,.09);border-color:rgba(91,158,122,.25);color:rgba(91,198,142,.65)}
+.widget-body{flex:1;padding:1rem}
+
+/* ── Insight bar ── */
+.insight-bar{
+  background:linear-gradient(135deg,rgba(65,104,175,.1) 0%,rgba(65,104,175,.04) 100%);
+  border-left:3px solid rgba(65,104,175,.7);
+  padding:.9rem 1.1rem .85rem;
+  margin-bottom:1.1rem;
+  border-radius:0 .6rem .6rem 0;
+  position:relative;
+  overflow:hidden;
+}
+.insight-bar::before{
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(90deg,rgba(65,104,175,.07) 0%,transparent 60%);
+  pointer-events:none;
+}
+.insight-bar .headline{
+  font-size:1rem;
+  font-weight:900;
+  letter-spacing:-.02em;
+  line-height:1.35;
+  background:linear-gradient(135deg,#ffffff 30%,var(--accent-lt) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:.45rem;
+}
+.insight-bar .desc{
+  font-size:.72rem;
+  color:rgba(255,255,255,.5);
+  line-height:1.65;
+}
+
+/* ── Stat cards ── */
+.stat-row{display:flex;gap:.65rem;margin-bottom:.9rem;flex-wrap:wrap}
+.stat-card{flex:1;min-width:90px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:.55rem;padding:.6rem .75rem}
+.stat-card .s-lbl{font-size:.48rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:.25rem}
+.stat-card .s-val{font-size:1.3rem;font-weight:900;letter-spacing:-.02em;color:#fff}
+.stat-card .s-val em{font-size:.6rem;font-weight:500;color:rgba(255,255,255,.4);margin-left:.12rem;font-style:normal}
+.stat-card .s-sub{font-size:.5rem;color:rgba(255,255,255,.3);margin-top:.15rem}
+.stat-card.hi{border-color:rgba(65,104,175,.35);background:rgba(65,104,175,.07)}.stat-card.hi .s-val{color:var(--accent-lt)}
+.stat-card.warn{border-color:rgba(192,116,138,.3);background:rgba(192,116,138,.06)}.stat-card.warn .s-val{color:#D99AAF}
+.stat-card.pos{border-color:rgba(91,158,122,.3);background:rgba(91,158,122,.06)}.stat-card.pos .s-val{color:#7FCCA0}
+
+/* ── p-badge ── */
+.pb{display:inline-flex;align-items:center;gap:.2rem;font-size:.48rem;font-weight:700;letter-spacing:.06em;padding:.14rem .4rem;border-radius:.2rem;background:rgba(91,158,122,.1);border:1px solid rgba(91,158,122,.22);color:rgba(91,198,142,.7);font-family:'Courier New',monospace}
+.pb.hi{background:rgba(163,194,239,.07);border-color:rgba(163,194,239,.2);color:rgba(163,194,239,.65)}
+
+/* ── Legend ── */
+.legend{display:flex;gap:.65rem;flex-wrap:wrap;margin-bottom:.7rem}
+.li{display:flex;align-items:center;gap:.28rem;font-size:.52rem;color:rgba(255,255,255,.4)}
+.ld{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+
+/* ── Population Pyramid ── */
+.pyramid-wrap{display:flex;flex-direction:column;gap:.6rem}
+.pyramid-row{display:flex;align-items:center;gap:0}
+.pyr-lbl{width:60px;text-align:center;font-size:.58rem;font-weight:700;color:rgba(255,255,255,.5);flex-shrink:0;z-index:1}
+.pyr-left{flex:1;display:flex;justify-content:flex-end}
+.pyr-right{flex:1;display:flex;justify-content:flex-start}
+.pyr-bar{height:28px;border-radius:3px;display:flex;align-items:center;transition:width .6s ease;min-width:2px}
+.pyr-bar-left{justify-content:flex-end;padding-right:6px}
+.pyr-bar-right{justify-content:flex-start;padding-left:6px}
+.pyr-pct{font-size:.58rem;font-weight:700;color:rgba(255,255,255,.7);white-space:nowrap}
+.pyr-axis{display:flex;align-items:center;gap:0;margin-top:.3rem}
+.pyr-axis-left{flex:1;display:flex;justify-content:flex-end;padding-right:4px}
+.pyr-axis-right{flex:1;display:flex;justify-content:flex-start;padding-left:4px}
+.pyr-axis-label{width:60px;text-align:center;font-size:.44rem;color:rgba(255,255,255,.2)}
+.pyr-header{display:flex;margin-bottom:.4rem}
+.pyr-header-left{flex:1;text-align:right;padding-right:4px;font-size:.5rem;font-weight:700;color:rgba(125,163,224,.6)}
+.pyr-header-right{flex:1;text-align:left;padding-left:4px;font-size:.5rem;font-weight:700;color:rgba(192,116,138,.6)}
+.pyr-header-center{width:60px}
+.pyr-divider{width:1px;background:rgba(255,255,255,.12);align-self:stretch;margin:0 0}
+
+/* ── Heatmap ── */
+.heatmap-grid{display:grid;gap:3px}
+.hm-cell{border-radius:.3rem;display:flex;align-items:center;justify-content:center;font-size:.56rem;font-weight:700;transition:background .3s}
+.hm-row-label{font-size:.54rem;font-weight:600;color:rgba(255,255,255,.45);display:flex;align-items:center;padding-right:.4rem}
+.hm-col-header{font-size:.48rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.3);text-align:center;padding:.25rem}
+.hm-section-label{font-size:.44rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.2);padding:.3rem 0 .1rem}
+
+/* ── Divider ── */
+.divider{height:1px;background:rgba(255,255,255,.05);margin:.8rem 0}
+
+/* ── Chart wrapper ── */
+.chart-wrap{position:relative;width:100%}
+.chart-cap{font-size:.48rem;color:rgba(255,255,255,.22);text-align:center;margin-top:.45rem;letter-spacing:.04em;line-height:1.6}
+</style>
+</head>
+<body class="antialiased overflow-x-hidden">
+<div class="page">
+
+<!-- ═══ HERO ═══ -->
+<section class="ct-hero">
+  <div class="blob w-[600px] h-[600px]" style="background:#1E3050;opacity:.2;top:-180px;left:-120px"></div>
+  <div class="blob w-[360px] h-[360px]" style="background:#3A1840;opacity:.12;top:80px;right:-80px"></div>
+  <div class="relative" style="display:flex;align-items:flex-start;gap:2.5rem;flex-wrap:wrap">
+    <div style="flex:1;min-width:260px">
+      <div class="section-label">PROBY · S Module · 정량 분석</div>
+      <h1 style="font-size:2.6rem;font-weight:900;letter-spacing:-.03em;line-height:1.15;margin-bottom:.75rem">
+        <span class="grad-text">브랜드 포트폴리오</span><br>정량 인사이트
+      </h1>
+      <p style="font-size:.88rem;color:rgba(255,255,255,.42);max-width:480px;line-height:1.75;margin-bottom:.3rem">
+        루메르 사용자(150) · 이탈자(150) 대상 브랜드 행태·만족·재구매 의향 분석
+      </p>
+      <p style="font-size:.72rem;color:var(--accent-text);opacity:.5;max-width:520px;line-height:1.65">
+        레이더 · 산점도 · 버블 · 히트맵 · 극좌표 · 인구피라미드 — 6종 시각화
+      </p>
+    </div>
+    <div style="flex-shrink:0;padding-top:.5rem">
+      <img src="../Brand assets/proby/logo-text-white.png" alt="Proby" style="height:22px;object-fit:contain;opacity:.7"/>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ STRIP ═══ -->
+<div class="candidate-strip">
+  <span class="material-symbols-outlined" style="font-size:1.1rem;color:rgba(125,163,224,.65)">query_stats</span>
+  <div><div class="strip-meta-lbl">표본</div><div class="strip-meta-val">N=300 (사용자 150 / 이탈자 150) · 연령 19~39세</div></div>
+  <div class="strip-pill">
+    <span class="pill g">t·z·Bootstrap</span>
+    <span class="pill">Bonferroni α/m=0.01</span>
+    <span class="pill">6개 섹션</span>
+  </div>
+</div>
+
+<div class="widget-grid">
+
+  <!-- ══════════════════════════════════════════
+       ① RADAR — 브랜드 카테고리 프로파일
+       A1(MA) vs A2(SA) × 사용자/이탈자
+  ══════════════════════════════════════════ -->
+  <div class="widget">
+    <div class="widget-header">
+      <div class="widget-icon"><span class="material-symbols-outlined">radar</span></div>
+      <span class="widget-title">① 브랜드 카테고리 프로파일</span>
+      <span class="widget-badge sig">Radar · A1/A2</span>
+    </div>
+    <div class="widget-body">
+      <div class="insight-bar">
+        <div class="headline">사용자·이탈자 모두 럭셔리 MA 두껍고, SA는 급격히 수축</div>
+        <div class="desc">MA(병행사용)·SA(최선호) 간 갭 패턴이 4개 카테고리 전반에서 동일하게 나타남. 단일표본 t=8.14, p=0.002.</div>
+      </div>
+      <div class="legend">
+        <div class="li"><div class="ld" style="background:#4168AF"></div>사용자 MA</div>
+        <div class="li"><div class="ld" style="background:rgba(65,104,175,.35)"></div>사용자 SA</div>
+        <div class="li"><div class="ld" style="background:#C0748A"></div>이탈자 MA</div>
+        <div class="li"><div class="ld" style="background:rgba(192,116,138,.35)"></div>이탈자 SA</div>
+      </div>
+      <div class="chart-wrap" style="height:280px"><canvas id="chartRadar"></canvas></div>
+      <div class="chart-cap">레이더 축: 매스·로드샵·일반매스·럭셔리 브랜드 NET (A1/A2 각 전체 기준)</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       ② BUBBLE — 만족도 × 재구매 의향 상관
+       연령1 그룹 4개, 버블 크기 = Base n
+  ══════════════════════════════════════════ -->
+  <div class="widget">
+    <div class="widget-header">
+      <div class="widget-icon"><span class="material-symbols-outlined">bubble_chart</span></div>
+      <span class="widget-title">② 만족도 × 재구매 상관 버블</span>
+      <span class="widget-badge sig">Bubble · A3×A4</span>
+    </div>
+    <div class="widget-body">
+      <div class="insight-bar">
+        <div class="headline">이탈자 그룹이 만족도·재구매 의향 모두 우상단에 집중</div>
+        <div class="desc">사용자 그룹은 좌하단에 분리 — 현재 브랜드가 아닌 대체 브랜드에 대한 높은 만족·확신이 이탈을 설명.</div>
+      </div>
+      <div class="legend">
+        <div class="li"><div class="ld" style="background:#4168AF;border-radius:50%"></div>사용자 그룹</div>
+        <div class="li"><div class="ld" style="background:#C0748A;border-radius:50%"></div>이탈자 그룹</div>
+        <div class="li" style="color:rgba(255,255,255,.28)">버블 크기 = 표본 n</div>
+      </div>
+      <div class="chart-wrap" style="height:280px"><canvas id="chartBubble"></canvas></div>
+      <div class="chart-cap">x=만족도 TOP2 · y=재구매 TOP2 · 버블 r∝n (사용자/이탈자 × 연령1)</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       ③ SCATTER — 럭셔리 브랜드 충성도 맵
+       x=MA%, y=SA%, label=브랜드명
+  ══════════════════════════════════════════ -->
+  <div class="widget span-full">
+    <div class="widget-header">
+      <div class="widget-icon"><span class="material-symbols-outlined">scatter_plot</span></div>
+      <span class="widget-title">③ 럭셔리 브랜드 충성도 맵 — MA vs SA</span>
+      <span class="widget-badge">Scatter · A1×A2</span>
+    </div>
+    <div class="widget-body">
+      <div class="insight-bar">
+        <div class="headline">루메르: MA 최상위(50%)지만 SA는 브랜드 규모 대비 낮은 충성도</div>
+        <div class="desc">대각선에 가까울수록 선호 독점률이 높은 브랜드. 루메르는 MA↔SA 갭이 가장 크며, 다수가 병행 사용 중임을 의미.</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-card hi"><div class="s-lbl">루메르 MA</div><div class="s-val">50.0<em>%</em></div><div class="s-sub">럭셔리 중 1위</div></div>
+        <div class="stat-card warn"><div class="s-lbl">루메르 SA</div><div class="s-val">15.7<em>%</em></div><div class="s-sub">충성도 비율 31.4%</div></div>
+        <div class="stat-card"><div class="s-lbl">셀키아 SA/MA</div><div class="s-val">35.2<em>%</em></div><div class="s-sub">비교적 높은 충성</div></div>
+        <div class="stat-card"><div class="s-lbl">크리엔느 SA/MA</div><div class="s-val">20.6<em>%</em></div><div class="s-sub">중간 수준</div></div>
+      </div>
+      <div class="chart-wrap" style="height:320px"><canvas id="chartScatter"></canvas></div>
+      <div class="chart-cap">전체 N=300 기준 · x=A1 MA% · y=A2 SA% · 점선=충성도 기준선(SA=MA×0.3) · 브랜드명 hover 시 표시</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       ④ CSS HEATMAP — 연령×만족도 매트릭스
+       8세그먼트(사용자4+이탈자4) × 3레벨
+  ══════════════════════════════════════════ -->
+  <div class="widget">
+    <div class="widget-header">
+      <div class="widget-icon"><span class="material-symbols-outlined">grid_on</span></div>
+      <span class="widget-title">④ 연령 × 만족도 히트맵</span>
+      <span class="widget-badge">Heatmap · A3</span>
+    </div>
+    <div class="widget-body">
+      <div class="insight-bar">
+        <div class="headline">이탈자 전 연령대에서 '매우 만족' 셀이 밝게 켜진다</div>
+        <div class="desc">사용자 행은 '약간 만족' 셀이 일관되게 진하고 '매우 만족'은 거의 꺼진 상태. 연령과 무관한 구조적 차이.</div>
+      </div>
+      <div id="heatmap"></div>
+      <div class="chart-cap">색 강도 = % 절댓값 · 오렌지=약간만족(우려) · 블루=만족 · 그린=매우만족</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       ⑤ POLAR AREA — 재구매 이유 NET
+  ══════════════════════════════════════════ -->
+  <div class="widget">
+    <div class="widget-header">
+      <div class="widget-icon"><span class="material-symbols-outlined">donut_large</span></div>
+      <span class="widget-title">⑤ 재구매 이유 NET 비중</span>
+      <span class="widget-badge sig">Polar · A4-1</span>
+    </div>
+    <div class="widget-body">
+      <div class="insight-bar">
+        <div class="headline">피부 적합성 NET이 전체를 압도 — 효능보다 3.8배 크다</div>
+        <div class="desc">z=7.13, p≈10⁻¹³. 진정·저자극·적합성을 커뮤니케이션 전면에 세우는 것이 표와 일치.</div>
+      </div>
+      <div class="chart-wrap" style="height:260px"><canvas id="chartPolar"></canvas></div>
+      <div class="chart-cap">사용자 Base=142 · 각 NET은 중복응답(숫자는 % 절댓값)</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       ⑥ POPULATION PYRAMID — 만족도 분포
+       사용자(왼쪽) vs 이탈자(오른쪽)
+  ══════════════════════════════════════════ -->
+  <div class="widget span-full">
+    <div class="widget-header">
+      <div class="widget-icon"><span class="material-symbols-outlined">align_horizontal_center</span></div>
+      <span class="widget-title">⑥ 만족도 분포 — 사용자 vs 이탈자 피라미드</span>
+      <span class="widget-badge sig">Population Pyramid · A3</span>
+    </div>
+    <div class="widget-body">
+      <div class="insight-bar">
+        <div class="headline">구조적 비대칭 — 사용자 '약간 만족'이 두껍고, 이탈자 '매우 만족'이 극적으로 두텁다</div>
+        <div class="desc">매우만족: z=−4.807, p=1.53×10⁻⁶, Cohen h=−0.589 / 약간만족: z=4.678, p=2.90×10⁻⁶, h=0.559 — 모두 Bonferroni α/m=0.01 통과.</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-card warn"><div class="s-lbl">약간만족 · 사용자</div><div class="s-val">32.0<em>%</em></div><div class="s-sub">이탈자 대비 +22%p</div></div>
+        <div class="stat-card"><div class="s-lbl">만족 · 전체</div><div class="s-val">63.3<em>%</em></div><div class="s-sub">양측 유사</div></div>
+        <div class="stat-card hi"><div class="s-lbl">매우만족 · 이탈자</div><div class="s-val">25.3<em>%</em></div><div class="s-sub">사용자 대비 +20%p</div></div>
+        <div class="stat-card pos"><div class="s-lbl">TOP2 · 이탈자</div><div class="s-val">90.0<em>%</em></div><div class="s-sub">사용자 67.3%</div></div>
+      </div>
+      <div id="pyramid" style="max-width:680px;margin:0 auto"></div>
+      <div class="chart-cap" style="margin-top:.8rem">각 연령세그먼트(사용자4·이탈자4)별 만족도 레벨 비교 · 폭=% 절댓값</div>
+    </div>
+  </div>
+
+</div><!-- /widget-grid -->
+</div><!-- /page -->
+
+<script>
+/* ═══════════ Global Chart defaults ═══════════ */
+Chart.defaults.color='rgba(255,255,255,.38)';
+Chart.defaults.borderColor='rgba(255,255,255,.06)';
+Chart.defaults.font.family='Pretendard,-apple-system,sans-serif';
+Chart.defaults.font.size=10;
+
+/* ══════════════════════════════════════════════════
+   ① RADAR — 브랜드 카테고리 프로파일
+══════════════════════════════════════════════════ */
+(function(){
+  const ctx=document.getElementById('chartRadar').getContext('2d');
+  new Chart(ctx,{
+    type:'radar',
+    data:{
+      labels:['매스 브랜드','로드샵 Sub','일반매스 Sub','럭셔리'],
+      datasets:[
+        {label:'사용자 MA',data:[87.3,71.3,66.0,100.0],
+         borderColor:'rgba(65,104,175,1)',backgroundColor:'rgba(65,104,175,.2)',
+         borderWidth:2,pointBackgroundColor:'rgba(65,104,175,1)',pointRadius:4},
+        {label:'사용자 SA',data:[31.3,14.0,17.3,68.7],
+         borderColor:'rgba(125,163,224,.8)',backgroundColor:'rgba(125,163,224,.08)',
+         borderWidth:2,borderDash:[4,3],pointBackgroundColor:'rgba(125,163,224,.8)',pointRadius:3},
+        {label:'이탈자 MA',data:[88.7,61.3,73.3,90.0],
+         borderColor:'rgba(192,116,138,1)',backgroundColor:'rgba(192,116,138,.15)',
+         borderWidth:2,pointBackgroundColor:'rgba(192,116,138,1)',pointRadius:4},
+        {label:'이탈자 SA',data:[37.3,15.3,22.0,62.7],
+         borderColor:'rgba(217,154,175,.7)',backgroundColor:'rgba(192,116,138,.05)',
+         borderWidth:2,borderDash:[4,3],pointBackgroundColor:'rgba(217,154,175,.7)',pointRadius:3}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{
+        backgroundColor:'rgba(17,17,20,.95)',borderColor:'rgba(255,255,255,.1)',borderWidth:1,
+        callbacks:{label:c=>` ${c.dataset.label}: ${c.raw}%`}
+      }},
+      scales:{r:{
+        grid:{color:'rgba(255,255,255,.06)'},
+        angleLines:{color:'rgba(255,255,255,.08)'},
+        ticks:{color:'rgba(255,255,255,.3)',backdropColor:'transparent',stepSize:25,callback:v=>v+'%'},
+        pointLabels:{color:'rgba(255,255,255,.55)',font:{size:10,weight:600}},
+        min:0,max:100,suggestedMin:0
+      }}
+    }
+  });
+})();
+
+/* ══════════════════════════════════════════════════
+   ② BUBBLE — 만족도 × 재구매 의향 (연령1 그룹)
+══════════════════════════════════════════════════ */
+(function(){
+  const ctx=document.getElementById('chartBubble').getContext('2d');
+  // x=만족도TOP2, y=재구매TOP2, r=sqrt(n)*1.2
+  new Chart(ctx,{
+    type:'bubble',
+    data:{
+      datasets:[
+        {label:'사용자 19~29세',data:[{x:65.8,y:57.0,r:10.6}],
+         backgroundColor:'rgba(65,104,175,.65)',borderColor:'rgba(125,163,224,.9)',borderWidth:1.5},
+        {label:'사용자 30~39세',data:[{x:69.0,y:60.6,r:10.1}],
+         backgroundColor:'rgba(65,104,175,.45)',borderColor:'rgba(125,163,224,.7)',borderWidth:1.5},
+        {label:'이탈자 19~29세',data:[{x:88.0,y:84.0,r:10.3}],
+         backgroundColor:'rgba(192,116,138,.65)',borderColor:'rgba(217,154,175,.9)',borderWidth:1.5},
+        {label:'이탈자 30~39세',data:[{x:92.0,y:89.3,r:10.3}],
+         backgroundColor:'rgba(192,116,138,.45)',borderColor:'rgba(217,154,175,.7)',borderWidth:1.5}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:true,position:'top',align:'end',
+          labels:{boxWidth:8,boxHeight:8,padding:10,color:'rgba(255,255,255,.4)',font:{size:9}}},
+        tooltip:{
+          backgroundColor:'rgba(17,17,20,.95)',borderColor:'rgba(255,255,255,.1)',borderWidth:1,padding:10,
+          callbacks:{
+            label:c=>[
+              ` ${c.dataset.label}`,
+              ` 만족TOP2: ${c.parsed.x}%`,
+              ` 재구매TOP2: ${c.parsed.y}%`
+            ]
+          }
+        }
+      },
+      scales:{
+        x:{grid:{color:'rgba(255,255,255,.04)'},
+           title:{display:true,text:'만족도 TOP2 (%)',color:'rgba(255,255,255,.3)',font:{size:9}},
+           ticks:{color:'rgba(255,255,255,.35)',callback:v=>v+'%'},min:50,max:100},
+        y:{grid:{color:'rgba(255,255,255,.04)'},
+           title:{display:true,text:'재구매 TOP2 (%)',color:'rgba(255,255,255,.3)',font:{size:9}},
+           ticks:{color:'rgba(255,255,255,.35)',callback:v=>v+'%'},min:50,max:100}
+      }
+    }
+  });
+})();
+
+/* ══════════════════════════════════════════════════
+   ③ SCATTER — 럭셔리 브랜드 충성도 맵
+   Custom label plugin inline
+══════════════════════════════════════════════════ */
+(function(){
+  const ctx=document.getElementById('chartScatter').getContext('2d');
+  const brands=[
+    {x:50.0,y:15.7,name:'루메르',hi:true},
+    {x:27.7,y:5.7,name:'크리엔느'},
+    {x:22.7,y:8.0,name:'셀키아'},
+    {x:22.0,y:2.7,name:'오레뉴'},
+    {x:21.0,y:3.3,name:'베라르'},
+    {x:20.7,y:1.7,name:'솔라베'},
+    {x:18.7,y:4.3,name:'블리에'},
+    {x:18.3,y:0.7,name:'록떼르'},
+    {x:18.0,y:2.0,name:'클리녹'},
+    {x:16.7,y:2.7,name:'에스테리'},
+    {x:16.3,y:4.7,name:'수메르'},
+    {x:15.3,y:2.3,name:'랑셰'},
+    {x:13.7,y:1.7,name:'오에'},
+    {x:11.3,y:1.0,name:'클라렌'},
+    {x:10.7,y:2.0,name:'프리메'},
+  ];
+  // Reference line: y = x * 0.3 (30% loyalty ratio)
+  const refMax=55;
+  const refLine=[{x:0,y:0},{x:refMax,y:refMax*0.3}];
+  // Reference line 2: y = x * 0.15
+  const refLine2=[{x:0,y:0},{x:refMax,y:refMax*0.15}];
+
+  const labelPlugin={
+    id:'scatterLabels',
+    afterDatasetsDraw(chart){
+      const {ctx}=chart;
+      const ds=chart.data.datasets[0];
+      const meta=chart.getDatasetMeta(0);
+      meta.data.forEach((pt,i)=>{
+        const d=ds.data[i];
+        ctx.save();
+        ctx.font=d.hi?'bold 10px Pretendard,sans-serif':'9px Pretendard,sans-serif';
+        ctx.fillStyle=d.hi?'rgba(163,194,239,.9)':'rgba(255,255,255,.55)';
+        ctx.fillText(d.name,pt.x+8,pt.y-4);
+        ctx.restore();
+      });
+    }
+  };
+
+  new Chart(ctx,{
+    type:'scatter',
+    plugins:[labelPlugin],
+    data:{
+      datasets:[
+        {label:'럭셔리 브랜드',
+         data:brands,
+         backgroundColor:brands.map(b=>b.hi?'rgba(163,194,239,.9)':'rgba(125,163,224,.45)'),
+         borderColor:brands.map(b=>b.hi?'rgba(163,194,239,1)':'rgba(125,163,224,.7)'),
+         pointRadius:brands.map(b=>b.hi?8:5),
+         pointHoverRadius:brands.map(b=>b.hi?10:7),
+         borderWidth:brands.map(b=>b.hi?2:1)},
+        {label:'충성도 30% 기준선',data:refLine,
+         type:'line',borderColor:'rgba(91,158,122,.4)',borderDash:[5,4],borderWidth:1.5,
+         pointRadius:0,fill:false},
+        {label:'충성도 15% 기준선',data:refLine2,
+         type:'line',borderColor:'rgba(224,168,90,.25)',borderDash:[3,4],borderWidth:1,
+         pointRadius:0,fill:false}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          filter:item=>item.datasetIndex===0,
+          backgroundColor:'rgba(17,17,20,.95)',borderColor:'rgba(255,255,255,.1)',borderWidth:1,padding:10,
+          callbacks:{
+            title:items=>{const d=items[0].raw;return d.name||''},
+            label:item=>[` MA: ${item.raw.x}%`,` SA: ${item.raw.y}%`,` 충성도비율: ${(item.raw.y/item.raw.x*100).toFixed(1)}%`]
+          }
+        }
+      },
+      scales:{
+        x:{grid:{color:'rgba(255,255,255,.04)'},
+           title:{display:true,text:'A1 MA % (현사용 중복응답)',color:'rgba(255,255,255,.3)',font:{size:9}},
+           ticks:{color:'rgba(255,255,255,.35)',callback:v=>v+'%'},min:0,max:58},
+        y:{grid:{color:'rgba(255,255,255,.04)'},
+           title:{display:true,text:'A2 SA % (최선호 단독)',color:'rgba(255,255,255,.3)',font:{size:9}},
+           ticks:{color:'rgba(255,255,255,.35)',callback:v=>v+'%'},min:0,max:20}
+      }
+    }
+  });
+})();
+
+/* ══════════════════════════════════════════════════
+   ④ CSS HEATMAP
+══════════════════════════════════════════════════ */
+(function(){
+  const el=document.getElementById('heatmap');
+  const cols=['약간 만족','만족','매우 만족'];
+  const rows=[
+    {label:'사용자 19~24세',type:'user',vals:[30.0,70.0,0]},
+    {label:'사용자 25~29세',type:'user',vals:[34.7,59.2,4.1]},
+    {label:'사용자 30~34세',type:'user',vals:[29.2,62.5,8.3]},
+    {label:'사용자 35~39세',type:'user',vals:[34.8,56.5,8.7]},
+    {label:'이탈자 19~24세',type:'leaver',vals:[14.8,55.6,29.6]},
+    {label:'이탈자 25~29세',type:'leaver',vals:[10.4,66.7,22.9]},
+    {label:'이탈자 30~34세',type:'leaver',vals:[4.2,66.7,29.2]},
+    {label:'이탈자 35~39세',type:'leaver',vals:[14.8,66.7,18.5]},
+  ];
+  // Color functions per column
+  const colorFn=[
+    v=>`rgba(224,138,60,${Math.min(v/35*.8+.08,1).toFixed(2)})`,  // 약간만족: amber
+    v=>`rgba(65,104,175,${Math.min(v/70*.7+.1,1).toFixed(2)})`,   // 만족: blue
+    v=>`rgba(91,158,122,${(v===0?.04:Math.min(v/30*.8+.08,1)).toFixed(2)})` // 매우만족: green
+  ];
+
+  let html=`<div style="display:grid;grid-template-columns:140px repeat(3,1fr);gap:3px">`;
+  // header
+  html+=`<div></div>`;
+  cols.forEach((c,ci)=>{
+    const dotColors=['rgba(224,138,60,.8)','rgba(65,104,175,.8)','rgba(91,158,122,.8)'];
+    html+=`<div class="hm-col-header" style="display:flex;align-items:center;justify-content:center;gap:5px"><span style="width:7px;height:7px;border-radius:2px;background:${dotColors[ci]};flex-shrink:0;display:inline-block"></span>${c}</div>`;
+  });
+  // separator
+  html+=`<div class="hm-section-label" style="grid-column:1/-1;padding:.5rem 0 .2rem">사용자 (n=150)</div>`;
+  rows.filter(r=>r.type==='user').forEach(row=>{
+    html+=`<div class="hm-row-label">${row.label}</div>`;
+    row.vals.forEach((v,ci)=>{
+      const bg=colorFn[ci](v);
+      const textColor=v===0?'rgba(255,255,255,.2)':v>45?'rgba(255,255,255,.85)':'rgba(255,255,255,.75)';
+      html+=`<div class="hm-cell" style="background:${bg};color:${textColor};padding:.45rem;min-height:38px">${v===0?'—':v.toFixed(1)+'%'}</div>`;
+    });
+  });
+  html+=`<div class="hm-section-label" style="grid-column:1/-1;padding:.5rem 0 .2rem">이탈자 (n=150)</div>`;
+  rows.filter(r=>r.type==='leaver').forEach(row=>{
+    html+=`<div class="hm-row-label">${row.label}</div>`;
+    row.vals.forEach((v,ci)=>{
+      const bg=colorFn[ci](v);
+      const textColor=v<10?'rgba(255,255,255,.45)':v>45?'rgba(255,255,255,.85)':'rgba(255,255,255,.75)';
+      html+=`<div class="hm-cell" style="background:${bg};color:${textColor};padding:.45rem;min-height:38px">${v.toFixed(1)}%</div>`;
+    });
+  });
+  html+=`</div>`;
+  el.innerHTML=html;
+})();
+
+/* ══════════════════════════════════════════════════
+   ⑤ POLAR AREA — 재구매 이유 NET
+══════════════════════════════════════════════════ */
+(function(){
+  const ctx=document.getElementById('chartPolar').getContext('2d');
+  new Chart(ctx,{
+    type:'polarArea',
+    data:{
+      labels:['피부 적합성','사용감','보습력','가격/용량','제품 효과','브랜드'],
+      datasets:[{
+        data:[54.2,30.3,29.6,16.2,14.1,9.2],
+        backgroundColor:[
+          'rgba(65,104,175,.75)','rgba(91,158,122,.65)','rgba(125,163,224,.6)',
+          'rgba(224,168,90,.55)','rgba(192,116,138,.55)','rgba(163,194,239,.35)'
+        ],
+        borderColor:[
+          'rgba(65,104,175,1)','rgba(91,158,122,.9)','rgba(125,163,224,.9)',
+          'rgba(224,168,90,.8)','rgba(192,116,138,.8)','rgba(163,194,239,.6)'
+        ],
+        borderWidth:1.5
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:true,position:'right',
+          labels:{boxWidth:9,boxHeight:9,padding:8,color:'rgba(255,255,255,.5)',font:{size:9}}},
+        tooltip:{
+          backgroundColor:'rgba(17,17,20,.95)',borderColor:'rgba(255,255,255,.1)',borderWidth:1,
+          callbacks:{label:c=>` ${c.label}: ${c.raw}%`}
+        }
+      },
+      scales:{r:{
+        grid:{color:'rgba(255,255,255,.06)'},
+        ticks:{display:false},
+        angleLines:{display:false},
+        min:0
+      }}
+    }
+  });
+})();
+
+/* ══════════════════════════════════════════════════
+   ⑥ POPULATION PYRAMID — 만족도 분포
+   사용자(왼쪽) / 이탈자(오른쪽)
+══════════════════════════════════════════════════ */
+(function(){
+  const el=document.getElementById('pyramid');
+  const MAXW=120; // max % for scaling (넘으면 비율 조정)
+
+  const data=[
+    {level:'매우 만족',user:5.3,leaver:25.3,note:'z=−4.807 p=1.53×10⁻⁶ h=−0.589'},
+    {level:'만족',user:62.0,leaver:64.7,note:'유사 (유의차 없음)'},
+    {level:'약간 만족',user:32.0,leaver:10.0,note:'z=4.678 p=2.90×10⁻⁶ h=0.559'},
+  ];
+
+  const scale=v=>(v/70*100); // scale to max 70%
+
+  let html=`
+  <div style="margin-bottom:.5rem">
+    <div style="display:flex">
+      <div style="flex:1;text-align:right;padding-right:8px;font-size:.5rem;font-weight:700;color:rgba(125,163,224,.65)">사용자 →</div>
+      <div style="width:100px;text-align:center;font-size:.5rem;color:rgba(255,255,255,.25)">만족도</div>
+      <div style="flex:1;text-align:left;padding-left:8px;font-size:.5rem;font-weight:700;color:rgba(192,116,138,.65)">← 이탈자</div>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:.6rem">`;
+
+  data.forEach(d=>{
+    const uw=scale(d.user);
+    const lw=scale(d.leaver);
+    const isKey=(d.level==='매우 만족'||d.level==='약간 만족');
+    html+=`
+    <div>
+      <div style="display:flex;align-items:center">
+        <div style="flex:1;display:flex;justify-content:flex-end;align-items:center">
+          <span style="font-size:.6rem;font-weight:700;color:rgba(255,255,255,.55);margin-right:6px">${d.user}%</span>
+          <div style="width:${uw}%;max-width:calc(50vw - 120px);height:30px;background:linear-gradient(90deg,rgba(65,104,175,.35),rgba(65,104,175,.8));border-radius:3px 0 0 3px;min-width:2px"></div>
+        </div>
+        <div style="width:100px;text-align:center;font-size:.6rem;font-weight:${isKey?700:600};color:rgba(255,255,255,${isKey?.7:.45});flex-shrink:0;padding:0 6px">${d.level}</div>
+        <div style="flex:1;display:flex;justify-content:flex-start;align-items:center">
+          <div style="width:${lw}%;max-width:calc(50vw - 120px);height:30px;background:linear-gradient(90deg,rgba(192,116,138,.8),rgba(192,116,138,.35));border-radius:0 3px 3px 0;min-width:2px"></div>
+          <span style="font-size:.6rem;font-weight:700;color:rgba(255,255,255,.55);margin-left:6px">${d.leaver}%</span>
+        </div>
+      </div>
+      <div style="text-align:center;font-size:.47rem;color:rgba(255,255,255,.22);margin-top:.2rem;letter-spacing:.03em">${d.note}</div>
+    </div>`;
+  });
+
+  // Scale axis
+  html+=`
+  <div style="display:flex;margin-top:.2rem">
+    <div style="flex:1;display:flex;justify-content:flex-end;padding-right:8px;gap:8px">
+      ${[70,35].map(v=>`<span style="font-size:.43rem;color:rgba(255,255,255,.2)">${v}%</span>`).join('')}
+    </div>
+    <div style="width:100px"></div>
+    <div style="flex:1;display:flex;justify-content:flex-start;padding-left:8px;gap:8px">
+      ${[35,70].map(v=>`<span style="font-size:.43rem;color:rgba(255,255,255,.2)">${v}%</span>`).join('')}
+    </div>
+  </div>`;
+
+  html+=`</div>`;
+  el.innerHTML=html;
+})();
+</script>
+</body>
+</html>

@@ -163,6 +163,10 @@ body::before{content:'';position:fixed;inset:0;
 .upload-hint{font-size:.66rem;color:rgba(255,255,255,.14);}
 .test-img-wrap{position:relative;max-width:100%;max-height:calc(100vh - 240px);}
 .test-img-wrap img{max-width:100%;max-height:calc(100vh - 240px);border-radius:.5rem;display:block;box-shadow:0 12px 56px rgba(0,0,0,.6);}
+/* ── Video player ── */
+.test-video-wrap{position:relative;max-width:100%;max-height:calc(100vh - 240px);display:flex;flex-direction:column;align-items:center;gap:.55rem;}
+.test-video-wrap video{max-width:100%;max-height:calc(100vh - 280px);border-radius:.5rem;display:block;box-shadow:0 12px 56px rgba(0,0,0,.6);background:#000;outline:none;}
+.video-label{font-size:.6rem;color:rgba(255,255,255,.22);letter-spacing:.04em;}
 
 .float-tag{position:absolute;display:flex;align-items:center;gap:.3rem;background:rgba(14,14,18,.88);border:1px solid rgba(255,255,255,.07);border-radius:.4rem;padding:.24rem .5rem;font-size:.6rem;font-weight:600;color:rgba(255,255,255,.42);backdrop-filter:blur(8px);white-space:nowrap;pointer-events:none;opacity:0;transform:translateY(4px);transition:opacity .3s,transform .3s;z-index:5;}
 .image-view-area:hover .float-tag{opacity:1;transform:translateY(0);}
@@ -371,8 +375,8 @@ input[type="file"]{display:none;}
       <div class="btn-row">
         <label class="ib ib-img">
           <span class="material-symbols-outlined" style="font-size:.82rem;font-variation-settings:'FILL' 0,'wght' 300;">upload</span>
-          이미지
-          <input type="file" id="fileInput" accept="image/*,.md,.txt,.html" multiple onchange="handleUpload(event)"/>
+          업로드
+          <input type="file" id="fileInput" accept="image/*,video/*,.md,.txt,.html" multiple onchange="handleUpload(event)"/>
         </label>
         <button class="ib ib-link" id="linkBtn" onclick="toggleLinkInput()">
           <span class="material-symbols-outlined" style="font-size:.82rem;font-variation-settings:'FILL' 0,'wght' 300;">link</span>
@@ -414,8 +418,8 @@ input[type="file"]{display:none;}
          ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
       <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
         <span class="material-symbols-outlined upload-icon">image</span>
-        <div class="upload-text">이미지를 드래그하거나 클릭하여 업로드<br><span style="color:rgba(255,255,255,.14);">버전별 테스트 화면을 첨부합니다</span></div>
-        <div class="upload-hint">PNG · JPG · WebP · SVG · HTML</div>
+        <div class="upload-text">이미지·영상을 드래그하거나 클릭하여 업로드<br><span style="color:rgba(255,255,255,.14);">버전별 테스트 화면을 첨부합니다</span></div>
+        <div class="upload-hint">PNG · JPG · WebP · MP4 · MOV · HTML</div>
         <div style="margin-top:.75rem;font-size:.58rem;color:rgba(255,255,255,.11);line-height:1.9;text-align:center;">
           파일명에 포함 시 인터뷰 데이터 자동 로드<br>
           <span style="color:rgba(255,255,255,.18);">홈화면</span> · <span style="color:rgba(255,255,255,.18);">검색결과</span> · <span style="color:rgba(255,255,255,.18);">상품상세</span> · <span style="color:rgba(255,255,255,.18);">검색바</span> · <span style="color:rgba(255,255,255,.18);">카테고리</span> · <span style="color:rgba(255,255,255,.18);">장바구니</span><br>
@@ -429,6 +433,12 @@ input[type="file"]{display:none;}
           <div class="float-tag" style="top:38%;right:3%;"><span class="ft-dot" style="background:#FBBF24;"></span>주요 CTA</div>
           <div class="float-tag" style="bottom:18%;left:4%;"><span class="ft-dot" style="background:#34D399;"></span>정보 계층</div>
           <div class="float-tag" style="bottom:5%;right:4%;"><span class="ft-dot" style="background:#F472B6;"></span>오류 요소</div>
+        </div>
+      </div>
+      <div id="testVideoWrapper" style="display:none;">
+        <div class="test-video-wrap">
+          <video id="testVideo" controls playsinline></video>
+          <span class="video-label" id="videoLabel"></span>
         </div>
       </div>
       <!-- Embed (URL / HTML) iframe view -->
@@ -533,6 +543,7 @@ const state = {
   active: 'a',
   versions: {a:true, b:false, c:false},
   images:   {a:null, b:null,  c:null},
+  videos:   {a:null, b:null,  c:null},  // blob URL for video files
   embeds:   {a:null, b:null,  c:null},  // {type:'url'|'html', src?:string, htmlContent?:string}
   screenLabels: {a:null, b:null, c:null},
   currentSection: null,
@@ -1315,6 +1326,10 @@ function handleMultipleFiles(files) {
   const htmlFile = arr.find(f => /\.html?$/i.test(f.name));
   if (htmlFile) { loadFile(htmlFile); return; }
 
+  // Video file
+  const videoFile = arr.find(f => f.type.startsWith('video/'));
+  if (videoFile) { loadFile(videoFile); return; }
+
   const imgFile = arr.find(f => f.type.startsWith('image/'));
   const mdFile  = arr.find(f => /\.(md|txt)$/i.test(f.name));
 
@@ -1364,6 +1379,22 @@ function loadFile(file){
     r.readAsText(file, 'utf-8');
     return;
   }
+  // Video file → blob URL (efficient, avoids loading entire file into memory)
+  if (file.type.startsWith('video/')) {
+    // Revoke old blob URL if any
+    if (state.videos[state.active]) URL.revokeObjectURL(state.videos[state.active]);
+    const blobUrl = URL.createObjectURL(file);
+    state.videos[state.active] = blobUrl;
+    state.images[state.active] = null;
+    state.embeds[state.active] = null;
+    const stem = file.name.replace(/\.[^/.]+$/, '');
+    state.screenLabels[state.active] = stem;
+    renderView(state.active);
+    document.getElementById('ipTitle').textContent = `${VER_FULL[state.active]} — ${stem}`;
+    document.getElementById('screenPicker').style.display = 'none';
+    showToast(`🎬 ${file.name} 로드됨`, false);
+    return;
+  }
   const r=new FileReader();
   r.onload=ev=>{
     state.images[state.active]=ev.target.result;
@@ -1391,22 +1422,25 @@ function loadFile(file){
   r.readAsDataURL(file);
 }
 
-// ── Unified view renderer: image / embed / empty ──
+// ── Unified view renderer: image / video / embed / empty ──
 function renderView(ver){
   const embed = state.embeds[ver];
   const img   = state.images[ver];
+  const video = state.videos[ver];
 
-  const uploadZone     = document.getElementById('uploadZone');
-  const testImgWrapper = document.getElementById('testImageWrapper');
-  const embedWrapper   = document.getElementById('embedWrapper');
-  const embedFrame     = document.getElementById('embedFrame');
-  const embedBarUrl    = document.getElementById('embedBarUrl');
-  const embedTypeBadge = document.getElementById('embedTypeBadge');
-  const clearBtn       = document.getElementById('clearBtn');
+  const uploadZone      = document.getElementById('uploadZone');
+  const testImgWrapper  = document.getElementById('testImageWrapper');
+  const testVidWrapper  = document.getElementById('testVideoWrapper');
+  const embedWrapper    = document.getElementById('embedWrapper');
+  const embedFrame      = document.getElementById('embedFrame');
+  const embedBarUrl     = document.getElementById('embedBarUrl');
+  const embedTypeBadge  = document.getElementById('embedTypeBadge');
+  const clearBtn        = document.getElementById('clearBtn');
 
   if (embed) {
     uploadZone.style.display      = 'none';
     testImgWrapper.style.display  = 'none';
+    testVidWrapper.style.display  = 'none';
     embedWrapper.classList.add('active');
     if (embed.type === 'html') {
       // srcdoc avoids file:// security restriction
@@ -1425,9 +1459,19 @@ function renderView(ver){
       embedTypeBadge.className   = 'embed-type-badge url';
     }
     clearBtn.style.display = '';
+  } else if (video) {
+    uploadZone.style.display      = 'none';
+    testImgWrapper.style.display  = 'none';
+    testVidWrapper.style.display  = '';
+    embedWrapper.classList.remove('active');
+    embedFrame.src = 'about:blank';
+    const videoEl = document.getElementById('testVideo');
+    if (videoEl.src !== video) videoEl.src = video;
+    clearBtn.style.display = '';
   } else if (img) {
     uploadZone.style.display      = 'none';
     testImgWrapper.style.display  = '';
+    testVidWrapper.style.display  = 'none';
     embedWrapper.classList.remove('active');
     embedFrame.src = 'about:blank';
     document.getElementById('testImage').src = img;
@@ -1435,6 +1479,7 @@ function renderView(ver){
   } else {
     uploadZone.style.display      = '';
     testImgWrapper.style.display  = 'none';
+    testVidWrapper.style.display  = 'none';
     embedWrapper.classList.remove('active');
     embedFrame.src = 'about:blank';
     clearBtn.style.display = 'none';
@@ -1446,8 +1491,15 @@ function renderImage(ver){ renderView(ver); }
 
 function clearImage(){
   state.embeds[state.active] = null;
-  state.images[state.active]=null;
-  state.screenLabels[state.active]=null;
+  state.images[state.active] = null;
+  // Revoke video blob URL to free memory
+  if (state.videos[state.active]) {
+    URL.revokeObjectURL(state.videos[state.active]);
+    state.videos[state.active] = null;
+    const v = document.getElementById('testVideo');
+    if (v) { v.pause(); v.src = ''; }
+  }
+  state.screenLabels[state.active] = null;
   state.currentSection = null;
   const f = document.getElementById('embedFrame');
   f.removeAttribute('srcdoc');
