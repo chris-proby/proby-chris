@@ -1,6 +1,7 @@
 import { useRef, useMemo, useState, useEffect } from 'react';
 import { v4 as uuid } from 'uuid';
 import { useStore } from '../store';
+import { useShallow } from 'zustand/react/shallow';
 import { saveFile, loadFile } from '../fileStorage';
 import type { TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, GoalStatus, KeyResult, LeadData, LeadStage, FunnelData, TextboxData, HtmlData, FileUploadData, FileItem, Attachment, ConnectionType, DirectoryData, DirectoryColumn, DirectoryColumnType, WorklogData, WorklogEntry } from '../types';
 
@@ -241,7 +242,9 @@ function GroupInspector({
   onToggleCollapse: () => void;
 }) {
   const [sort, setSort] = useState<GroupSort>('updatedAt');
-  const children = useStore((s) => s.widgets.filter((w) => w.groupId === widgetId));
+  // useShallow prevents infinite re-render: filter() always returns new array,
+  // shallow comparison avoids useSyncExternalStore loop when widgets unchanged
+  const children = useStore(useShallow((s) => s.widgets.filter((w) => w.groupId === widgetId)));
   const setSelectedWidget = useStore((s) => s.setSelectedWidget);
 
   const sorted = useMemo(() => {
