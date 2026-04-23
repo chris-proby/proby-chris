@@ -17,16 +17,8 @@ function getPortWorldPos(w: Widget, port: PortSide): Point {
   }
 }
 
-function getCanvasOffset(): { left: number; top: number } {
-  const el = document.querySelector('.canvas-container');
-  if (!el) return { left: 0, top: 0 };
-  const r = el.getBoundingClientRect();
-  return { left: r.left, top: r.top };
-}
-
 function worldToScreen(p: Point, vp: { x: number; y: number; scale: number }): Point {
-  const { left, top } = getCanvasOffset();
-  return { x: p.x * vp.scale + vp.x + left, y: p.y * vp.scale + vp.y + top };
+  return { x: p.x * vp.scale + vp.x, y: p.y * vp.scale + vp.y };
 }
 
 function getBestPorts(from: Widget, to: Widget): { fromPort: PortSide; toPort: PortSide } {
