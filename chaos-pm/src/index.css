@@ -2709,7 +2709,6 @@ html, body, #root { height: 100%; overflow: hidden; font-family: -apple-system, 
 /* ── Worklog Widget (canvas) ── */
 .widget-worklog {
   padding: 0;
-  overflow: hidden;
 }
 
 .worklog-widget {

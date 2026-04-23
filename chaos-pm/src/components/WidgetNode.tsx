@@ -166,7 +166,7 @@ function WidgetNode({ widget }: Props) {
             if (el) el.style.transform = `translate(${dx}px,${dy}px)`;
           });
         }
-        if (!isGroup) {
+        {
           const state = useStore.getState();
           const targetId = findGroupForWidget({ ...widget, x: startPos.x + dx, y: startPos.y + dy }, state.widgets) ?? null;
           if (targetId !== state.dropTargetGroupId) setDropTargetGroupId(targetId);
@@ -186,11 +186,11 @@ function WidgetNode({ widget }: Props) {
           if (el) { el.style.transform = ''; el.style.left = (sp.x + dx) + 'px'; el.style.top = (sp.y + dy) + 'px'; }
           updateWidget(sp.id, { x: sp.x + dx, y: sp.y + dy });
         });
-        // Group assignment for all multi-selected widgets
+        // Group assignment for all multi-selected widgets (including group widgets)
         const state = useStore.getState();
         multiStart.forEach((sp) => {
           const w = state.widgets.find((x) => x.id === sp.id);
-          if (!w || w.type === 'group') return;
+          if (!w) return;
           const targetGroupId = findGroupForWidget(w, state.widgets);
           if (targetGroupId !== w.groupId) {
             useStore.getState().setWidgetGroup(sp.id, targetGroupId);
@@ -212,7 +212,7 @@ function WidgetNode({ widget }: Props) {
             updateWidget(cp.id, { x: cp.x + dx, y: cp.y + dy });
           });
         }
-        if (!isGroup) {
+        {
           const state = useStore.getState();
           const targetGroupId = findGroupForWidget({ ...widget, x: newX, y: newY }, state.widgets);
           const prevGroupId = state.widgets.find((w) => w.id === widget.id)?.groupId;
