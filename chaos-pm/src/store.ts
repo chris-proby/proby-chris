@@ -93,6 +93,8 @@ interface Store {
   restoreSnapshot: (id: string) => void;
   deleteSnapshot: (id: string) => void;
   clearSnapshots: () => void;
+  exportCanvas: () => void;
+  importCanvas: (file: File) => Promise<void>;
 }
 
 export const useStore = create<Store>()(
@@ -380,6 +382,32 @@ export const useStore = create<Store>()(
       })),
 
       clearSnapshots: () => set({ snapshots: [] }),
+
+      exportCanvas: () => {
+        const { widgets, connections } = get();
+        const data = JSON.stringify({ widgets, connections, exportedAt: Date.now(), version: 1 }, null, 2);
+        const blob = new Blob([data], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `chaos-pm-backup-${new Date().toISOString().slice(0, 10)}.json`;
+        a.click();
+        URL.revokeObjectURL(a.href);
+      },
+
+      importCanvas: async (file: File) => {
+        const text = await file.text();
+        const data = JSON.parse(text);
+        if (!Array.isArray(data.widgets) || !Array.isArray(data.connections)) {
+          throw new Error('올바른 Chaos PM 백업 파일이 아닙니다');
+        }
+        set({
+          widgets: data.widgets,
+          connections: data.connections,
+          selectedWidgetId: null,
+          selectedConnectionId: null,
+          multiSelectedIds: [],
+        });
+      },
     }),
     {
       name: 'chaos-pm-v1',

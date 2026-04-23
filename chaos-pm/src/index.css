@@ -606,7 +606,9 @@ html, body, #root { height: 100%; overflow: hidden; font-family: -apple-system, 
 }
 
 /* ── Image widget ── */
-.widget-image { min-width: 120px; overflow: hidden; }
+.widget-image { min-width: 120px; }
+
+.image-content { overflow: hidden; border-radius: var(--radius); }
 
 .image-content {
   display: flex;
@@ -1422,7 +1424,6 @@ html, body, #root { height: 100%; overflow: hidden; font-family: -apple-system, 
 /* ── Goal widget ── */
 .widget-goal {
   padding: 0;
-  overflow: hidden;
   min-width: 260px;
 }
 
@@ -1611,7 +1612,6 @@ html, body, #root { height: 100%; overflow: hidden; font-family: -apple-system, 
 /* ── Lead widget ── */
 .widget-lead {
   padding: 0;
-  overflow: hidden;
   min-width: 260px;
 }
 
@@ -1769,7 +1769,6 @@ html, body, #root { height: 100%; overflow: hidden; font-family: -apple-system, 
 /* ── Funnel widget ── */
 .widget-funnel {
   padding: 0;
-  overflow: hidden;
   min-width: 260px;
 }
 
@@ -2052,7 +2051,6 @@ html, body, #root { height: 100%; overflow: hidden; font-family: -apple-system, 
 /* ── HTML widget ── */
 .widget-html {
   padding: 0;
-  overflow: hidden;
   min-width: 200px;
   min-height: 120px;
 }

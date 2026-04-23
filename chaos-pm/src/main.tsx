@@ -2,12 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import './index.css';
+import { runMigrations } from './migrate';
 
-// Clean up old localStorage entry that caused QuotaExceededError
-try { localStorage.removeItem('canvas-pm-v2'); localStorage.removeItem('chaos-pm-v1'); } catch {}
+function mount() {
+  ReactDOM.createRoot(document.getElementById('root')!).render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+}
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+// Run migrations before rendering so Zustand hydrates with correct data
+runMigrations().then(mount).catch(mount);

@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { useStore } from '../store';
 import type { GroupData } from '../types';
 import type { Theme } from '../hooks/useTheme';
@@ -10,6 +11,7 @@ interface ToolbarProps {
 }
 
 export default function Toolbar({ onToggleHistory, showHistory, theme, onToggleTheme }: ToolbarProps) {
+  const importRef = useRef<HTMLInputElement>(null);
   const viewport = useStore((s) => s.viewport);
   const setViewport = useStore((s) => s.setViewport);
   const fitToView = useStore((s) => s.fitToView);
@@ -20,6 +22,8 @@ export default function Toolbar({ onToggleHistory, showHistory, theme, onToggleT
   const widgets = useStore((s) => s.widgets);
   const groupSelected = useStore((s) => s.groupSelected);
   const ungroupWidget = useStore((s) => s.ungroupWidget);
+  const exportCanvas = useStore((s) => s.exportCanvas);
+  const importCanvas = useStore((s) => s.importCanvas);
 
   const hasSelection = selectedWidgetId || selectedConnectionId;
   const snapshotCount = useStore((s) => s.snapshots.length);
@@ -46,9 +50,20 @@ export default function Toolbar({ onToggleHistory, showHistory, theme, onToggleT
     setViewport({ x: vw, y: vh, scale: 1 });
   };
 
+  const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      await importCanvas(file);
+    } catch (err) {
+      alert(err instanceof Error ? err.message : '가져오기 실패');
+    }
+    e.target.value = '';
+  };
+
   return (
     <header className="toolbar">
-      <div className="toolbar-logo">Canvas<span>PM</span></div>
+      <div className="toolbar-logo">Chaos<span>PM</span></div>
       <div className="toolbar-divider" />
 
       <button className="tb-btn" onClick={() => zoom(0.2)} title="Zoom in">
@@ -65,6 +80,14 @@ export default function Toolbar({ onToggleHistory, showHistory, theme, onToggleT
       </button>
 
       <div className="toolbar-right">
+        <input ref={importRef} type="file" accept=".json" style={{ display: 'none' }} onChange={handleImport} />
+        <button className="tb-btn" onClick={exportCanvas} title="캔버스 내보내기 (JSON 백업)">
+          ↓ 내보내기
+        </button>
+        <button className="tb-btn" onClick={() => importRef.current?.click()} title="캔버스 가져오기 (JSON 복원)">
+          ↑ 가져오기
+        </button>
+        <div className="toolbar-divider" />
         <button
           className="tb-btn"
           onClick={onToggleTheme}

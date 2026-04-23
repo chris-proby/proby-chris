@@ -54,31 +54,63 @@ function openStateDb(): Promise<IDBDatabase> {
   });
 }
 
+const LS_FALLBACK_PREFIX = '__idb_fallback__';
+
 export const idbStorage = {
   getItem: async (name: string): Promise<string | null> => {
-    const db = await openStateDb();
-    return new Promise((resolve, reject) => {
-      const req = db.transaction(STATE_STORE).objectStore(STATE_STORE).get(name);
-      req.onsuccess = () => resolve(req.result ?? null);
-      req.onerror = () => reject(req.error);
-    });
+    try {
+      const db = await openStateDb();
+      return await new Promise((resolve, reject) => {
+        const req = db.transaction(STATE_STORE).objectStore(STATE_STORE).get(name);
+        req.onsuccess = () => resolve(req.result ?? null);
+        req.onerror = () => reject(req.error);
+      });
+    } catch {
+      return localStorage.getItem(LS_FALLBACK_PREFIX + name);
+    }
   },
   setItem: async (name: string, value: string): Promise<void> => {
-    const db = await openStateDb();
-    return new Promise((resolve, reject) => {
-      const tx = db.transaction(STATE_STORE, 'readwrite');
-      tx.objectStore(STATE_STORE).put(value, name);
-      tx.oncomplete = () => resolve();
-      tx.onerror = () => reject(tx.error);
-    });
+    try {
+      const db = await openStateDb();
+      await new Promise<void>((resolve, reject) => {
+        const tx = db.transaction(STATE_STORE, 'readwrite');
+        tx.objectStore(STATE_STORE).put(value, name);
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+      });
+      // Mirror a compact backup to localStorage (stripping large data fields)
+      try {
+        const parsed = JSON.parse(value);
+        const backup = JSON.stringify({
+          ...parsed,
+          state: {
+            ...parsed.state,
+            // Strip binary data from backup to stay within localStorage quota
+            widgets: (parsed.state?.widgets ?? []).map((w: { type: string; data: { src?: string; html?: string; attachments?: unknown[]; files?: unknown[] } }) => {
+              if (w.type === 'image') return { ...w, data: { ...w.data, src: '' } };
+              if (w.type === 'html') return { ...w, data: { ...w.data, html: '' } };
+              if (w.type === 'task') return { ...w, data: { ...w.data, attachments: [] } };
+              if (w.type === 'fileupload') return { ...w, data: { ...w.data, files: [] } };
+              return w;
+            }),
+          },
+        });
+        localStorage.setItem(LS_FALLBACK_PREFIX + name, backup);
+      } catch { /* quota exceeded on backup is ok */ }
+    } catch {
+      localStorage.setItem(LS_FALLBACK_PREFIX + name, value);
+    }
   },
   removeItem: async (name: string): Promise<void> => {
-    const db = await openStateDb();
-    return new Promise((resolve, reject) => {
-      const tx = db.transaction(STATE_STORE, 'readwrite');
-      tx.objectStore(STATE_STORE).delete(name);
-      tx.oncomplete = () => resolve();
-      tx.onerror = () => reject(tx.error);
-    });
+    try {
+      const db = await openStateDb();
+      await new Promise<void>((resolve, reject) => {
+        const tx = db.transaction(STATE_STORE, 'readwrite');
+        tx.objectStore(STATE_STORE).delete(name);
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+      });
+    } catch { /* ignore */ }
+    localStorage.removeItem(LS_FALLBACK_PREFIX + name);
   },
 };
