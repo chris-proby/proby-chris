@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { useStore } from '../store';
 import WidgetNode from './WidgetNode';
 import ConnectionLayer from './ConnectionLayer';
@@ -182,18 +182,19 @@ export default function Canvas() {
     setPicker(null);
   };
 
-  // Collapsed group IDs — their children should be hidden
-  const collapsedGroupIds = new Set(
-    widgets
-      .filter((w) => w.type === 'group' && (w.data as { collapsed: boolean }).collapsed)
-      .map((w) => w.id)
+  const collapsedGroupIds = useMemo(
+    () => new Set(
+      widgets
+        .filter((w) => w.type === 'group' && (w.data as { collapsed: boolean }).collapsed)
+        .map((w) => w.id)
+    ),
+    [widgets]
   );
 
-  // Render: groups first (lower z-index), then other widgets
-  const sortedWidgets = [...widgets].sort((a, b) => a.zIndex - b.zIndex);
-  const visibleWidgets = sortedWidgets.filter(
-    (w) => !w.groupId || !collapsedGroupIds.has(w.groupId)
-  );
+  const visibleWidgets = useMemo(() => {
+    const sorted = [...widgets].sort((a, b) => a.zIndex - b.zIndex);
+    return sorted.filter((w) => !w.groupId || !collapsedGroupIds.has(w.groupId));
+  }, [widgets, collapsedGroupIds]);
 
   const gridSize = 32 * viewport.scale;
   const gridX = ((viewport.x % gridSize) + gridSize) % gridSize;

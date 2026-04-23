@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useStore } from '../store';
 import type { PortSide, Point, Widget } from '../types';
 
@@ -67,7 +68,7 @@ export default function ConnectionLayer() {
   const selectedConnectionId = useStore((s) => s.selectedConnectionId);
   const setSelectedConnection = useStore((s) => s.setSelectedConnection);
 
-  const widgetMap = new Map(widgets.map((w) => [w.id, w]));
+  const widgetMap = useMemo(() => new Map(widgets.map((w) => [w.id, w])), [widgets]);
 
   // Pending connection: find source port screen position
   let pendingPath: string | null = null;

@@ -1,4 +1,4 @@
-import { useRef, useEffect, useMemo, useState } from 'react';
+import React, { useRef, useEffect, useMemo, useState } from 'react';
 import { useStore } from '../store';
 import { saveFile, loadFile } from '../fileStorage';
 import type { Widget, PortSide, TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, GoalStatus, LeadData, LeadStage, FunnelData, TextboxData, HtmlData, FileUploadData, FileItem } from '../types';
@@ -60,12 +60,13 @@ const RESIZE_DIRS: ResizeDir[] = ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'];
 
 interface Props { widget: Widget }
 
-export default function WidgetNode({ widget }: Props) {
+function WidgetNode({ widget }: Props) {
   const [isTextboxEditing, setIsTextboxEditing] = useState(false);
   const updateWidget = useStore((s) => s.updateWidget);
   const setSelectedWidget = useStore((s) => s.setSelectedWidget);
   const addToMultiSelect = useStore((s) => s.addToMultiSelect);
-  const multiSelectedIds = useStore((s) => s.multiSelectedIds);
+  const isSelected = useStore((s) => s.multiSelectedIds.includes(widget.id));
+  const isMulti = useStore((s) => s.multiSelectedIds.length > 1 && s.multiSelectedIds.includes(widget.id));
   const bringToFront = useStore((s) => s.bringToFront);
   const pendingConnection = useStore((s) => s.pendingConnection);
   const setPendingConnection = useStore((s) => s.setPendingConnection);
@@ -74,17 +75,11 @@ export default function WidgetNode({ widget }: Props) {
   const stageGroupChange = useStore((s) => s.stageGroupChange);
   const setDropTargetGroupId = useStore((s) => s.setDropTargetGroupId);
   const dropTargetGroupId = useStore((s) => s.dropTargetGroupId);
-  const viewport = useStore((s) => s.viewport);
 
-  const isSelected = multiSelectedIds.includes(widget.id);
-  const isMulti = multiSelectedIds.length > 1 && isSelected;
   const isConnecting = !!pendingConnection;
   const isSource = pendingConnection?.fromId === widget.id;
   const isGroup = widget.type === 'group';
   const isDropTarget = dropTargetGroupId === widget.id;
-
-  const viewportRef = useRef(viewport);
-  useEffect(() => { viewportRef.current = viewport; }, [viewport]);
 
   const nodeRef = useRef<HTMLDivElement>(null);
 
@@ -136,23 +131,30 @@ export default function WidgetNode({ widget }: Props) {
         })()
       : null;
 
+    let lastDx = 0, lastDy = 0;
+
     const onMove = (ev: MouseEvent) => {
-      const vp = viewportRef.current;
-      const dx = (ev.clientX - startMouse.x) / vp.scale;
-      const dy = (ev.clientY - startMouse.y) / vp.scale;
+      const vp = useStore.getState().viewport;
+      lastDx = (ev.clientX - startMouse.x) / vp.scale;
+      lastDy = (ev.clientY - startMouse.y) / vp.scale;
+      const dx = lastDx, dy = lastDy;
 
       if (multiStart) {
-        multiStart.forEach((sp) => updateWidget(sp.id, { x: sp.x + dx, y: sp.y + dy }));
+        multiStart.forEach((sp) => {
+          const el = document.querySelector<HTMLDivElement>(`[data-widget="${sp.id}"]`);
+          if (el) el.style.transform = `translate(${dx}px,${dy}px)`;
+        });
       } else {
-        const newX = startPos.x + dx;
-        const newY = startPos.y + dy;
-        updateWidget(widget.id, { x: newX, y: newY });
+        if (nodeRef.current) nodeRef.current.style.transform = `translate(${dx}px,${dy}px)`;
         if (childStart) {
-          childStart.forEach((cp) => updateWidget(cp.id, { x: cp.x + dx, y: cp.y + dy }));
+          childStart.forEach((cp) => {
+            const el = document.querySelector<HTMLDivElement>(`[data-widget="${cp.id}"]`);
+            if (el) el.style.transform = `translate(${dx}px,${dy}px)`;
+          });
         }
         if (!isGroup) {
           const state = useStore.getState();
-          const targetId = findGroupForWidget({ ...widget, x: newX, y: newY }, state.widgets) ?? null;
+          const targetId = findGroupForWidget({ ...widget, x: startPos.x + dx, y: startPos.y + dy }, state.widgets) ?? null;
           if (targetId !== state.dropTargetGroupId) setDropTargetGroupId(targetId);
         }
       }
@@ -162,19 +164,42 @@ export default function WidgetNode({ widget }: Props) {
       document.removeEventListener('mousemove', onMove);
       document.removeEventListener('mouseup', onUp);
 
-      if (!isGroup && !multiStart) {
-        const state = useStore.getState();
-        const current = state.widgets.find((w) => w.id === widget.id);
-        if (current) {
-          const targetGroupId = findGroupForWidget(current, state.widgets);
-          if (targetGroupId !== current.groupId) {
+      const dx = lastDx, dy = lastDy;
+
+      if (multiStart) {
+        multiStart.forEach((sp) => {
+          const el = document.querySelector<HTMLDivElement>(`[data-widget="${sp.id}"]`);
+          if (el) { el.style.transform = ''; el.style.left = (sp.x + dx) + 'px'; el.style.top = (sp.y + dy) + 'px'; }
+          updateWidget(sp.id, { x: sp.x + dx, y: sp.y + dy });
+        });
+      } else {
+        const newX = startPos.x + dx;
+        const newY = startPos.y + dy;
+        if (nodeRef.current) {
+          nodeRef.current.style.transform = '';
+          nodeRef.current.style.left = newX + 'px';
+          nodeRef.current.style.top = newY + 'px';
+        }
+        updateWidget(widget.id, { x: newX, y: newY });
+        if (childStart) {
+          childStart.forEach((cp) => {
+            const el = document.querySelector<HTMLDivElement>(`[data-widget="${cp.id}"]`);
+            if (el) { el.style.transform = ''; el.style.left = (cp.x + dx) + 'px'; el.style.top = (cp.y + dy) + 'px'; }
+            updateWidget(cp.id, { x: cp.x + dx, y: cp.y + dy });
+          });
+        }
+        if (!isGroup) {
+          const state = useStore.getState();
+          const targetGroupId = findGroupForWidget({ ...widget, x: newX, y: newY }, state.widgets);
+          const prevGroupId = state.widgets.find((w) => w.id === widget.id)?.groupId;
+          if (targetGroupId !== prevGroupId) {
             const targetGroup = targetGroupId
               ? state.widgets.find((w) => w.id === targetGroupId)
-              : state.widgets.find((w) => w.id === current.groupId);
+              : state.widgets.find((w) => w.id === prevGroupId);
             const groupName = (targetGroup?.data as GroupData)?.title || '그룹';
             stageGroupChange({
-              widgetId: current.id,
-              prevGroupId: current.groupId,
+              widgetId: widget.id,
+              prevGroupId,
               prevX: startPos.x,
               prevY: startPos.y,
               newGroupId: targetGroupId,
@@ -266,6 +291,8 @@ export default function WidgetNode({ widget }: Props) {
     </div>
   );
 }
+
+export default React.memo(WidgetNode);
 
 /* ── Resize Handles ── */
 function ResizeHandles({ widget, isGroup }: { widget: Widget; isGroup: boolean }) {
