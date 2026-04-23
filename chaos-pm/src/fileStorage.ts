@@ -1,5 +1,5 @@
-/* ── Binary file storage (IndexedDB: canvas-pm-files) ── */
-const FILES_DB = 'canvas-pm-files';
+/* ── Binary file storage (IndexedDB: chaos-pm-files) ── */
+const FILES_DB = 'chaos-pm-files';
 const FILES_STORE = 'files';
 
 function openFilesDb(): Promise<IDBDatabase> {
@@ -41,8 +41,8 @@ export async function deleteFiles(ids: string[]): Promise<void> {
   });
 }
 
-/* ── Zustand state storage (IndexedDB: canvas-pm-state) ── */
-const STATE_DB = 'canvas-pm-state';
+/* ── Zustand state storage (IndexedDB: chaos-pm-state) ── */
+const STATE_DB = 'chaos-pm-state';
 const STATE_STORE = 'state';
 
 function openStateDb(): Promise<IDBDatabase> {

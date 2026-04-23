@@ -382,7 +382,7 @@ export const useStore = create<Store>()(
       clearSnapshots: () => set({ snapshots: [] }),
     }),
     {
-      name: 'canvas-pm-v2',
+      name: 'chaos-pm-v1',
       storage: createJSONStorage(() => idbStorage),
       partialize: (s) => ({
         widgets: stripFileData(s.widgets),
