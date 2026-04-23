@@ -22,6 +22,7 @@ export default function Canvas() {
 
   const containerRef = useRef<HTMLDivElement>(null);
   const worldRef = useRef<HTMLDivElement>(null);
+  const connLayerRef = useRef<SVGSVGElement>(null);
   const viewportRef = useRef(viewport);
   useEffect(() => { viewportRef.current = viewport; }, [viewport]);
 
@@ -31,11 +32,14 @@ export default function Canvas() {
   const zoomTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Apply viewport directly to DOM — one DOM write, zero React re-renders during pan/zoom.
-  // ConnectionLayer is inside .world, so it moves with .world for free.
   const applyViewport = (vp: Viewport) => {
     Object.assign(vpBridge, vp);
+    const t = `translate(${vp.x}px,${vp.y}px) scale(${vp.scale})`;
     if (worldRef.current) {
-      worldRef.current.style.transform = `translate(${vp.x}px,${vp.y}px) scale(${vp.scale})`;
+      worldRef.current.style.transform = t;
+    }
+    if (connLayerRef.current) {
+      connLayerRef.current.style.transform = t;
     }
     if (containerRef.current) {
       const gs = 32 * vp.scale;
@@ -252,13 +256,13 @@ export default function Canvas() {
       onMouseUp={handleMouseUp}
       onDoubleClick={handleDoubleClick}
     >
-      {/* world transform managed via worldRef — ConnectionLayer inside world shares the transform */}
       <div ref={worldRef} className="world">
         {visibleWidgets.map((w) => (
           <WidgetNode key={w.id} widget={w} />
         ))}
-        <ConnectionLayer />
       </div>
+      {/* ConnectionLayer is outside .world — same transform applied directly via connLayerRef */}
+      <ConnectionLayer ref={connLayerRef} />
 
       {/* Rubber band selection overlay */}
       {rbRect && cr && (

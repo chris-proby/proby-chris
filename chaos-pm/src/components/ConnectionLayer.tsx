@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, forwardRef } from 'react';
 import { useStore } from '../store';
 import { vpBridge } from '../viewportBridge';
 import type { PortSide, Point, Widget } from '../types';
@@ -57,7 +57,7 @@ function midPoint(from: Point, to: Point): Point {
   return { x: (from.x + to.x) / 2, y: (from.y + to.y) / 2 };
 }
 
-export default function ConnectionLayer() {
+const ConnectionLayer = forwardRef<SVGSVGElement>(function ConnectionLayer(_props, ref) {
   const connections = useStore((s) => s.connections);
   const widgets = useStore((s) => s.widgets);
   const pendingConnection = useStore((s) => s.pendingConnection);
@@ -81,7 +81,7 @@ export default function ConnectionLayer() {
   }
 
   return (
-    <svg className="connection-layer">
+    <svg className="connection-layer" ref={ref}>
       <defs>
         {Object.entries(CONN_COLORS).map(([type, color]) => (
           <marker
@@ -185,4 +185,6 @@ export default function ConnectionLayer() {
       )}
     </svg>
   );
-}
+});
+
+export default ConnectionLayer;

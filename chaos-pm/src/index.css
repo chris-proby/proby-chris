@@ -378,7 +378,6 @@ html, body, #root { height: 100%; overflow: hidden; font-family: -apple-system, 
   top: 0;
   left: 0;
   transform-origin: 0 0;
-  will-change: transform;
   contain: layout;
 }
 
@@ -826,16 +825,17 @@ html, body, #root { height: 100%; overflow: hidden; font-family: -apple-system, 
   box-shadow: 0 0 0 2px rgba(99,102,241,0.5), var(--shadow-md);
 }
 
-/* ── Connection SVG layer (inside .world — inherits world transform) ── */
+/* ── Connection SVG layer (sibling of .world, same transform applied via JS) ── */
 .connection-layer {
   position: absolute;
   top: 0;
   left: 0;
-  width: 20000px;
-  height: 20000px;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
   z-index: 2147483647;
   overflow: visible;
+  transform-origin: 0 0;
 }
 
 /* ── Inspector Panel ── */
@@ -2521,7 +2521,7 @@ html, body, #root { height: 100%; overflow: hidden; font-family: -apple-system, 
   font-size: 12px;
   min-width: 0;
 }
-.dir-col-row .dir-col-label-input { width: auto; }
+.dir-col-row .dir-col-label-input { width: auto !important; }
 .dir-col-label-input:focus { outline: none; border-color: var(--accent); }
 
 .dir-col-type-select {
