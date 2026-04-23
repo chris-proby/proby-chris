@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useMemo, useState } from 'react';
 import { useStore } from '../store';
 import { saveFile, loadFile } from '../fileStorage';
-import { vpBridge } from '../viewportBridge';
+import { vpBridge, keyBridge } from '../viewportBridge';
 import { getCurrentSession } from '../auth';
 import { v4 as uuidv4 } from 'uuid';
 import type { Widget, PortSide, TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, GoalStatus, LeadData, LeadStage, FunnelData, TextboxData, HtmlData, FileUploadData, FileItem, DirectoryData, DirectoryColumn, WorklogData } from '../types';
@@ -97,6 +97,8 @@ function WidgetNode({ widget }: Props) {
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button !== 0) return;
+    // Space held → let event bubble to canvas for pan
+    if (keyBridge.space) return;
     if ((e.target as HTMLElement).closest('.port')) return;
     if ((e.target as HTMLElement).closest('.group-collapse-btn')) return;
     if ((e.target as HTMLElement).closest('.resize-handle')) return;

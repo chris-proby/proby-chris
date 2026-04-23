@@ -222,6 +222,15 @@ const TYPE_LABELS: Record<string, string> = {
 /* ─── Group Inspector ─── */
 const GROUP_COLORS = ['#6366f1', '#3b82f6', '#22c55e', '#f59e0b', '#ef4444', '#8b5cf6'];
 
+function getWidgetTitle(w: { type: string; data: unknown }): string {
+  const d = w.data as Record<string, unknown>;
+  if (typeof d.title === 'string' && d.title) return d.title;
+  if (typeof d.name === 'string' && d.name) return d.name;
+  return TYPE_LABELS[w.type] ?? w.type;
+}
+
+type GroupSort = 'updatedAt' | 'type';
+
 function GroupInspector({
   widgetId, data, onChange, onUngroup, onToggleCollapse,
 }: {
@@ -231,7 +240,16 @@ function GroupInspector({
   onUngroup: () => void;
   onToggleCollapse: () => void;
 }) {
-  const childCount = useStore((s) => s.widgets.filter((w) => w.groupId === widgetId).length);
+  const [sort, setSort] = useState<GroupSort>('updatedAt');
+  const children = useStore((s) => s.widgets.filter((w) => w.groupId === widgetId));
+  const setSelectedWidget = useStore((s) => s.setSelectedWidget);
+
+  const sorted = useMemo(() => {
+    const arr = [...children];
+    if (sort === 'updatedAt') arr.sort((a, b) => b.updatedAt - a.updatedAt);
+    else arr.sort((a, b) => a.type.localeCompare(b.type));
+    return arr;
+  }, [children, sort]);
 
   return (
     <>
@@ -252,9 +270,41 @@ function GroupInspector({
           ))}
         </div>
       </div>
-      <div style={{ padding: '10px', background: 'rgba(255,255,255,0.04)', borderRadius: 6, fontSize: 13, color: 'var(--panel-muted)' }}>
-        포함된 위젯: <strong style={{ color: 'var(--panel-text)' }}>{childCount}개</strong>
+
+      <div className="field">
+        <div className="group-children-header">
+          <span className="field-label" style={{ margin: 0 }}>포함된 요소 ({children.length})</span>
+          <div className="seg-group" style={{ gap: 2 }}>
+            <button
+              className={`seg-btn${sort === 'updatedAt' ? ' active' : ''}`}
+              style={{ fontSize: 11, padding: '3px 8px' }}
+              onClick={() => setSort('updatedAt')}
+            >최근순</button>
+            <button
+              className={`seg-btn${sort === 'type' ? ' active' : ''}`}
+              style={{ fontSize: 11, padding: '3px 8px' }}
+              onClick={() => setSort('type')}
+            >타입순</button>
+          </div>
+        </div>
+        <div className="group-children-list">
+          {sorted.length === 0 && (
+            <div className="group-children-empty">비어있음</div>
+          )}
+          {sorted.map((w) => (
+            <button
+              key={w.id}
+              className="group-child-item"
+              onClick={() => setSelectedWidget(w.id)}
+            >
+              <span className="group-child-icon">{TYPE_ICONS[w.type] ?? '□'}</span>
+              <span className="group-child-name">{getWidgetTitle(w)}</span>
+              <span className="group-child-type">{TYPE_LABELS[w.type] ?? w.type}</span>
+            </button>
+          ))}
+        </div>
       </div>
+
       <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
         <button
           className="seg-btn"

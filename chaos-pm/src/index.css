@@ -371,6 +371,8 @@ html, body, #root { height: 100%; overflow: hidden; font-family: -apple-system, 
   cursor: default;
 }
 .canvas-container.panning { cursor: grabbing !important; }
+.canvas-container.space-pan { cursor: grab !important; }
+.canvas-container.space-pan.panning { cursor: grabbing !important; }
 .canvas-container.connecting { cursor: crosshair !important; }
 
 .world {
@@ -2501,6 +2503,58 @@ html, body, #root { height: 100%; overflow: hidden; font-family: -apple-system, 
   letter-spacing: 0.2px;
 }
 .directory-add-row:hover { background: rgba(99,102,241,0.06); }
+
+/* ── Group Children List ── */
+.group-children-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.group-children-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.group-children-empty {
+  font-size: 12px;
+  color: var(--panel-muted);
+  padding: 8px 0;
+  text-align: center;
+}
+.group-child-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--panel-text);
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  font-size: 13px;
+  transition: background 0.1s;
+}
+.group-child-item:hover { background: rgba(255,255,255,0.06); }
+.group-child-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+  width: 20px;
+  text-align: center;
+}
+.group-child-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.group-child-type {
+  font-size: 11px;
+  color: var(--panel-muted);
+  flex-shrink: 0;
+}
 
 /* ── Directory Inspector ── */
 .dir-col-list { display: flex; flex-direction: column; gap: 5px; margin-bottom: 2px; }

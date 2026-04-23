@@ -4,7 +4,7 @@ import WidgetNode from './WidgetNode';
 import ConnectionLayer from './ConnectionLayer';
 import WidgetPicker from './WidgetPicker';
 import type { RubberBand, Viewport, WidgetType } from '../types';
-import { vpBridge } from '../viewportBridge';
+import { vpBridge, keyBridge } from '../viewportBridge';
 
 const MIN_SCALE = 0.08;
 const MAX_SCALE = 4;
@@ -60,6 +60,39 @@ export default function Canvas() {
   const [picker, setPicker] = useState<{ sx: number; sy: number; wx: number; wy: number } | null>(null);
   const rubberBandRef = useRef<RubberBand | null>(null);
   const isRubberBanding = useRef(false);
+
+  // Space key → pan mode (Figma-style)
+  useEffect(() => {
+    const isTyping = () => {
+      const el = document.activeElement;
+      if (!el) return false;
+      const tag = (el as HTMLElement).tagName;
+      return tag === 'INPUT' || tag === 'TEXTAREA' || (el as HTMLElement).isContentEditable;
+    };
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.code === 'Space' && !e.repeat && !isTyping()) {
+        e.preventDefault();
+        keyBridge.space = true;
+        containerRef.current?.classList.add('space-pan');
+      }
+    };
+    const onKeyUp = (e: KeyboardEvent) => {
+      if (e.code === 'Space') {
+        keyBridge.space = false;
+        containerRef.current?.classList.remove('space-pan');
+        if (isPanning.current) {
+          setViewport(viewportRef.current);
+          isPanning.current = false;
+        }
+      }
+    };
+    document.addEventListener('keydown', onKeyDown);
+    document.addEventListener('keyup', onKeyUp);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('keyup', onKeyUp);
+    };
+  }, [setViewport]);
 
   // Document-level mouse tracking
   useEffect(() => {
@@ -174,6 +207,16 @@ export default function Canvas() {
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button !== 0) return;
+
+    // Space held → pan the canvas regardless of what's under the cursor
+    if (keyBridge.space) {
+      isPanning.current = true;
+      lastMouse.current = { x: e.clientX, y: e.clientY };
+      containerRef.current?.classList.add('space-pan');
+      e.preventDefault();
+      return;
+    }
+
     const target = e.target as HTMLElement;
     if (target.closest('[data-widget]')) return;
 
