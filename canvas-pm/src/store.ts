@@ -1,7 +1,7 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
 import { v4 as uuid } from 'uuid';
-import { deleteFiles } from './fileStorage';
+import { deleteFiles, idbStorage } from './fileStorage';
 import type {
   Widget, Connection, Viewport, PendingConnection, PendingGroupChange, Snapshot,
   WidgetType, ConnectionType, TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, LeadData, FunnelData, TextboxData, HtmlData, FileUploadData,
@@ -383,6 +383,7 @@ export const useStore = create<Store>()(
     }),
     {
       name: 'canvas-pm-v2',
+      storage: createJSONStorage(() => idbStorage),
       partialize: (s) => ({
         widgets: stripFileData(s.widgets),
         connections: s.connections,
