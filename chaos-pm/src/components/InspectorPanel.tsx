@@ -1,8 +1,8 @@
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import { useStore } from '../store';
 import { saveFile, loadFile } from '../fileStorage';
-import type { TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, GoalStatus, KeyResult, LeadData, LeadStage, FunnelData, TextboxData, HtmlData, FileUploadData, FileItem, Attachment, ConnectionType, DirectoryData, DirectoryColumn, DirectoryColumnType } from '../types';
+import type { TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, GoalStatus, KeyResult, LeadData, LeadStage, FunnelData, TextboxData, HtmlData, FileUploadData, FileItem, Attachment, ConnectionType, DirectoryData, DirectoryColumn, DirectoryColumnType, WorklogData, WorklogEntry } from '../types';
 
 const NOTE_COLORS = ['#fef9c3', '#dbeafe', '#dcfce7', '#fce7f3', '#ede9fe', '#ffedd5'];
 
@@ -192,6 +192,12 @@ export default function InspectorPanel() {
             onChange={(d) => updateWidgetData(widget.id, d)}
           />
         )}
+        {widget.type === 'worklog' && (
+          <WorklogInspector
+            data={widget.data as WorklogData}
+            onChange={(d) => updateWidgetData(widget.id, d)}
+          />
+        )}
       </div>
       <div className="inspector-footer">
         <div className="meta-row">
@@ -207,10 +213,10 @@ export default function InspectorPanel() {
 }
 
 const TYPE_ICONS: Record<string, string> = {
-  task: '✓', note: '📝', link: '🔗', image: '🖼️', group: '⬡', goal: '🎯', lead: '💼', funnel: '📊', textbox: 'T', html: '⟨/⟩', fileupload: '📁', directory: '👥',
+  task: '✓', note: '📝', link: '🔗', image: '🖼️', group: '⬡', goal: '🎯', lead: '💼', funnel: '📊', textbox: 'T', html: '⟨/⟩', fileupload: '📁', directory: '👥', worklog: '📋',
 };
 const TYPE_LABELS: Record<string, string> = {
-  task: '작업', note: '메모', link: '링크', image: '이미지', group: '그룹', goal: '목표', lead: '리드', funnel: '세일즈 퍼널', textbox: '텍스트박스', html: 'HTML', fileupload: '파일 업로드', directory: '인원 디렉토리',
+  task: '작업', note: '메모', link: '링크', image: '이미지', group: '그룹', goal: '목표', lead: '리드', funnel: '세일즈 퍼널', textbox: '텍스트박스', html: 'HTML', fileupload: '파일 업로드', directory: '인원 디렉토리', worklog: '작업로그',
 };
 
 /* ─── Group Inspector ─── */
@@ -1342,6 +1348,83 @@ function SelectOptionsEditor({
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+/* ─── Worklog Inspector ─── */
+function formatTime(ts: number): string {
+  const d = new Date(ts);
+  const pad = (n: number) => String(n).padStart(2, '0');
+  const now = new Date();
+  const isToday = d.toDateString() === now.toDateString();
+  if (isToday) {
+    return `오늘 ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+  return `${d.getMonth() + 1}/${d.getDate()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+function WorklogInspector({ data, onChange }: { data: WorklogData; onChange: (d: Partial<WorklogData>) => void }) {
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+
+  const handleDelete = (id: string) => {
+    onChange({ entries: data.entries.filter((e) => e.id !== id) });
+    setConfirmDeleteId(null);
+  };
+
+  return (
+    <div>
+      <div className="field">
+        <div className="field-label">제목</div>
+        <input
+          value={data.title}
+          onChange={(e) => onChange({ title: e.target.value })}
+          placeholder="작업로그"
+        />
+      </div>
+      <div className="field">
+        <div className="field-label">
+          로그 히스토리
+          <span style={{ marginLeft: 6, fontWeight: 400, color: 'var(--panel-muted)' }}>
+            {data.entries.length}건
+          </span>
+        </div>
+        {data.entries.length === 0 ? (
+          <div className="worklog-inspector-empty">
+            캔버스 위젯에서 내용을 입력하고 Enter를 누르면 기록됩니다
+          </div>
+        ) : (
+          <div className="worklog-log-list">
+            {data.entries.map((entry: WorklogEntry) => (
+              <div key={entry.id} className="worklog-log-item">
+                <div className="worklog-log-meta">
+                  <span className="worklog-log-user">{entry.userName}</span>
+                  <span className="worklog-log-time">{formatTime(entry.createdAt)}</span>
+                  {confirmDeleteId === entry.id ? (
+                    <div className="worklog-log-confirm">
+                      <button
+                        className="worklog-log-confirm-yes"
+                        onClick={() => handleDelete(entry.id)}
+                      >삭제</button>
+                      <button
+                        className="worklog-log-confirm-no"
+                        onClick={() => setConfirmDeleteId(null)}
+                      >취소</button>
+                    </div>
+                  ) : (
+                    <button
+                      className="worklog-log-del"
+                      onClick={() => setConfirmDeleteId(entry.id)}
+                      title="삭제"
+                    >✕</button>
+                  )}
+                </div>
+                <div className="worklog-log-content">{entry.content}</div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

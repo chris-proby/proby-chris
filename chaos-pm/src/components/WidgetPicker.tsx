@@ -13,6 +13,7 @@ const ITEMS: { type: WidgetType; icon: string; label: string }[] = [
   { type: 'html',    icon: '⟨/⟩', label: 'HTML'      },
   { type: 'fileupload', icon: '📁', label: '파일'     },
   { type: 'directory',  icon: '👥', label: '디렉토리' },
+  { type: 'worklog',   icon: '📋', label: '작업로그' },
 ];
 
 interface Props {

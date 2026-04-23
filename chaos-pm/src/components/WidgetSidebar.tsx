@@ -12,7 +12,8 @@ const WIDGET_ITEMS: { type: WidgetType; icon: string; label: string; desc: strin
   { type: 'funnel',  icon: '📊',   label: '퍼널',      desc: '리드 집계 차트' },
   { type: 'textbox', icon: 'T',    label: '텍스트박스', desc: '자유 텍스트 배치' },
   { type: 'html',    icon: '⟨/⟩', label: 'HTML',      desc: 'HTML 미리보기' },
-  { type: 'fileupload', icon: '📁', label: '파일',     desc: '파일 업로드 & 보관' },
+  { type: 'fileupload', icon: '📁', label: '파일',       desc: '파일 업로드 & 보관' },
+  { type: 'worklog',   icon: '📋', label: '작업로그',   desc: '팀 작업 기록 & 로그' },
 ];
 
 export default function WidgetSidebar() {

@@ -5,7 +5,7 @@ import { deleteFiles, idbStorage } from './fileStorage';
 import { getCurrentSession } from './auth';
 import type {
   Widget, Connection, Viewport, PendingConnection, PendingGroupChange, Snapshot,
-  WidgetType, ConnectionType, TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, LeadData, FunnelData, TextboxData, HtmlData, FileUploadData, DirectoryData,
+  WidgetType, ConnectionType, TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, LeadData, FunnelData, TextboxData, HtmlData, FileUploadData, DirectoryData, WorklogData,
 } from './types';
 
 function stripFileData(widgets: Widget[]): Widget[] {
@@ -16,7 +16,7 @@ function stripFileData(widgets: Widget[]): Widget[] {
   });
 }
 
-function defaultData(type: WidgetType): TaskData | NoteData | LinkData | ImageData | GroupData | GoalData | LeadData | FunnelData | TextboxData | HtmlData | FileUploadData | DirectoryData {
+function defaultData(type: WidgetType): TaskData | NoteData | LinkData | ImageData | GroupData | GoalData | LeadData | FunnelData | TextboxData | HtmlData | FileUploadData | DirectoryData | WorklogData {
   switch (type) {
     case 'task': return {
       title: '새 작업', description: '', status: 'todo',
@@ -32,6 +32,7 @@ function defaultData(type: WidgetType): TaskData | NoteData | LinkData | ImageDa
     case 'textbox': return { content: '텍스트를 입력하세요', fontSize: 16, align: 'left', bold: false, italic: false, color: '#1e293b' };
     case 'html': return { html: '', name: '' };
     case 'fileupload': return { title: '파일 보관함', files: [] };
+    case 'worklog': return { title: '작업로그', entries: [] };
     case 'directory': return {
       title: '인원 디렉토리',
       columns: [
@@ -61,6 +62,7 @@ function defaultSize(type: WidgetType): { width: number; height: number } {
     case 'textbox': return { width: 280, height: 80 };
     case 'html': return { width: 360, height: 280 };
     case 'fileupload': return { width: 280, height: 200 };
+    case 'worklog':   return { width: 280, height: 200 };
     case 'directory': return { width: 520, height: 260 };
   }
 }

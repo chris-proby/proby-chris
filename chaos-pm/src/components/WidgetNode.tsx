@@ -2,7 +2,9 @@ import React, { useRef, useEffect, useMemo, useState } from 'react';
 import { useStore } from '../store';
 import { saveFile, loadFile } from '../fileStorage';
 import { vpBridge } from '../viewportBridge';
-import type { Widget, PortSide, TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, GoalStatus, LeadData, LeadStage, FunnelData, TextboxData, HtmlData, FileUploadData, FileItem, DirectoryData, DirectoryColumn } from '../types';
+import { getCurrentSession } from '../auth';
+import { v4 as uuidv4 } from 'uuid';
+import type { Widget, PortSide, TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, GoalStatus, LeadData, LeadStage, FunnelData, TextboxData, HtmlData, FileUploadData, FileItem, DirectoryData, DirectoryColumn, WorklogData } from '../types';
 
 const GOAL_GRADIENTS: Record<GoalStatus, string> = {
   'on-track': 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
@@ -100,6 +102,10 @@ function WidgetNode({ widget }: Props) {
     if ((e.target as HTMLElement).closest('.resize-handle')) return;
     if (widget.type === 'textbox' && isTextboxEditing) return;
     if ((e.target as HTMLElement).closest('[data-dir-cell]')) {
+      if (!isSelected) setSelectedWidget(widget.id);
+      return;
+    }
+    if ((e.target as HTMLElement).closest('[data-worklog-input]')) {
       if (!isSelected) setSelectedWidget(widget.id);
       return;
     }
@@ -414,6 +420,12 @@ function WidgetContent({ widget, isTextboxEditing, onTextboxEditEnd }: {
     case 'directory': return (
       <DirectoryContent
         data={widget.data as DirectoryData}
+        onChange={(d) => updateWidgetData(widget.id, d)}
+      />
+    );
+    case 'worklog': return (
+      <WorklogContent
+        data={widget.data as WorklogData}
         onChange={(d) => updateWidgetData(widget.id, d)}
       />
     );
@@ -1296,6 +1308,66 @@ function DirectoryContent({
       </div>
       <div className="directory-add-row" data-dir-cell="1" onMouseDown={(e) => e.stopPropagation()} onClick={addRow}>
         + 행 추가
+      </div>
+    </div>
+  );
+}
+
+/* ── Worklog Widget ── */
+function WorklogContent({ data, onChange }: { data: WorklogData; onChange: (d: Partial<WorklogData>) => void }) {
+  const [input, setInput] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key !== 'Enter') return;
+    const text = input.trim();
+    if (!text) return;
+    e.preventDefault();
+    const session = getCurrentSession();
+    const entry = {
+      id: uuidv4(),
+      content: text,
+      createdAt: Date.now(),
+      userId: session?.userId ?? 'unknown',
+      userName: session?.name ?? '알 수 없음',
+    };
+    onChange({ entries: [entry, ...data.entries] });
+    setInput('');
+  };
+
+  const recent = data.entries.slice(0, 3);
+
+  return (
+    <div className="worklog-widget">
+      <div className="worklog-header">
+        <span className="worklog-icon">📋</span>
+        <span className="worklog-title">{data.title || '작업로그'}</span>
+        <span className="worklog-count">{data.entries.length}건</span>
+      </div>
+      <div className="worklog-preview">
+        {recent.length === 0 ? (
+          <div className="worklog-empty">아직 기록이 없습니다</div>
+        ) : (
+          recent.map((e) => (
+            <div key={e.id} className="worklog-preview-item">
+              <span className="worklog-preview-text">{e.content}</span>
+            </div>
+          ))
+        )}
+        {data.entries.length > 3 && (
+          <div className="worklog-preview-more">+{data.entries.length - 3}개 더</div>
+        )}
+      </div>
+      <div className="worklog-input-row" data-worklog-input="1">
+        <input
+          ref={inputRef}
+          className="worklog-input"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="작업 내용 입력 후 Enter..."
+          onMouseDown={(e) => e.stopPropagation()}
+        />
       </div>
     </div>
   );

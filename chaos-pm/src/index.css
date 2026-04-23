@@ -2705,3 +2705,197 @@ html, body, #root { height: 100%; overflow: hidden; font-family: -apple-system, 
 .invite-used { font-size: 11px; color: var(--panel-muted); }
 .invite-active { font-size: 11px; color: #10b981; font-weight: 600; }
 .invite-actions { display: flex; gap: 4px; }
+
+/* ── Worklog Widget (canvas) ── */
+.widget-worklog {
+  display: flex;
+  flex-direction: column;
+  min-height: 160px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.worklog-widget {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.worklog-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px 8px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.worklog-icon { font-size: 14px; }
+.worklog-title {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.worklog-count {
+  font-size: 11px;
+  color: var(--text-muted);
+  background: rgba(99,102,241,0.1);
+  color: var(--accent);
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.worklog-preview {
+  flex: 1;
+  padding: 6px 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.worklog-empty {
+  font-size: 11px;
+  color: var(--text-muted);
+  padding: 6px 2px;
+  font-style: italic;
+}
+
+.worklog-preview-item {
+  font-size: 11.5px;
+  color: var(--text);
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 2px 4px;
+  border-radius: 4px;
+  background: rgba(0,0,0,0.03);
+}
+[data-theme="dark"] .worklog-preview-item { background: rgba(255,255,255,0.04); color: #c9d1d9; }
+
+.worklog-preview-more {
+  font-size: 10px;
+  color: var(--accent);
+  padding: 1px 4px;
+  font-weight: 600;
+}
+
+.worklog-input-row {
+  flex-shrink: 0;
+  border-top: 1px solid var(--border);
+  padding: 6px 8px;
+}
+
+.worklog-input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 12px;
+  background: transparent;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.15s;
+}
+.worklog-input:focus { border-color: var(--accent); }
+.worklog-input::placeholder { color: var(--text-muted); }
+[data-theme="dark"] .worklog-input { color: #e6edf3; }
+[data-theme="dark"] .worklog-input::placeholder { color: #6e7681; }
+
+/* ── Worklog Inspector ── */
+.worklog-inspector-empty {
+  font-size: 12px;
+  color: var(--panel-muted);
+  padding: 10px 0;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.worklog-log-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--panel-input-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.worklog-log-item {
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--panel-input-border);
+  background: transparent;
+  transition: background 0.1s;
+}
+.worklog-log-item:last-child { border-bottom: none; }
+.worklog-log-item:hover { background: rgba(99,102,241,0.04); }
+
+.worklog-log-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.worklog-log-user {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.worklog-log-time {
+  font-size: 11px;
+  color: var(--panel-muted);
+  flex: 1;
+}
+
+.worklog-log-del {
+  background: none;
+  border: none;
+  color: var(--panel-muted);
+  font-size: 11px;
+  cursor: pointer;
+  padding: 1px 4px;
+  border-radius: 3px;
+  line-height: 1;
+  opacity: 0;
+  transition: opacity 0.15s, color 0.15s;
+}
+.worklog-log-item:hover .worklog-log-del { opacity: 1; }
+.worklog-log-del:hover { color: var(--danger); }
+
+.worklog-log-confirm {
+  display: flex;
+  gap: 4px;
+}
+.worklog-log-confirm-yes {
+  font-size: 11px;
+  background: var(--danger);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 1px 7px;
+  cursor: pointer;
+}
+.worklog-log-confirm-no {
+  font-size: 11px;
+  background: transparent;
+  color: var(--panel-muted);
+  border: 1px solid var(--panel-input-border);
+  border-radius: 4px;
+  padding: 1px 7px;
+  cursor: pointer;
+}
+
+.worklog-log-content {
+  font-size: 12.5px;
+  color: var(--panel-text);
+  line-height: 1.5;
+  word-break: break-word;
+}
