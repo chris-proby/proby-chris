@@ -2521,6 +2521,7 @@ html, body, #root { height: 100%; overflow: hidden; font-family: -apple-system, 
   font-size: 12px;
   min-width: 0;
 }
+.dir-col-row .dir-col-label-input { width: auto; }
 .dir-col-label-input:focus { outline: none; border-color: var(--accent); }
 
 .dir-col-type-select {

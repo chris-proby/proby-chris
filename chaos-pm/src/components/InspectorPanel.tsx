@@ -1,4 +1,4 @@
-import { useRef, useMemo, useState } from 'react';
+import { useRef, useMemo, useState, useEffect } from 'react';
 import { v4 as uuid } from 'uuid';
 import { useStore } from '../store';
 import { saveFile, loadFile } from '../fileStorage';
@@ -1251,11 +1251,9 @@ function DirectoryInspector({
         <div className="dir-col-list">
           {data.columns.map((col) => (
             <div key={col.id} className="dir-col-row">
-              <input
-                className="dir-col-label-input"
+              <ColumnLabelInput
                 value={col.label}
-                onChange={(e) => updateColumn(col.id, { label: e.target.value })}
-                placeholder="컬럼명..."
+                onCommit={(label) => updateColumn(col.id, { label })}
               />
               <select
                 className="dir-col-type-select"
@@ -1426,5 +1424,36 @@ function WorklogInspector({ data, onChange }: { data: WorklogData; onChange: (d:
         )}
       </div>
     </div>
+  );
+}
+
+/* ── Column label input with IME-safe local state ── */
+function ColumnLabelInput({ value, onCommit }: { value: string; onCommit: (v: string) => void }) {
+  const [local, setLocal] = useState(value);
+  const composingRef = useRef(false);
+
+  // Sync from parent only when not composing
+  useEffect(() => {
+    if (!composingRef.current) setLocal(value);
+  }, [value]);
+
+  return (
+    <input
+      className="dir-col-label-input"
+      value={local}
+      placeholder="컬럼명..."
+      onChange={(e) => {
+        setLocal(e.target.value);
+        if (!composingRef.current) onCommit(e.target.value);
+      }}
+      onCompositionStart={() => { composingRef.current = true; }}
+      onCompositionEnd={(e) => {
+        composingRef.current = false;
+        const v = (e.target as HTMLInputElement).value;
+        setLocal(v);
+        onCommit(v);
+      }}
+      onBlur={() => onCommit(local)}
+    />
   );
 }
