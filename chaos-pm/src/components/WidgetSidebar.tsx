@@ -13,6 +13,7 @@ const WIDGET_ITEMS: { type: WidgetType; icon: string; label: string; desc: strin
   { type: 'textbox', icon: 'T',    label: '텍스트박스', desc: '자유 텍스트 배치' },
   { type: 'html',    icon: '⟨/⟩', label: 'HTML',      desc: 'HTML 미리보기' },
   { type: 'fileupload', icon: '📁', label: '파일',       desc: '파일 업로드 & 보관' },
+  { type: 'directory', icon: '👥', label: '디렉토리',   desc: '인원 & 연락처 목록' },
   { type: 'worklog',   icon: '📋', label: '작업로그',   desc: '팀 작업 기록 & 로그' },
 ];
 

@@ -1320,6 +1320,7 @@ function WorklogContent({ data, onChange }: { data: WorklogData; onChange: (d: P
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key !== 'Enter') return;
+    if (e.nativeEvent.isComposing) return; // ignore IME composition Enter
     const text = input.trim();
     if (!text) return;
     e.preventDefault();
