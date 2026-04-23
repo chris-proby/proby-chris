@@ -442,31 +442,6 @@ export const useStore = create<Store>()(
           widgets: stripFileData(snap.widgets),
         })),
       }),
-      onRehydrateStorage: () => (state) => {
-        if (!state) return;
-        // Repair any circular groupId references that could cause infinite loops
-        const ids = new Set(state.widgets.map((w) => w.id));
-        state.widgets = state.widgets.map((w) => {
-          if (w.groupId && !ids.has(w.groupId)) return { ...w, groupId: undefined };
-          return w;
-        });
-        // Detect and break circular group chains
-        const visited = new Set<string>();
-        const fix = (id: string, ancestors: Set<string>): void => {
-          if (ancestors.has(id)) {
-            // circular — detach this widget from its parent
-            const w = state.widgets.find((x) => x.id === id);
-            if (w) state.widgets = state.widgets.map((x) => x.id === id ? { ...x, groupId: undefined } : x);
-            return;
-          }
-          if (visited.has(id)) return;
-          visited.add(id);
-          const next = new Set(ancestors);
-          next.add(id);
-          state.widgets.filter((w) => w.groupId === id).forEach((w) => fix(w.id, next));
-        };
-        state.widgets.filter((w) => !w.groupId).forEach((w) => fix(w.id, new Set()));
-      },
     }
   )
 );
