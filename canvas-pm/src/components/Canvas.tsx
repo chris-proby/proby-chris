@@ -1,0 +1,266 @@
+import { useEffect, useRef, useState } from 'react';
+import { useStore } from '../store';
+import WidgetNode from './WidgetNode';
+import ConnectionLayer from './ConnectionLayer';
+import WidgetPicker from './WidgetPicker';
+import type { RubberBand, WidgetType } from '../types';
+
+const MIN_SCALE = 0.08;
+const MAX_SCALE = 4;
+
+export default function Canvas() {
+  const viewport = useStore((s) => s.viewport);
+  const setViewport = useStore((s) => s.setViewport);
+  const widgets = useStore((s) => s.widgets);
+  const pendingConnection = useStore((s) => s.pendingConnection);
+  const setPendingConnection = useStore((s) => s.setPendingConnection);
+  const clearSelection = useStore((s) => s.clearSelection);
+  const setMultiSelected = useStore((s) => s.setMultiSelected);
+  const addWidget = useStore((s) => s.addWidget);
+  const setSelectedWidget = useStore((s) => s.setSelectedWidget);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const viewportRef = useRef(viewport);
+  useEffect(() => { viewportRef.current = viewport; }, [viewport]);
+
+  const pendingRef = useRef(pendingConnection);
+  useEffect(() => { pendingRef.current = pendingConnection; }, [pendingConnection]);
+
+  const isPanning = useRef(false);
+  const lastMouse = useRef({ x: 0, y: 0 });
+
+  const [rubberBand, setRubberBand] = useState<RubberBand | null>(null);
+  const [picker, setPicker] = useState<{ sx: number; sy: number; wx: number; wy: number } | null>(null);
+  const rubberBandRef = useRef<RubberBand | null>(null);
+  const isRubberBanding = useRef(false);
+
+  // Document-level mouse tracking
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      if (isPanning.current) {
+        const dx = e.clientX - lastMouse.current.x;
+        const dy = e.clientY - lastMouse.current.y;
+        lastMouse.current = { x: e.clientX, y: e.clientY };
+        const vp = viewportRef.current;
+        const next = { ...vp, x: vp.x + dx, y: vp.y + dy };
+        viewportRef.current = next;
+        setViewport(next);
+      }
+      if (pendingRef.current) {
+        setPendingConnection({ ...pendingRef.current, toX: e.clientX, toY: e.clientY });
+      }
+      if (isRubberBanding.current && rubberBandRef.current) {
+        const next = { ...rubberBandRef.current, endX: e.clientX, endY: e.clientY };
+        rubberBandRef.current = next;
+        setRubberBand({ ...next });
+      }
+    };
+    const onUp = (e: MouseEvent) => {
+      if (isRubberBanding.current) {
+        isRubberBanding.current = false;
+        const rb = rubberBandRef.current;
+        if (rb) {
+          finishRubberBand(rb, e.shiftKey);
+        }
+        rubberBandRef.current = null;
+        setRubberBand(null);
+      }
+      isPanning.current = false;
+    };
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+    return () => {
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+    };
+  }, [setViewport, setPendingConnection]);
+
+  const finishRubberBand = (rb: RubberBand, _additive: boolean) => {
+    const el = containerRef.current;
+    if (!el) return;
+    const cr = el.getBoundingClientRect();
+    const vp = viewportRef.current;
+
+    const sx = Math.min(rb.startX, rb.endX);
+    const sy = Math.min(rb.startY, rb.endY);
+    const ex = Math.max(rb.startX, rb.endX);
+    const ey = Math.max(rb.startY, rb.endY);
+
+    if (ex - sx < 4 && ey - sy < 4) return;
+
+    // Convert rubber band screen coords to world coords
+    const toWorld = (px: number, py: number) => ({
+      x: (px - cr.left - vp.x) / vp.scale,
+      y: (py - cr.top - vp.y) / vp.scale,
+    });
+    const wMin = toWorld(sx, sy);
+    const wMax = toWorld(ex, ey);
+
+    // Find all widgets whose bounding box intersects the selection rect
+    // Exclude group background widgets from rubber band (select children instead)
+    const selected = useStore.getState().widgets.filter((w) => {
+      if (w.type === 'group') return false;
+      return (
+        w.x < wMax.x && w.x + w.width > wMin.x &&
+        w.y < wMax.y && w.y + w.height > wMin.y
+      );
+    });
+
+    if (selected.length > 0) {
+      setMultiSelected(selected.map((w) => w.id));
+    } else {
+      clearSelection();
+    }
+  };
+
+  // Wheel zoom toward cursor
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const rect = el.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+      const factor = e.deltaY < 0 ? 1.1 : 0.9091;
+      const vp = viewportRef.current;
+      const newScale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, vp.scale * factor));
+      const ratio = newScale / vp.scale;
+      const next = { x: mx - (mx - vp.x) * ratio, y: my - (my - vp.y) * ratio, scale: newScale };
+      viewportRef.current = next;
+      setViewport(next);
+    };
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => el.removeEventListener('wheel', onWheel);
+  }, [setViewport]);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (e.button !== 0) return;
+    const target = e.target as HTMLElement;
+    if (target.closest('[data-widget]')) return;
+
+    if (e.altKey || e.metaKey) {
+      // Alt/Cmd + drag = pan
+      clearSelection();
+      isPanning.current = true;
+      lastMouse.current = { x: e.clientX, y: e.clientY };
+    } else if (e.shiftKey) {
+      // Shift + drag = additive rubber band (not used differently here)
+      isRubberBanding.current = true;
+      const rb = { startX: e.clientX, startY: e.clientY, endX: e.clientX, endY: e.clientY };
+      rubberBandRef.current = rb;
+      setRubberBand(rb);
+    } else {
+      // Plain drag: pan
+      clearSelection();
+      isPanning.current = true;
+      lastMouse.current = { x: e.clientX, y: e.clientY };
+    }
+    e.preventDefault();
+  };
+
+  const handleMouseUp = (e: React.MouseEvent) => {
+    if (pendingRef.current) {
+      const target = e.target as HTMLElement;
+      if (!target.closest('[data-widget]')) setPendingConnection(null);
+    }
+  };
+
+  const handleDoubleClick = (e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest('[data-widget]')) return;
+    const vp = viewportRef.current;
+    const cr = containerRef.current?.getBoundingClientRect();
+    const wx = (e.clientX - (cr?.left ?? 0) - vp.x) / vp.scale - 140;
+    const wy = (e.clientY - (cr?.top ?? 0) - vp.y) / vp.scale - 90;
+    setPicker({ sx: e.clientX, sy: e.clientY, wx, wy });
+  };
+
+  const handlePickerSelect = (type: WidgetType) => {
+    if (!picker) return;
+    const id = addWidget(type, picker.wx, picker.wy);
+    setSelectedWidget(id);
+    setPicker(null);
+  };
+
+  // Collapsed group IDs — their children should be hidden
+  const collapsedGroupIds = new Set(
+    widgets
+      .filter((w) => w.type === 'group' && (w.data as { collapsed: boolean }).collapsed)
+      .map((w) => w.id)
+  );
+
+  // Render: groups first (lower z-index), then other widgets
+  const sortedWidgets = [...widgets].sort((a, b) => a.zIndex - b.zIndex);
+  const visibleWidgets = sortedWidgets.filter(
+    (w) => !w.groupId || !collapsedGroupIds.has(w.groupId)
+  );
+
+  const gridSize = 32 * viewport.scale;
+  const gridX = ((viewport.x % gridSize) + gridSize) % gridSize;
+  const gridY = ((viewport.y % gridSize) + gridSize) % gridSize;
+
+  // Rubber band rect in screen space
+  const rb = rubberBand;
+  const rbRect = rb
+    ? {
+        left: Math.min(rb.startX, rb.endX),
+        top: Math.min(rb.startY, rb.endY),
+        width: Math.abs(rb.endX - rb.startX),
+        height: Math.abs(rb.endY - rb.startY),
+      }
+    : null;
+
+  // Get canvas container offset for rubber band display
+  const cr = containerRef.current?.getBoundingClientRect();
+
+  return (
+    <div
+      ref={containerRef}
+      className={`canvas-container${pendingConnection ? ' connecting' : ''}`}
+      style={{
+        backgroundSize: `${gridSize}px ${gridSize}px`,
+        backgroundPosition: `${gridX}px ${gridY}px`,
+      }}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
+      onDoubleClick={handleDoubleClick}
+    >
+      <div
+        className="world"
+        style={{ transform: `translate(${viewport.x}px,${viewport.y}px) scale(${viewport.scale})` }}
+      >
+        {visibleWidgets.map((w) => (
+          <WidgetNode key={w.id} widget={w} />
+        ))}
+      </div>
+
+      {/* Rubber band selection overlay */}
+      {rbRect && cr && (
+        <div
+          style={{
+            position: 'absolute',
+            left: rbRect.left - cr.left,
+            top: rbRect.top - cr.top,
+            width: rbRect.width,
+            height: rbRect.height,
+            border: '1px solid #6366f1',
+            background: 'rgba(99,102,241,0.08)',
+            pointerEvents: 'none',
+            borderRadius: 3,
+          }}
+        />
+      )}
+
+      <ConnectionLayer />
+
+      {picker && (
+        <WidgetPicker
+          x={picker.sx}
+          y={picker.sy}
+          onSelect={handlePickerSelect}
+          onDismiss={() => setPicker(null)}
+        />
+      )}
+    </div>
+  );
+}
