@@ -3,10 +3,10 @@ import { persist } from 'zustand/middleware';
 import { v4 as uuid } from 'uuid';
 import type {
   Widget, Connection, Viewport, PendingConnection, PendingGroupChange, Snapshot,
-  WidgetType, ConnectionType, TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, LeadData, FunnelData, TextboxData, HtmlData,
+  WidgetType, ConnectionType, TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, LeadData, FunnelData, TextboxData, HtmlData, FileUploadData,
 } from './types';
 
-function defaultData(type: WidgetType): TaskData | NoteData | LinkData | ImageData | GroupData | GoalData | LeadData | FunnelData | TextboxData | HtmlData {
+function defaultData(type: WidgetType): TaskData | NoteData | LinkData | ImageData | GroupData | GoalData | LeadData | FunnelData | TextboxData | HtmlData | FileUploadData {
   switch (type) {
     case 'task': return {
       title: '새 작업', description: '', status: 'todo',
@@ -21,6 +21,7 @@ function defaultData(type: WidgetType): TaskData | NoteData | LinkData | ImageDa
     case 'funnel': return { title: '세일즈 퍼널' };
     case 'textbox': return { content: '텍스트를 입력하세요', fontSize: 16, align: 'left', bold: false, italic: false, color: '#1e293b' };
     case 'html': return { html: '', name: '' };
+    case 'fileupload': return { title: '파일 보관함', files: [] };
   }
 }
 
@@ -36,6 +37,7 @@ function defaultSize(type: WidgetType): { width: number; height: number } {
     case 'funnel': return { width: 340, height: 320 };
     case 'textbox': return { width: 280, height: 80 };
     case 'html': return { width: 360, height: 280 };
+    case 'fileupload': return { width: 280, height: 200 };
   }
 }
 

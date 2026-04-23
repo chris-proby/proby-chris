@@ -2135,6 +2135,105 @@ html, body, #root { height: 100%; overflow: hidden; font-family: -apple-system, 
   background: rgba(255,255,255,0.02);
 }
 
+/* ── File Upload Widget ── */
+.fileupload-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+.fileupload-header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 12px 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.fileupload-icon { font-size: 14px; }
+.fileupload-title {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--panel-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fileupload-count {
+  font-size: 11px;
+  color: var(--panel-muted);
+  background: rgba(255,255,255,0.06);
+  padding: 1px 7px;
+  border-radius: 10px;
+}
+.fileupload-drop-hint {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--panel-muted);
+  font-size: 12px;
+  padding: 20px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.fileupload-drop-hint:hover { background: rgba(255,255,255,0.03); }
+.fileupload-drop-icon { font-size: 26px; }
+.fileupload-list {
+  flex: 1;
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  overflow: hidden;
+}
+.fileupload-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 6px;
+  border-radius: 5px;
+  background: rgba(255,255,255,0.03);
+  font-size: 11px;
+}
+.fileupload-item-icon { font-size: 13px; flex-shrink: 0; }
+.fileupload-item-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--panel-text);
+}
+.fileupload-item-size {
+  color: var(--panel-muted);
+  flex-shrink: 0;
+  font-size: 10px;
+}
+.fileupload-item-dl {
+  background: none;
+  border: none;
+  color: var(--panel-muted);
+  cursor: pointer;
+  font-size: 12px;
+  padding: 0 2px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.fileupload-item-dl:hover { color: var(--panel-text); }
+.fileupload-more {
+  font-size: 11px;
+  color: var(--panel-muted);
+  text-align: center;
+  padding: 3px 0;
+}
+
+[data-theme="light"] .fileupload-header { border-bottom-color: #e5e7eb; }
+[data-theme="light"] .fileupload-count { background: rgba(0,0,0,0.05); }
+[data-theme="light"] .fileupload-drop-hint:hover { background: rgba(0,0,0,0.02); }
+[data-theme="light"] .fileupload-item { background: rgba(0,0,0,0.03); }
+
 /* ── Lead source badge (on widget card) ── */
 .lead-source-badge {
   font-size: 9px;

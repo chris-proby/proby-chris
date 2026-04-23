@@ -1,7 +1,7 @@
 import { useRef, useMemo } from 'react';
 import { v4 as uuid } from 'uuid';
 import { useStore } from '../store';
-import type { TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, GoalStatus, KeyResult, LeadData, LeadStage, FunnelData, TextboxData, HtmlData, Attachment, ConnectionType } from '../types';
+import type { TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, GoalStatus, KeyResult, LeadData, LeadStage, FunnelData, TextboxData, HtmlData, FileUploadData, FileItem, Attachment, ConnectionType } from '../types';
 
 const NOTE_COLORS = ['#fef9c3', '#dbeafe', '#dcfce7', '#fce7f3', '#ede9fe', '#ffedd5'];
 
@@ -179,6 +179,12 @@ export default function InspectorPanel() {
             onChange={(d) => updateWidgetData(widget.id, d)}
           />
         )}
+        {widget.type === 'fileupload' && (
+          <FileUploadInspector
+            data={widget.data as FileUploadData}
+            onChange={(d) => updateWidgetData(widget.id, d)}
+          />
+        )}
       </div>
       <div className="inspector-footer">
         <div className="meta-row">
@@ -194,10 +200,10 @@ export default function InspectorPanel() {
 }
 
 const TYPE_ICONS: Record<string, string> = {
-  task: '✓', note: '📝', link: '🔗', image: '🖼️', group: '⬡', goal: '🎯', lead: '💼', funnel: '📊', textbox: 'T', html: '⟨/⟩',
+  task: '✓', note: '📝', link: '🔗', image: '🖼️', group: '⬡', goal: '🎯', lead: '💼', funnel: '📊', textbox: 'T', html: '⟨/⟩', fileupload: '📁',
 };
 const TYPE_LABELS: Record<string, string> = {
-  task: '작업', note: '메모', link: '링크', image: '이미지', group: '그룹', goal: '목표', lead: '리드', funnel: '세일즈 퍼널', textbox: '텍스트박스', html: 'HTML',
+  task: '작업', note: '메모', link: '링크', image: '이미지', group: '그룹', goal: '목표', lead: '리드', funnel: '세일즈 퍼널', textbox: '텍스트박스', html: 'HTML', fileupload: '파일 업로드',
 };
 
 /* ─── Group Inspector ─── */
@@ -1055,6 +1061,111 @@ function HtmlInspector({ data, onChange }: { data: HtmlData; onChange: (d: Parti
           새 탭에서 열기 ↗
         </button>
       )}
+    </>
+  );
+}
+
+/* ─── File Upload Inspector ─── */
+function fileIcon(mimeType: string): string {
+  if (mimeType.startsWith('image/')) return '🖼️';
+  if (mimeType.includes('pdf')) return '📄';
+  if (mimeType.startsWith('video/')) return '🎬';
+  if (mimeType.startsWith('audio/')) return '🎵';
+  if (mimeType.includes('zip') || mimeType.includes('archive') || mimeType.includes('compressed')) return '📦';
+  if (mimeType.includes('spreadsheet') || mimeType.includes('excel') || mimeType.includes('csv')) return '📊';
+  if (mimeType.includes('word') || mimeType.includes('document')) return '📝';
+  return '📎';
+}
+
+function fmtSize(bytes: number): string {
+  if (bytes >= 1_000_000) return `${(bytes / 1_000_000).toFixed(1)}MB`;
+  if (bytes >= 1_000) return `${(bytes / 1_000).toFixed(0)}KB`;
+  return `${bytes}B`;
+}
+
+function downloadFile(file: FileItem) {
+  const a = document.createElement('a');
+  a.href = file.data;
+  a.download = file.name;
+  a.click();
+}
+
+function FileUploadInspector({
+  data,
+  onChange,
+}: {
+  data: FileUploadData;
+  onChange: (d: Partial<FileUploadData>) => void;
+}) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
+    let pending = files.length;
+    const newFiles: FileItem[] = [];
+    if (!pending) return;
+    files.forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        newFiles.push({
+          id: Math.random().toString(36).slice(2),
+          name: file.name,
+          size: file.size,
+          mimeType: file.type || 'application/octet-stream',
+          data: reader.result as string,
+        });
+        pending--;
+        if (pending === 0) onChange({ files: [...data.files, ...newFiles] });
+      };
+      reader.readAsDataURL(file);
+    });
+    e.target.value = '';
+  };
+
+  const removeFile = (id: string) => onChange({ files: data.files.filter((f) => f.id !== id) });
+
+  return (
+    <>
+      <div className="field">
+        <div className="field-label">제목</div>
+        <input
+          value={data.title}
+          onChange={(e) => onChange({ title: e.target.value })}
+          placeholder="파일 보관함 이름..."
+        />
+      </div>
+      <div className="field">
+        <div className="field-label">파일 ({data.files.length}개)</div>
+        <input ref={fileInputRef} type="file" multiple style={{ display: 'none' }} onChange={handleUpload} />
+        <button className="attach-btn" onClick={() => fileInputRef.current?.click()}>
+          📂 파일 업로드
+        </button>
+        {data.files.length > 0 && (
+          <div className="attach-list" style={{ marginTop: 8 }}>
+            {data.files.map((f) => (
+              <div key={f.id} className="attach-item">
+                <span className="attach-item-icon">{fileIcon(f.mimeType)}</span>
+                <span className="attach-item-name">{f.name}</span>
+                <span style={{ fontSize: 10, color: 'var(--panel-muted)', flexShrink: 0 }}>{fmtSize(f.size)}</span>
+                <button
+                  className="attach-item-del"
+                  title="다운로드"
+                  style={{ color: 'var(--panel-muted)' }}
+                  onClick={() => downloadFile(f)}
+                >
+                  ↓
+                </button>
+                <button className="attach-item-del" onClick={() => removeFile(f.id)}>×</button>
+              </div>
+            ))}
+          </div>
+        )}
+        {data.files.length === 0 && (
+          <div style={{ fontSize: 12, color: 'var(--panel-muted)', marginTop: 6 }}>
+            업로드된 파일이 없습니다
+          </div>
+        )}
+      </div>
     </>
   );
 }

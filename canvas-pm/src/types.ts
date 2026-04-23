@@ -1,5 +1,5 @@
 export type PortSide = 'top' | 'right' | 'bottom' | 'left';
-export type WidgetType = 'task' | 'note' | 'link' | 'image' | 'group' | 'goal' | 'lead' | 'funnel' | 'textbox' | 'html';
+export type WidgetType = 'task' | 'note' | 'link' | 'image' | 'group' | 'goal' | 'lead' | 'funnel' | 'textbox' | 'html' | 'fileupload';
 export type TaskStatus = 'todo' | 'in-progress' | 'done';
 export type TaskPriority = 'low' | 'medium' | 'high';
 export type ConnectionType = 'relates-to' | 'blocks' | 'depends-on' | 'goal-parent';
@@ -106,7 +106,20 @@ export interface HtmlData {
   name: string;
 }
 
-export type WidgetData = TaskData | NoteData | LinkData | ImageData | GroupData | GoalData | LeadData | FunnelData | TextboxData | HtmlData;
+export interface FileItem {
+  id: string;
+  name: string;
+  size: number;
+  mimeType: string;
+  data: string;
+}
+
+export interface FileUploadData {
+  title: string;
+  files: FileItem[];
+}
+
+export type WidgetData = TaskData | NoteData | LinkData | ImageData | GroupData | GoalData | LeadData | FunnelData | TextboxData | HtmlData | FileUploadData;
 
 export interface Widget {
   id: string;

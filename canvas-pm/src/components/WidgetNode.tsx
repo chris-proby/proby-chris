@@ -1,6 +1,6 @@
 import { useRef, useEffect, useMemo, useState } from 'react';
 import { useStore } from '../store';
-import type { Widget, PortSide, TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, GoalStatus, LeadData, LeadStage, FunnelData, TextboxData, HtmlData } from '../types';
+import type { Widget, PortSide, TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, GoalStatus, LeadData, LeadStage, FunnelData, TextboxData, HtmlData, FileUploadData, FileItem } from '../types';
 
 const GOAL_GRADIENTS: Record<GoalStatus, string> = {
   'on-track': 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
@@ -358,6 +358,12 @@ function WidgetContent({ widget, isTextboxEditing, onTextboxEditEnd }: {
       />
     );
     case 'html': return <HtmlContent data={widget.data as HtmlData} />;
+    case 'fileupload': return (
+      <FileUploadContent
+        data={widget.data as FileUploadData}
+        onChange={(d) => updateWidgetData(widget.id, d)}
+      />
+    );
   }
 }
 
@@ -963,6 +969,112 @@ function FunnelContent({ data }: { data: FunnelData }) {
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+/* ── File Upload Content ── */
+function fileIcon(mimeType: string): string {
+  if (mimeType.startsWith('image/')) return '🖼️';
+  if (mimeType.includes('pdf')) return '📄';
+  if (mimeType.startsWith('video/')) return '🎬';
+  if (mimeType.startsWith('audio/')) return '🎵';
+  if (mimeType.includes('zip') || mimeType.includes('archive') || mimeType.includes('compressed')) return '📦';
+  if (mimeType.includes('spreadsheet') || mimeType.includes('excel') || mimeType.includes('csv')) return '📊';
+  if (mimeType.includes('word') || mimeType.includes('document')) return '📝';
+  return '📎';
+}
+
+function fmtSize(bytes: number): string {
+  if (bytes >= 1_000_000) return `${(bytes / 1_000_000).toFixed(1)}MB`;
+  if (bytes >= 1_000) return `${(bytes / 1_000).toFixed(0)}KB`;
+  return `${bytes}B`;
+}
+
+function downloadFile(file: FileItem) {
+  const a = document.createElement('a');
+  a.href = file.data;
+  a.download = file.name;
+  a.click();
+}
+
+function FileUploadContent({
+  data,
+  onChange,
+}: {
+  data: FileUploadData;
+  onChange: (d: Partial<FileUploadData>) => void;
+}) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
+    let pending = files.length;
+    const newFiles: FileItem[] = [];
+    if (!pending) return;
+    files.forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        newFiles.push({
+          id: Math.random().toString(36).slice(2),
+          name: file.name,
+          size: file.size,
+          mimeType: file.type || 'application/octet-stream',
+          data: reader.result as string,
+        });
+        pending--;
+        if (pending === 0) onChange({ files: [...data.files, ...newFiles] });
+      };
+      reader.readAsDataURL(file);
+    });
+    e.target.value = '';
+  };
+
+  return (
+    <div className="fileupload-card">
+      <div className="fileupload-header">
+        <span className="fileupload-icon">📁</span>
+        <span className="fileupload-title">{data.title || '파일 보관함'}</span>
+        <span className="fileupload-count">{data.files.length}개</span>
+      </div>
+      {data.files.length === 0 ? (
+        <div
+          className="fileupload-drop-hint"
+          onMouseDown={(e) => e.stopPropagation()}
+          onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
+        >
+          <div className="fileupload-drop-icon">📂</div>
+          <div>클릭하여 파일 업로드</div>
+        </div>
+      ) : (
+        <div className="fileupload-list">
+          {data.files.slice(0, 5).map((f) => (
+            <div key={f.id} className="fileupload-item">
+              <span className="fileupload-item-icon">{fileIcon(f.mimeType)}</span>
+              <span className="fileupload-item-name">{f.name}</span>
+              <span className="fileupload-item-size">{fmtSize(f.size)}</span>
+              <button
+                className="fileupload-item-dl"
+                onMouseDown={(e) => e.stopPropagation()}
+                onClick={(e) => { e.stopPropagation(); downloadFile(f); }}
+                title="다운로드"
+              >
+                ↓
+              </button>
+            </div>
+          ))}
+          {data.files.length > 5 && (
+            <div className="fileupload-more">+{data.files.length - 5}개 더</div>
+          )}
+        </div>
+      )}
+      <input
+        ref={fileInputRef}
+        type="file"
+        multiple
+        style={{ display: 'none' }}
+        onChange={handleUpload}
+      />
     </div>
   );
 }

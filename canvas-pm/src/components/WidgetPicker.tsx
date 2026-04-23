@@ -11,6 +11,7 @@ const ITEMS: { type: WidgetType; icon: string; label: string }[] = [
   { type: 'funnel',  icon: '📊',   label: '퍼널'      },
   { type: 'textbox', icon: 'T',    label: '텍스트'    },
   { type: 'html',    icon: '⟨/⟩', label: 'HTML'      },
+  { type: 'fileupload', icon: '📁', label: '파일'     },
 ];
 
 interface Props {
@@ -25,7 +26,7 @@ export default function WidgetPicker({ x, y, onSelect, onDismiss }: Props) {
 
   // Adjust position so picker stays on screen
   const PICKER_W = 260;
-  const PICKER_H = 290;
+  const PICKER_H = 320;
   const left = Math.min(x, window.innerWidth - PICKER_W - 12);
   const top  = Math.min(y, window.innerHeight - PICKER_H - 12);
 
