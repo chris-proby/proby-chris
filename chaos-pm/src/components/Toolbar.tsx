@@ -2,15 +2,20 @@ import { useRef } from 'react';
 import { useStore } from '../store';
 import type { GroupData } from '../types';
 import type { Theme } from '../hooks/useTheme';
+import type { AuthSession } from '../auth';
 
 interface ToolbarProps {
   onToggleHistory: () => void;
   showHistory: boolean;
   theme: Theme;
   onToggleTheme: () => void;
+  session: AuthSession;
+  onLogout: () => void;
+  onToggleInvite: () => void;
+  showInvite: boolean;
 }
 
-export default function Toolbar({ onToggleHistory, showHistory, theme, onToggleTheme }: ToolbarProps) {
+export default function Toolbar({ onToggleHistory, showHistory, theme, onToggleTheme, session, onLogout, onToggleInvite, showInvite }: ToolbarProps) {
   const importRef = useRef<HTMLInputElement>(null);
   const viewport = useStore((s) => s.viewport);
   const setViewport = useStore((s) => s.setViewport);
@@ -63,7 +68,7 @@ export default function Toolbar({ onToggleHistory, showHistory, theme, onToggleT
 
   return (
     <header className="toolbar">
-      <div className="toolbar-logo">Chaos<span>PM</span></div>
+      <div className="toolbar-logo">messy<span>notion</span></div>
       <div className="toolbar-divider" />
 
       <button className="tb-btn" onClick={() => zoom(0.2)} title="Zoom in">
@@ -121,8 +126,19 @@ export default function Toolbar({ onToggleHistory, showHistory, theme, onToggleT
             🗑 삭제
           </button>
         )}
-        <div style={{ fontSize: 11, color: 'var(--panel-muted)', paddingLeft: 8 }}>
-          Shift+드래그로 다중 선택
+        <div className="toolbar-divider" />
+        <button
+          className={`tb-btn${showInvite ? ' active' : ''}`}
+          onClick={onToggleInvite}
+          title="초대 코드 관리"
+        >
+          ✉ 초대
+        </button>
+        <div className="toolbar-user">
+          <span className="toolbar-user-name" title={session.email}>{session.name}</span>
+          <button className="tb-btn" onClick={onLogout} title="로그아웃">
+            로그아웃
+          </button>
         </div>
       </div>
     </header>

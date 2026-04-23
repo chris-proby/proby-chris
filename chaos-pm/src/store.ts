@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { v4 as uuid } from 'uuid';
 import { deleteFiles, idbStorage } from './fileStorage';
+import { getCurrentSession } from './auth';
 import type {
   Widget, Connection, Viewport, PendingConnection, PendingGroupChange, Snapshot,
   WidgetType, ConnectionType, TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, LeadData, FunnelData, TextboxData, HtmlData, FileUploadData, DirectoryData,
@@ -110,6 +111,9 @@ interface Store {
   exportCanvas: () => void;
   importCanvas: (file: File) => Promise<void>;
 }
+
+const _session = getCurrentSession();
+const STORE_NAME = _session ? `messynotion-v1-${_session.userId}` : 'messynotion-v1';
 
 export const useStore = create<Store>()(
   persist(
@@ -403,7 +407,7 @@ export const useStore = create<Store>()(
         const blob = new Blob([data], { type: 'application/json' });
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = `chaos-pm-backup-${new Date().toISOString().slice(0, 10)}.json`;
+        a.download = `messynotion-backup-${new Date().toISOString().slice(0, 10)}.json`;
         a.click();
         URL.revokeObjectURL(a.href);
       },
@@ -412,7 +416,7 @@ export const useStore = create<Store>()(
         const text = await file.text();
         const data = JSON.parse(text);
         if (!Array.isArray(data.widgets) || !Array.isArray(data.connections)) {
-          throw new Error('올바른 Chaos PM 백업 파일이 아닙니다');
+          throw new Error('올바른 messynotion 백업 파일이 아닙니다');
         }
         set({
           widgets: data.widgets,
@@ -424,7 +428,7 @@ export const useStore = create<Store>()(
       },
     }),
     {
-      name: 'chaos-pm-v1',
+      name: STORE_NAME,
       storage: createJSONStorage(() => idbStorage),
       partialize: (s) => ({
         widgets: stripFileData(s.widgets),

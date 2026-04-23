@@ -4,12 +4,12 @@ export type Theme = 'dark' | 'light';
 
 export function useTheme() {
   const [theme, setTheme] = useState<Theme>(
-    () => (localStorage.getItem('chaos-pm-theme') as Theme) ?? 'dark'
+    () => (localStorage.getItem('messynotion-theme') as Theme) ?? 'dark'
   );
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('chaos-pm-theme', theme);
+    localStorage.setItem('messynotion-theme', theme);
   }, [theme]);
 
   const toggleTheme = () => setTheme((t) => (t === 'dark' ? 'light' : 'dark'));
