@@ -137,21 +137,27 @@ function WidgetNode({ widget }: Props) {
 
     const currentMulti = useStore.getState().multiSelectedIds;
     const isMultiDrag = currentMulti.length > 1 && currentMulti.includes(widget.id);
+
+    // Cache DOM elements and positions once at mousedown — avoids O(n) querySelector per frame
+    const allW = useStore.getState().widgets;
+    const widgetMap = new Map(allW.map((w) => [w.id, w]));
+
     const multiStart = isMultiDrag
       ? currentMulti.map((id) => {
-          const w = useStore.getState().widgets.find((x) => x.id === id);
-          return { id, x: w?.x ?? 0, y: w?.y ?? 0 };
+          const w = widgetMap.get(id);
+          const el = document.querySelector<HTMLDivElement>(`[data-widget="${id}"]`);
+          return { id, x: w?.x ?? 0, y: w?.y ?? 0, el };
         })
       : null;
 
     const childStart = isGroup
       ? (() => {
-          const allW = useStore.getState().widgets;
           const descIds = getAllDescendantIds(widget.id, allW);
           descIds.delete(widget.id);
           return Array.from(descIds).map((id) => {
-            const w = allW.find((x) => x.id === id);
-            return { id, x: w?.x ?? 0, y: w?.y ?? 0 };
+            const w = widgetMap.get(id);
+            const el = document.querySelector<HTMLDivElement>(`[data-widget="${id}"]`);
+            return { id, x: w?.x ?? 0, y: w?.y ?? 0, el };
           });
         })()
       : null;
@@ -165,9 +171,9 @@ function WidgetNode({ widget }: Props) {
       const dx = lastDx, dy = lastDy;
 
       if (multiStart) {
+        // Use cached el — no querySelector per frame
         multiStart.forEach((sp) => {
-          const el = document.querySelector<HTMLDivElement>(`[data-widget="${sp.id}"]`);
-          if (el) el.style.transform = `translate(${dx}px,${dy}px)`;
+          if (sp.el) sp.el.style.transform = `translate(${dx}px,${dy}px)`;
         });
         if (!isGroup) {
           const state = useStore.getState();
@@ -176,13 +182,14 @@ function WidgetNode({ widget }: Props) {
         }
       } else {
         if (nodeRef.current) nodeRef.current.style.transform = `translate(${dx}px,${dy}px)`;
+        // Use cached el — no querySelector per frame
         if (childStart) {
           childStart.forEach((cp) => {
-            const el = document.querySelector<HTMLDivElement>(`[data-widget="${cp.id}"]`);
-            if (el) el.style.transform = `translate(${dx}px,${dy}px)`;
+            if (cp.el) cp.el.style.transform = `translate(${dx}px,${dy}px)`;
           });
         }
-        {
+        // Skip findGroupForWidget during group drag (O(n) per frame) — still runs on mouseup
+        if (!isGroup) {
           const state = useStore.getState();
           const targetId = findGroupForWidget({ ...widget, x: startPos.x + dx, y: startPos.y + dy }, state.widgets) ?? null;
           if (targetId !== state.dropTargetGroupId) setDropTargetGroupId(targetId);
@@ -198,11 +205,9 @@ function WidgetNode({ widget }: Props) {
 
       if (multiStart) {
         multiStart.forEach((sp) => {
-          const el = document.querySelector<HTMLDivElement>(`[data-widget="${sp.id}"]`);
-          if (el) { el.style.transform = ''; el.style.left = (sp.x + dx) + 'px'; el.style.top = (sp.y + dy) + 'px'; }
+          if (sp.el) { sp.el.style.transform = ''; sp.el.style.left = (sp.x + dx) + 'px'; sp.el.style.top = (sp.y + dy) + 'px'; }
           updateWidget(sp.id, { x: sp.x + dx, y: sp.y + dy });
         });
-        // Group assignment for all multi-selected widgets (including group widgets)
         const state = useStore.getState();
         multiStart.forEach((sp) => {
           const w = state.widgets.find((x) => x.id === sp.id);
@@ -223,8 +228,7 @@ function WidgetNode({ widget }: Props) {
         updateWidget(widget.id, { x: newX, y: newY });
         if (childStart) {
           childStart.forEach((cp) => {
-            const el = document.querySelector<HTMLDivElement>(`[data-widget="${cp.id}"]`);
-            if (el) { el.style.transform = ''; el.style.left = (cp.x + dx) + 'px'; el.style.top = (cp.y + dy) + 'px'; }
+            if (cp.el) { cp.el.style.transform = ''; cp.el.style.left = (cp.x + dx) + 'px'; cp.el.style.top = (cp.y + dy) + 'px'; }
             updateWidget(cp.id, { x: cp.x + dx, y: cp.y + dy });
           });
         }
