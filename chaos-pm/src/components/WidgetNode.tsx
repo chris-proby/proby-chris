@@ -68,18 +68,16 @@ function WidgetNode({ widget }: Props) {
   const isSelected = useStore((s) => s.multiSelectedIds.includes(widget.id));
   const isMulti = useStore((s) => s.multiSelectedIds.length > 1 && s.multiSelectedIds.includes(widget.id));
   const bringToFront = useStore((s) => s.bringToFront);
-  const pendingConnection = useStore((s) => s.pendingConnection);
+  const isConnecting = useStore((s) => !!s.pendingConnection);
+  const isSource = useStore((s) => s.pendingConnection?.fromId === widget.id);
+  const isDropTarget = useStore((s) => s.dropTargetGroupId === widget.id);
   const setPendingConnection = useStore((s) => s.setPendingConnection);
   const addConnection = useStore((s) => s.addConnection);
   const toggleGroupCollapse = useStore((s) => s.toggleGroupCollapse);
   const stageGroupChange = useStore((s) => s.stageGroupChange);
   const setDropTargetGroupId = useStore((s) => s.setDropTargetGroupId);
-  const dropTargetGroupId = useStore((s) => s.dropTargetGroupId);
 
-  const isConnecting = !!pendingConnection;
-  const isSource = pendingConnection?.fromId === widget.id;
   const isGroup = widget.type === 'group';
-  const isDropTarget = dropTargetGroupId === widget.id;
 
   const nodeRef = useRef<HTMLDivElement>(null);
 
@@ -223,8 +221,9 @@ function WidgetNode({ widget }: Props) {
   };
 
   const handleMouseUp = (e: React.MouseEvent) => {
-    if (pendingConnection && pendingConnection.fromId !== widget.id) {
-      addConnection(pendingConnection.fromId, widget.id);
+    const pc = useStore.getState().pendingConnection;
+    if (pc && pc.fromId !== widget.id) {
+      addConnection(pc.fromId, widget.id);
       setPendingConnection(null);
       e.stopPropagation();
     }
