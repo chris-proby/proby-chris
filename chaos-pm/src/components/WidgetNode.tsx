@@ -1336,30 +1336,14 @@ function WorklogContent({ data, onChange }: { data: WorklogData; onChange: (d: P
     setInput('');
   };
 
-  const recent = data.entries.slice(0, 3);
-
   return (
-    <div className="worklog-widget">
+    <div className="worklog-widget" data-worklog-input="1" onMouseDown={(e) => e.stopPropagation()}>
       <div className="worklog-header">
         <span className="worklog-icon">📋</span>
         <span className="worklog-title">{data.title || '작업로그'}</span>
         <span className="worklog-count">{data.entries.length}건</span>
       </div>
-      <div className="worklog-preview">
-        {recent.length === 0 ? (
-          <div className="worklog-empty">아직 기록이 없습니다</div>
-        ) : (
-          recent.map((e) => (
-            <div key={e.id} className="worklog-preview-item">
-              <span className="worklog-preview-text">{e.content}</span>
-            </div>
-          ))
-        )}
-        {data.entries.length > 3 && (
-          <div className="worklog-preview-more">+{data.entries.length - 3}개 더</div>
-        )}
-      </div>
-      <div className="worklog-input-row" data-worklog-input="1">
+      <div className="worklog-input-area" onClick={() => inputRef.current?.focus()}>
         <input
           ref={inputRef}
           className="worklog-input"
@@ -1367,7 +1351,6 @@ function WorklogContent({ data, onChange }: { data: WorklogData; onChange: (d: P
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="작업 내용 입력 후 Enter..."
-          onMouseDown={(e) => e.stopPropagation()}
         />
       </div>
     </div>
