@@ -1,5 +1,6 @@
-import { forwardRef, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useStore } from '../store';
+import { vpBridge } from '../viewportBridge';
 import type { PortSide, Point, Widget } from '../types';
 
 const CONN_COLORS: Record<string, string> = {
@@ -56,7 +57,7 @@ function midPoint(from: Point, to: Point): Point {
   return { x: (from.x + to.x) / 2, y: (from.y + to.y) / 2 };
 }
 
-const ConnectionLayer = forwardRef<SVGSVGElement>((_, ref) => {
+export default function ConnectionLayer() {
   const connections = useStore((s) => s.connections);
   const widgets = useStore((s) => s.widgets);
   const pendingConnection = useStore((s) => s.pendingConnection);
@@ -65,23 +66,22 @@ const ConnectionLayer = forwardRef<SVGSVGElement>((_, ref) => {
 
   const widgetMap = useMemo(() => new Map(widgets.map((w) => [w.id, w])), [widgets]);
 
-  // Pending connection path rendered in world coordinates
+  // Pending connection path in world coordinates — vpBridge is always current even during zoom debounce
   let pendingPath: string | null = null;
   if (pendingConnection) {
     const fromWidget = widgetMap.get(pendingConnection.fromId);
     if (fromWidget) {
-      const vp = useStore.getState().viewport;
       const from = getPortWorldPos(fromWidget, pendingConnection.fromPort);
       const to = {
-        x: (pendingConnection.toX - vp.x) / vp.scale,
-        y: (pendingConnection.toY - vp.y) / vp.scale,
+        x: (pendingConnection.toX - vpBridge.x) / vpBridge.scale,
+        y: (pendingConnection.toY - vpBridge.y) / vpBridge.scale,
       };
       pendingPath = bezierPath(from, to, pendingConnection.fromPort);
     }
   }
 
   return (
-    <svg ref={ref} className="connection-layer">
+    <svg className="connection-layer">
       <defs>
         {Object.entries(CONN_COLORS).map(([type, color]) => (
           <marker
@@ -185,8 +185,4 @@ const ConnectionLayer = forwardRef<SVGSVGElement>((_, ref) => {
       )}
     </svg>
   );
-});
-
-ConnectionLayer.displayName = 'ConnectionLayer';
-
-export default ConnectionLayer;
+}

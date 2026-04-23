@@ -367,18 +367,8 @@ html, body, #root { height: 100%; overflow: hidden; font-family: -apple-system, 
   position: relative;
   overflow: hidden;
   background-color: var(--bg);
-  cursor: default;
-}
-.world-grid {
-  position: absolute;
-  top: -10000px;
-  left: -10000px;
-  width: 20000px;
-  height: 20000px;
   background-image: radial-gradient(circle, var(--grid-dot) 1px, transparent 1px);
-  background-size: 32px 32px;
-  pointer-events: none;
-  z-index: 0;
+  cursor: default;
 }
 .canvas-container.panning { cursor: grabbing !important; }
 .canvas-container.connecting { cursor: crosshair !important; }
@@ -389,6 +379,7 @@ html, body, #root { height: 100%; overflow: hidden; font-family: -apple-system, 
   left: 0;
   transform-origin: 0 0;
   will-change: transform;
+  contain: layout;
 }
 
 /* ── Widget base ── */
@@ -835,18 +826,16 @@ html, body, #root { height: 100%; overflow: hidden; font-family: -apple-system, 
   box-shadow: 0 0 0 2px rgba(99,102,241,0.5), var(--shadow-md);
 }
 
-/* ── Connection SVG layer ── */
+/* ── Connection SVG layer (inside .world — inherits world transform) ── */
 .connection-layer {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 0;
+  height: 0;
   pointer-events: none;
-  z-index: 50;
+  z-index: 9999;
   overflow: visible;
-  transform-origin: 0 0;
-  will-change: transform;
 }
 
 /* ── Inspector Panel ── */

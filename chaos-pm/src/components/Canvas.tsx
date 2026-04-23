@@ -22,7 +22,6 @@ export default function Canvas() {
 
   const containerRef = useRef<HTMLDivElement>(null);
   const worldRef = useRef<HTMLDivElement>(null);
-  const connectionLayerRef = useRef<SVGSVGElement>(null);
   const viewportRef = useRef(viewport);
   useEffect(() => { viewportRef.current = viewport; }, [viewport]);
 
@@ -31,13 +30,20 @@ export default function Canvas() {
 
   const zoomTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Apply viewport directly to DOM — zero React re-renders during pan/zoom.
-  // Grid is inside .world so it gets the transform for free (no backgroundPosition updates).
+  // Apply viewport directly to DOM — one DOM write, zero React re-renders during pan/zoom.
+  // ConnectionLayer is inside .world, so it moves with .world for free.
   const applyViewport = (vp: Viewport) => {
-    Object.assign(vpBridge, vp); // keep bridge always current for WidgetNode drag
-    const t = `translate(${vp.x}px,${vp.y}px) scale(${vp.scale})`;
-    if (worldRef.current) worldRef.current.style.transform = t;
-    if (connectionLayerRef.current) connectionLayerRef.current.style.transform = t;
+    Object.assign(vpBridge, vp);
+    if (worldRef.current) {
+      worldRef.current.style.transform = `translate(${vp.x}px,${vp.y}px) scale(${vp.scale})`;
+    }
+    if (containerRef.current) {
+      const gs = 32 * vp.scale;
+      const gx = ((vp.x % gs) + gs) % gs;
+      const gy = ((vp.y % gs) + gs) % gs;
+      containerRef.current.style.backgroundSize = `${gs}px ${gs}px`;
+      containerRef.current.style.backgroundPosition = `${gx}px ${gy}px`;
+    }
   };
 
   // Sync DOM when viewport changes via Zustand (zoom, fitToView, initial load)
@@ -246,13 +252,12 @@ export default function Canvas() {
       onMouseUp={handleMouseUp}
       onDoubleClick={handleDoubleClick}
     >
-      {/* world transform is managed via worldRef — no inline style */}
+      {/* world transform managed via worldRef — ConnectionLayer inside world shares the transform */}
       <div ref={worldRef} className="world">
-        {/* Grid is inside .world: gets pan/zoom for free via CSS transform — no JS background updates */}
-        <div className="world-grid" />
         {visibleWidgets.map((w) => (
           <WidgetNode key={w.id} widget={w} />
         ))}
+        <ConnectionLayer />
       </div>
 
       {/* Rubber band selection overlay */}
@@ -271,9 +276,6 @@ export default function Canvas() {
           }}
         />
       )}
-
-      {/* Connection layer shares the same CSS transform as .world via ref */}
-      <ConnectionLayer ref={connectionLayerRef} />
 
       {picker && (
         <WidgetPicker
