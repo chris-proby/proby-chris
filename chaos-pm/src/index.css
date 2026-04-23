@@ -367,8 +367,18 @@ html, body, #root { height: 100%; overflow: hidden; font-family: -apple-system, 
   position: relative;
   overflow: hidden;
   background-color: var(--bg);
-  background-image: radial-gradient(circle, var(--grid-dot) 1px, transparent 1px);
   cursor: default;
+}
+.world-grid {
+  position: absolute;
+  top: -10000px;
+  left: -10000px;
+  width: 20000px;
+  height: 20000px;
+  background-image: radial-gradient(circle, var(--grid-dot) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+  z-index: 0;
 }
 .canvas-container.panning { cursor: grabbing !important; }
 .canvas-container.connecting { cursor: crosshair !important; }

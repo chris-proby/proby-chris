@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useMemo, useState } from 'react';
 import { useStore } from '../store';
 import { saveFile, loadFile } from '../fileStorage';
+import { vpBridge } from '../viewportBridge';
 import type { Widget, PortSide, TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, GoalStatus, LeadData, LeadStage, FunnelData, TextboxData, HtmlData, FileUploadData, FileItem, DirectoryData, DirectoryColumn } from '../types';
 
 const GOAL_GRADIENTS: Record<GoalStatus, string> = {
@@ -136,7 +137,7 @@ function WidgetNode({ widget }: Props) {
     let lastDx = 0, lastDy = 0;
 
     const onMove = (ev: MouseEvent) => {
-      const vp = useStore.getState().viewport;
+      const vp = vpBridge;
       lastDx = (ev.clientX - startMouse.x) / vp.scale;
       lastDy = (ev.clientY - startMouse.y) / vp.scale;
       const dx = lastDx, dy = lastDy;
@@ -324,7 +325,7 @@ function ResizeHandles({ widget, isGroup }: { widget: Widget; isGroup: boolean }
     const start = { x: widget.x, y: widget.y, w: widget.width, h: widget.height };
 
     const onMove = (ev: MouseEvent) => {
-      const vp = useStore.getState().viewport;
+      const vp = vpBridge;
       const dx = (ev.clientX - startMouse.x) / vp.scale;
       const dy = (ev.clientY - startMouse.y) / vp.scale;
 

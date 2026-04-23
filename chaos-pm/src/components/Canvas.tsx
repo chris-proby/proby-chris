@@ -4,6 +4,7 @@ import WidgetNode from './WidgetNode';
 import ConnectionLayer from './ConnectionLayer';
 import WidgetPicker from './WidgetPicker';
 import type { RubberBand, Viewport, WidgetType } from '../types';
+import { vpBridge } from '../viewportBridge';
 
 const MIN_SCALE = 0.08;
 const MAX_SCALE = 4;
@@ -28,19 +29,15 @@ export default function Canvas() {
   const pendingRef = useRef(pendingConnection);
   useEffect(() => { pendingRef.current = pendingConnection; }, [pendingConnection]);
 
-  // Apply viewport directly to DOM — called during pan (no React re-render)
-  // and also from useEffect when viewport changes via other means (zoom, fitToView)
+  const zoomTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Apply viewport directly to DOM — zero React re-renders during pan/zoom.
+  // Grid is inside .world so it gets the transform for free (no backgroundPosition updates).
   const applyViewport = (vp: Viewport) => {
+    Object.assign(vpBridge, vp); // keep bridge always current for WidgetNode drag
     const t = `translate(${vp.x}px,${vp.y}px) scale(${vp.scale})`;
     if (worldRef.current) worldRef.current.style.transform = t;
     if (connectionLayerRef.current) connectionLayerRef.current.style.transform = t;
-    if (containerRef.current) {
-      const gs = 32 * vp.scale;
-      const gx = ((vp.x % gs) + gs) % gs;
-      const gy = ((vp.y % gs) + gs) % gs;
-      containerRef.current.style.backgroundSize = `${gs}px ${gs}px`;
-      containerRef.current.style.backgroundPosition = `${gx}px ${gy}px`;
-    }
   };
 
   // Sync DOM when viewport changes via Zustand (zoom, fitToView, initial load)
@@ -153,8 +150,13 @@ export default function Canvas() {
       const ratio = newScale / vp.scale;
       const next = { x: mx - (mx - vp.x) * ratio, y: my - (my - vp.y) * ratio, scale: newScale };
       viewportRef.current = next;
-      applyViewport(next);
-      setViewport(next);
+      applyViewport(next); // Direct DOM — no React re-render during rapid zoom
+      // Debounce Zustand commit: one re-render after scroll wheel stops
+      if (zoomTimer.current) clearTimeout(zoomTimer.current);
+      zoomTimer.current = setTimeout(() => {
+        setViewport(viewportRef.current);
+        zoomTimer.current = null;
+      }, 120);
     };
     el.addEventListener('wheel', onWheel, { passive: false });
     return () => el.removeEventListener('wheel', onWheel);
@@ -246,6 +248,8 @@ export default function Canvas() {
     >
       {/* world transform is managed via worldRef — no inline style */}
       <div ref={worldRef} className="world">
+        {/* Grid is inside .world: gets pan/zoom for free via CSS transform — no JS background updates */}
+        <div className="world-grid" />
         {visibleWidgets.map((w) => (
           <WidgetNode key={w.id} widget={w} />
         ))}
