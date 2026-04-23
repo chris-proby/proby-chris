@@ -30,6 +30,7 @@ function getAllDescendantIds(groupId: string, allWidgets: Widget[]): Set<string>
   const queue = [groupId];
   while (queue.length) {
     const id = queue.pop()!;
+    if (ids.has(id)) continue; // cycle guard — prevents infinite loop on circular refs
     ids.add(id);
     allWidgets.filter((w) => w.groupId === id).forEach((w) => queue.push(w.id));
   }
