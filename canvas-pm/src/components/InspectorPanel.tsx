@@ -1,6 +1,7 @@
 import { useRef, useMemo } from 'react';
 import { v4 as uuid } from 'uuid';
 import { useStore } from '../store';
+import { saveFile, loadFile } from '../fileStorage';
 import type { TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, GoalStatus, KeyResult, LeadData, LeadStage, FunnelData, TextboxData, HtmlData, FileUploadData, FileItem, Attachment, ConnectionType } from '../types';
 
 const NOTE_COLORS = ['#fef9c3', '#dbeafe', '#dcfce7', '#fce7f3', '#ede9fe', '#ffedd5'];
@@ -1083,9 +1084,12 @@ function fmtSize(bytes: number): string {
   return `${bytes}B`;
 }
 
-function downloadFile(file: FileItem) {
+async function downloadFile(file: FileItem) {
+  let dataUrl = file.data;
+  if (!dataUrl) dataUrl = await loadFile(file.id) ?? '';
+  if (!dataUrl) return;
   const a = document.createElement('a');
-  a.href = file.data;
+  a.href = dataUrl;
   a.download = file.name;
   a.click();
 }
@@ -1107,12 +1111,15 @@ function FileUploadInspector({
     files.forEach((file) => {
       const reader = new FileReader();
       reader.onload = () => {
+        const id = Math.random().toString(36).slice(2);
+        const dataUrl = reader.result as string;
+        saveFile(id, dataUrl);
         newFiles.push({
-          id: Math.random().toString(36).slice(2),
+          id,
           name: file.name,
           size: file.size,
           mimeType: file.type || 'application/octet-stream',
-          data: reader.result as string,
+          data: '',
         });
         pending--;
         if (pending === 0) onChange({ files: [...data.files, ...newFiles] });

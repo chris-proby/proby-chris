@@ -1,10 +1,19 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { v4 as uuid } from 'uuid';
+import { deleteFiles } from './fileStorage';
 import type {
   Widget, Connection, Viewport, PendingConnection, PendingGroupChange, Snapshot,
   WidgetType, ConnectionType, TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, LeadData, FunnelData, TextboxData, HtmlData, FileUploadData,
 } from './types';
+
+function stripFileData(widgets: Widget[]): Widget[] {
+  return widgets.map((w) => {
+    if (w.type !== 'fileupload') return w;
+    const d = w.data as FileUploadData;
+    return { ...w, data: { ...d, files: d.files.map((f) => ({ ...f, data: '' })) } };
+  });
+}
 
 function defaultData(type: WidgetType): TaskData | NoteData | LinkData | ImageData | GroupData | GoalData | LeadData | FunnelData | TextboxData | HtmlData | FileUploadData {
   switch (type) {
@@ -136,9 +145,12 @@ export const useStore = create<Store>()(
       deleteWidget: (id) => {
         const { widgets } = get();
         const w = widgets.find((x) => x.id === id);
+        if (w?.type === 'fileupload') {
+          const fileIds = (w.data as FileUploadData).files.map((f) => f.id);
+          if (fileIds.length) deleteFiles(fileIds);
+        }
         set((s) => {
           let updated = s.widgets.filter((x) => x.id !== id);
-          // If deleting a group, also release its children
           if (w?.type === 'group') {
             updated = updated.map((x) => x.groupId === id ? { ...x, groupId: undefined } : x);
           }
@@ -372,11 +384,14 @@ export const useStore = create<Store>()(
     {
       name: 'canvas-pm-v2',
       partialize: (s) => ({
-        widgets: s.widgets,
+        widgets: stripFileData(s.widgets),
         connections: s.connections,
         viewport: s.viewport,
         maxZIndex: s.maxZIndex,
-        snapshots: s.snapshots,
+        snapshots: s.snapshots.map((snap) => ({
+          ...snap,
+          widgets: stripFileData(snap.widgets),
+        })),
       }),
     }
   )
