@@ -1337,13 +1337,18 @@ function WorklogContent({ data, onChange }: { data: WorklogData; onChange: (d: P
   };
 
   return (
-    <div className="worklog-widget" data-worklog-input="1" onMouseDown={(e) => e.stopPropagation()}>
+    <div className="worklog-widget">
       <div className="worklog-header">
         <span className="worklog-icon">📋</span>
         <span className="worklog-title">{data.title || '작업로그'}</span>
         <span className="worklog-count">{data.entries.length}건</span>
       </div>
-      <div className="worklog-input-area" onClick={() => inputRef.current?.focus()}>
+      <div
+        className="worklog-input-area"
+        data-worklog-input="1"
+        onMouseDown={(e) => e.stopPropagation()}
+        onClick={() => inputRef.current?.focus()}
+      >
         <input
           ref={inputRef}
           className="worklog-input"

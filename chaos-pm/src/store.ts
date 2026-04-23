@@ -62,7 +62,7 @@ function defaultSize(type: WidgetType): { width: number; height: number } {
     case 'textbox': return { width: 280, height: 80 };
     case 'html': return { width: 360, height: 280 };
     case 'fileupload': return { width: 280, height: 200 };
-    case 'worklog':   return { width: 280, height: 100 };
+    case 'worklog':   return { width: 280, height: 130 };
     case 'directory': return { width: 520, height: 260 };
   }
 }
