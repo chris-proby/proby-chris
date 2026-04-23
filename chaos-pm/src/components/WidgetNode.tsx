@@ -146,6 +146,11 @@ function WidgetNode({ widget }: Props) {
           const el = document.querySelector<HTMLDivElement>(`[data-widget="${sp.id}"]`);
           if (el) el.style.transform = `translate(${dx}px,${dy}px)`;
         });
+        if (!isGroup) {
+          const state = useStore.getState();
+          const targetId = findGroupForWidget({ ...widget, x: startPos.x + dx, y: startPos.y + dy }, state.widgets) ?? null;
+          if (targetId !== state.dropTargetGroupId) setDropTargetGroupId(targetId);
+        }
       } else {
         if (nodeRef.current) nodeRef.current.style.transform = `translate(${dx}px,${dy}px)`;
         if (childStart) {
@@ -173,6 +178,16 @@ function WidgetNode({ widget }: Props) {
           const el = document.querySelector<HTMLDivElement>(`[data-widget="${sp.id}"]`);
           if (el) { el.style.transform = ''; el.style.left = (sp.x + dx) + 'px'; el.style.top = (sp.y + dy) + 'px'; }
           updateWidget(sp.id, { x: sp.x + dx, y: sp.y + dy });
+        });
+        // Group assignment for all multi-selected widgets
+        const state = useStore.getState();
+        multiStart.forEach((sp) => {
+          const w = state.widgets.find((x) => x.id === sp.id);
+          if (!w || w.type === 'group') return;
+          const targetGroupId = findGroupForWidget(w, state.widgets);
+          if (targetGroupId !== w.groupId) {
+            useStore.getState().setWidgetGroup(sp.id, targetGroupId);
+          }
         });
       } else {
         const newX = startPos.x + dx;

@@ -3,7 +3,7 @@ import { useStore } from '../store';
 import WidgetNode from './WidgetNode';
 import ConnectionLayer from './ConnectionLayer';
 import WidgetPicker from './WidgetPicker';
-import type { RubberBand, WidgetType } from '../types';
+import type { RubberBand, Viewport, WidgetType } from '../types';
 
 const MIN_SCALE = 0.08;
 const MAX_SCALE = 4;
@@ -20,11 +20,31 @@ export default function Canvas() {
   const setSelectedWidget = useStore((s) => s.setSelectedWidget);
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const worldRef = useRef<HTMLDivElement>(null);
+  const connectionLayerRef = useRef<SVGSVGElement>(null);
   const viewportRef = useRef(viewport);
   useEffect(() => { viewportRef.current = viewport; }, [viewport]);
 
   const pendingRef = useRef(pendingConnection);
   useEffect(() => { pendingRef.current = pendingConnection; }, [pendingConnection]);
+
+  // Apply viewport directly to DOM — called during pan (no React re-render)
+  // and also from useEffect when viewport changes via other means (zoom, fitToView)
+  const applyViewport = (vp: Viewport) => {
+    const t = `translate(${vp.x}px,${vp.y}px) scale(${vp.scale})`;
+    if (worldRef.current) worldRef.current.style.transform = t;
+    if (connectionLayerRef.current) connectionLayerRef.current.style.transform = t;
+    if (containerRef.current) {
+      const gs = 32 * vp.scale;
+      const gx = ((vp.x % gs) + gs) % gs;
+      const gy = ((vp.y % gs) + gs) % gs;
+      containerRef.current.style.backgroundSize = `${gs}px ${gs}px`;
+      containerRef.current.style.backgroundPosition = `${gx}px ${gy}px`;
+    }
+  };
+
+  // Sync DOM when viewport changes via Zustand (zoom, fitToView, initial load)
+  useEffect(() => { applyViewport(viewport); }, [viewport]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const isPanning = useRef(false);
   const lastMouse = useRef({ x: 0, y: 0 });
@@ -44,7 +64,8 @@ export default function Canvas() {
         const vp = viewportRef.current;
         const next = { ...vp, x: vp.x + dx, y: vp.y + dy };
         viewportRef.current = next;
-        setViewport(next);
+        // Direct DOM update — no React re-render during pan
+        applyViewport(next);
       }
       if (pendingRef.current) {
         setPendingConnection({ ...pendingRef.current, toX: e.clientX, toY: e.clientY });
@@ -64,6 +85,10 @@ export default function Canvas() {
         }
         rubberBandRef.current = null;
         setRubberBand(null);
+      }
+      if (isPanning.current) {
+        // Commit pan to Zustand once per gesture
+        setViewport(viewportRef.current);
       }
       isPanning.current = false;
     };
@@ -128,6 +153,7 @@ export default function Canvas() {
       const ratio = newScale / vp.scale;
       const next = { x: mx - (mx - vp.x) * ratio, y: my - (my - vp.y) * ratio, scale: newScale };
       viewportRef.current = next;
+      applyViewport(next);
       setViewport(next);
     };
     el.addEventListener('wheel', onWheel, { passive: false });
@@ -196,10 +222,6 @@ export default function Canvas() {
     return sorted.filter((w) => !w.groupId || !collapsedGroupIds.has(w.groupId));
   }, [widgets, collapsedGroupIds]);
 
-  const gridSize = 32 * viewport.scale;
-  const gridX = ((viewport.x % gridSize) + gridSize) % gridSize;
-  const gridY = ((viewport.y % gridSize) + gridSize) % gridSize;
-
   // Rubber band rect in screen space
   const rb = rubberBand;
   const rbRect = rb
@@ -218,18 +240,12 @@ export default function Canvas() {
     <div
       ref={containerRef}
       className={`canvas-container${pendingConnection ? ' connecting' : ''}`}
-      style={{
-        backgroundSize: `${gridSize}px ${gridSize}px`,
-        backgroundPosition: `${gridX}px ${gridY}px`,
-      }}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       onDoubleClick={handleDoubleClick}
     >
-      <div
-        className="world"
-        style={{ transform: `translate(${viewport.x}px,${viewport.y}px) scale(${viewport.scale})` }}
-      >
+      {/* world transform is managed via worldRef — no inline style */}
+      <div ref={worldRef} className="world">
         {visibleWidgets.map((w) => (
           <WidgetNode key={w.id} widget={w} />
         ))}
@@ -252,7 +268,8 @@ export default function Canvas() {
         />
       )}
 
-      <ConnectionLayer />
+      {/* Connection layer shares the same CSS transform as .world via ref */}
+      <ConnectionLayer ref={connectionLayerRef} />
 
       {picker && (
         <WidgetPicker

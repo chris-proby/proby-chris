@@ -835,6 +835,8 @@ html, body, #root { height: 100%; overflow: hidden; font-family: -apple-system, 
   pointer-events: none;
   z-index: 50;
   overflow: visible;
+  transform-origin: 0 0;
+  will-change: transform;
 }
 
 /* ── Inspector Panel ── */

@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { forwardRef, useMemo } from 'react';
 import { useStore } from '../store';
 import type { PortSide, Point, Widget } from '../types';
 
@@ -16,10 +16,6 @@ function getPortWorldPos(w: Widget, port: PortSide): Point {
     case 'bottom': return { x: w.x + w.width / 2, y: w.y + w.height };
     case 'left':   return { x: w.x,               y: w.y + w.height / 2 };
   }
-}
-
-function worldToScreen(p: Point, vp: { x: number; y: number; scale: number }): Point {
-  return { x: p.x * vp.scale + vp.x, y: p.y * vp.scale + vp.y };
 }
 
 function getBestPorts(from: Widget, to: Widget): { fromPort: PortSide; toPort: PortSide } {
@@ -60,30 +56,32 @@ function midPoint(from: Point, to: Point): Point {
   return { x: (from.x + to.x) / 2, y: (from.y + to.y) / 2 };
 }
 
-export default function ConnectionLayer() {
+const ConnectionLayer = forwardRef<SVGSVGElement>((_, ref) => {
   const connections = useStore((s) => s.connections);
   const widgets = useStore((s) => s.widgets);
-  const viewport = useStore((s) => s.viewport);
   const pendingConnection = useStore((s) => s.pendingConnection);
   const selectedConnectionId = useStore((s) => s.selectedConnectionId);
   const setSelectedConnection = useStore((s) => s.setSelectedConnection);
 
   const widgetMap = useMemo(() => new Map(widgets.map((w) => [w.id, w])), [widgets]);
 
-  // Pending connection: find source port screen position
+  // Pending connection path rendered in world coordinates
   let pendingPath: string | null = null;
   if (pendingConnection) {
     const fromWidget = widgetMap.get(pendingConnection.fromId);
     if (fromWidget) {
-      const fromWorld = getPortWorldPos(fromWidget, pendingConnection.fromPort);
-      const from = worldToScreen(fromWorld, viewport);
-      const to = { x: pendingConnection.toX, y: pendingConnection.toY };
+      const vp = useStore.getState().viewport;
+      const from = getPortWorldPos(fromWidget, pendingConnection.fromPort);
+      const to = {
+        x: (pendingConnection.toX - vp.x) / vp.scale,
+        y: (pendingConnection.toY - vp.y) / vp.scale,
+      };
       pendingPath = bezierPath(from, to, pendingConnection.fromPort);
     }
   }
 
   return (
-    <svg className="connection-layer">
+    <svg ref={ref} className="connection-layer">
       <defs>
         {Object.entries(CONN_COLORS).map(([type, color]) => (
           <marker
@@ -110,10 +108,11 @@ export default function ConnectionLayer() {
         if (!from || !to) return null;
 
         const { fromPort, toPort } = getBestPorts(from, to);
-        const fromScreen = worldToScreen(getPortWorldPos(from, fromPort), viewport);
-        const toScreen = worldToScreen(getPortWorldPos(to, toPort), viewport);
-        const path = bezierPath(fromScreen, toScreen, fromPort);
-        const mid = midPoint(fromScreen, toScreen);
+        // World coordinates — transform applied by CSS on the SVG element
+        const fromPos = getPortWorldPos(from, fromPort);
+        const toPos = getPortWorldPos(to, toPort);
+        const path = bezierPath(fromPos, toPos, fromPort);
+        const mid = midPoint(fromPos, toPos);
 
         const isSelected = selectedConnectionId === conn.id;
         const color = isSelected ? '#f59e0b' : (CONN_COLORS[conn.type] ?? '#6366f1');
@@ -186,4 +185,8 @@ export default function ConnectionLayer() {
       )}
     </svg>
   );
-}
+});
+
+ConnectionLayer.displayName = 'ConnectionLayer';
+
+export default ConnectionLayer;
