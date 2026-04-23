@@ -25,14 +25,27 @@ const GOAL_STATUS_KO: Record<GoalStatus, string> = {
   'paused':   '중단',
 };
 
+function buildChildrenMap(allWidgets: Widget[]): Map<string, string[]> {
+  const map = new Map<string, string[]>();
+  for (const w of allWidgets) {
+    if (!w.groupId) continue;
+    const list = map.get(w.groupId);
+    if (list) list.push(w.id);
+    else map.set(w.groupId, [w.id]);
+  }
+  return map;
+}
+
 function getAllDescendantIds(groupId: string, allWidgets: Widget[]): Set<string> {
+  const childrenMap = buildChildrenMap(allWidgets);
   const ids = new Set<string>();
   const queue = [groupId];
   while (queue.length) {
     const id = queue.pop()!;
-    if (ids.has(id)) continue; // cycle guard — prevents infinite loop on circular refs
+    if (ids.has(id)) continue; // cycle guard
     ids.add(id);
-    allWidgets.filter((w) => w.groupId === id).forEach((w) => queue.push(w.id));
+    const children = childrenMap.get(id);
+    if (children) children.forEach((c) => queue.push(c));
   }
   return ids;
 }

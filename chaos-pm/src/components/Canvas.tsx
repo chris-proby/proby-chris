@@ -22,7 +22,6 @@ export default function Canvas() {
 
   const containerRef = useRef<HTMLDivElement>(null);
   const worldRef = useRef<HTMLDivElement>(null);
-  const connLayerRef = useRef<SVGSVGElement>(null);
   const viewportRef = useRef(viewport);
   useEffect(() => { viewportRef.current = viewport; }, [viewport]);
 
@@ -34,12 +33,8 @@ export default function Canvas() {
   // Apply viewport directly to DOM — one DOM write, zero React re-renders during pan/zoom.
   const applyViewport = (vp: Viewport) => {
     Object.assign(vpBridge, vp);
-    const t = `translate(${vp.x}px,${vp.y}px) scale(${vp.scale})`;
     if (worldRef.current) {
-      worldRef.current.style.transform = t;
-    }
-    if (connLayerRef.current) {
-      connLayerRef.current.style.transform = t;
+      worldRef.current.style.transform = `translate(${vp.x}px,${vp.y}px) scale(${vp.scale})`;
     }
     if (containerRef.current) {
       const gs = 32 * vp.scale;
@@ -303,9 +298,8 @@ export default function Canvas() {
         {visibleWidgets.map((w) => (
           <WidgetNode key={w.id} widget={w} />
         ))}
+        <ConnectionLayer />
       </div>
-      {/* ConnectionLayer is outside .world — same transform applied directly via connLayerRef */}
-      <ConnectionLayer ref={connLayerRef} />
 
       {/* Rubber band selection overlay */}
       {rbRect && cr && (
