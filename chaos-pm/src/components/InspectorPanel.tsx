@@ -2,7 +2,7 @@ import { useRef, useMemo } from 'react';
 import { v4 as uuid } from 'uuid';
 import { useStore } from '../store';
 import { saveFile, loadFile } from '../fileStorage';
-import type { TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, GoalStatus, KeyResult, LeadData, LeadStage, FunnelData, TextboxData, HtmlData, FileUploadData, FileItem, Attachment, ConnectionType } from '../types';
+import type { TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, GoalStatus, KeyResult, LeadData, LeadStage, FunnelData, TextboxData, HtmlData, FileUploadData, FileItem, Attachment, ConnectionType, DirectoryData, DirectoryColumn, DirectoryColumnType } from '../types';
 
 const NOTE_COLORS = ['#fef9c3', '#dbeafe', '#dcfce7', '#fce7f3', '#ede9fe', '#ffedd5'];
 
@@ -186,6 +186,12 @@ export default function InspectorPanel() {
             onChange={(d) => updateWidgetData(widget.id, d)}
           />
         )}
+        {widget.type === 'directory' && (
+          <DirectoryInspector
+            data={widget.data as DirectoryData}
+            onChange={(d) => updateWidgetData(widget.id, d)}
+          />
+        )}
       </div>
       <div className="inspector-footer">
         <div className="meta-row">
@@ -201,10 +207,10 @@ export default function InspectorPanel() {
 }
 
 const TYPE_ICONS: Record<string, string> = {
-  task: '✓', note: '📝', link: '🔗', image: '🖼️', group: '⬡', goal: '🎯', lead: '💼', funnel: '📊', textbox: 'T', html: '⟨/⟩', fileupload: '📁',
+  task: '✓', note: '📝', link: '🔗', image: '🖼️', group: '⬡', goal: '🎯', lead: '💼', funnel: '📊', textbox: 'T', html: '⟨/⟩', fileupload: '📁', directory: '👥',
 };
 const TYPE_LABELS: Record<string, string> = {
-  task: '작업', note: '메모', link: '링크', image: '이미지', group: '그룹', goal: '목표', lead: '리드', funnel: '세일즈 퍼널', textbox: '텍스트박스', html: 'HTML', fileupload: '파일 업로드',
+  task: '작업', note: '메모', link: '링크', image: '이미지', group: '그룹', goal: '목표', lead: '리드', funnel: '세일즈 퍼널', textbox: '텍스트박스', html: 'HTML', fileupload: '파일 업로드', directory: '인원 디렉토리',
 };
 
 /* ─── Group Inspector ─── */
@@ -1174,5 +1180,168 @@ function FileUploadInspector({
         )}
       </div>
     </>
+  );
+}
+
+/* ─── Directory Inspector ─── */
+const COL_TYPE_OPTIONS: { value: DirectoryColumnType; label: string }[] = [
+  { value: 'text',   label: '텍스트' },
+  { value: 'email',  label: '이메일' },
+  { value: 'phone',  label: '전화번호' },
+  { value: 'select', label: '선택' },
+  { value: 'url',    label: 'URL' },
+  { value: 'number', label: '숫자' },
+];
+
+function DirectoryInspector({
+  data,
+  onChange,
+}: {
+  data: DirectoryData;
+  onChange: (d: Partial<DirectoryData>) => void;
+}) {
+  const colLabelInputRef = useRef<HTMLInputElement>(null);
+
+  const addColumn = () => {
+    const newCol: DirectoryColumn = {
+      id: uuid(),
+      label: '새 컬럼',
+      type: 'text',
+      width: 120,
+    };
+    onChange({ columns: [...data.columns, newCol] });
+  };
+
+  const updateColumn = (colId: string, update: Partial<DirectoryColumn>) => {
+    onChange({ columns: data.columns.map((c) => c.id === colId ? { ...c, ...update } : c) });
+  };
+
+  const deleteColumn = (colId: string) => {
+    onChange({
+      columns: data.columns.filter((c) => c.id !== colId),
+      rows: data.rows.map((r) => {
+        const cells = { ...r.cells };
+        delete cells[colId];
+        return { ...r, cells };
+      }),
+    });
+  };
+
+  const selectCols = data.columns.filter((c) => c.type === 'select');
+
+  return (
+    <>
+      <div className="field">
+        <div className="field-label">제목</div>
+        <input
+          value={data.title}
+          onChange={(e) => onChange({ title: e.target.value })}
+          placeholder="인원 디렉토리..."
+        />
+      </div>
+
+      <div className="field">
+        <div className="field-label">컬럼 관리</div>
+        <div className="dir-col-list">
+          {data.columns.map((col) => (
+            <div key={col.id} className="dir-col-row">
+              <input
+                className="dir-col-label-input"
+                value={col.label}
+                onChange={(e) => updateColumn(col.id, { label: e.target.value })}
+                placeholder="컬럼명..."
+              />
+              <select
+                className="dir-col-type-select"
+                value={col.type}
+                onChange={(e) => updateColumn(col.id, { type: e.target.value as DirectoryColumnType })}
+              >
+                {COL_TYPE_OPTIONS.map(({ value, label }) => (
+                  <option key={value} value={value}>{label}</option>
+                ))}
+              </select>
+              <button
+                className="attach-item-del"
+                onClick={() => deleteColumn(col.id)}
+                disabled={data.columns.length <= 1}
+              >×</button>
+            </div>
+          ))}
+        </div>
+        <button className="attach-btn" style={{ marginTop: 6 }} onClick={addColumn}>
+          + 컬럼 추가
+        </button>
+      </div>
+
+      {selectCols.map((col) => (
+        <div key={col.id} className="field">
+          <div className="field-label">"{col.label}" 선택 옵션</div>
+          <SelectOptionsEditor
+            options={col.options ?? []}
+            onChange={(options) => updateColumn(col.id, { options })}
+          />
+        </div>
+      ))}
+
+      <div className="field">
+        <div className="field-label">데이터</div>
+        <div style={{ fontSize: 13, color: 'var(--panel-muted)', marginBottom: 6 }}>
+          {data.rows.length}개 행
+        </div>
+        {data.rows.length > 0 && (
+          <button
+            className="attach-btn"
+            style={{ color: 'var(--danger, #ef4444)', borderColor: 'rgba(239,68,68,0.3)' }}
+            onClick={() => {
+              if (window.confirm(`${data.rows.length}개 행을 모두 삭제하시겠습니까?`)) {
+                onChange({ rows: [] });
+              }
+            }}
+          >
+            🗑 모든 행 삭제
+          </button>
+        )}
+      </div>
+    </>
+  );
+}
+
+function SelectOptionsEditor({
+  options,
+  onChange,
+}: {
+  options: string[];
+  onChange: (opts: string[]) => void;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const addOption = () => {
+    const val = inputRef.current?.value.trim();
+    if (!val || options.includes(val)) return;
+    onChange([...options, val]);
+    if (inputRef.current) inputRef.current.value = '';
+  };
+
+  return (
+    <div>
+      <div className="tags-input-row">
+        <input
+          ref={inputRef}
+          placeholder="옵션 추가..."
+          onKeyDown={(e) => e.key === 'Enter' && addOption()}
+        />
+        <button className="tag-add-btn" onClick={addOption}>+</button>
+      </div>
+      {options.length > 0 && (
+        <div className="tags-list">
+          {options.map((opt) => (
+            <span key={opt} className="tag-chip">
+              {opt}
+              <button onClick={() => onChange(options.filter((o) => o !== opt))}>×</button>
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }

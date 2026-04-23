@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useMemo, useState } from 'react';
 import { useStore } from '../store';
 import { saveFile, loadFile } from '../fileStorage';
-import type { Widget, PortSide, TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, GoalStatus, LeadData, LeadStage, FunnelData, TextboxData, HtmlData, FileUploadData, FileItem } from '../types';
+import type { Widget, PortSide, TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, GoalStatus, LeadData, LeadStage, FunnelData, TextboxData, HtmlData, FileUploadData, FileItem, DirectoryData, DirectoryColumn } from '../types';
 
 const GOAL_GRADIENTS: Record<GoalStatus, string> = {
   'on-track': 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
@@ -98,6 +98,10 @@ function WidgetNode({ widget }: Props) {
     if ((e.target as HTMLElement).closest('.group-collapse-btn')) return;
     if ((e.target as HTMLElement).closest('.resize-handle')) return;
     if (widget.type === 'textbox' && isTextboxEditing) return;
+    if ((e.target as HTMLElement).closest('[data-dir-cell]')) {
+      if (!isSelected) setSelectedWidget(widget.id);
+      return;
+    }
     e.stopPropagation();
 
     if (e.shiftKey) { addToMultiSelect(widget.id); return; }
@@ -388,6 +392,12 @@ function WidgetContent({ widget, isTextboxEditing, onTextboxEditEnd }: {
     case 'fileupload': return (
       <FileUploadContent
         data={widget.data as FileUploadData}
+        onChange={(d) => updateWidgetData(widget.id, d)}
+      />
+    );
+    case 'directory': return (
+      <DirectoryContent
+        data={widget.data as DirectoryData}
         onChange={(d) => updateWidgetData(widget.id, d)}
       />
     );
@@ -1108,6 +1118,169 @@ function FileUploadContent({
         style={{ display: 'none' }}
         onChange={handleUpload}
       />
+    </div>
+  );
+}
+
+/* ── Directory Content ── */
+const COL_TYPE_ICON: Record<string, string> = {
+  text: 'T', email: '@', phone: '☎', select: '▾', url: '🔗', number: '#',
+};
+
+function DirectoryContent({
+  data,
+  onChange,
+}: {
+  data: DirectoryData;
+  onChange: (d: Partial<DirectoryData>) => void;
+}) {
+  const [editingCell, setEditingCell] = useState<{ rowId: string; colId: string } | null>(null);
+
+  const genId = () => Math.random().toString(36).slice(2, 10);
+
+  const addRow = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const newRow = {
+      id: genId(),
+      cells: Object.fromEntries(data.columns.map((c) => [c.id, ''])),
+    };
+    onChange({ rows: [...data.rows, newRow] });
+    setEditingCell({ rowId: newRow.id, colId: data.columns[0]?.id ?? '' });
+  };
+
+  const updateCell = (rowId: string, colId: string, value: string) => {
+    onChange({
+      rows: data.rows.map((r) =>
+        r.id === rowId ? { ...r, cells: { ...r.cells, [colId]: value } } : r
+      ),
+    });
+  };
+
+  const deleteRow = (rowId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    onChange({ rows: data.rows.filter((r) => r.id !== rowId) });
+  };
+
+  const moveEdit = (rowId: string, colId: string, dir: 'next' | 'prev') => {
+    const rowIdx = data.rows.findIndex((r) => r.id === rowId);
+    const colIdx = data.columns.findIndex((c) => c.id === colId);
+    if (dir === 'next') {
+      if (colIdx < data.columns.length - 1) {
+        setEditingCell({ rowId, colId: data.columns[colIdx + 1].id });
+      } else if (rowIdx < data.rows.length - 1) {
+        setEditingCell({ rowId: data.rows[rowIdx + 1].id, colId: data.columns[0].id });
+      } else {
+        setEditingCell(null);
+      }
+    } else {
+      if (colIdx > 0) {
+        setEditingCell({ rowId, colId: data.columns[colIdx - 1].id });
+      } else if (rowIdx > 0) {
+        setEditingCell({ rowId: data.rows[rowIdx - 1].id, colId: data.columns[data.columns.length - 1].id });
+      } else {
+        setEditingCell(null);
+      }
+    }
+  };
+
+  return (
+    <div className="directory-card">
+      <div className="directory-header">
+        <span className="directory-icon">👥</span>
+        <span className="directory-title">{data.title || '인원 디렉토리'}</span>
+        <span className="directory-count">{data.rows.length}명</span>
+      </div>
+      <div className="directory-table-wrap">
+        <table className="directory-table">
+          <thead>
+            <tr>
+              {data.columns.map((col) => (
+                <th key={col.id} style={{ width: col.width, minWidth: col.width }}>
+                  <span className="dir-col-type-icon">{COL_TYPE_ICON[col.type] ?? 'T'}</span>
+                  {col.label}
+                </th>
+              ))}
+              <th className="dir-del-col" />
+            </tr>
+          </thead>
+          <tbody>
+            {data.rows.map((row) => (
+              <tr key={row.id} className="directory-row">
+                {data.columns.map((col) => {
+                  const isEditing = editingCell?.rowId === row.id && editingCell?.colId === col.id;
+                  const value = row.cells[col.id] ?? '';
+                  return (
+                    <td key={col.id} data-dir-cell="1">
+                      {isEditing ? (
+                        col.type === 'select' ? (
+                          <select
+                            autoFocus
+                            className="dir-cell-input"
+                            value={value}
+                            onMouseDown={(e) => e.stopPropagation()}
+                            onChange={(e) => updateCell(row.id, col.id, e.target.value)}
+                            onBlur={() => setEditingCell(null)}
+                          >
+                            <option value="">—</option>
+                            {(col.options ?? []).map((opt) => (
+                              <option key={opt} value={opt}>{opt}</option>
+                            ))}
+                          </select>
+                        ) : (
+                          <input
+                            autoFocus
+                            className="dir-cell-input"
+                            type={col.type === 'number' ? 'number' : 'text'}
+                            value={value}
+                            onMouseDown={(e) => e.stopPropagation()}
+                            onChange={(e) => updateCell(row.id, col.id, e.target.value)}
+                            onBlur={() => setEditingCell(null)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Tab') { e.preventDefault(); moveEdit(row.id, col.id, e.shiftKey ? 'prev' : 'next'); }
+                              if (e.key === 'Enter') moveEdit(row.id, col.id, 'next');
+                              if (e.key === 'Escape') setEditingCell(null);
+                            }}
+                          />
+                        )
+                      ) : (
+                        <div
+                          className="dir-cell-display"
+                          onClick={() => setEditingCell({ rowId: row.id, colId: col.id })}
+                        >
+                          {value ? (
+                            col.type === 'select'
+                              ? <span className="dir-select-badge">{value}</span>
+                              : col.type === 'email'
+                                ? <span className="dir-email">{value}</span>
+                                : <span>{value}</span>
+                          ) : (
+                            <span className="dir-cell-empty">—</span>
+                          )}
+                        </div>
+                      )}
+                    </td>
+                  );
+                })}
+                <td className="dir-del-col" data-dir-cell="1">
+                  <button
+                    className="dir-row-del"
+                    onMouseDown={(e) => e.stopPropagation()}
+                    onClick={(e) => deleteRow(row.id, e)}
+                  >×</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {data.rows.length === 0 && (
+          <div className="directory-empty" data-dir-cell="1" onClick={addRow}>
+            클릭하여 첫 번째 항목 추가
+          </div>
+        )}
+      </div>
+      <div className="directory-add-row" data-dir-cell="1" onMouseDown={(e) => e.stopPropagation()} onClick={addRow}>
+        + 행 추가
+      </div>
     </div>
   );
 }

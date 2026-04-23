@@ -4,7 +4,7 @@ import { v4 as uuid } from 'uuid';
 import { deleteFiles, idbStorage } from './fileStorage';
 import type {
   Widget, Connection, Viewport, PendingConnection, PendingGroupChange, Snapshot,
-  WidgetType, ConnectionType, TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, LeadData, FunnelData, TextboxData, HtmlData, FileUploadData,
+  WidgetType, ConnectionType, TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, LeadData, FunnelData, TextboxData, HtmlData, FileUploadData, DirectoryData,
 } from './types';
 
 function stripFileData(widgets: Widget[]): Widget[] {
@@ -15,7 +15,7 @@ function stripFileData(widgets: Widget[]): Widget[] {
   });
 }
 
-function defaultData(type: WidgetType): TaskData | NoteData | LinkData | ImageData | GroupData | GoalData | LeadData | FunnelData | TextboxData | HtmlData | FileUploadData {
+function defaultData(type: WidgetType): TaskData | NoteData | LinkData | ImageData | GroupData | GoalData | LeadData | FunnelData | TextboxData | HtmlData | FileUploadData | DirectoryData {
   switch (type) {
     case 'task': return {
       title: '새 작업', description: '', status: 'todo',
@@ -31,6 +31,19 @@ function defaultData(type: WidgetType): TaskData | NoteData | LinkData | ImageDa
     case 'textbox': return { content: '텍스트를 입력하세요', fontSize: 16, align: 'left', bold: false, italic: false, color: '#1e293b' };
     case 'html': return { html: '', name: '' };
     case 'fileupload': return { title: '파일 보관함', files: [] };
+    case 'directory': return {
+      title: '인원 디렉토리',
+      columns: [
+        { id: 'c1', label: '이름', type: 'text', width: 110 },
+        { id: 'c2', label: '직책', type: 'text', width: 110 },
+        { id: 'c3', label: '팀', type: 'select', width: 90, options: ['개발', '디자인', '마케팅', '영업', '기획'] },
+        { id: 'c4', label: '이메일', type: 'email', width: 160 },
+      ],
+      rows: [
+        { id: 'r1', cells: { c1: '', c2: '', c3: '', c4: '' } },
+        { id: 'r2', cells: { c1: '', c2: '', c3: '', c4: '' } },
+      ],
+    } as DirectoryData;
   }
 }
 
@@ -47,6 +60,7 @@ function defaultSize(type: WidgetType): { width: number; height: number } {
     case 'textbox': return { width: 280, height: 80 };
     case 'html': return { width: 360, height: 280 };
     case 'fileupload': return { width: 280, height: 200 };
+    case 'directory': return { width: 520, height: 260 };
   }
 }
 

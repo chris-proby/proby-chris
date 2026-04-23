@@ -1,5 +1,5 @@
 export type PortSide = 'top' | 'right' | 'bottom' | 'left';
-export type WidgetType = 'task' | 'note' | 'link' | 'image' | 'group' | 'goal' | 'lead' | 'funnel' | 'textbox' | 'html' | 'fileupload';
+export type WidgetType = 'task' | 'note' | 'link' | 'image' | 'group' | 'goal' | 'lead' | 'funnel' | 'textbox' | 'html' | 'fileupload' | 'directory';
 export type TaskStatus = 'todo' | 'in-progress' | 'done';
 export type TaskPriority = 'low' | 'medium' | 'high';
 export type ConnectionType = 'relates-to' | 'blocks' | 'depends-on' | 'goal-parent';
@@ -119,7 +119,28 @@ export interface FileUploadData {
   files: FileItem[];
 }
 
-export type WidgetData = TaskData | NoteData | LinkData | ImageData | GroupData | GoalData | LeadData | FunnelData | TextboxData | HtmlData | FileUploadData;
+export type DirectoryColumnType = 'text' | 'email' | 'phone' | 'select' | 'url' | 'number';
+
+export interface DirectoryColumn {
+  id: string;
+  label: string;
+  type: DirectoryColumnType;
+  options?: string[];
+  width: number;
+}
+
+export interface DirectoryRow {
+  id: string;
+  cells: Record<string, string>;
+}
+
+export interface DirectoryData {
+  title: string;
+  columns: DirectoryColumn[];
+  rows: DirectoryRow[];
+}
+
+export type WidgetData = TaskData | NoteData | LinkData | ImageData | GroupData | GoalData | LeadData | FunnelData | TextboxData | HtmlData | FileUploadData | DirectoryData;
 
 export interface Widget {
   id: string;
