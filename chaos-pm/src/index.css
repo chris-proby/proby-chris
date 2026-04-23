@@ -831,8 +831,8 @@ html, body, #root { height: 100%; overflow: hidden; font-family: -apple-system, 
   position: absolute;
   top: 0;
   left: 0;
-  width: 0;
-  height: 0;
+  width: 20000px;
+  height: 20000px;
   pointer-events: none;
   z-index: 9999;
   overflow: visible;
