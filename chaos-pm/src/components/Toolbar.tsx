@@ -13,9 +13,10 @@ interface ToolbarProps {
   onLogout: () => void;
   onToggleInvite: () => void;
   showInvite: boolean;
+  collabMode?: boolean;
 }
 
-export default function Toolbar({ onToggleHistory, showHistory, theme, onToggleTheme, session, onLogout, onToggleInvite, showInvite }: ToolbarProps) {
+export default function Toolbar({ onToggleHistory, showHistory, theme, onToggleTheme, session, onLogout, onToggleInvite, showInvite, collabMode }: ToolbarProps) {
   const importRef = useRef<HTMLInputElement>(null);
   const viewport = useStore((s) => s.viewport);
   const setViewport = useStore((s) => s.setViewport);
@@ -130,9 +131,9 @@ export default function Toolbar({ onToggleHistory, showHistory, theme, onToggleT
         <button
           className={`tb-btn${showInvite ? ' active' : ''}`}
           onClick={onToggleInvite}
-          title="초대 코드 관리"
+          title="초대 관리"
         >
-          ✉ 초대
+          {collabMode ? <><span className="collab-live-dot" />공동편집</> : '✉ 초대'}
         </button>
         <div className="toolbar-user">
           <span className="toolbar-user-name" title={session.email}>{session.name}</span>

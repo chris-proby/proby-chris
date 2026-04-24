@@ -14,6 +14,7 @@ const ITEMS: { type: WidgetType; icon: string; label: string }[] = [
   { type: 'fileupload', icon: '📁', label: '파일'     },
   { type: 'directory',  icon: '👥', label: '디렉토리' },
   { type: 'worklog',   icon: '📋', label: '작업로그' },
+  { type: 'finance',   icon: '💰', label: '재무 현황' },
 ];
 
 interface Props {

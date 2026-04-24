@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid';
 import { useStore } from '../store';
 import { useShallow } from 'zustand/react/shallow';
 import { saveFile, loadFile } from '../fileStorage';
-import type { TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, GoalStatus, KeyResult, LeadData, LeadStage, FunnelData, TextboxData, HtmlData, FileUploadData, FileItem, Attachment, ConnectionType, DirectoryData, DirectoryColumn, DirectoryColumnType, WorklogData, WorklogEntry } from '../types';
+import type { TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, GoalStatus, KeyResult, LeadData, LeadStage, FunnelData, TextboxData, HtmlData, FileUploadData, FileItem, Attachment, ConnectionType, DirectoryData, DirectoryColumn, DirectoryColumnType, WorklogData, WorklogEntry, FinanceData, InvoiceEntry, InvoiceStatus } from '../types';
 
 const NOTE_COLORS = ['#fef9c3', '#dbeafe', '#dcfce7', '#fce7f3', '#ede9fe', '#ffedd5'];
 
@@ -199,6 +199,12 @@ export default function InspectorPanel() {
             onChange={(d) => updateWidgetData(widget.id, d)}
           />
         )}
+        {widget.type === 'finance' && (
+          <FinanceInspector
+            data={widget.data as FinanceData}
+            onChange={(d) => updateWidgetData(widget.id, d)}
+          />
+        )}
       </div>
       <div className="inspector-footer">
         <div className="meta-row">
@@ -214,10 +220,10 @@ export default function InspectorPanel() {
 }
 
 const TYPE_ICONS: Record<string, string> = {
-  task: '✓', note: '📝', link: '🔗', image: '🖼️', group: '⬡', goal: '🎯', lead: '💼', funnel: '📊', textbox: 'T', html: '⟨/⟩', fileupload: '📁', directory: '👥', worklog: '📋',
+  task: '✓', note: '📝', link: '🔗', image: '🖼️', group: '⬡', goal: '🎯', lead: '💼', funnel: '📊', textbox: 'T', html: '⟨/⟩', fileupload: '📁', directory: '👥', worklog: '📋', finance: '💰',
 };
 const TYPE_LABELS: Record<string, string> = {
-  task: '작업', note: '메모', link: '링크', image: '이미지', group: '그룹', goal: '목표', lead: '리드', funnel: '세일즈 퍼널', textbox: '텍스트박스', html: 'HTML', fileupload: '파일 업로드', directory: '인원 디렉토리', worklog: '작업로그',
+  task: '작업', note: '메모', link: '링크', image: '이미지', group: '그룹', goal: '목표', lead: '리드', funnel: '세일즈 퍼널', textbox: '텍스트박스', html: 'HTML', fileupload: '파일 업로드', directory: '인원 디렉토리', worklog: '작업로그', finance: '재무 현황',
 };
 
 /* ─── Group Inspector ─── */
@@ -1508,5 +1514,201 @@ function ColumnLabelInput({ value, onCommit }: { value: string; onCommit: (v: st
       }}
       onBlur={() => onCommit(local)}
     />
+  );
+}
+
+/* ─── Finance Inspector ─── */
+
+const SAMPLE_INVOICE_MD = `# Invoice INV-2025-001
+고객사: LG Uplus
+발행일: 2025-01-15
+만기일: 2025-02-15
+금액: ₩12,000,000
+상태: 완료
+설명: UX 컨설팅 서비스
+
+---
+
+# Invoice INV-2025-002
+고객사: SKT
+발행일: 2025-02-01
+만기일: 2025-03-01
+금액: ₩8,500,000
+상태: 미수금
+설명: 서비스 디자인
+
+---
+
+# Invoice INV-2025-003
+고객사: 네이버
+발행일: 2025-02-15
+만기일: 2025-03-15
+금액: ₩15,000,000
+상태: 연체
+설명: 앱 개발`;
+
+function parseInvAmount(str: string): number {
+  if (!str) return 0;
+  let clean = str.replace(/[₩$€£¥\s,]/g, '');
+  let num = 0;
+  if (clean.includes('억')) { const p = clean.split('억'); num += parseFloat(p[0] || '0') * 100_000_000; clean = p[1] || ''; }
+  if (clean.includes('만')) { const p = clean.split('만'); num += parseFloat(p[0] || '0') * 10_000; clean = p[1] || ''; }
+  if (clean.includes('천')) { const p = clean.split('천'); num += parseFloat(p[0] || '0') * 1_000; clean = p[1] || ''; }
+  if (clean) num += parseFloat(clean) || 0;
+  return Math.round(num);
+}
+
+function parseInvStatus(str: string): InvoiceStatus {
+  const s = str.toLowerCase();
+  if (/paid|완료|지급|결제|수령|완납|done/.test(s)) return 'paid';
+  if (/overdue|연체|미납|지연|초과/.test(s)) return 'overdue';
+  if (/cancel|취소|무효|폐기/.test(s)) return 'cancelled';
+  return 'pending';
+}
+
+function getInvField(text: string, keys: string[]): string {
+  for (const key of keys) {
+    const re = new RegExp(`[*_]*${key}[*_]*\\s*[:：]\\s*(.+)`, 'im');
+    const m = text.match(re);
+    if (m) return m[1].replace(/\*|_/g, '').trim();
+  }
+  return '';
+}
+
+function parseInvBlock(block: string): InvoiceEntry | null {
+  const headMatch = block.match(/(?:Invoice|인보이스|청구서)?\s*#?\s*(INV[-\w]+|\d{4}-\d+)/i);
+  const invoiceNumber = headMatch?.[1] || getInvField(block, ['인보이스 ?번호', 'Invoice ?#?', '번호', 'No']);
+  const client      = getInvField(block, ['고객사', '고객', 'Client', 'Company', '거래처', '업체', '발주처']);
+  const date        = getInvField(block, ['발행일', '날짜', 'Date', 'Invoice Date', '발송일', '청구일']);
+  const dueDate     = getInvField(block, ['만기일', '납기일', '기한', 'Due Date', 'Due', '결제 ?기한', '지급 ?기한']);
+  const amountStr   = getInvField(block, ['금액', '총액', '합계', 'Amount', 'Total', '청구 ?금액', '공급가액']);
+  const statusStr   = getInvField(block, ['상태', '진행 ?상태', 'Status', '결제 ?상태', '수금 ?상태']);
+  const description = getInvField(block, ['설명', '내용', '서비스', 'Description', 'Service', '항목', '품목']);
+
+  const amount = parseInvAmount(amountStr);
+  const currency = /₩|KRW|원/.test(amountStr + block.slice(0, 100)) ? 'KRW'
+                 : /\$|USD/.test(amountStr) ? 'USD'
+                 : /€|EUR/.test(amountStr) ? 'EUR' : 'KRW';
+  const status = parseInvStatus(statusStr);
+
+  if (!client && amount === 0) return null;
+  return { id: Math.random().toString(36).slice(2, 10), invoiceNumber: invoiceNumber || '', client: client || '미상', date, dueDate, amount, currency, status, description };
+}
+
+function parseMdInvoices(md: string): InvoiceEntry[] {
+  const blocks = md.split(/\n-{3,}\n|\n#{1,3}\s+(?:Invoice|인보이스|청구서)\b/i).filter(s => s.trim().length > 5);
+  return blocks.map(parseInvBlock).filter(Boolean) as InvoiceEntry[];
+}
+
+const INV_STATUS_LABELS: Record<InvoiceStatus, string> = { paid: '수금', pending: '미수금', overdue: '연체', cancelled: '취소' };
+const INV_STATUS_COLORS: Record<InvoiceStatus, string> = { paid: '#22c55e', pending: '#f59e0b', overdue: '#ef4444', cancelled: '#64748b' };
+
+function fmtInspAmt(n: number, currency = 'KRW'): string {
+  if (currency === 'KRW') {
+    if (n >= 100_000_000) return `₩${(n / 100_000_000).toFixed(1)}억`;
+    if (n >= 10_000) return `₩${Math.round(n / 10_000).toLocaleString()}만`;
+    return `₩${n.toLocaleString()}`;
+  }
+  return `$${n.toLocaleString()}`;
+}
+
+function FinanceInspector({ data, onChange }: { data: FinanceData; onChange: (d: Partial<FinanceData>) => void }) {
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
+
+  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const parsed = parseMdInvoices(reader.result as string);
+      if (parsed.length > 0) onChange({ invoices: [...data.invoices, ...parsed] });
+      else alert('인식된 인보이스가 없습니다. 샘플 형식을 확인해주세요.');
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  };
+
+  const downloadSample = () => {
+    const blob = new Blob([SAMPLE_INVOICE_MD], { type: 'text/markdown' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'sample_invoices.md';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  };
+
+  const removeInvoice = (id: string) => onChange({ invoices: data.invoices.filter(inv => inv.id !== id) });
+
+  const updateInvoiceStatus = (id: string, status: InvoiceStatus) => {
+    onChange({ invoices: data.invoices.map(inv => inv.id === id ? { ...inv, status } : inv) });
+  };
+
+  const clearAll = () => {
+    if (window.confirm('모든 인보이스를 삭제하시겠습니까?')) onChange({ invoices: [] });
+  };
+
+  const currency = data.invoices[0]?.currency || 'KRW';
+
+  return (
+    <>
+      <div className="field">
+        <div className="field-label">위젯 제목</div>
+        <input value={data.title} onChange={e => onChange({ title: e.target.value })} placeholder="재무 현황" />
+      </div>
+
+      <div className="field">
+        <div className="field-label">MD 인보이스 업로드</div>
+        <div style={{ fontSize: 11, color: '#8b949e', marginBottom: 8, lineHeight: 1.5 }}>
+          고객사·금액·날짜·상태가 포함된 마크다운 파일을 업로드하면 자동으로 파싱됩니다.
+        </div>
+        <div style={{ display: 'flex', gap: 6 }}>
+          <button className="btn-secondary" style={{ flex: 1 }} onClick={() => fileRef.current?.click()}>
+            📄 MD 업로드
+          </button>
+          <button className="btn-secondary" onClick={downloadSample} title="샘플 다운로드">
+            ↓ 샘플
+          </button>
+        </div>
+        <input ref={fileRef} type="file" accept=".md,.txt" style={{ display: 'none' }} onChange={handleUpload} />
+      </div>
+
+      {data.invoices.length > 0 && (
+        <div className="field">
+          <div className="field-label" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span>인보이스 {data.invoices.length}건</span>
+            <button onClick={clearAll} style={{ color: '#ef4444', background: 'none', border: 'none', cursor: 'pointer', fontSize: 11 }}>전체 삭제</button>
+          </div>
+          <div className="finance-insp-list">
+            {data.invoices.map(inv => (
+              <div key={inv.id} className="finance-insp-item">
+                <div className="finance-insp-main">
+                  <span className="finance-insp-client">{inv.client}</span>
+                  <span className="finance-insp-amt">{fmtInspAmt(inv.amount, inv.currency)}</span>
+                  <button className="finance-insp-del" onClick={() => removeInvoice(inv.id)}>×</button>
+                </div>
+                <div className="finance-insp-meta">
+                  <span style={{ color: '#8b949e' }}>{inv.date || '날짜 없음'}</span>
+                  {inv.invoiceNumber && <span style={{ color: '#8b949e' }}>#{inv.invoiceNumber}</span>}
+                  {/* Status toggle tags */}
+                  <div className="finance-status-tags">
+                    {(['paid', 'pending', 'overdue', 'cancelled'] as InvoiceStatus[]).map(s => (
+                      <button
+                        key={s}
+                        className={`finance-status-tag${inv.status === s ? ' active' : ''}`}
+                        style={inv.status === s ? { background: INV_STATUS_COLORS[s] + '22', color: INV_STATUS_COLORS[s], borderColor: INV_STATUS_COLORS[s] + '66' } : {}}
+                        onClick={() => updateInvoiceStatus(inv.id, s)}
+                      >
+                        {INV_STATUS_LABELS[s]}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </>
   );
 }

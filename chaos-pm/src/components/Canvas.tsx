@@ -3,13 +3,14 @@ import { useStore } from '../store';
 import WidgetNode from './WidgetNode';
 import ConnectionLayer from './ConnectionLayer';
 import WidgetPicker from './WidgetPicker';
+import CollabCursors from './CollabCursors';
 import type { RubberBand, Viewport, WidgetType } from '../types';
-import { vpBridge, keyBridge } from '../viewportBridge';
+import { vpBridge, keyBridge, collabBridge } from '../viewportBridge';
 
 const MIN_SCALE = 0.08;
 const MAX_SCALE = 4;
 
-export default function Canvas() {
+export default function Canvas({ collabMode }: { collabMode?: boolean }) {
   const viewport = useStore((s) => s.viewport);
   const setViewport = useStore((s) => s.setViewport);
   const widgets = useStore((s) => s.widgets);
@@ -268,8 +269,17 @@ export default function Canvas() {
   );
 
   const visibleWidgets = useMemo(() => {
+    const byId = new Map(widgets.map((w) => [w.id, w]));
+    const hiddenByAncestor = (w: { groupId?: string }): boolean => {
+      let gid = w.groupId;
+      while (gid) {
+        if (collapsedGroupIds.has(gid)) return true;
+        gid = byId.get(gid)?.groupId;
+      }
+      return false;
+    };
     const sorted = [...widgets].sort((a, b) => a.zIndex - b.zIndex);
-    return sorted.filter((w) => !w.groupId || !collapsedGroupIds.has(w.groupId));
+    return sorted.filter((w) => !hiddenByAncestor(w));
   }, [widgets, collapsedGroupIds]);
 
   // Rubber band rect in screen space
@@ -293,6 +303,15 @@ export default function Canvas() {
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       onDoubleClick={handleDoubleClick}
+      onMouseMove={collabMode ? (e) => {
+        const vp = viewportRef.current;
+        const cr = containerRef.current?.getBoundingClientRect();
+        if (!cr) return;
+        collabBridge.onCursorMove?.(
+          (e.clientX - cr.left - vp.x) / vp.scale,
+          (e.clientY - cr.top - vp.y) / vp.scale,
+        );
+      } : undefined}
     >
       <div ref={worldRef} className="world">
         {visibleWidgets.map((w) => (
@@ -325,6 +344,13 @@ export default function Canvas() {
           onSelect={handlePickerSelect}
           onDismiss={() => setPicker(null)}
         />
+      )}
+
+      {/* Other users' cursors — only rendered when inside a RoomProvider */}
+      {collabMode && (
+        <div className="collab-cursors-layer">
+          <CollabCursors />
+        </div>
       )}
     </div>
   );

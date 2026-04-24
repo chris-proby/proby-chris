@@ -56,6 +56,41 @@ function openStateDb(): Promise<IDBDatabase> {
 
 const LS_FALLBACK_PREFIX = '__idb_fallback__';
 
+// Debounced setItem: rapid store updates coalesce into one IDB write.
+// Without this, every drag frame could queue an IDB transaction.
+const pendingWrites = new Map<string, string>();
+let flushTimer: ReturnType<typeof setTimeout> | null = null;
+const FLUSH_DELAY_MS = 400;
+
+async function flushPendingWrites(): Promise<void> {
+  if (pendingWrites.size === 0) return;
+  const entries = Array.from(pendingWrites.entries());
+  pendingWrites.clear();
+  try {
+    const db = await openStateDb();
+    await new Promise<void>((resolve, reject) => {
+      const tx = db.transaction(STATE_STORE, 'readwrite');
+      for (const [name, value] of entries) {
+        tx.objectStore(STATE_STORE).put(value, name);
+      }
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  } catch {
+    for (const [name, value] of entries) {
+      try { localStorage.setItem(LS_FALLBACK_PREFIX + name, value); } catch { /* quota */ }
+    }
+  }
+}
+
+// Flush on page hide / unload so the last write isn't lost.
+if (typeof window !== 'undefined') {
+  window.addEventListener('pagehide', () => { void flushPendingWrites(); });
+  window.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') void flushPendingWrites();
+  });
+}
+
 export const idbStorage = {
   getItem: async (name: string): Promise<string | null> => {
     try {
@@ -70,36 +105,10 @@ export const idbStorage = {
     }
   },
   setItem: async (name: string, value: string): Promise<void> => {
-    try {
-      const db = await openStateDb();
-      await new Promise<void>((resolve, reject) => {
-        const tx = db.transaction(STATE_STORE, 'readwrite');
-        tx.objectStore(STATE_STORE).put(value, name);
-        tx.oncomplete = () => resolve();
-        tx.onerror = () => reject(tx.error);
-      });
-      // Mirror a compact backup to localStorage (stripping large data fields)
-      try {
-        const parsed = JSON.parse(value);
-        const backup = JSON.stringify({
-          ...parsed,
-          state: {
-            ...parsed.state,
-            // Strip binary data from backup to stay within localStorage quota
-            widgets: (parsed.state?.widgets ?? []).map((w: { type: string; data: { src?: string; html?: string; attachments?: unknown[]; files?: unknown[] } }) => {
-              if (w.type === 'image') return { ...w, data: { ...w.data, src: '' } };
-              if (w.type === 'html') return { ...w, data: { ...w.data, html: '' } };
-              if (w.type === 'task') return { ...w, data: { ...w.data, attachments: [] } };
-              if (w.type === 'fileupload') return { ...w, data: { ...w.data, files: [] } };
-              return w;
-            }),
-          },
-        });
-        localStorage.setItem(LS_FALLBACK_PREFIX + name, backup);
-      } catch { /* quota exceeded on backup is ok */ }
-    } catch {
-      localStorage.setItem(LS_FALLBACK_PREFIX + name, value);
-    }
+    // Coalesce rapid writes. Last value wins; one IDB transaction per debounce window.
+    pendingWrites.set(name, value);
+    if (flushTimer) clearTimeout(flushTimer);
+    flushTimer = setTimeout(() => { flushTimer = null; void flushPendingWrites(); }, FLUSH_DELAY_MS);
   },
   removeItem: async (name: string): Promise<void> => {
     try {

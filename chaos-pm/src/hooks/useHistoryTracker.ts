@@ -2,14 +2,15 @@ import { useEffect, useRef } from 'react';
 import { useStore } from '../store';
 import type { Widget, Connection } from '../types';
 
-const DEBOUNCE_MS = 1500;
+const DEBOUNCE_MS = 4000;
 
 function describeChange(prev: { widgets: Widget[]; connections: Connection[] }, next: { widgets: Widget[]; connections: Connection[] }): string | null {
   const wDiff = next.widgets.length - prev.widgets.length;
   const cDiff = next.connections.length - prev.connections.length;
 
   if (wDiff > 0) {
-    const added = next.widgets.find((w) => !prev.widgets.some((p) => p.id === w.id));
+    const prevIds = new Set(prev.widgets.map((w) => w.id));
+    const added = next.widgets.find((w) => !prevIds.has(w.id));
     const typeLabel: Record<string, string> = { task: '작업', note: '메모', link: '링크', image: '이미지', group: '그룹', goal: '목표' };
     return `${typeLabel[added?.type ?? ''] ?? '위젯'} 추가`;
   }
@@ -17,25 +18,24 @@ function describeChange(prev: { widgets: Widget[]; connections: Connection[] }, 
   if (cDiff > 0) return '연결 추가';
   if (cDiff < 0) return '연결 삭제';
 
-  // Check for structural changes (group membership, type)
+  // O(n) lookup via map — was O(n²) with nested find/some
+  const prevMap = new Map(prev.widgets.map((w) => [w.id, w]));
+
   const groupChanged = next.widgets.some((w) => {
-    const prev_ = prev.widgets.find((p) => p.id === w.id);
-    return prev_ && prev_.groupId !== w.groupId;
+    const p = prevMap.get(w.id);
+    return p && p.groupId !== w.groupId;
   });
   if (groupChanged) return '그룹 변경';
 
-  // Data changes
+  let changedWidget: Widget | undefined;
   const dataChanged = next.widgets.some((w) => {
-    const prev_ = prev.widgets.find((p) => p.id === w.id);
-    return prev_ && prev_.updatedAt !== w.updatedAt;
+    const p = prevMap.get(w.id);
+    if (p && p.updatedAt !== w.updatedAt) { changedWidget = w; return true; }
+    return false;
   });
   if (dataChanged) {
-    const changed = next.widgets.find((w) => {
-      const prev_ = prev.widgets.find((p) => p.id === w.id);
-      return prev_ && prev_.updatedAt !== w.updatedAt;
-    });
     const typeLabel: Record<string, string> = { task: '작업', note: '메모', link: '링크', image: '이미지', group: '그룹', goal: '목표' };
-    return `${typeLabel[changed?.type ?? ''] ?? '위젯'} 수정`;
+    return `${typeLabel[changedWidget?.type ?? ''] ?? '위젯'} 수정`;
   }
 
   return null;

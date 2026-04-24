@@ -1,5 +1,5 @@
 export type PortSide = 'top' | 'right' | 'bottom' | 'left';
-export type WidgetType = 'task' | 'note' | 'link' | 'image' | 'group' | 'goal' | 'lead' | 'funnel' | 'textbox' | 'html' | 'fileupload' | 'directory' | 'worklog';
+export type WidgetType = 'task' | 'note' | 'link' | 'image' | 'group' | 'goal' | 'lead' | 'funnel' | 'textbox' | 'html' | 'fileupload' | 'directory' | 'worklog' | 'finance';
 export type TaskStatus = 'todo' | 'in-progress' | 'done';
 export type TaskPriority = 'low' | 'medium' | 'high';
 export type ConnectionType = 'relates-to' | 'blocks' | 'depends-on' | 'goal-parent';
@@ -153,7 +153,26 @@ export interface WorklogData {
   entries: WorklogEntry[];
 }
 
-export type WidgetData = TaskData | NoteData | LinkData | ImageData | GroupData | GoalData | LeadData | FunnelData | TextboxData | HtmlData | FileUploadData | DirectoryData | WorklogData;
+export type InvoiceStatus = 'paid' | 'pending' | 'overdue' | 'cancelled';
+
+export interface InvoiceEntry {
+  id: string;
+  invoiceNumber: string;
+  client: string;
+  date: string;
+  dueDate: string;
+  amount: number;
+  currency: string;
+  status: InvoiceStatus;
+  description: string;
+}
+
+export interface FinanceData {
+  title: string;
+  invoices: InvoiceEntry[];
+}
+
+export type WidgetData = TaskData | NoteData | LinkData | ImageData | GroupData | GoalData | LeadData | FunnelData | TextboxData | HtmlData | FileUploadData | DirectoryData | WorklogData | FinanceData;
 
 export interface Widget {
   id: string;

@@ -7,32 +7,64 @@ import HistoryPanel from './components/HistoryPanel';
 import GroupChangeToast from './components/GroupChangeToast';
 import AuthScreen from './components/AuthScreen';
 import InvitePanel from './components/InvitePanel';
+import CollabSync from './components/CollabSync';
+import CollabCursors from './components/CollabCursors';
 import { useHistoryTracker } from './hooks/useHistoryTracker';
 import { useClipboardPaste } from './hooks/useClipboardPaste';
 import { useTheme } from './hooks/useTheme';
 import { useStore } from './store';
 import { getCurrentSession, logout } from './auth';
+import { RoomProvider, LiveObject, getUserColor, LIVEBLOCKS_KEY } from './liveblocks';
 
 export default function App() {
-  const [session, setSession] = useState(() => getCurrentSession());
+  const [session] = useState(() => getCurrentSession());
 
-  const handleAuth = () => {
-    window.location.reload();
-  };
+  const handleAuth = () => { window.location.reload(); };
+  const handleLogout = () => { logout(); window.location.reload(); };
 
-  const handleLogout = () => {
-    logout();
-    window.location.reload();
-  };
+  if (!session) return <AuthScreen onAuth={handleAuth} />;
 
-  if (!session) {
-    return <AuthScreen onAuth={handleAuth} />;
+  // When Liveblocks key is configured, the owner is ALWAYS connected to their own room
+  // so guests can join at any time and get the latest canvas state.
+  const roomParam = new URLSearchParams(window.location.search).get('room');
+  const isGuest = !!roomParam && roomParam !== session.userId;
+  // Owner uses their own userId as room; guest joins the owner's room.
+  const targetRoomId = isGuest ? roomParam! : session.userId;
+
+  if (LIVEBLOCKS_KEY) {
+    const initState = useStore.getState();
+    return (
+      <RoomProvider
+        id={`messynotion-${targetRoomId}`}
+        initialPresence={{ cursor: null, name: session.name, color: getUserColor(session.userId) }}
+        initialStorage={{
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          canvas: new LiveObject({
+            widgets: !isGuest ? initState.widgets : [],
+            connections: !isGuest ? initState.connections : [],
+            maxZIndex: !isGuest ? initState.maxZIndex : 0,
+          } as any),
+        }}
+      >
+        <CollabSync
+          isOwner={!isGuest}
+          userName={session.name}
+          userColor={getUserColor(session.userId)}
+        />
+        <AppInner session={session} onLogout={handleLogout} collabMode roomOwnerId={targetRoomId} />
+      </RoomProvider>
+    );
   }
 
   return <AppInner session={session} onLogout={handleLogout} />;
 }
 
-function AppInner({ session, onLogout }: { session: NonNullable<ReturnType<typeof getCurrentSession>>; onLogout: () => void }) {
+function AppInner({ session, onLogout, collabMode, roomOwnerId }: {
+  session: NonNullable<ReturnType<typeof getCurrentSession>>;
+  onLogout: () => void;
+  collabMode?: boolean;
+  roomOwnerId?: string;
+}) {
   const selectedWidgetId = useStore((s) => s.selectedWidgetId);
   const selectedConnectionId = useStore((s) => s.selectedConnectionId);
   const deleteSelected = useStore((s) => s.deleteSelected);
@@ -75,12 +107,13 @@ function AppInner({ session, onLogout }: { session: NonNullable<ReturnType<typeo
         onLogout={onLogout}
         onToggleInvite={() => { setShowInvite((v) => !v); setShowHistory(false); }}
         showInvite={showInvite}
+        collabMode={collabMode}
       />
       <div className="workspace">
         <WidgetSidebar />
-        <Canvas />
+        <Canvas collabMode={collabMode} />
         {showHistory && <HistoryPanel onClose={() => setShowHistory(false)} />}
-        {showInvite && <InvitePanel session={session} onClose={() => setShowInvite(false)} />}
+        {showInvite && <InvitePanel session={session} onClose={() => setShowInvite(false)} collabMode={collabMode} roomOwnerId={roomOwnerId} />}
         {!showHistory && !showInvite && hasSelection && <InspectorPanel />}
       </div>
       <GroupChangeToast />

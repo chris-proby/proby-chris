@@ -4,7 +4,7 @@ import { saveFile, loadFile } from '../fileStorage';
 import { vpBridge, keyBridge } from '../viewportBridge';
 import { getCurrentSession } from '../auth';
 import { v4 as uuidv4 } from 'uuid';
-import type { Widget, PortSide, TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, GoalStatus, LeadData, LeadStage, FunnelData, TextboxData, HtmlData, FileUploadData, FileItem, DirectoryData, DirectoryColumn, WorklogData } from '../types';
+import type { Widget, PortSide, TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, GoalStatus, LeadData, LeadStage, FunnelData, TextboxData, HtmlData, FileUploadData, FileItem, DirectoryData, DirectoryColumn, WorklogData, FinanceData, InvoiceEntry, InvoiceStatus } from '../types';
 
 const GOAL_GRADIENTS: Record<GoalStatus, string> = {
   'on-track': 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
@@ -80,6 +80,7 @@ interface Props { widget: Widget }
 function WidgetNode({ widget }: Props) {
   const [isTextboxEditing, setIsTextboxEditing] = useState(false);
   const updateWidget = useStore((s) => s.updateWidget);
+  const batchMoveWidgets = useStore((s) => s.batchMoveWidgets);
   const setSelectedWidget = useStore((s) => s.setSelectedWidget);
   const addToMultiSelect = useStore((s) => s.addToMultiSelect);
   const isSelected = useStore((s) => s.multiSelectedIds.includes(widget.id));
@@ -130,7 +131,7 @@ function WidgetNode({ widget }: Props) {
     if (e.shiftKey) { addToMultiSelect(widget.id); return; }
 
     if (!isSelected) setSelectedWidget(widget.id);
-    if (!isGroup) bringToFront(widget.id);
+    bringToFront(widget.id);
 
     const startMouse = { x: e.clientX, y: e.clientY };
     const startPos = { x: widget.x, y: widget.y };
@@ -171,9 +172,9 @@ function WidgetNode({ widget }: Props) {
       const dx = lastDx, dy = lastDy;
 
       if (multiStart) {
-        // Use cached el — no querySelector per frame
+        // left/top instead of transform — avoids GPU compositor layer creation per element
         multiStart.forEach((sp) => {
-          if (sp.el) sp.el.style.transform = `translate(${dx}px,${dy}px)`;
+          if (sp.el) { sp.el.style.left = (sp.x + dx) + 'px'; sp.el.style.top = (sp.y + dy) + 'px'; }
         });
         if (!isGroup) {
           const state = useStore.getState();
@@ -181,19 +182,16 @@ function WidgetNode({ widget }: Props) {
           if (targetId !== state.dropTargetGroupId) setDropTargetGroupId(targetId);
         }
       } else {
-        if (nodeRef.current) nodeRef.current.style.transform = `translate(${dx}px,${dy}px)`;
-        // Use cached el — no querySelector per frame
+        if (nodeRef.current) { nodeRef.current.style.left = (startPos.x + dx) + 'px'; nodeRef.current.style.top = (startPos.y + dy) + 'px'; }
         if (childStart) {
           childStart.forEach((cp) => {
-            if (cp.el) cp.el.style.transform = `translate(${dx}px,${dy}px)`;
+            if (cp.el) { cp.el.style.left = (cp.x + dx) + 'px'; cp.el.style.top = (cp.y + dy) + 'px'; }
           });
         }
-        // Skip findGroupForWidget during group drag (O(n) per frame) — still runs on mouseup
-        if (!isGroup) {
-          const state = useStore.getState();
-          const targetId = findGroupForWidget({ ...widget, x: startPos.x + dx, y: startPos.y + dy }, state.widgets) ?? null;
-          if (targetId !== state.dropTargetGroupId) setDropTargetGroupId(targetId);
-        }
+        // Drop-target detection works for both regular widgets AND groups (enables nested groups)
+        const state = useStore.getState();
+        const targetId = findGroupForWidget({ ...widget, x: startPos.x + dx, y: startPos.y + dy }, state.widgets) ?? null;
+        if (targetId !== state.dropTargetGroupId) setDropTargetGroupId(targetId);
       }
     };
 
@@ -204,34 +202,44 @@ function WidgetNode({ widget }: Props) {
       const dx = lastDx, dy = lastDy;
 
       if (multiStart) {
+        // Final position already set by last onMove; just commit to store in one batch
         multiStart.forEach((sp) => {
-          if (sp.el) { sp.el.style.transform = ''; sp.el.style.left = (sp.x + dx) + 'px'; sp.el.style.top = (sp.y + dy) + 'px'; }
-          updateWidget(sp.id, { x: sp.x + dx, y: sp.y + dy });
+          if (sp.el) { sp.el.style.left = (sp.x + dx) + 'px'; sp.el.style.top = (sp.y + dy) + 'px'; }
         });
+        batchMoveWidgets(multiStart.map((sp) => ({ id: sp.id, x: sp.x + dx, y: sp.y + dy })));
         const state = useStore.getState();
+        const selectedIds = new Set(multiStart.map((sp) => sp.id));
         multiStart.forEach((sp) => {
           const w = state.widgets.find((x) => x.id === sp.id);
           if (!w) return;
+          // Skip widgets whose ancestor group is also in this selection —
+          // bringToFront on the ancestor group covers the whole subtree.
+          let gid = w.groupId;
+          while (gid) {
+            if (selectedIds.has(gid)) return;
+            gid = state.widgets.find((x) => x.id === gid)?.groupId;
+          }
           const targetGroupId = findGroupForWidget(w, state.widgets);
           if (targetGroupId !== w.groupId) {
             useStore.getState().setWidgetGroup(sp.id, targetGroupId);
           }
+          useStore.getState().bringToFront(sp.id);
         });
       } else {
         const newX = startPos.x + dx;
         const newY = startPos.y + dy;
         if (nodeRef.current) {
-          nodeRef.current.style.transform = '';
           nodeRef.current.style.left = newX + 'px';
           nodeRef.current.style.top = newY + 'px';
         }
-        updateWidget(widget.id, { x: newX, y: newY });
+        const moves: { id: string; x: number; y: number }[] = [{ id: widget.id, x: newX, y: newY }];
         if (childStart) {
           childStart.forEach((cp) => {
-            if (cp.el) { cp.el.style.transform = ''; cp.el.style.left = (cp.x + dx) + 'px'; cp.el.style.top = (cp.y + dy) + 'px'; }
-            updateWidget(cp.id, { x: cp.x + dx, y: cp.y + dy });
+            if (cp.el) { cp.el.style.left = (cp.x + dx) + 'px'; cp.el.style.top = (cp.y + dy) + 'px'; }
+            moves.push({ id: cp.id, x: cp.x + dx, y: cp.y + dy });
           });
         }
+        batchMoveWidgets(moves);
         {
           const state = useStore.getState();
           const targetGroupId = findGroupForWidget({ ...widget, x: newX, y: newY }, state.widgets);
@@ -251,6 +259,7 @@ function WidgetNode({ widget }: Props) {
               action: targetGroupId ? 'added' : 'removed',
             });
           }
+          bringToFront(widget.id);
         }
       }
       setDropTargetGroupId(null);
@@ -449,6 +458,7 @@ function WidgetContent({ widget, isTextboxEditing, onTextboxEditEnd }: {
         onChange={(d) => updateWidgetData(widget.id, d)}
       />
     );
+    case 'finance': return <FinanceContent data={widget.data as FinanceData} />;
   }
 }
 
@@ -1377,6 +1387,283 @@ function WorklogContent({ data, onChange }: { data: WorklogData; onChange: (d: P
           onKeyDown={handleKeyDown}
           placeholder="작업 내용 입력 후 Enter..."
         />
+      </div>
+    </div>
+  );
+}
+
+/* ── Finance Widget ── */
+
+function fmtFinAmt(n: number, currency = 'KRW'): string {
+  if (currency === 'KRW') {
+    if (n >= 100_000_000) return `₩${(n / 100_000_000).toFixed(1)}억`;
+    if (n >= 10_000) return `₩${Math.round(n / 10_000).toLocaleString()}만`;
+    return `₩${n.toLocaleString()}`;
+  }
+  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000) return `$${(n / 1_000).toFixed(0)}K`;
+  return `$${n.toLocaleString()}`;
+}
+
+const INV_STATUS_CFG: Record<InvoiceStatus, { label: string; color: string }> = {
+  paid:      { label: '수금', color: '#22c55e' },
+  pending:   { label: '미수금', color: '#f59e0b' },
+  overdue:   { label: '연체', color: '#ef4444' },
+  cancelled: { label: '취소', color: '#64748b' },
+};
+
+function InvStatusBadge({ status }: { status: InvoiceStatus }) {
+  const { label, color } = INV_STATUS_CFG[status];
+  return <span className="inv-status-badge" style={{ color, borderColor: color + '44', background: color + '18' }}>{label}</span>;
+}
+
+function DonutChart({ data }: { data: { label: string; value: number; color: string }[] }) {
+  const total = data.reduce((s, d) => s + d.value, 0);
+  if (!total) return <div className="finance-donut-empty">데이터 없음</div>;
+  const cx = 50, cy = 50, R = 38, r = 24;
+  let angle = -Math.PI / 2;
+  const slices = data.filter(d => d.value > 0).map((d) => {
+    const sweep = (d.value / total) * 2 * Math.PI;
+    const x1 = cx + R * Math.cos(angle), y1 = cy + R * Math.sin(angle);
+    const x2 = cx + R * Math.cos(angle + sweep), y2 = cy + R * Math.sin(angle + sweep);
+    const ix1 = cx + r * Math.cos(angle), iy1 = cy + r * Math.sin(angle);
+    const ix2 = cx + r * Math.cos(angle + sweep), iy2 = cy + r * Math.sin(angle + sweep);
+    const large = sweep > Math.PI ? 1 : 0;
+    const path = `M${x1},${y1} A${R},${R} 0 ${large} 1 ${x2},${y2} L${ix2},${iy2} A${r},${r} 0 ${large} 0 ${ix1},${iy1} Z`;
+    angle += sweep;
+    return { ...d, path };
+  });
+  return (
+    <svg viewBox="0 0 100 100" className="finance-donut-svg">
+      {slices.map((s, i) => <path key={i} d={s.path} fill={s.color} />)}
+    </svg>
+  );
+}
+
+function HBarChart({ data, fmt }: { data: { label: string; value: number; color?: string }[]; fmt: (n: number) => string }) {
+  const max = Math.max(...data.map(d => d.value), 1);
+  return (
+    <div className="finance-hbar">
+      {data.map((d, i) => (
+        <div key={i} className="finance-hbar-row">
+          <div className="finance-hbar-label" title={d.label}>{d.label}</div>
+          <div className="finance-hbar-track">
+            <div className="finance-hbar-fill" style={{ width: `${(d.value / max) * 100}%`, background: d.color || '#6366f1' }} />
+          </div>
+          <div className="finance-hbar-val">{fmt(d.value)}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function MonthlyBars({ data, fmt }: { data: { month: string; paid: number; pending: number }[]; fmt: (n: number) => string }) {
+  const max = Math.max(...data.map(d => d.paid + d.pending), 1);
+  const bw = Math.min(36, Math.max(18, 240 / (data.length || 1)));
+  const gap = 6;
+  const W = data.length * (bw + gap) + 16;
+  return (
+    <div style={{ overflowX: 'auto' }}>
+      <svg viewBox={`0 0 ${W} 90`} style={{ width: Math.min(W, 500), height: 90, display: 'block' }}>
+        {data.map((d, i) => {
+          const pH = (d.paid / max) * 64;
+          const peH = (d.pending / max) * 64;
+          const x = i * (bw + gap) + 8;
+          return (
+            <g key={i}>
+              <rect x={x} y={70 - pH - peH} width={bw} height={peH} fill="#f59e0b" rx={1} />
+              <rect x={x} y={70 - pH} width={bw} height={pH} fill="#22c55e" rx={1} />
+              <text x={x + bw / 2} y={82} textAnchor="middle" fontSize="7" fill="#8b949e">{d.month.slice(5)}</text>
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+  );
+}
+
+type FinTab = 'overview' | 'client' | 'monthly' | 'list';
+
+function FinanceContent({ data }: { data: FinanceData }) {
+  const [tab, setTab] = useState<FinTab>('overview');
+  const { invoices } = data;
+  const currency = invoices[0]?.currency || 'KRW';
+  const fmt = (n: number) => fmtFinAmt(n, currency);
+
+  if (!invoices.length) {
+    return (
+      <div className="finance-empty">
+        <div style={{ fontSize: 28 }}>💰</div>
+        <div style={{ fontWeight: 600, marginTop: 8 }}>{data.title || '재무 현황'}</div>
+        <div style={{ fontSize: 12, color: '#8b949e', marginTop: 4 }}>인스펙터에서 MD 인보이스 파일을 업로드하세요</div>
+      </div>
+    );
+  }
+
+  const paid    = invoices.filter(i => i.status === 'paid').reduce((s, i) => s + i.amount, 0);
+  const pending = invoices.filter(i => i.status === 'pending').reduce((s, i) => s + i.amount, 0);
+  const overdue = invoices.filter(i => i.status === 'overdue').reduce((s, i) => s + i.amount, 0);
+  const total   = paid + pending + overdue;
+  const collectRate = total > 0 ? Math.round((paid / total) * 100) : 0;
+
+  const byClient = useMemo(() => {
+    const map: Record<string, { paid: number; pending: number; overdue: number; total: number; count: number }> = {};
+    invoices.forEach(inv => {
+      if (!map[inv.client]) map[inv.client] = { paid: 0, pending: 0, overdue: 0, total: 0, count: 0 };
+      if (inv.status !== 'cancelled') {
+        (map[inv.client] as Record<string, number>)[inv.status] += inv.amount;
+        map[inv.client].total += inv.amount;
+      }
+      map[inv.client].count++;
+    });
+    return Object.entries(map).sort((a, b) => b[1].total - a[1].total);
+  }, [invoices]);
+
+  const byMonth = useMemo(() => {
+    const map: Record<string, { paid: number; pending: number }> = {};
+    invoices.filter(i => i.status !== 'cancelled').forEach(inv => {
+      const m = inv.date.slice(0, 7);
+      if (!m || m.length < 7) return;
+      if (!map[m]) map[m] = { paid: 0, pending: 0 };
+      if (inv.status === 'paid') map[m].paid += inv.amount;
+      else map[m].pending += inv.amount;
+    });
+    return Object.entries(map).sort().map(([month, v]) => ({ month, ...v }));
+  }, [invoices]);
+
+  const donutData = [
+    { label: '수금', value: paid, color: '#22c55e' },
+    { label: '미수금', value: pending, color: '#f59e0b' },
+    { label: '연체', value: overdue, color: '#ef4444' },
+  ];
+
+  return (
+    <div className="finance-card">
+      {/* KPI */}
+      <div className="finance-kpi-row">
+        <div className="finance-kpi">
+          <div className="finance-kpi-label">총 청구</div>
+          <div className="finance-kpi-val">{fmt(total)}</div>
+        </div>
+        <div className="finance-kpi finance-kpi-paid">
+          <div className="finance-kpi-label">수금</div>
+          <div className="finance-kpi-val">{fmt(paid)}</div>
+        </div>
+        <div className="finance-kpi finance-kpi-pending">
+          <div className="finance-kpi-label">미수금</div>
+          <div className="finance-kpi-val">{fmt(pending)}</div>
+        </div>
+        <div className="finance-kpi finance-kpi-overdue">
+          <div className="finance-kpi-label">연체</div>
+          <div className="finance-kpi-val">{fmt(overdue)}</div>
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div className="finance-tabs">
+        {(['overview', 'client', 'monthly', 'list'] as FinTab[]).map((t) => {
+          const labels: Record<FinTab, string> = { overview: '개요', client: '고객사별', monthly: '월별', list: '목록' };
+          return (
+            <button
+              key={t}
+              className={`finance-tab${tab === t ? ' active' : ''}`}
+              onMouseDown={e => e.stopPropagation()}
+              onClick={e => { e.stopPropagation(); setTab(t); }}
+            >{labels[t]}</button>
+          );
+        })}
+        <div className="finance-collect-rate">수금률 <strong>{collectRate}%</strong></div>
+      </div>
+
+      <div className="finance-body">
+        {/* 개요 */}
+        {tab === 'overview' && (
+          <div className="finance-overview">
+            <DonutChart data={donutData} />
+            <div className="finance-overview-right">
+              {donutData.filter(d => d.value > 0).map(d => (
+                <div key={d.label} className="finance-legend-row">
+                  <span className="finance-legend-dot" style={{ background: d.color }} />
+                  <span className="finance-legend-label">{d.label}</span>
+                  <span className="finance-legend-amt">{fmt(d.value)}</span>
+                </div>
+              ))}
+              <div className="finance-legend-divider" />
+              <div className="finance-legend-row" style={{ fontSize: 11, color: '#8b949e' }}>
+                <span>총 인보이스</span>
+                <span style={{ marginLeft: 'auto' }}>{invoices.length}건</span>
+              </div>
+              <div className="finance-legend-row" style={{ fontSize: 11, color: '#8b949e' }}>
+                <span>고객사</span>
+                <span style={{ marginLeft: 'auto' }}>{byClient.length}곳</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 고객사별 */}
+        {tab === 'client' && (
+          <div className="finance-client-tab">
+            <HBarChart
+              data={byClient.slice(0, 8).map(([label, v]) => ({ label, value: v.total }))}
+              fmt={fmt}
+            />
+            <div className="finance-client-table">
+              <div className="finance-client-thead">
+                <span>고객사</span><span>수금</span><span>미수금</span><span>건수</span>
+              </div>
+              {byClient.map(([name, v]) => (
+                <div key={name} className="finance-client-row">
+                  <span className="finance-client-name" title={name}>{name}</span>
+                  <span style={{ color: '#22c55e' }}>{v.paid ? fmt(v.paid) : '-'}</span>
+                  <span style={{ color: '#f59e0b' }}>{v.pending + v.overdue ? fmt(v.pending + v.overdue) : '-'}</span>
+                  <span style={{ color: '#8b949e' }}>{v.count}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 월별 */}
+        {tab === 'monthly' && (
+          <div className="finance-monthly-tab">
+            {byMonth.length > 0 ? (
+              <>
+                <MonthlyBars data={byMonth} fmt={fmt} />
+                <div className="finance-monthly-legend">
+                  <span><span className="finance-legend-dot" style={{ background: '#22c55e' }} />수금</span>
+                  <span><span className="finance-legend-dot" style={{ background: '#f59e0b' }} />미수금</span>
+                </div>
+                <div className="finance-monthly-table">
+                  {byMonth.map(d => (
+                    <div key={d.month} className="finance-monthly-row">
+                      <span className="finance-monthly-label">{d.month}</span>
+                      <span style={{ color: '#22c55e' }}>{d.paid ? fmt(d.paid) : '-'}</span>
+                      <span style={{ color: '#f59e0b' }}>{d.pending ? fmt(d.pending) : '-'}</span>
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : <div className="finance-empty-msg">날짜 데이터가 없습니다</div>}
+          </div>
+        )}
+
+        {/* 목록 */}
+        {tab === 'list' && (
+          <div className="finance-list-tab">
+            <div className="finance-list-thead">
+              <span>고객사</span><span>날짜</span><span>금액</span><span>상태</span>
+            </div>
+            {invoices.map(inv => (
+              <div key={inv.id} className="finance-list-row">
+                <span className="finance-list-client" title={inv.client}>{inv.client}</span>
+                <span className="finance-list-date">{inv.date || '-'}</span>
+                <span className="finance-list-amt">{fmt(inv.amount)}</span>
+                <InvStatusBadge status={inv.status} />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

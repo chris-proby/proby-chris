@@ -1,11 +1,11 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
+import { persist, type PersistStorage, type StorageValue } from 'zustand/middleware';
 import { v4 as uuid } from 'uuid';
 import { deleteFiles, idbStorage } from './fileStorage';
 import { getCurrentSession } from './auth';
 import type {
   Widget, Connection, Viewport, PendingConnection, PendingGroupChange, Snapshot,
-  WidgetType, ConnectionType, TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, LeadData, FunnelData, TextboxData, HtmlData, FileUploadData, DirectoryData, WorklogData,
+  WidgetType, ConnectionType, TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, LeadData, FunnelData, TextboxData, HtmlData, FileUploadData, DirectoryData, WorklogData, FinanceData,
 } from './types';
 
 function stripFileData(widgets: Widget[]): Widget[] {
@@ -33,6 +33,7 @@ function defaultData(type: WidgetType): TaskData | NoteData | LinkData | ImageDa
     case 'html': return { html: '', name: '' };
     case 'fileupload': return { title: '파일 보관함', files: [] };
     case 'worklog': return { title: '작업로그', entries: [] };
+    case 'finance': return { title: '재무 현황', invoices: [] } as FinanceData;
     case 'directory': return {
       title: '인원 디렉토리',
       columns: [
@@ -64,6 +65,7 @@ function defaultSize(type: WidgetType): { width: number; height: number } {
     case 'fileupload': return { width: 280, height: 200 };
     case 'worklog':   return { width: 280, height: 130 };
     case 'directory': return { width: 520, height: 260 };
+    case 'finance':   return { width: 580, height: 480 };
   }
 }
 
@@ -103,7 +105,9 @@ interface Store {
   groupSelected: () => void;
   ungroupWidget: (groupId: string) => void;
   toggleGroupCollapse: (groupId: string) => void;
+  batchMoveWidgets: (moves: { id: string; x: number; y: number }[]) => void;
   fitToView: () => void;
+  applyRemoteState: (widgets: Widget[], connections: Connection[], maxZIndex: number) => void;
 
   snapshots: Snapshot[];
   saveSnapshot: (label: string) => void;
@@ -115,7 +119,65 @@ interface Store {
 }
 
 const _session = getCurrentSession();
-const STORE_NAME = _session ? `messynotion-v1-${_session.userId}` : 'messynotion-v1';
+// Guests joining a collab room get a separate IDB key so their own solo canvas isn't overwritten.
+const _roomParam = typeof window !== 'undefined'
+  ? new URLSearchParams(window.location.search).get('room')
+  : null;
+const _isOwnerRoom = _roomParam === _session?.userId;
+const STORE_NAME = _session
+  ? ((_roomParam && !_isOwnerRoom)
+    ? `messynotion-v1-collab-${_session.userId}`
+    : `messynotion-v1-${_session.userId}`)
+  : 'messynotion-v1';
+
+/**
+ * PersistStorage that holds the latest state object in memory and defers
+ * JSON.stringify + IDB write until a debounced flush. Zustand normally
+ * stringifies the full state synchronously on every `set`, which with
+ * hundreds of widgets during rapid drags can exhaust V8's heap.
+ */
+type PersistedShape = {
+  widgets: Widget[];
+  connections: Connection[];
+  viewport: Viewport;
+  maxZIndex: number;
+};
+
+let pendingPersist: { name: string; value: StorageValue<PersistedShape> } | null = null;
+let persistTimer: ReturnType<typeof setTimeout> | null = null;
+const PERSIST_DELAY_MS = 600;
+
+async function flushPersist(): Promise<void> {
+  if (!pendingPersist) return;
+  const { name, value } = pendingPersist;
+  pendingPersist = null;
+  try {
+    await idbStorage.setItem(name, JSON.stringify(value));
+  } catch {
+    /* swallow; idbStorage has its own fallback */
+  }
+}
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('pagehide', () => { void flushPersist(); });
+  window.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') void flushPersist();
+  });
+}
+
+const deferredPersistStorage: PersistStorage<PersistedShape> = {
+  getItem: async (name) => {
+    const str = await idbStorage.getItem(name);
+    if (!str) return null;
+    try { return JSON.parse(str) as StorageValue<PersistedShape>; } catch { return null; }
+  },
+  setItem: (name, value) => {
+    pendingPersist = { name, value };
+    if (persistTimer) clearTimeout(persistTimer);
+    persistTimer = setTimeout(() => { persistTimer = null; void flushPersist(); }, PERSIST_DELAY_MS);
+  },
+  removeItem: async (name) => { await idbStorage.removeItem(name); },
+};
 
 export const useStore = create<Store>()(
   persist(
@@ -186,11 +248,42 @@ export const useStore = create<Store>()(
       },
 
       bringToFront: (id) => {
-        const newZ = get().maxZIndex + 1;
-        set((s) => ({
-          widgets: s.widgets.map((w) => w.id === id ? { ...w, zIndex: newZ } : w),
-          maxZIndex: newZ,
-        }));
+        const { widgets, maxZIndex } = get();
+        const target = widgets.find((w) => w.id === id);
+        if (!target) return;
+
+        if (target.type === 'group') {
+          // BFS to collect group + all descendants in level order (group first, then children, grandchildren…)
+          // This guarantees each group renders below its own children.
+          const ordered: Widget[] = [];
+          const visited = new Set<string>();
+          const queue: string[] = [id];
+          while (queue.length) {
+            const curr = queue.shift()!;
+            if (visited.has(curr)) continue;
+            visited.add(curr);
+            const w = widgets.find((x) => x.id === curr);
+            if (w) ordered.push(w);
+            // enqueue direct children sorted by current zIndex to preserve sibling order
+            widgets
+              .filter((x) => x.groupId === curr)
+              .sort((a, b) => a.zIndex - b.zIndex)
+              .forEach((x) => queue.push(x.id));
+          }
+          const newBase = maxZIndex + 1;
+          const newMax = newBase + ordered.length - 1;
+          const zMap = new Map(ordered.map((w, i) => [w.id, newBase + i]));
+          set((s) => ({
+            widgets: s.widgets.map((w) => zMap.has(w.id) ? { ...w, zIndex: zMap.get(w.id)! } : w),
+            maxZIndex: newMax,
+          }));
+        } else {
+          const newZ = maxZIndex + 1;
+          set((s) => ({
+            widgets: s.widgets.map((w) => w.id === id ? { ...w, zIndex: newZ } : w),
+            maxZIndex: newZ,
+          }));
+        }
       },
 
       addConnection: (fromId, toId, type = 'relates-to') => {
@@ -354,6 +447,20 @@ export const useStore = create<Store>()(
         }));
       },
 
+      applyRemoteState: (widgets, connections, maxZIndex) => set({ widgets, connections, maxZIndex }),
+
+      batchMoveWidgets: (moves) => {
+        if (moves.length === 0) return;
+        const moveMap = new Map(moves.map((m) => [m.id, m]));
+        const now = Date.now();
+        set((s) => ({
+          widgets: s.widgets.map((w) => {
+            const m = moveMap.get(w.id);
+            return m ? { ...w, x: m.x, y: m.y, updatedAt: now } : w;
+          }),
+        }));
+      },
+
       fitToView: () => {
         const { widgets } = get();
         if (widgets.length === 0) { set({ viewport: { x: 100, y: 100, scale: 1 } }); return; }
@@ -376,10 +483,10 @@ export const useStore = create<Store>()(
           id: uuid(),
           timestamp: Date.now(),
           label,
-          widgets: JSON.parse(JSON.stringify(widgets)),
+          widgets: JSON.parse(JSON.stringify(stripFileData(widgets))),
           connections: JSON.parse(JSON.stringify(connections)),
         };
-        const MAX = 40;
+        const MAX = 10;
         const next = [snapshot, ...snapshots].slice(0, MAX);
         set({ snapshots: next });
       },
@@ -431,16 +538,15 @@ export const useStore = create<Store>()(
     }),
     {
       name: STORE_NAME,
-      storage: createJSONStorage(() => idbStorage),
+      storage: deferredPersistStorage,
       partialize: (s) => ({
         widgets: stripFileData(s.widgets),
         connections: s.connections,
         viewport: s.viewport,
         maxZIndex: s.maxZIndex,
-        snapshots: s.snapshots.map((snap) => ({
-          ...snap,
-          widgets: stripFileData(snap.widgets),
-        })),
+        // snapshots excluded from persist — they're deep copies of all widgets and
+        // re-stringified on every Zustand set. With rapid drags this allocated
+        // multi-MB strings repeatedly and exhausted the V8 heap. History is in-memory only.
       }),
     }
   )
