@@ -1,10 +1,11 @@
 import React, { useRef, useEffect, useMemo, useState } from 'react';
 import { useStore } from '../store';
+import { track } from '../analytics';
 import { saveFile, loadFile } from '../fileStorage';
 import { vpBridge, keyBridge } from '../viewportBridge';
 import { getCurrentSession } from '../auth';
 import { v4 as uuidv4 } from 'uuid';
-import type { Widget, PortSide, TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, GoalStatus, LeadData, LeadStage, FunnelData, TextboxData, HtmlData, FileUploadData, FileItem, DirectoryData, DirectoryColumn, WorklogData, FinanceData, InvoiceEntry, InvoiceStatus } from '../types';
+import type { Widget, PortSide, TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, GoalStatus, LeadData, LeadStage, FunnelData, TextboxData, HtmlData, FileUploadData, FileItem, DirectoryData, DirectoryColumn, WorklogData, FinanceData, InvoiceEntry, InvoiceStatus, CalendarData, CalendarEvent, EmbedData } from '../types';
 
 const GOAL_GRADIENTS: Record<GoalStatus, string> = {
   'on-track': 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
@@ -133,6 +134,8 @@ function WidgetNode({ widget }: Props) {
     if (!isSelected) setSelectedWidget(widget.id);
     bringToFront(widget.id);
 
+    track(`WidgetNode_DragStart_${widget.type}`);
+
     const startMouse = { x: e.clientX, y: e.clientY };
     const startPos = { x: widget.x, y: widget.y };
 
@@ -206,6 +209,7 @@ function WidgetNode({ widget }: Props) {
         multiStart.forEach((sp) => {
           if (sp.el) { sp.el.style.left = (sp.x + dx) + 'px'; sp.el.style.top = (sp.y + dy) + 'px'; }
         });
+        if (Math.abs(dx) > 2 || Math.abs(dy) > 2) useStore.getState().pushUndo();
         batchMoveWidgets(multiStart.map((sp) => ({ id: sp.id, x: sp.x + dx, y: sp.y + dy })));
         const state = useStore.getState();
         const selectedIds = new Set(multiStart.map((sp) => sp.id));
@@ -239,16 +243,21 @@ function WidgetNode({ widget }: Props) {
             moves.push({ id: cp.id, x: cp.x + dx, y: cp.y + dy });
           });
         }
+        if (Math.abs(dx) > 2 || Math.abs(dy) > 2) useStore.getState().pushUndo();
         batchMoveWidgets(moves);
         {
           const state = useStore.getState();
           const targetGroupId = findGroupForWidget({ ...widget, x: newX, y: newY }, state.widgets);
           const prevGroupId = state.widgets.find((w) => w.id === widget.id)?.groupId;
+          const moved = Math.abs(dx) > 2 || Math.abs(dy) > 2;
+          if (moved) track(`WidgetNode_DragEnd_${widget.type}`, { dx: Math.round(dx), dy: Math.round(dy) });
           if (targetGroupId !== prevGroupId) {
             const targetGroup = targetGroupId
               ? state.widgets.find((w) => w.id === targetGroupId)
               : state.widgets.find((w) => w.id === prevGroupId);
             const groupName = (targetGroup?.data as GroupData)?.title || '그룹';
+            if (targetGroupId) track(`WidgetNode_DropIntoGroup_${widget.type}`, { group_name: groupName });
+            else track(`WidgetNode_RemoveFromGroup_${widget.type}`, { group_name: groupName });
             stageGroupChange({
               widgetId: widget.id,
               prevGroupId,
@@ -272,7 +281,8 @@ function WidgetNode({ widget }: Props) {
   const handlePortMouseDown = (e: React.MouseEvent, port: PortSide) => {
     e.stopPropagation();
     e.preventDefault();
-    setPendingConnection({ fromId: widget.id, fromPort: port, toX: e.clientX, toY: e.clientY });
+    const cr = (e.target as HTMLElement).closest('.canvas-container')?.getBoundingClientRect() ?? { left: 0, top: 0 };
+    setPendingConnection({ fromId: widget.id, fromPort: port, toX: e.clientX - cr.left, toY: e.clientY - cr.top });
   };
 
   const handleMouseUp = (e: React.MouseEvent) => {
@@ -285,7 +295,13 @@ function WidgetNode({ widget }: Props) {
   };
 
   const handleDoubleClick = (e: React.MouseEvent) => {
-    if (isGroup) { e.stopPropagation(); toggleGroupCollapse(widget.id); return; }
+    if (isGroup) {
+      e.stopPropagation();
+      const data = widget.data as GroupData;
+      track(data.collapsed ? 'WidgetNode_Group_Expand' : 'WidgetNode_Group_Collapse', { group_title: data.title });
+      toggleGroupCollapse(widget.id);
+      return;
+    }
     if (widget.type === 'textbox') { e.stopPropagation(); setIsTextboxEditing(true); return; }
   };
 
@@ -320,7 +336,6 @@ function WidgetNode({ widget }: Props) {
         top: widget.y,
         width: widget.width,
         height: (isGroup || widget.userResized) ? widget.height : undefined,
-        overflow: widget.userResized ? 'hidden' : undefined,
         zIndex: widget.zIndex,
         ...groupStyle,
       }}
@@ -337,11 +352,20 @@ function WidgetNode({ widget }: Props) {
         <ResizeHandles widget={widget} isGroup={isGroup} />
       )}
 
-      <WidgetContent
-        widget={widget}
-        isTextboxEditing={isTextboxEditing}
-        onTextboxEditEnd={() => setIsTextboxEditing(false)}
-      />
+      <div style={{
+        flex: '1 1 auto',
+        minHeight: 0,
+        overflow: widget.userResized ? 'hidden' : undefined,
+        display: 'flex',
+        flexDirection: 'column',
+        borderRadius: 'var(--radius)',
+      }}>
+        <WidgetContent
+          widget={widget}
+          isTextboxEditing={isTextboxEditing}
+          onTextboxEditEnd={() => setIsTextboxEditing(false)}
+        />
+      </div>
     </div>
   );
 }
@@ -356,10 +380,17 @@ function ResizeHandles({ widget, isGroup }: { widget: Widget; isGroup: boolean }
     e.stopPropagation();
     e.preventDefault();
 
+    useStore.getState().pushUndo();
+
     const startMouse = { x: e.clientX, y: e.clientY };
     const start = { x: widget.x, y: widget.y, w: widget.width, h: widget.height };
+    let firstMove = true;
 
     const onMove = (ev: MouseEvent) => {
+      if (firstMove) {
+        firstMove = false;
+        updateWidget(widget.id, { userResized: true });
+      }
       const vp = vpBridge;
       const dx = (ev.clientX - startMouse.x) / vp.scale;
       const dy = (ev.clientY - startMouse.y) / vp.scale;
@@ -386,6 +417,7 @@ function ResizeHandles({ widget, isGroup }: { widget: Widget; isGroup: boolean }
     const onUp = () => {
       const current = useStore.getState().widgets.find((w) => w.id === widget.id);
       if (current) {
+        track(`WidgetNode_Resize_${widget.type}`, { dir, new_w: Math.round(current.width), new_h: Math.round(current.height) });
         if (isGroup) {
           updateWidget(widget.id, {
             data: { ...current.data, expandedWidth: current.width, expandedHeight: current.height },
@@ -459,6 +491,13 @@ function WidgetContent({ widget, isTextboxEditing, onTextboxEditEnd }: {
       />
     );
     case 'finance': return <FinanceContent data={widget.data as FinanceData} />;
+    case 'calendar': return (
+      <CalendarContent
+        data={widget.data as CalendarData}
+        onChange={(d) => updateWidgetData(widget.id, d)}
+      />
+    );
+    case 'embed': return <EmbedContent data={widget.data as EmbedData} />;
   }
 }
 
@@ -917,6 +956,7 @@ function HtmlContent({ data }: { data: HtmlData }) {
 
 /* ── Funnel Content ── */
 const FUNNEL_STAGES: LeadStage[] = ['prospect', 'qualified', 'proposal', 'negotiation', 'won'];
+const ALL_STAGES: LeadStage[]    = ['prospect', 'qualified', 'proposal', 'negotiation', 'won', 'lost'];
 
 function fmtValue(v: number, currency: string): string {
   if (currency === 'KRW') {
@@ -931,140 +971,366 @@ function fmtValue(v: number, currency: string): string {
 
 const SOURCE_COLORS = ['#6366f1', '#3b82f6', '#22c55e', '#f59e0b', '#f97316', '#8b5cf6', '#ec4899', '#14b8a6'];
 
+type FunnelTab2 = 'funnel' | 'source' | 'cross' | 'pipeline';
+
 function FunnelContent({ data }: { data: FunnelData }) {
-  const [tab, setTab] = useState<'stage' | 'source'>('stage');
+  const [tab, setTab] = useState<FunnelTab2>('funnel');
+  const [pipeSort, setPipeSort] = useState<'expected' | 'value' | 'prob' | 'date'>('expected');
   const widgets = useStore((s) => s.widgets);
-  const allLeads = useMemo(
+
+  // All hooks before any conditional return
+  const leads = useMemo(
     () => widgets.filter((w) => w.type === 'lead').map((w) => w.data as LeadData),
     [widgets]
   );
 
-  const stageRows = FUNNEL_STAGES.map((stage) => {
-    const items = allLeads.filter((l) => l.stage === stage);
-    const totalVal = items.reduce((sum, l) => sum + (l.value || 0), 0);
-    const currencies = [...new Set(items.map((l) => l.currency || 'KRW'))];
-    return { stage, count: items.length, value: totalVal, currency: currencies[0] ?? 'KRW' };
-  });
-  const lostCount = allLeads.filter((l) => l.stage === 'lost').length;
-  const maxStageCount = Math.max(...stageRows.map((r) => r.count), 1);
-  const totalLeads = allLeads.length;
-  const wonRow = stageRows.find((r) => r.stage === 'won')!;
-  const prospectRow = stageRows.find((r) => r.stage === 'prospect')!;
-  const convRate = prospectRow.count > 0 ? Math.round((wonRow.count / prospectRow.count) * 100) : 0;
-  const totalActiveValue = stageRows.reduce((s, r) => s + r.value, 0);
-  const displayCurrency = allLeads[0]?.currency ?? 'KRW';
+  const currency = leads[0]?.currency ?? 'KRW';
+  const fmt = (n: number) => fmtValue(n, currency);
 
-  const sourceRows = useMemo(() => {
-    const map = new Map<string, { count: number; value: number; currency: string }>();
-    allLeads.forEach((l) => {
+  // Stage aggregation
+  const stageData = useMemo(() =>
+    ALL_STAGES.map((stage) => {
+      const items = leads.filter((l) => l.stage === stage);
+      const value = items.reduce((s, l) => s + (l.value || 0), 0);
+      const expected = items.reduce((s, l) => s + (l.value || 0) * (l.probability || 0) / 100, 0);
+      const avgProb = items.length > 0 ? Math.round(items.reduce((s, l) => s + (l.probability || 0), 0) / items.length) : 0;
+      return { stage, count: items.length, value, expected, avgProb };
+    }), [leads]
+  );
+
+  // Source aggregation
+  const sourceData = useMemo(() => {
+    const map = new Map<string, { count: number; value: number; won: number; lost: number }>();
+    leads.forEach((l) => {
       const src = l.source?.trim() || '미입력';
-      const existing = map.get(src) ?? { count: 0, value: 0, currency: l.currency || 'KRW' };
-      map.set(src, { count: existing.count + 1, value: existing.value + (l.value || 0), currency: existing.currency });
+      const e = map.get(src) ?? { count: 0, value: 0, won: 0, lost: 0 };
+      map.set(src, {
+        count: e.count + 1,
+        value: e.value + (l.value || 0),
+        won:  e.won  + (l.stage === 'won'  ? 1 : 0),
+        lost: e.lost + (l.stage === 'lost' ? 1 : 0),
+      });
     });
     return [...map.entries()]
       .sort((a, b) => b[1].count - a[1].count)
-      .map(([source, stats], i) => ({ source, ...stats, color: SOURCE_COLORS[i % SOURCE_COLORS.length] }));
-  }, [allLeads]);
+      .map(([src, v], i) => ({
+        src,
+        ...v,
+        winRate: (v.won + v.lost) > 0 ? Math.round(v.won / (v.won + v.lost) * 100) : null,
+        avgDeal: v.won > 0 ? v.value / v.count : 0,
+        color: SOURCE_COLORS[i % SOURCE_COLORS.length],
+      }));
+  }, [leads]);
 
-  const maxSourceCount = Math.max(...sourceRows.map((r) => r.count), 1);
+  // Cross matrix: source × stage
+  const sources = useMemo(() => [...new Set(leads.map((l) => l.source?.trim() || '미입력'))], [leads]);
+  const crossData = useMemo(() => {
+    const matrix: Record<string, Record<LeadStage, number>> = {};
+    sources.forEach((src) => {
+      matrix[src] = { prospect: 0, qualified: 0, proposal: 0, negotiation: 0, won: 0, lost: 0 };
+    });
+    leads.forEach((l) => {
+      const src = l.source?.trim() || '미입력';
+      if (matrix[src]) matrix[src][l.stage] = (matrix[src][l.stage] || 0) + 1;
+    });
+    return matrix;
+  }, [leads, sources]);
+  const crossMax = useMemo(() => {
+    let m = 1;
+    sources.forEach((src) => ALL_STAGES.forEach((st) => { if ((crossData[src]?.[st] ?? 0) > m) m = crossData[src][st]; }));
+    return m;
+  }, [crossData, sources]);
+
+  // Pipeline list (active deals)
+  const pipelineData = useMemo(() => {
+    const active = leads.filter((l) => l.stage !== 'won' && l.stage !== 'lost');
+    const sorted = [...active].sort((a, b) => {
+      if (pipeSort === 'expected') return (b.value * b.probability / 100) - (a.value * a.probability / 100);
+      if (pipeSort === 'value')    return (b.value || 0) - (a.value || 0);
+      if (pipeSort === 'prob')     return (b.probability || 0) - (a.probability || 0);
+      if (pipeSort === 'date')     return (a.nextActionDate || 'z').localeCompare(b.nextActionDate || 'z');
+      return 0;
+    });
+    return sorted;
+  }, [leads, pipeSort]);
+
+  // KPI
+  const activeLeads = leads.filter((l) => l.stage !== 'won' && l.stage !== 'lost');
+  const wonLeads    = leads.filter((l) => l.stage === 'won');
+  const lostLeads   = leads.filter((l) => l.stage === 'lost');
+  const pipeline    = activeLeads.reduce((s, l) => s + (l.value || 0), 0);
+  const expectedRev = activeLeads.reduce((s, l) => s + (l.value || 0) * (l.probability || 0) / 100, 0);
+  const winRate     = (wonLeads.length + lostLeads.length) > 0
+    ? Math.round(wonLeads.length / (wonLeads.length + lostLeads.length) * 100) : 0;
+  const avgDeal     = wonLeads.length > 0
+    ? wonLeads.reduce((s, l) => s + (l.value || 0), 0) / wonLeads.length : 0;
+
+  const activeStages = stageData.filter((d) => d.stage !== 'won' && d.stage !== 'lost');
+  const maxActive    = Math.max(...activeStages.map((d) => d.count), 1);
+
+  const tabBtn = (t: FunnelTab2, label: string) => (
+    <button
+      key={t}
+      className={`funnel-tab${tab === t ? ' active' : ''}`}
+      onMouseDown={(e) => e.stopPropagation()}
+      onClick={(e) => { e.stopPropagation(); setTab(t); }}
+    >{label}</button>
+  );
 
   return (
     <div className="funnel-card">
+      {/* Header */}
       <div className="funnel-header">
         <span className="funnel-title-text">{data.title || '세일즈 퍼널'}</span>
-        <span className="funnel-total-badge">{totalLeads}개 리드</span>
+        <span className="funnel-total-badge">{leads.length}개 리드</span>
       </div>
 
-      {totalLeads === 0 ? (
+      {leads.length === 0 ? (
         <div className="funnel-empty">
-          <div>💼 리드 위젯을 추가하면</div>
-          <div>여기에 자동으로 집계됩니다</div>
+          <div style={{ fontSize: 28, marginBottom: 8 }}>📊</div>
+          <div style={{ fontWeight: 600 }}>리드 위젯을 추가하면</div>
+          <div style={{ fontSize: 12, color: '#8b949e', marginTop: 4 }}>고급 세일즈 분석이 자동으로 집계됩니다</div>
         </div>
       ) : (
         <>
-          <div className="funnel-tabs">
-            <button
-              className={`funnel-tab${tab === 'stage' ? ' active' : ''}`}
-              onMouseDown={(e) => e.stopPropagation()}
-              onClick={(e) => { e.stopPropagation(); setTab('stage'); }}
-            >
-              스테이지
-            </button>
-            <button
-              className={`funnel-tab${tab === 'source' ? ' active' : ''}`}
-              onMouseDown={(e) => e.stopPropagation()}
-              onClick={(e) => { e.stopPropagation(); setTab('source'); }}
-            >
-              소스별
-            </button>
+          {/* KPI Row */}
+          <div className="funnel-kpi-row">
+            <div className="funnel-kpi">
+              <div className="funnel-kpi-label">파이프라인</div>
+              <div className="funnel-kpi-val">{fmt(pipeline)}</div>
+            </div>
+            <div className="funnel-kpi">
+              <div className="funnel-kpi-label">예상 매출</div>
+              <div className="funnel-kpi-val funnel-kpi-green">{fmt(expectedRev)}</div>
+            </div>
+            <div className="funnel-kpi">
+              <div className="funnel-kpi-label">수주율</div>
+              <div className="funnel-kpi-val">{winRate}%</div>
+            </div>
+            <div className="funnel-kpi">
+              <div className="funnel-kpi-label">평균 계약</div>
+              <div className="funnel-kpi-val">{avgDeal > 0 ? fmt(avgDeal) : '-'}</div>
+            </div>
           </div>
 
-          {tab === 'stage' ? (
-            <div className="funnel-stages">
-              {stageRows.map(({ stage, count, value, currency }, i) => {
-                const pct = Math.max(count > 0 ? 8 : 0, (count / maxStageCount) * 100);
-                const color = LEAD_STAGE_COLOR[stage];
-                const convFromPrev = i > 0 && stageRows[i - 1].count > 0
-                  ? Math.round((count / stageRows[i - 1].count) * 100)
-                  : null;
-                return (
-                  <div key={stage} className="funnel-row">
-                    <div className="funnel-row-label">{LEAD_STAGE_KO[stage]}</div>
-                    <div className="funnel-bar-track">
-                      <div className="funnel-bar-fill" style={{ width: `${pct}%`, background: color }} />
-                    </div>
-                    <div className="funnel-row-stats">
-                      <span className="funnel-count" style={{ color }}>{count}</span>
-                      {value > 0 && <span className="funnel-value">{fmtValue(value, currency)}</span>}
-                    </div>
-                    {convFromPrev !== null && count > 0 && (
-                      <div className="funnel-conv-arrow">↓{convFromPrev}%</div>
-                    )}
+          {/* Tabs */}
+          <div className="funnel-tabs">
+            {tabBtn('funnel', '퍼널')}
+            {tabBtn('source', '소스')}
+            {tabBtn('cross', '교차분석')}
+            {tabBtn('pipeline', '기회목록')}
+          </div>
+
+          <div className="funnel-body">
+            {/* ── 퍼널 탭 ── */}
+            {tab === 'funnel' && (
+              <div className="funnel-viz-tab">
+                {/* SVG Trapezoid Funnel */}
+                <FunnelShape stages={activeStages} maxCount={maxActive} />
+                {/* Stage Detail Table */}
+                <div className="funnel-stage-table">
+                  <div className="funnel-stage-thead">
+                    <span>스테이지</span><span>건수</span><span>전환율</span><span>금액</span><span>예상매출</span><span>평균확률</span>
                   </div>
-                );
-              })}
-            </div>
-          ) : (
-            <div className="funnel-stages">
-              {sourceRows.map(({ source, count, value, currency, color }) => {
-                const pct = Math.max(8, (count / maxSourceCount) * 100);
-                return (
-                  <div key={source} className="funnel-row">
-                    <div className="funnel-row-label funnel-source-label" title={source}>{source}</div>
-                    <div className="funnel-bar-track">
-                      <div className="funnel-bar-fill" style={{ width: `${pct}%`, background: color }} />
+                  {stageData.map((d, i) => {
+                    const prev = i > 0 ? stageData[i - 1].count : null;
+                    const conv = prev !== null && prev > 0 ? Math.round(d.count / prev * 100) : null;
+                    const isWon = d.stage === 'won'; const isLost = d.stage === 'lost';
+                    return (
+                      <div key={d.stage} className={`funnel-stage-row${isWon ? ' won' : isLost ? ' lost' : ''}`}>
+                        <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                          <span style={{ width: 8, height: 8, borderRadius: '50%', background: LEAD_STAGE_COLOR[d.stage], flexShrink: 0 }} />
+                          {LEAD_STAGE_KO[d.stage]}
+                        </span>
+                        <span style={{ color: LEAD_STAGE_COLOR[d.stage], fontWeight: 700 }}>{d.count}</span>
+                        <span style={{ color: conv !== null && conv < 50 ? '#ef4444' : '#22c55e' }}>
+                          {conv !== null ? `${conv}%` : '—'}
+                        </span>
+                        <span>{d.value > 0 ? fmt(d.value) : '—'}</span>
+                        <span style={{ color: '#22c55e' }}>{d.expected > 0 ? fmt(d.expected) : '—'}</span>
+                        <span style={{ color: '#8b949e' }}>{d.avgProb > 0 ? `${d.avgProb}%` : '—'}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* ── 소스 탭 ── */}
+            {tab === 'source' && (
+              <div className="funnel-source-tab">
+                <div className="funnel-source-bars">
+                  {sourceData.map((s) => (
+                    <div key={s.src} className="funnel-source-bar-row">
+                      <div className="funnel-source-label" title={s.src}>{s.src}</div>
+                      <div className="funnel-source-track">
+                        <div className="funnel-source-fill" style={{ width: `${(s.count / (sourceData[0]?.count || 1)) * 100}%`, background: s.color }} />
+                        <span className="funnel-source-cnt">{s.count}</span>
+                      </div>
                     </div>
-                    <div className="funnel-row-stats">
-                      <span className="funnel-count" style={{ color }}>{count}</span>
-                      {value > 0 && <span className="funnel-value">{fmtValue(value, currency)}</span>}
-                    </div>
+                  ))}
+                </div>
+                <div className="funnel-source-table">
+                  <div className="funnel-source-thead">
+                    <span>소스</span><span>건수</span><span>수주율</span><span>평균금액</span><span>W/L</span>
                   </div>
-                );
-              })}
-            </div>
-          )}
+                  {sourceData.map((s) => (
+                    <div key={s.src} className="funnel-source-row">
+                      <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                        <span style={{ width: 8, height: 8, borderRadius: '50%', background: s.color, flexShrink: 0 }} />
+                        <span className="funnel-source-name" title={s.src}>{s.src}</span>
+                      </span>
+                      <span style={{ fontWeight: 700 }}>{s.count}</span>
+                      <span style={{ color: s.winRate !== null ? (s.winRate >= 50 ? '#22c55e' : '#f59e0b') : '#8b949e' }}>
+                        {s.winRate !== null ? `${s.winRate}%` : '—'}
+                      </span>
+                      <span>{s.avgDeal > 0 ? fmt(s.avgDeal) : '—'}</span>
+                      <span style={{ color: '#8b949e', fontSize: 10 }}>{s.won}W / {s.lost}L</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* ── 교차분석 탭 ── */}
+            {tab === 'cross' && (
+              <div className="funnel-cross-tab">
+                <div className="funnel-cross-wrap" style={{ overflowX: 'auto' }}>
+                  <table className="funnel-cross-table">
+                    <thead>
+                      <tr>
+                        <th>소스</th>
+                        {ALL_STAGES.map((st) => (
+                          <th key={st} style={{ color: LEAD_STAGE_COLOR[st] }}>{LEAD_STAGE_KO[st]}</th>
+                        ))}
+                        <th style={{ color: '#8b949e' }}>합계</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {sources.map((src) => {
+                        const row = crossData[src] ?? {} as Record<LeadStage, number>;
+                        const rowTotal = ALL_STAGES.reduce((s, st) => s + (row[st] || 0), 0);
+                        return (
+                          <tr key={src}>
+                            <td className="funnel-cross-src">{src}</td>
+                            {ALL_STAGES.map((st) => {
+                              const v = row[st] || 0;
+                              const intensity = v > 0 ? Math.max(0.12, v / crossMax) : 0;
+                              return (
+                                <td key={st} className="funnel-cross-cell"
+                                  style={{ background: v > 0 ? `rgba(99,102,241,${intensity})` : 'transparent' }}>
+                                  {v > 0 ? v : <span style={{ color: '#374151', opacity: 0.2 }}>·</span>}
+                                </td>
+                              );
+                            })}
+                            <td className="funnel-cross-total">{rowTotal}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td className="funnel-cross-src" style={{ fontWeight: 700 }}>합계</td>
+                        {ALL_STAGES.map((st) => (
+                          <td key={st} className="funnel-cross-total">{stageData.find((d) => d.stage === st)?.count ?? 0}</td>
+                        ))}
+                        <td className="funnel-cross-total" style={{ fontWeight: 700 }}>{leads.length}</td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {/* ── 기회 목록 탭 ── */}
+            {tab === 'pipeline' && (
+              <div className="funnel-pipeline-tab">
+                <div className="funnel-pipeline-sorts">
+                  {(['expected', 'value', 'prob', 'date'] as const).map((k) => {
+                    const labels = { expected: '예상매출', value: '금액', prob: '확률', date: '다음연락' };
+                    return (
+                      <button
+                        key={k}
+                        className={`funnel-sort-btn${pipeSort === k ? ' active' : ''}`}
+                        onMouseDown={(e) => e.stopPropagation()}
+                        onClick={(e) => { e.stopPropagation(); setPipeSort(k); }}
+                      >{labels[k]}</button>
+                    );
+                  })}
+                </div>
+                <div className="funnel-pipeline-list">
+                  <div className="funnel-pipeline-thead">
+                    <span>리드</span><span>스테이지</span><span>금액</span><span>확률</span><span>예상</span><span>다음연락</span>
+                  </div>
+                  {pipelineData.map((l, i) => {
+                    const overdue = l.nextActionDate && l.nextActionDate < new Date().toISOString().slice(0, 10);
+                    return (
+                      <div key={i} className="funnel-pipeline-row">
+                        <span className="funnel-pipe-name" title={`${l.name} (${l.company})`}>
+                          <span>{l.name}</span>
+                          {l.company && <span className="funnel-pipe-co">{l.company}</span>}
+                        </span>
+                        <span>
+                          <span className="funnel-pipe-stage" style={{ background: LEAD_STAGE_COLOR[l.stage] + '22', color: LEAD_STAGE_COLOR[l.stage] }}>
+                            {LEAD_STAGE_KO[l.stage]}
+                          </span>
+                        </span>
+                        <span>{l.value > 0 ? fmt(l.value) : '—'}</span>
+                        <span style={{ color: l.probability >= 70 ? '#22c55e' : l.probability >= 40 ? '#f59e0b' : '#ef4444' }}>
+                          {l.probability}%
+                        </span>
+                        <span style={{ color: '#22c55e', fontWeight: 600 }}>
+                          {l.value > 0 ? fmt(l.value * l.probability / 100) : '—'}
+                        </span>
+                        <span style={{ color: overdue ? '#ef4444' : '#8b949e', fontSize: 10 }}>
+                          {l.nextActionDate ? l.nextActionDate.slice(5) : '—'}
+                        </span>
+                      </div>
+                    );
+                  })}
+                  {pipelineData.length === 0 && (
+                    <div style={{ padding: 16, textAlign: 'center', color: '#8b949e', fontSize: 12 }}>진행 중인 기회가 없습니다</div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
         </>
       )}
-
-      <div className="funnel-footer">
-        <div className="funnel-footer-stat">
-          <span className="funnel-footer-label">잠재→성사</span>
-          <span className="funnel-footer-val">{convRate}%</span>
-        </div>
-        {totalActiveValue > 0 && (
-          <div className="funnel-footer-stat">
-            <span className="funnel-footer-label">파이프라인</span>
-            <span className="funnel-footer-val">{fmtValue(totalActiveValue, displayCurrency)}</span>
-          </div>
-        )}
-        {lostCount > 0 && (
-          <div className="funnel-footer-stat lost">
-            <span className="funnel-footer-label">손실</span>
-            <span className="funnel-footer-val">{lostCount}개</span>
-          </div>
-        )}
-      </div>
     </div>
+  );
+}
+
+function FunnelShape({ stages, maxCount }: { stages: { stage: LeadStage; count: number; value: number }[]; maxCount: number }) {
+  const W = 260; const H_PER = 34; const PAD = 20;
+  const totalH = stages.length * H_PER;
+  const maxW = W - PAD * 2;
+  const minW = 14;
+
+  return (
+    <svg viewBox={`0 0 ${W} ${totalH}`} style={{ width: '100%', maxWidth: W, height: totalH, display: 'block', margin: '0 auto' }}>
+      {stages.map((d, i) => {
+        const topW = maxCount > 0 ? Math.max(minW, (d.count / maxCount) * maxW) : minW;
+        const nextCount = stages[i + 1]?.count ?? 0;
+        const botW = maxCount > 0 ? Math.max(minW, (nextCount / maxCount) * maxW) : minW;
+        const cx = W / 2;
+        const y = i * H_PER;
+        const color = LEAD_STAGE_COLOR[d.stage];
+        const pts = `${cx - topW/2},${y} ${cx + topW/2},${y} ${cx + botW/2},${y + H_PER - 2} ${cx - botW/2},${y + H_PER - 2}`;
+        const conv = i > 0 && stages[i-1].count > 0 ? Math.round(d.count / stages[i-1].count * 100) : null;
+        return (
+          <g key={d.stage}>
+            <polygon points={pts} fill={color} opacity={0.85} />
+            <text x={cx} y={y + H_PER / 2 + 4} textAnchor="middle" fontSize="9" fontWeight="700" fill="#fff">
+              {LEAD_STAGE_KO[d.stage]}  {d.count}건
+            </text>
+            {conv !== null && (
+              <text x={cx + topW/2 + 6} y={y + 10} fontSize="8" fill={conv < 50 ? '#f59e0b' : '#94a3b8'}>↓{conv}%</text>
+            )}
+          </g>
+        );
+      })}
+    </svg>
   );
 }
 
@@ -1185,6 +1451,36 @@ const COL_TYPE_ICON: Record<string, string> = {
   text: 'T', email: '@', phone: '☎', select: '▾', url: '🔗', number: '#',
 };
 
+/* ── Column resize utilities (shared across table widgets) ── */
+function useColWidths(initials: number[], mins?: number[]) {
+  const [widths, setWidths] = useState([...initials]);
+  const startResize = (idx: number) => (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const x0 = e.clientX;
+    const w0 = widths[idx];
+    const min = mins?.[idx] ?? 30;
+    const onMove = (ev: MouseEvent) => {
+      const dx = (ev.clientX - x0) / (vpBridge.scale || 1);
+      setWidths(prev => prev.map((v, i) => i === idx ? Math.max(min, Math.round(w0 + dx)) : v));
+    };
+    const onUp = () => { document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); };
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  };
+  return { widths, startResize };
+}
+
+function ColResizer({ onMouseDown }: { onMouseDown: (e: React.MouseEvent) => void }) {
+  return (
+    <span
+      className="col-resizer"
+      onMouseDown={onMouseDown}
+      onClick={(e) => e.stopPropagation()}
+    />
+  );
+}
+
 function DirectoryContent({
   data,
   onChange,
@@ -1193,11 +1489,11 @@ function DirectoryContent({
   onChange: (d: Partial<DirectoryData>) => void;
 }) {
   const [editingCell, setEditingCell] = useState<{ rowId: string; colId: string } | null>(null);
+  const [editingHeader, setEditingHeader] = useState<string | null>(null); // colId
 
   const genId = () => Math.random().toString(36).slice(2, 10);
 
-  const addRow = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const addRow = () => {
     const newRow = {
       id: genId(),
       cells: Object.fromEntries(data.columns.map((c) => [c.id, ''])),
@@ -1214,30 +1510,26 @@ function DirectoryContent({
     });
   };
 
-  const deleteRow = (rowId: string, e: React.MouseEvent) => {
-    e.stopPropagation();
+  const updateColLabel = (colId: string, label: string) => {
+    onChange({ columns: data.columns.map((c) => c.id === colId ? { ...c, label } : c) });
+  };
+
+  const deleteRow = (rowId: string) => {
     onChange({ rows: data.rows.filter((r) => r.id !== rowId) });
+    if (editingCell?.rowId === rowId) setEditingCell(null);
   };
 
   const moveEdit = (rowId: string, colId: string, dir: 'next' | 'prev') => {
     const rowIdx = data.rows.findIndex((r) => r.id === rowId);
     const colIdx = data.columns.findIndex((c) => c.id === colId);
     if (dir === 'next') {
-      if (colIdx < data.columns.length - 1) {
-        setEditingCell({ rowId, colId: data.columns[colIdx + 1].id });
-      } else if (rowIdx < data.rows.length - 1) {
-        setEditingCell({ rowId: data.rows[rowIdx + 1].id, colId: data.columns[0].id });
-      } else {
-        setEditingCell(null);
-      }
+      if (colIdx < data.columns.length - 1) setEditingCell({ rowId, colId: data.columns[colIdx + 1].id });
+      else if (rowIdx < data.rows.length - 1) setEditingCell({ rowId: data.rows[rowIdx + 1].id, colId: data.columns[0].id });
+      else addRow();
     } else {
-      if (colIdx > 0) {
-        setEditingCell({ rowId, colId: data.columns[colIdx - 1].id });
-      } else if (rowIdx > 0) {
-        setEditingCell({ rowId: data.rows[rowIdx - 1].id, colId: data.columns[data.columns.length - 1].id });
-      } else {
-        setEditingCell(null);
-      }
+      if (colIdx > 0) setEditingCell({ rowId, colId: data.columns[colIdx - 1].id });
+      else if (rowIdx > 0) setEditingCell({ rowId: data.rows[rowIdx - 1].id, colId: data.columns[data.columns.length - 1].id });
+      else setEditingCell(null);
     }
   };
 
@@ -1253,12 +1545,35 @@ function DirectoryContent({
           <thead>
             <tr>
               {data.columns.map((col) => (
-                <th key={col.id} style={{ width: col.width, minWidth: col.width }}>
-                  <span className="dir-col-type-icon">{COL_TYPE_ICON[col.type] ?? 'T'}</span>
-                  {col.label}
+                <th
+                  key={col.id}
+                  data-dir-cell="1"
+                  style={{ width: col.width, minWidth: col.width, cursor: 'text' }}
+                  onClick={(e) => { e.stopPropagation(); setEditingHeader(col.id); }}
+                  title="클릭으로 컬럼명 수정"
+                >
+                  {editingHeader === col.id ? (
+                    <input
+                      autoFocus
+                      className="dir-header-input"
+                      value={col.label}
+                      onMouseDown={(e) => e.stopPropagation()}
+                      onChange={(e) => updateColLabel(col.id, e.target.value)}
+                      onBlur={() => setEditingHeader(null)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === 'Escape') setEditingHeader(null);
+                        if (e.key === 'Tab') { e.preventDefault(); setEditingHeader(null); }
+                      }}
+                    />
+                  ) : (
+                    <>
+                      <span className="dir-col-type-icon">{COL_TYPE_ICON[col.type] ?? 'T'}</span>
+                      {col.label}
+                    </>
+                  )}
                 </th>
               ))}
-              <th className="dir-del-col" />
+              <th className="dir-del-col" data-dir-cell="1" />
             </tr>
           </thead>
           <tbody>
@@ -1268,7 +1583,11 @@ function DirectoryContent({
                   const isEditing = editingCell?.rowId === row.id && editingCell?.colId === col.id;
                   const value = row.cells[col.id] ?? '';
                   return (
-                    <td key={col.id} data-dir-cell="1">
+                    <td
+                      key={col.id}
+                      data-dir-cell="1"
+                      onClick={() => { if (!isEditing) setEditingCell({ rowId: row.id, colId: col.id }); }}
+                    >
                       {isEditing ? (
                         col.type === 'select' ? (
                           <select
@@ -1278,6 +1597,10 @@ function DirectoryContent({
                             onMouseDown={(e) => e.stopPropagation()}
                             onChange={(e) => updateCell(row.id, col.id, e.target.value)}
                             onBlur={() => setEditingCell(null)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Escape') setEditingCell(null);
+                              if (e.key === 'Tab') { e.preventDefault(); moveEdit(row.id, col.id, e.shiftKey ? 'prev' : 'next'); }
+                            }}
                           >
                             <option value="">—</option>
                             {(col.options ?? []).map((opt) => (
@@ -1288,7 +1611,7 @@ function DirectoryContent({
                           <input
                             autoFocus
                             className="dir-cell-input"
-                            type={col.type === 'number' ? 'number' : 'text'}
+                            type={col.type === 'number' ? 'number' : col.type === 'email' ? 'email' : col.type === 'url' ? 'url' : col.type === 'phone' ? 'tel' : 'text'}
                             value={value}
                             onMouseDown={(e) => e.stopPropagation()}
                             onChange={(e) => updateCell(row.id, col.id, e.target.value)}
@@ -1301,16 +1624,15 @@ function DirectoryContent({
                           />
                         )
                       ) : (
-                        <div
-                          className="dir-cell-display"
-                          onClick={() => setEditingCell({ rowId: row.id, colId: col.id })}
-                        >
+                        <div className="dir-cell-display">
                           {value ? (
                             col.type === 'select'
                               ? <span className="dir-select-badge">{value}</span>
                               : col.type === 'email'
                                 ? <span className="dir-email">{value}</span>
-                                : <span>{value}</span>
+                                : col.type === 'url'
+                                  ? <span className="dir-url" title={value}>{value}</span>
+                                  : <span>{value}</span>
                           ) : (
                             <span className="dir-cell-empty">—</span>
                           )}
@@ -1323,7 +1645,7 @@ function DirectoryContent({
                   <button
                     className="dir-row-del"
                     onMouseDown={(e) => e.stopPropagation()}
-                    onClick={(e) => deleteRow(row.id, e)}
+                    onClick={(e) => { e.stopPropagation(); deleteRow(row.id); }}
                   >×</button>
                 </td>
               </tr>
@@ -1331,12 +1653,22 @@ function DirectoryContent({
           </tbody>
         </table>
         {data.rows.length === 0 && (
-          <div className="directory-empty" data-dir-cell="1" onClick={addRow}>
+          <div
+            className="directory-empty"
+            data-dir-cell="1"
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={addRow}
+          >
             클릭하여 첫 번째 항목 추가
           </div>
         )}
       </div>
-      <div className="directory-add-row" data-dir-cell="1" onMouseDown={(e) => e.stopPropagation()} onClick={addRow}>
+      <div
+        className="directory-add-row"
+        data-dir-cell="1"
+        onMouseDown={(e) => e.stopPropagation()}
+        onClick={addRow}
+      >
         + 행 추가
       </div>
     </div>
@@ -1406,10 +1738,10 @@ function fmtFinAmt(n: number, currency = 'KRW'): string {
 }
 
 const INV_STATUS_CFG: Record<InvoiceStatus, { label: string; color: string }> = {
-  paid:      { label: '수금', color: '#22c55e' },
+  paid:      { label: '수금',  color: '#22c55e' },
   pending:   { label: '미수금', color: '#f59e0b' },
-  overdue:   { label: '연체', color: '#ef4444' },
-  cancelled: { label: '취소', color: '#64748b' },
+  cancelled: { label: '취소',  color: '#64748b' },
+  requested: { label: '요청',  color: '#6366f1' },
 };
 
 function InvStatusBadge({ status }: { status: InvoiceStatus }) {
@@ -1457,38 +1789,196 @@ function HBarChart({ data, fmt }: { data: { label: string; value: number; color?
   );
 }
 
-function MonthlyBars({ data, fmt }: { data: { month: string; paid: number; pending: number }[]; fmt: (n: number) => string }) {
-  const max = Math.max(...data.map(d => d.paid + d.pending), 1);
-  const bw = Math.min(36, Math.max(18, 240 / (data.length || 1)));
-  const gap = 6;
-  const W = data.length * (bw + gap) + 16;
+function MonthlyBars({ data, fmt }: { data: { month: string; paid: number; pending: number; requested: number }[]; fmt: (n: number) => string }) {
+  const BAR_H = 60;
+  const LABEL_H = 14;
+  const LINE_H = 50;
+  const SVG_H = BAR_H + LABEL_H + LINE_H + 16;
+  const max = Math.max(...data.map(d => d.paid + d.pending + d.requested), 1);
+  const lineMax = Math.max(...data.map(d => d.paid + d.pending + d.requested), 1);
+  const bw = Math.min(32, Math.max(16, 200 / (data.length || 1)));
+  const gap = 8;
+  const padL = 8;
+  const W = data.length * (bw + gap) + padL * 2;
+
+  // Bar center x positions
+  const cx = (i: number) => padL + i * (bw + gap) + bw / 2;
+
+  // Line chart y for total (paid+pending+requested)
+  const lineY = (d: typeof data[0]) => {
+    const total = d.paid + d.pending + d.requested;
+    return BAR_H + LABEL_H + 8 + (1 - total / lineMax) * (LINE_H - 12);
+  };
+
+  const linePoints = data.map((d, i) => `${cx(i)},${lineY(d)}`).join(' ');
+
   return (
     <div style={{ overflowX: 'auto' }}>
-      <svg viewBox={`0 0 ${W} 90`} style={{ width: Math.min(W, 500), height: 90, display: 'block' }}>
+      <svg viewBox={`0 0 ${W} ${SVG_H}`} style={{ width: Math.min(W, 480), height: SVG_H, display: 'block' }}>
+        {/* Stacked bars */}
         {data.map((d, i) => {
-          const pH = (d.paid / max) * 64;
-          const peH = (d.pending / max) * 64;
-          const x = i * (bw + gap) + 8;
+          const x = padL + i * (bw + gap);
+          const rH  = (d.requested / max) * BAR_H;
+          const peH = (d.pending   / max) * BAR_H;
+          const pH  = (d.paid      / max) * BAR_H;
+          const base = BAR_H;
           return (
             <g key={i}>
-              <rect x={x} y={70 - pH - peH} width={bw} height={peH} fill="#f59e0b" rx={1} />
-              <rect x={x} y={70 - pH} width={bw} height={pH} fill="#22c55e" rx={1} />
-              <text x={x + bw / 2} y={82} textAnchor="middle" fontSize="7" fill="#8b949e">{d.month.slice(5)}</text>
+              <rect x={x} y={base - pH - peH - rH} width={bw} height={rH}  fill="#6366f1" rx={1} />
+              <rect x={x} y={base - pH - peH}       width={bw} height={peH} fill="#f59e0b" rx={1} />
+              <rect x={x} y={base - pH}             width={bw} height={pH}  fill="#22c55e" rx={1} />
+              <text x={cx(i)} y={BAR_H + LABEL_H} textAnchor="middle" fontSize="7" fill="#8b949e">
+                {d.month.slice(5)}
+              </text>
             </g>
           );
         })}
+
+        {/* Divider */}
+        <line x1={0} y1={BAR_H + LABEL_H + 6} x2={W} y2={BAR_H + LABEL_H + 6} stroke="var(--border,#334155)" strokeWidth="0.5" />
+
+        {/* Line chart — cumulative total */}
+        {data.length > 1 && (
+          <polyline
+            points={linePoints}
+            fill="none"
+            stroke="#94a3b8"
+            strokeWidth="1.5"
+            strokeLinejoin="round"
+          />
+        )}
+        {data.map((d, i) => (
+          <circle key={i} cx={cx(i)} cy={lineY(d)} r="2.5" fill="#6366f1" />
+        ))}
+
+        {/* Line label */}
+        <text x={4} y={BAR_H + LABEL_H + 16} fontSize="6.5" fill="#8b949e">누적</text>
       </svg>
     </div>
   );
 }
 
 type FinTab = 'overview' | 'client' | 'monthly' | 'list';
+type SortKey = 'client' | 'date' | 'amount' | 'status';
+
+const STATUS_ORDER: Record<InvoiceStatus, number> = { requested: 0, pending: 1, paid: 2, cancelled: 3 };
+
+function ListTab({ invoices, fmt }: { invoices: InvoiceEntry[]; fmt: (n: number) => string }) {
+  const [sortKey, setSortKey] = useState<SortKey>('date');
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
+
+  const handleSort = (key: SortKey) => {
+    if (sortKey === key) setSortDir(d => d === 'asc' ? 'desc' : 'asc');
+    else { setSortKey(key); setSortDir(key === 'date' || key === 'amount' ? 'desc' : 'asc'); }
+  };
+
+  const sorted = useMemo(() => {
+    return [...invoices].sort((a, b) => {
+      let v = 0;
+      if (sortKey === 'client')  v = a.client.localeCompare(b.client);
+      if (sortKey === 'date')    v = (a.date || '').localeCompare(b.date || '');
+      if (sortKey === 'amount')  v = a.amount - b.amount;
+      if (sortKey === 'status')  v = (STATUS_ORDER[a.status] ?? 9) - (STATUS_ORDER[b.status] ?? 9);
+      return sortDir === 'asc' ? v : -v;
+    });
+  }, [invoices, sortKey, sortDir]);
+
+  const arrow = (key: SortKey) => sortKey === key ? (sortDir === 'asc' ? ' ↑' : ' ↓') : '';
+
+  return (
+    <div className="finance-list-tab">
+      <div className="finance-list-thead">
+        {(['client', 'date', 'amount', 'status'] as SortKey[]).map((key) => {
+          const labels: Record<SortKey, string> = { client: '고객사', date: '날짜', amount: '금액', status: '상태' };
+          return (
+            <span
+              key={key}
+              className="finance-list-sort-btn"
+              onClick={(e) => { e.stopPropagation(); handleSort(key); }}
+            >
+              {labels[key]}{arrow(key)}
+            </span>
+          );
+        })}
+      </div>
+      {sorted.map(inv => (
+        <div key={inv.id} className="finance-list-row">
+          <span className="finance-list-client" title={inv.client}>{inv.client}</span>
+          <span className="finance-list-date">{inv.date || '-'}</span>
+          <span className="finance-list-amt">{fmt(inv.amount)}</span>
+          <InvStatusBadge status={inv.status} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function fmtDual(n: number, currency: string, exchangeRate: number): [string, string | null] {
+  const primary = fmtFinAmt(n, currency);
+  if (!exchangeRate) return [primary, null];
+  if (currency === 'USD') {
+    const krw = n * exchangeRate;
+    const sec = krw >= 100_000_000
+      ? `₩${(krw / 100_000_000).toFixed(1)}억`
+      : krw >= 10_000
+        ? `₩${Math.round(krw / 10_000).toLocaleString()}만`
+        : `₩${Math.round(krw).toLocaleString()}`;
+    return [primary, sec];
+  }
+  if (currency === 'KRW') {
+    const usd = n / exchangeRate;
+    return [primary, `$${usd.toFixed(0)}`];
+  }
+  return [primary, null];
+}
+
+function KpiCard({ label, primary, secondary, className }: { label: string; primary: string; secondary?: string | null; className?: string }) {
+  return (
+    <div className={`finance-kpi${className ? ' ' + className : ''}`}>
+      <div className="finance-kpi-label">{label}</div>
+      <div className="finance-kpi-val">{primary}</div>
+      {secondary && <div className="finance-kpi-sub">{secondary}</div>}
+    </div>
+  );
+}
 
 function FinanceContent({ data }: { data: FinanceData }) {
   const [tab, setTab] = useState<FinTab>('overview');
   const { invoices } = data;
+  const exchangeRate = data.exchangeRate ?? 1450;
+
+  // All hooks must be called before any early return (Rules of Hooks)
+  const byClient = useMemo(() => {
+    if (!invoices.length) return [];
+    const map: Record<string, { paid: number; pending: number; requested: number; total: number; count: number }> = {};
+    invoices.forEach(inv => {
+      if (!map[inv.client]) map[inv.client] = { paid: 0, pending: 0, requested: 0, total: 0, count: 0 };
+      if (inv.status !== 'cancelled') {
+        (map[inv.client] as Record<string, number>)[inv.status] += inv.amount;
+        map[inv.client].total += inv.amount;
+      }
+      map[inv.client].count++;
+    });
+    return Object.entries(map).sort((a, b) => b[1].total - a[1].total);
+  }, [invoices]);
+
+  const byMonth = useMemo(() => {
+    if (!invoices.length) return [];
+    const map: Record<string, { paid: number; pending: number; requested: number }> = {};
+    invoices.filter(i => i.status !== 'cancelled').forEach(inv => {
+      const m = inv.date.slice(0, 7);
+      if (!m || m.length < 7) return;
+      if (!map[m]) map[m] = { paid: 0, pending: 0, requested: 0 };
+      if (inv.status === 'paid') map[m].paid += inv.amount;
+      else if (inv.status === 'requested') map[m].requested += inv.amount;
+      else map[m].pending += inv.amount;
+    });
+    return Object.entries(map).sort().map(([month, v]) => ({ month, ...v }));
+  }, [invoices]);
+
   const currency = invoices[0]?.currency || 'KRW';
   const fmt = (n: number) => fmtFinAmt(n, currency);
+  const fmtD = (n: number) => fmtDual(n, currency, exchangeRate);
 
   if (!invoices.length) {
     return (
@@ -1500,63 +1990,26 @@ function FinanceContent({ data }: { data: FinanceData }) {
     );
   }
 
-  const paid    = invoices.filter(i => i.status === 'paid').reduce((s, i) => s + i.amount, 0);
-  const pending = invoices.filter(i => i.status === 'pending').reduce((s, i) => s + i.amount, 0);
-  const overdue = invoices.filter(i => i.status === 'overdue').reduce((s, i) => s + i.amount, 0);
-  const total   = paid + pending + overdue;
+  const paid      = invoices.filter(i => i.status === 'paid').reduce((s, i) => s + i.amount, 0);
+  const pending   = invoices.filter(i => i.status === 'pending').reduce((s, i) => s + i.amount, 0);
+  const requested = invoices.filter(i => i.status === 'requested').reduce((s, i) => s + i.amount, 0);
+  const total     = paid + pending + requested;
   const collectRate = total > 0 ? Math.round((paid / total) * 100) : 0;
 
-  const byClient = useMemo(() => {
-    const map: Record<string, { paid: number; pending: number; overdue: number; total: number; count: number }> = {};
-    invoices.forEach(inv => {
-      if (!map[inv.client]) map[inv.client] = { paid: 0, pending: 0, overdue: 0, total: 0, count: 0 };
-      if (inv.status !== 'cancelled') {
-        (map[inv.client] as Record<string, number>)[inv.status] += inv.amount;
-        map[inv.client].total += inv.amount;
-      }
-      map[inv.client].count++;
-    });
-    return Object.entries(map).sort((a, b) => b[1].total - a[1].total);
-  }, [invoices]);
-
-  const byMonth = useMemo(() => {
-    const map: Record<string, { paid: number; pending: number }> = {};
-    invoices.filter(i => i.status !== 'cancelled').forEach(inv => {
-      const m = inv.date.slice(0, 7);
-      if (!m || m.length < 7) return;
-      if (!map[m]) map[m] = { paid: 0, pending: 0 };
-      if (inv.status === 'paid') map[m].paid += inv.amount;
-      else map[m].pending += inv.amount;
-    });
-    return Object.entries(map).sort().map(([month, v]) => ({ month, ...v }));
-  }, [invoices]);
-
   const donutData = [
-    { label: '수금', value: paid, color: '#22c55e' },
-    { label: '미수금', value: pending, color: '#f59e0b' },
-    { label: '연체', value: overdue, color: '#ef4444' },
+    { label: '수금',  value: paid,      color: '#22c55e' },
+    { label: '미수금', value: pending,   color: '#f59e0b' },
+    { label: '요청',  value: requested, color: '#6366f1' },
   ];
 
   return (
     <div className="finance-card">
       {/* KPI */}
       <div className="finance-kpi-row">
-        <div className="finance-kpi">
-          <div className="finance-kpi-label">총 청구</div>
-          <div className="finance-kpi-val">{fmt(total)}</div>
-        </div>
-        <div className="finance-kpi finance-kpi-paid">
-          <div className="finance-kpi-label">수금</div>
-          <div className="finance-kpi-val">{fmt(paid)}</div>
-        </div>
-        <div className="finance-kpi finance-kpi-pending">
-          <div className="finance-kpi-label">미수금</div>
-          <div className="finance-kpi-val">{fmt(pending)}</div>
-        </div>
-        <div className="finance-kpi finance-kpi-overdue">
-          <div className="finance-kpi-label">연체</div>
-          <div className="finance-kpi-val">{fmt(overdue)}</div>
-        </div>
+        <KpiCard label="총 청구" primary={fmtD(total)[0]}     secondary={fmtD(total)[1]} />
+        <KpiCard label="수금"    primary={fmtD(paid)[0]}      secondary={fmtD(paid)[1]}    className="finance-kpi-paid" />
+        <KpiCard label="미수금"  primary={fmtD(pending)[0]}   secondary={fmtD(pending)[1]} className="finance-kpi-pending" />
+        <KpiCard label="요청"    primary={fmtD(requested)[0]} secondary={fmtD(requested)[1]} className="finance-kpi-requested" />
       </div>
 
       {/* Tabs */}
@@ -1581,13 +2034,18 @@ function FinanceContent({ data }: { data: FinanceData }) {
           <div className="finance-overview">
             <DonutChart data={donutData} />
             <div className="finance-overview-right">
-              {donutData.filter(d => d.value > 0).map(d => (
-                <div key={d.label} className="finance-legend-row">
-                  <span className="finance-legend-dot" style={{ background: d.color }} />
-                  <span className="finance-legend-label">{d.label}</span>
-                  <span className="finance-legend-amt">{fmt(d.value)}</span>
-                </div>
-              ))}
+              {donutData.filter(d => d.value > 0).map(d => {
+                const [p, s] = fmtD(d.value);
+                return (
+                  <div key={d.label} className="finance-legend-row">
+                    <span className="finance-legend-dot" style={{ background: d.color }} />
+                    <span className="finance-legend-label">{d.label}</span>
+                    <span className="finance-legend-amt">
+                      {p}{s && <span className="finance-legend-sub">{s}</span>}
+                    </span>
+                  </div>
+                );
+              })}
               <div className="finance-legend-divider" />
               <div className="finance-legend-row" style={{ fontSize: 11, color: '#8b949e' }}>
                 <span>총 인보이스</span>
@@ -1610,13 +2068,14 @@ function FinanceContent({ data }: { data: FinanceData }) {
             />
             <div className="finance-client-table">
               <div className="finance-client-thead">
-                <span>고객사</span><span>수금</span><span>미수금</span><span>건수</span>
+                <span>고객사</span><span>수금</span><span>미수금</span><span>요청</span><span>건</span>
               </div>
               {byClient.map(([name, v]) => (
                 <div key={name} className="finance-client-row">
                   <span className="finance-client-name" title={name}>{name}</span>
                   <span style={{ color: '#22c55e' }}>{v.paid ? fmt(v.paid) : '-'}</span>
-                  <span style={{ color: '#f59e0b' }}>{v.pending + v.overdue ? fmt(v.pending + v.overdue) : '-'}</span>
+                  <span style={{ color: '#f59e0b' }}>{v.pending ? fmt(v.pending) : '-'}</span>
+                  <span style={{ color: '#6366f1' }}>{v.requested ? fmt(v.requested) : '-'}</span>
                   <span style={{ color: '#8b949e' }}>{v.count}</span>
                 </div>
               ))}
@@ -1633,13 +2092,21 @@ function FinanceContent({ data }: { data: FinanceData }) {
                 <div className="finance-monthly-legend">
                   <span><span className="finance-legend-dot" style={{ background: '#22c55e' }} />수금</span>
                   <span><span className="finance-legend-dot" style={{ background: '#f59e0b' }} />미수금</span>
+                  <span><span className="finance-legend-dot" style={{ background: '#6366f1' }} />요청</span>
                 </div>
                 <div className="finance-monthly-table">
+                  <div className="finance-monthly-row finance-monthly-thead">
+                    <span>월</span>
+                    <span style={{ color: '#22c55e' }}>수금</span>
+                    <span style={{ color: '#f59e0b' }}>미수금</span>
+                    <span style={{ color: '#6366f1' }}>요청</span>
+                  </div>
                   {byMonth.map(d => (
                     <div key={d.month} className="finance-monthly-row">
                       <span className="finance-monthly-label">{d.month}</span>
                       <span style={{ color: '#22c55e' }}>{d.paid ? fmt(d.paid) : '-'}</span>
                       <span style={{ color: '#f59e0b' }}>{d.pending ? fmt(d.pending) : '-'}</span>
+                      <span style={{ color: '#6366f1' }}>{d.requested ? fmt(d.requested) : '-'}</span>
                     </div>
                   ))}
                 </div>
@@ -1650,21 +2117,143 @@ function FinanceContent({ data }: { data: FinanceData }) {
 
         {/* 목록 */}
         {tab === 'list' && (
-          <div className="finance-list-tab">
-            <div className="finance-list-thead">
-              <span>고객사</span><span>날짜</span><span>금액</span><span>상태</span>
-            </div>
-            {invoices.map(inv => (
-              <div key={inv.id} className="finance-list-row">
-                <span className="finance-list-client" title={inv.client}>{inv.client}</span>
-                <span className="finance-list-date">{inv.date || '-'}</span>
-                <span className="finance-list-amt">{fmt(inv.amount)}</span>
-                <InvStatusBadge status={inv.status} />
-              </div>
-            ))}
-          </div>
+          <ListTab invoices={invoices} fmt={fmt} />
         )}
       </div>
+    </div>
+  );
+}
+
+/* ── Calendar Widget ── */
+const CAL_COLORS = ['#6366f1', '#22c55e', '#f59e0b', '#ef4444', '#06b6d4', '#ec4899', '#8b5cf6', '#f97316'];
+
+function CalendarContent({ data, onChange }: { data: CalendarData; onChange: (d: Partial<CalendarData>) => void }) {
+  const today = new Date();
+  const [year, setYear]   = useState(today.getFullYear());
+  const [month, setMonth] = useState(today.getMonth()); // 0-indexed
+
+  const firstDay = new Date(year, month, 1).getDay(); // 0=Sun
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
+  const eventsByDate = useMemo(() => {
+    const map: Record<string, CalendarEvent[]> = {};
+    (data.events ?? []).forEach((ev) => {
+      if (!map[ev.date]) map[ev.date] = [];
+      map[ev.date].push(ev);
+    });
+    return map;
+  }, [data.events]);
+
+  const prevMonth = () => { if (month === 0) { setMonth(11); setYear(y => y - 1); } else setMonth(m => m - 1); };
+  const nextMonth = () => { if (month === 11) { setMonth(0); setYear(y => y + 1); } else setMonth(m => m + 1); };
+
+  const dayLabel = ['일', '월', '화', '수', '목', '금', '토'];
+  const cells: (number | null)[] = [...Array(firstDay).fill(null), ...Array.from({ length: daysInMonth }, (_, i) => i + 1)];
+  while (cells.length % 7 !== 0) cells.push(null);
+
+  return (
+    <div className="cal-widget">
+      <div className="cal-header">
+        <button className="cal-nav" onClick={prevMonth}>‹</button>
+        <span className="cal-title">{year}년 {month + 1}월</span>
+        <button className="cal-nav" onClick={nextMonth}>›</button>
+      </div>
+      <div className="cal-grid">
+        {dayLabel.map((d, i) => (
+          <div key={d} className={`cal-dayname${i === 0 ? ' sun' : i === 6 ? ' sat' : ''}`}>{d}</div>
+        ))}
+        {cells.map((day, idx) => {
+          if (!day) return <div key={`empty-${idx}`} className="cal-cell empty" />;
+          const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+          const evs = eventsByDate[dateStr] ?? [];
+          const isToday = dateStr === todayStr;
+          const dow = (firstDay + day - 1) % 7;
+          return (
+            <div
+              key={day}
+              className={`cal-cell${isToday ? ' today' : ''}${dow === 0 ? ' sun' : dow === 6 ? ' sat' : ''}`}
+            >
+              <span className="cal-day-num">{day}</span>
+              <div className="cal-dots">
+                {evs.slice(0, 3).map((ev) => (
+                  <span key={ev.id} className="cal-dot" style={{ background: ev.color }} title={ev.title} />
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ── Embed Widget ── */
+
+// Convert common URLs to embeddable versions
+function toEmbedUrl(raw: string): string {
+  try {
+    const url = new URL(raw.trim());
+    const h = url.hostname;
+
+    // YouTube
+    if (h.includes('youtube.com') || h.includes('youtu.be')) {
+      let vid = url.searchParams.get('v');
+      if (!vid) vid = url.pathname.split('/').pop() ?? '';
+      if (vid) return `https://www.youtube.com/embed/${vid}?autoplay=0`;
+    }
+
+    // Figma
+    if (h.includes('figma.com')) {
+      return `https://www.figma.com/embed?embed_host=chaospm&url=${encodeURIComponent(raw)}`;
+    }
+
+    // Google Docs / Sheets / Slides
+    if (h.includes('docs.google.com')) {
+      return raw.replace(/\/(edit|view|pub)(\?.*)?$/, '/preview');
+    }
+
+    return raw;
+  } catch {
+    return raw;
+  }
+}
+
+function EmbedContent({ data }: { data: EmbedData }) {
+  const embedUrl = data.url ? toEmbedUrl(data.url) : '';
+
+  if (!data.url) {
+    return (
+      <div className="embed-empty">
+        <div style={{ fontSize: 28 }}>🔲</div>
+        <div style={{ fontWeight: 600, marginTop: 8 }}>임베드</div>
+        <div style={{ fontSize: 12, color: '#8b949e', marginTop: 4 }}>
+          인스펙터에서 URL을 입력하세요
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="embed-frame">
+      <iframe
+        src={embedUrl}
+        title={data.title || '임베드'}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+        sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+        style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
+      />
+      <a
+        className="embed-open-btn"
+        href={data.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        title="새 탭에서 열기"
+        onMouseDown={(e) => e.stopPropagation()}
+      >
+        ↗
+      </a>
     </div>
   );
 }

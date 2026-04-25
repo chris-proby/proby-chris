@@ -15,14 +15,19 @@ import { useTheme } from './hooks/useTheme';
 import { useStore } from './store';
 import { getCurrentSession, logout } from './auth';
 import { RoomProvider, LiveObject, getUserColor, LIVEBLOCKS_KEY } from './liveblocks';
+import { analyticsIdentify, analyticsReset, track } from './analytics';
 
 export default function App() {
   const [session] = useState(() => getCurrentSession());
 
   const handleAuth = () => { window.location.reload(); };
-  const handleLogout = () => { logout(); window.location.reload(); };
+  const handleLogout = () => { track('Toolbar_Logout_Click'); analyticsReset(); logout(); window.location.reload(); };
 
   if (!session) return <AuthScreen onAuth={handleAuth} />;
+
+  // Identify user on every session load
+  analyticsIdentify(session.email, { name: session.name });
+  track('App_Session_Start', { collab_enabled: !!LIVEBLOCKS_KEY });
 
   // When Liveblocks key is configured, the owner is ALWAYS connected to their own room
   // so guests can join at any time and get the latest canvas state.
@@ -35,7 +40,7 @@ export default function App() {
     const initState = useStore.getState();
     return (
       <RoomProvider
-        id={`messynotion-${targetRoomId}`}
+        id={`chaospm-${targetRoomId}`}
         initialPresence={{ cursor: null, name: session.name, color: getUserColor(session.userId) }}
         initialStorage={{
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -71,6 +76,7 @@ function AppInner({ session, onLogout, collabMode, roomOwnerId }: {
   const clearSelection = useStore((s) => s.clearSelection);
   const groupSelected = useStore((s) => s.groupSelected);
   const multiSelectedIds = useStore((s) => s.multiSelectedIds);
+  const undo = useStore((s) => s.undo);
   const [showHistory, setShowHistory] = useState(false);
   const [showInvite, setShowInvite] = useState(false);
 
@@ -80,18 +86,23 @@ function AppInner({ session, onLogout, collabMode, roomOwnerId }: {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      const tag = (e.target as HTMLElement).tagName;
-      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+      const target = e.target as HTMLElement;
+      const tag = target.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || target.isContentEditable) return;
       if (e.key === 'Delete' || e.key === 'Backspace') deleteSelected();
       if (e.key === 'Escape') { clearSelection(); setShowHistory(false); setShowInvite(false); }
       if ((e.metaKey || e.ctrlKey) && e.key === 'g') {
         e.preventDefault();
         if (multiSelectedIds.length >= 2) groupSelected();
       }
+      if ((e.metaKey || e.ctrlKey) && e.key === 'z' && !e.shiftKey) {
+        e.preventDefault();
+        undo();
+      }
     };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
-  }, [deleteSelected, clearSelection, groupSelected, multiSelectedIds]);
+  }, [deleteSelected, clearSelection, groupSelected, multiSelectedIds, undo]);
 
   const hasSelection = selectedWidgetId || selectedConnectionId;
   const showRight = showHistory || showInvite || (!showHistory && !showInvite && hasSelection);

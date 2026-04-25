@@ -3,9 +3,10 @@ import { persist, type PersistStorage, type StorageValue } from 'zustand/middlew
 import { v4 as uuid } from 'uuid';
 import { deleteFiles, idbStorage } from './fileStorage';
 import { getCurrentSession } from './auth';
+import { track } from './analytics';
 import type {
   Widget, Connection, Viewport, PendingConnection, PendingGroupChange, Snapshot,
-  WidgetType, ConnectionType, TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, LeadData, FunnelData, TextboxData, HtmlData, FileUploadData, DirectoryData, WorklogData, FinanceData,
+  WidgetType, ConnectionType, TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, LeadData, FunnelData, TextboxData, HtmlData, FileUploadData, DirectoryData, WorklogData, FinanceData, CalendarData, EmbedData,
 } from './types';
 
 function stripFileData(widgets: Widget[]): Widget[] {
@@ -33,7 +34,9 @@ function defaultData(type: WidgetType): TaskData | NoteData | LinkData | ImageDa
     case 'html': return { html: '', name: '' };
     case 'fileupload': return { title: '파일 보관함', files: [] };
     case 'worklog': return { title: '작업로그', entries: [] };
-    case 'finance': return { title: '재무 현황', invoices: [] } as FinanceData;
+    case 'finance': return { title: '재무 현황', invoices: [], exchangeRate: 1450 } as FinanceData;
+    case 'calendar': return { title: '캘린더', events: [] } as CalendarData;
+    case 'embed': return { url: '', title: '임베드' } as EmbedData;
     case 'directory': return {
       title: '인원 디렉토리',
       columns: [
@@ -59,13 +62,15 @@ function defaultSize(type: WidgetType): { width: number; height: number } {
     case 'group': return { width: 400, height: 300 };
     case 'goal':  return { width: 300, height: 190 };
     case 'lead':   return { width: 320, height: 210 };
-    case 'funnel': return { width: 340, height: 320 };
+    case 'funnel': return { width: 640, height: 560 };
     case 'textbox': return { width: 280, height: 80 };
     case 'html': return { width: 360, height: 280 };
     case 'fileupload': return { width: 280, height: 200 };
     case 'worklog':   return { width: 280, height: 130 };
     case 'directory': return { width: 520, height: 260 };
     case 'finance':   return { width: 580, height: 480 };
+    case 'calendar':  return { width: 380, height: 360 };
+    case 'embed':     return { width: 480, height: 320 };
   }
 }
 
@@ -114,6 +119,11 @@ interface Store {
   restoreSnapshot: (id: string) => void;
   deleteSnapshot: (id: string) => void;
   clearSnapshots: () => void;
+
+  undoStack: { widgets: Widget[]; connections: Connection[] }[];
+  pushUndo: () => void;
+  undo: () => void;
+
   exportCanvas: () => void;
   importCanvas: (file: File) => Promise<void>;
 }
@@ -126,9 +136,9 @@ const _roomParam = typeof window !== 'undefined'
 const _isOwnerRoom = _roomParam === _session?.userId;
 const STORE_NAME = _session
   ? ((_roomParam && !_isOwnerRoom)
-    ? `messynotion-v1-collab-${_session.userId}`
-    : `messynotion-v1-${_session.userId}`)
-  : 'messynotion-v1';
+    ? `chaospm-v1-collab-${_session.userId}`
+    : `chaospm-v1-${_session.userId}`)
+  : 'chaospm-v1';
 
 /**
  * PersistStorage that holds the latest state object in memory and defers
@@ -193,6 +203,7 @@ export const useStore = create<Store>()(
       dropTargetGroupId: null,
       maxZIndex: 0,
       snapshots: [],
+      undoStack: [],
 
       setViewport: (v) => set({ viewport: v }),
 
@@ -208,6 +219,7 @@ export const useStore = create<Store>()(
           zIndex: newZ,
         };
         set((s) => ({ widgets: [...s.widgets, widget], maxZIndex: newZ }));
+        track(`Store_Widget_Add_${type}`, { x: Math.round(x), y: Math.round(y), total_widgets: get().widgets.length });
         return id;
       },
 
@@ -229,6 +241,7 @@ export const useStore = create<Store>()(
       deleteWidget: (id) => {
         const { widgets } = get();
         const w = widgets.find((x) => x.id === id);
+        if (w) track(`Store_Widget_Delete_${w.type}`, { total_widgets: widgets.length - 1 });
         if (w?.type === 'fileupload') {
           const fileIds = (w.data as FileUploadData).files.map((f) => f.id);
           if (fileIds.length) deleteFiles(fileIds);
@@ -289,6 +302,7 @@ export const useStore = create<Store>()(
       addConnection: (fromId, toId, type = 'relates-to') => {
         if (fromId === toId) return;
         if (get().connections.some((c) => c.fromId === fromId && c.toId === toId)) return;
+        track('Store_Connection_Add', { connection_type: type });
         set((s) => ({
           connections: [...s.connections, {
             id: uuid(), fromId, toId, label: '', type,
@@ -300,13 +314,19 @@ export const useStore = create<Store>()(
         connections: s.connections.map((c) => c.id === id ? { ...c, ...changes } : c),
       })),
 
-      deleteConnection: (id) => set((s) => ({
-        connections: s.connections.filter((c) => c.id !== id),
-        selectedConnectionId: s.selectedConnectionId === id ? null : s.selectedConnectionId,
-      })),
+      deleteConnection: (id) => {
+        const conn = get().connections.find((c) => c.id === id);
+        track('Store_Connection_Delete', { connection_type: conn?.type });
+        set((s) => ({
+          connections: s.connections.filter((c) => c.id !== id),
+          selectedConnectionId: s.selectedConnectionId === id ? null : s.selectedConnectionId,
+        }));
+      },
 
       deleteSelected: () => {
         const { selectedWidgetId, selectedConnectionId, multiSelectedIds } = get();
+        if (!selectedWidgetId && !selectedConnectionId && multiSelectedIds.length === 0) return;
+        get().pushUndo();
         if (multiSelectedIds.length > 1) {
           multiSelectedIds.forEach((id) => get().deleteWidget(id));
         } else if (selectedWidgetId) {
@@ -369,6 +389,7 @@ export const useStore = create<Store>()(
         const { multiSelectedIds, widgets } = get();
         const selected = widgets.filter((w) => multiSelectedIds.includes(w.id));
         if (selected.length < 2) return;
+        track('Store_Group_Create', { widget_count: selected.length, widget_types: selected.map((w) => w.type) });
 
         const PAD = 28;
         const TITLE_H = 44;
@@ -410,6 +431,8 @@ export const useStore = create<Store>()(
       },
 
       ungroupWidget: (groupId) => {
+        const children = get().widgets.filter((w) => w.groupId === groupId);
+        track('Store_Group_Dissolve', { child_count: children.length });
         set((s) => ({
           widgets: s.widgets
             .filter((w) => w.id !== groupId)
@@ -479,6 +502,7 @@ export const useStore = create<Store>()(
 
       saveSnapshot: (label) => {
         const { widgets, connections, snapshots } = get();
+        track('Store_Snapshot_Save', { label, widget_count: widgets.length, snapshot_count: snapshots.length + 1 });
         const snapshot: Snapshot = {
           id: uuid(),
           timestamp: Date.now(),
@@ -495,6 +519,7 @@ export const useStore = create<Store>()(
         const { snapshots } = get();
         const snap = snapshots.find((s) => s.id === id);
         if (!snap) return;
+        track('Store_Snapshot_Restore', { label: snap.label, widget_count: snap.widgets.length });
         set({
           widgets: JSON.parse(JSON.stringify(snap.widgets)),
           connections: JSON.parse(JSON.stringify(snap.connections)),
@@ -510,13 +535,37 @@ export const useStore = create<Store>()(
 
       clearSnapshots: () => set({ snapshots: [] }),
 
+      pushUndo: () => {
+        const { widgets, connections, undoStack } = get();
+        const entry = {
+          widgets: JSON.parse(JSON.stringify(stripFileData(widgets))),
+          connections: JSON.parse(JSON.stringify(connections)),
+        };
+        set({ undoStack: [entry, ...undoStack].slice(0, 50) });
+      },
+
+      undo: () => {
+        const { undoStack } = get();
+        if (!undoStack.length) return;
+        const [entry, ...rest] = undoStack;
+        set({
+          widgets: JSON.parse(JSON.stringify(entry.widgets)),
+          connections: JSON.parse(JSON.stringify(entry.connections)),
+          undoStack: rest,
+          selectedWidgetId: null,
+          selectedConnectionId: null,
+          multiSelectedIds: [],
+        });
+      },
+
       exportCanvas: () => {
         const { widgets, connections } = get();
+        track('Store_Canvas_Export', { widget_count: widgets.length, connection_count: connections.length });
         const data = JSON.stringify({ widgets, connections, exportedAt: Date.now(), version: 1 }, null, 2);
         const blob = new Blob([data], { type: 'application/json' });
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = `messynotion-backup-${new Date().toISOString().slice(0, 10)}.json`;
+        a.download = `chaospm-backup-${new Date().toISOString().slice(0, 10)}.json`;
         a.click();
         URL.revokeObjectURL(a.href);
       },
@@ -525,8 +574,9 @@ export const useStore = create<Store>()(
         const text = await file.text();
         const data = JSON.parse(text);
         if (!Array.isArray(data.widgets) || !Array.isArray(data.connections)) {
-          throw new Error('올바른 messynotion 백업 파일이 아닙니다');
+          throw new Error('올바른 chaosPM 백업 파일이 아닙니다');
         }
+        track('Store_Canvas_Import', { widget_count: data.widgets.length, connection_count: data.connections.length });
         set({
           widgets: data.widgets,
           connections: data.connections,

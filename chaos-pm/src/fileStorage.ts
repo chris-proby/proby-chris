@@ -1,5 +1,5 @@
-/* ── Binary file storage (IndexedDB: messynotion-files) ── */
-const FILES_DB = 'messynotion-files';
+/* ── Binary file storage (IndexedDB: chaospm-files) ── */
+const FILES_DB = 'chaospm-files';
 const FILES_STORE = 'files';
 
 function openFilesDb(): Promise<IDBDatabase> {
@@ -41,8 +41,8 @@ export async function deleteFiles(ids: string[]): Promise<void> {
   });
 }
 
-/* ── Zustand state storage (IndexedDB: messynotion-state) ── */
-const STATE_DB = 'messynotion-state';
+/* ── Zustand state storage (IndexedDB: chaospm-state) ── */
+const STATE_DB = 'chaospm-state';
 const STATE_STORE = 'state';
 
 function openStateDb(): Promise<IDBDatabase> {
