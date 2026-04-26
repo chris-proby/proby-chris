@@ -18,6 +18,7 @@ import { RoomProvider, LiveObject, getUserColor, LIVEBLOCKS_KEY } from './livebl
 import { analyticsIdentify, analyticsReset, track } from './analytics';
 import { SUPABASE_CONFIGURED } from './supabase';
 import { roomBridge } from './viewportBridge';
+import { setSentryUser } from './sentry';
 
 export default function App() {
   const [session, setSession] = useState<AuthSession | null>(null);
@@ -33,9 +34,14 @@ export default function App() {
     hydrateSession().then((s) => {
       if (!mounted) return;
       setSession(s);
+      setSentryUser(s ? { id: s.userId, email: s.email } : null);
       setAuthReady(true);
     });
-    const unsub = onAuthChange((s) => { if (mounted) setSession(s); });
+    const unsub = onAuthChange((s) => {
+      if (!mounted) return;
+      setSession(s);
+      setSentryUser(s ? { id: s.userId, email: s.email } : null);
+    });
     return () => { mounted = false; unsub(); };
   }, []);
 

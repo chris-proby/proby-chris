@@ -3,11 +3,41 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import './index.css';
 import { runMigrations } from './migrate';
+import { initSentry, SentryErrorBoundary } from './sentry';
+
+initSentry();
+
+function FallbackError({ error, resetError }: { error: unknown; resetError: () => void }) {
+  return (
+    <div style={{
+      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+      height: '100vh', padding: 32, gap: 12, fontFamily: '-apple-system, sans-serif',
+    }}>
+      <div style={{ fontSize: 28 }}>💥</div>
+      <div style={{ fontSize: 18, fontWeight: 600 }}>예기치 못한 오류가 발생했습니다</div>
+      <div style={{ fontSize: 13, color: '#94a3b8', maxWidth: 480, textAlign: 'center' }}>
+        {error instanceof Error ? error.message : '알 수 없는 오류'}
+      </div>
+      <button
+        onClick={() => { resetError(); window.location.reload(); }}
+        style={{
+          marginTop: 12, padding: '8px 18px', borderRadius: 6,
+          border: '1px solid #6366f1', background: '#6366f1', color: '#fff',
+          fontSize: 13, cursor: 'pointer',
+        }}
+      >
+        새로고침
+      </button>
+    </div>
+  );
+}
 
 function mount() {
   ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
-      <App />
+      <SentryErrorBoundary fallback={FallbackError} showDialog={false}>
+        <App />
+      </SentryErrorBoundary>
     </React.StrictMode>
   );
 }
