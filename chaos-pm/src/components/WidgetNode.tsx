@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useMemo, useState } from 'react';
-import { useStore } from '../store';
+import { useStore, defaultSize } from '../store';
 import { track } from '../analytics';
 import { saveFile, loadFile } from '../fileStorage';
 import { vpBridge, keyBridge } from '../viewportBridge';
@@ -326,6 +326,11 @@ function WidgetNode({ widget }: Props) {
       } as React.CSSProperties
     : undefined;
 
+  // Scale content proportionally to widget width when user has resized
+  const defaultW = isGroup ? widget.width : defaultSize(widget.type).width;
+  const zoomScale = (!isGroup && widget.userResized) ? widget.width / defaultW : 1;
+  const zoomHeight = widget.userResized ? widget.height / zoomScale : undefined;
+
   return (
     <div
       ref={nodeRef}
@@ -353,11 +358,12 @@ function WidgetNode({ widget }: Props) {
       )}
 
       <div style={{
-        flex: '1 1 auto',
-        minHeight: 0,
-        overflow: widget.userResized ? 'hidden' : undefined,
+        zoom: zoomScale,
+        width: defaultW,
+        height: zoomHeight,
         display: 'flex',
         flexDirection: 'column',
+        overflow: 'hidden',
         borderRadius: 'var(--radius)',
       }}>
         <WidgetContent
@@ -2242,7 +2248,7 @@ function EmbedContent({ data }: { data: EmbedData }) {
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
         sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-        style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
+        style={{ width: '100%', flex: '1 1 auto', border: 'none', display: 'block', minHeight: 0 }}
       />
       <a
         className="embed-open-btn"

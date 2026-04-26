@@ -53,7 +53,7 @@ function defaultData(type: WidgetType): TaskData | NoteData | LinkData | ImageDa
   }
 }
 
-function defaultSize(type: WidgetType): { width: number; height: number } {
+export function defaultSize(type: WidgetType): { width: number; height: number } {
   switch (type) {
     case 'task':  return { width: 280, height: 180 };
     case 'note':  return { width: 220, height: 160 };
