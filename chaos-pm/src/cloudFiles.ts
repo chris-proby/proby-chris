@@ -1,4 +1,5 @@
 import { getAccessToken, getSupabase, SUPABASE_CONFIGURED } from './supabase';
+import { checkFileSize, showLimitError } from './limits';
 
 const UPLOAD_URL_ENDPOINT = '/api/files/upload-url';
 const STORAGE_BUCKET = 'canvas-files';
@@ -22,6 +23,8 @@ export async function uploadFileToCloud(file: File, roomId: string): Promise<Upl
   if (!SUPABASE_CONFIGURED) {
     throw new Error('Supabase not configured');
   }
+  const sizeErr = checkFileSize(file.size);
+  if (sizeErr) { showLimitError(sizeErr); throw new Error(sizeErr.message); }
   const accessToken = await getAccessToken();
   if (!accessToken) throw new Error('not authenticated');
 

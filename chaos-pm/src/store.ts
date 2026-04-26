@@ -4,6 +4,7 @@ import { v4 as uuid } from 'uuid';
 import { deleteFiles, idbStorage } from './fileStorage';
 import { getCurrentSession } from './auth';
 import { track } from './analytics';
+import { checkWidgetCount, checkConnectionCount, showLimitError } from './limits';
 import type {
   Widget, Connection, Viewport, PendingConnection, PendingGroupChange, Snapshot,
   WidgetType, ConnectionType, TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, LeadData, FunnelData, TextboxData, HtmlData, FileUploadData, DirectoryData, WorklogData, FinanceData, CalendarData, EmbedData,
@@ -208,6 +209,8 @@ export const useStore = create<Store>()(
       setViewport: (v) => set({ viewport: v }),
 
       addWidget: (type, x, y) => {
+        const limitErr = checkWidgetCount(get().widgets.length);
+        if (limitErr) { showLimitError(limitErr); return ''; }
         const id = uuid();
         const newZ = get().maxZIndex + 1;
         const widget: Widget = {
@@ -302,6 +305,8 @@ export const useStore = create<Store>()(
       addConnection: (fromId, toId, type = 'relates-to') => {
         if (fromId === toId) return;
         if (get().connections.some((c) => c.fromId === fromId && c.toId === toId)) return;
+        const limitErr = checkConnectionCount(get().connections.length);
+        if (limitErr) { showLimitError(limitErr); return; }
         track('Store_Connection_Add', { connection_type: type });
         set((s) => ({
           connections: [...s.connections, {
