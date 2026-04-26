@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { getUserFromAuthHeader, supabaseAdmin } from '../../lib/supabase-admin.js';
+import { getUserFromAuthHeader, supabaseAdmin, hasCanvasAccess } from '../../lib/supabase-admin.js';
 import { rateLimit, clientIp } from '../../lib/rate-limit.js';
 import crypto from 'node:crypto';
 
@@ -43,10 +43,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   const sb = supabaseAdmin();
-  const { data: canAccess } = await sb.rpc('has_canvas_access', {
-    p_canvas: canvas_id,
-    p_min_role: 'editor',
-  });
+  const canAccess = await hasCanvasAccess(canvas_id, user.id, 'editor');
   if (!canAccess) return res.status(403).json({ error: 'no access' });
 
   // sanitize filename, generate unique storage path

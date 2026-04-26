@@ -31,3 +31,25 @@ export async function getUserFromAuthHeader(authHeader: string | undefined): Pro
   if (error || !data.user) return null;
   return { id: data.user.id, email: data.user.email ?? '' };
 }
+
+// Check whether `userId` has at least `minRole` on `canvasId`.
+// Use this from API routes — the SQL has_canvas_access RPC uses auth.uid()
+// which is NULL when called via service_role.
+export type CanvasRole = 'owner' | 'editor' | 'viewer';
+export async function hasCanvasAccess(
+  canvasId: string,
+  userId: string,
+  minRole: CanvasRole = 'viewer',
+): Promise<boolean> {
+  const { data } = await supabaseAdmin()
+    .from('canvas_members')
+    .select('role')
+    .eq('canvas_id', canvasId)
+    .eq('user_id', userId)
+    .maybeSingle();
+  if (!data) return false;
+  const role = data.role as CanvasRole;
+  if (minRole === 'viewer') return true;
+  if (minRole === 'editor') return role === 'owner' || role === 'editor';
+  return role === 'owner';
+}

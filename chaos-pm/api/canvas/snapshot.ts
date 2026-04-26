@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { getUserFromAuthHeader, supabaseAdmin } from '../../lib/supabase-admin.js';
+import { getUserFromAuthHeader, supabaseAdmin, hasCanvasAccess } from '../../lib/supabase-admin.js';
 import { rateLimit, clientIp } from '../../lib/rate-limit.js';
 
 interface SnapshotPayload {
@@ -44,10 +44,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     );
     if (!canvasId) return res.status(400).json({ error: 'canvas_id or room_id required' });
 
-    const { data: canAccess } = await sb.rpc('has_canvas_access', {
-      p_canvas: canvasId,
-      p_min_role: 'viewer',
-    });
+    const canAccess = await hasCanvasAccess(canvasId, user.id, 'viewer');
     if (!canAccess) return res.status(403).json({ error: 'no access' });
 
     const { data, error } = await sb
@@ -83,10 +80,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (payloadSize > MAX_PAYLOAD_BYTES)
       return res.status(413).json({ error: 'payload too large' });
 
-    const { data: canAccess } = await sb.rpc('has_canvas_access', {
-      p_canvas: canvas_id,
-      p_min_role: 'editor',
-    });
+    const canAccess = await hasCanvasAccess(canvas_id, user.id, 'editor');
     if (!canAccess) return res.status(403).json({ error: 'no access' });
 
     const { error } = await sb.from('canvas_snapshots').insert({
