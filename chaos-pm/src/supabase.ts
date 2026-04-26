@@ -25,9 +25,35 @@ export function getSupabase(): SupabaseClient {
   return _client;
 }
 
-// Convenience: returns the current access token (for API requests)
+// Convenience: returns the current access token (for API requests).
+// If the cached session is expired, attempt one explicit refresh before giving up.
 export async function getAccessToken(): Promise<string | null> {
   if (!SUPABASE_CONFIGURED) return null;
-  const { data } = await getSupabase().auth.getSession();
-  return data.session?.access_token ?? null;
+  const sb = getSupabase();
+  const { data } = await sb.auth.getSession();
+  const sess = data.session;
+  if (sess?.access_token) {
+    const expSec = sess.expires_at ?? 0;
+    // Refresh if token expires within 60 seconds
+    if (expSec * 1000 - Date.now() < 60_000) {
+      const { data: refreshed } = await sb.auth.refreshSession();
+      return refreshed.session?.access_token ?? null;
+    }
+    return sess.access_token;
+  }
+  return null;
+}
+
+// Wrap fetch with bearer auth + 401 handling. On 401, drops the local
+// session and surfaces a clear error so the UI can redirect to login.
+export async function authedFetch(input: RequestInfo, init: RequestInit = {}): Promise<Response> {
+  const token = await getAccessToken();
+  const headers = new Headers(init.headers);
+  if (token) headers.set('Authorization', `Bearer ${token}`);
+  const res = await fetch(input, { ...init, headers });
+  if (res.status === 401 && SUPABASE_CONFIGURED) {
+    // Session is dead — clear it so onAuthChange surfaces login screen.
+    await getSupabase().auth.signOut().catch(() => {});
+  }
+  return res;
 }
