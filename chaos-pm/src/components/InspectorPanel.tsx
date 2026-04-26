@@ -6,6 +6,7 @@ import { saveFile, loadFile } from '../fileStorage';
 import { uploadFileToCloud } from '../cloudFiles';
 import { SUPABASE_CONFIGURED } from '../supabase';
 import { roomBridge } from '../viewportBridge';
+import { isSafeHref } from '../security';
 import { track } from '../analytics';
 import type { TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, GoalStatus, KeyResult, LeadData, LeadStage, FunnelData, TextboxData, HtmlData, FileUploadData, FileItem, Attachment, ConnectionType, DirectoryData, DirectoryColumn, DirectoryColumnType, WorklogData, WorklogEntry, FinanceData, InvoiceEntry, InvoiceStatus, CalendarData, CalendarEvent, EmbedData } from '../types';
 
@@ -553,6 +554,7 @@ function NoteInspector({ data, onChange }: { data: NoteData; onChange: (d: Parti
 
 /* ─── Link Inspector ─── */
 function LinkInspector({ data, onChange }: { data: LinkData; onChange: (d: Partial<LinkData>) => void }) {
+  const urlUnsafe = !!data.url && !isSafeHref(data.url);
   return (
     <>
       <div className="field">
@@ -562,7 +564,13 @@ function LinkInspector({ data, onChange }: { data: LinkData; onChange: (d: Parti
           value={data.url}
           onChange={(e) => onChange({ url: e.target.value })}
           placeholder="https://..."
+          style={urlUnsafe ? { borderColor: '#ef4444' } : undefined}
         />
+        {urlUnsafe && (
+          <div style={{ fontSize: 11, color: '#ef4444', marginTop: 4 }}>
+            안전하지 않은 URL 형식입니다 (javascript:, data: 등 차단)
+          </div>
+        )}
       </div>
       <div className="field">
         <div className="field-label">제목</div>

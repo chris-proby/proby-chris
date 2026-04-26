@@ -5,6 +5,7 @@ import { saveFile, loadFile } from '../fileStorage';
 import { uploadFileToCloud } from '../cloudFiles';
 import { SUPABASE_CONFIGURED } from '../supabase';
 import { roomBridge } from '../viewportBridge';
+import { isSafeEmbedUrl, safeHref } from '../security';
 import { vpBridge, keyBridge } from '../viewportBridge';
 import { getCurrentSession } from '../auth';
 import { v4 as uuidv4 } from 'uuid';
@@ -2263,6 +2264,18 @@ function EmbedContent({ data }: { data: EmbedData }) {
     );
   }
 
+  if (!isSafeEmbedUrl(embedUrl || data.url)) {
+    return (
+      <div className="embed-empty">
+        <div style={{ fontSize: 28 }}>🚫</div>
+        <div style={{ fontWeight: 600, marginTop: 8 }}>차단된 URL</div>
+        <div style={{ fontSize: 12, color: '#8b949e', marginTop: 4 }}>
+          http(s) 외부 URL만 임베드할 수 있습니다
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="embed-frame">
       <iframe
@@ -2271,11 +2284,12 @@ function EmbedContent({ data }: { data: EmbedData }) {
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
         sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+        referrerPolicy="strict-origin-when-cross-origin"
         style={{ width: '100%', flex: '1 1 auto', border: 'none', display: 'block', minHeight: 0 }}
       />
       <a
         className="embed-open-btn"
-        href={data.url}
+        href={safeHref(data.url)}
         target="_blank"
         rel="noopener noreferrer"
         title="새 탭에서 열기"
