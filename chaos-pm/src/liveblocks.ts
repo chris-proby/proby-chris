@@ -17,10 +17,14 @@ const client = SUPABASE_CONFIGURED
       authEndpoint: async (room) => {
         const token = await getAccessToken();
         if (!token) throw new Error('not authenticated');
+        // Pull share_token from URL (?t=...) so non-members can join shared canvases
+        const shareToken = typeof window !== 'undefined'
+          ? new URLSearchParams(window.location.search).get('t')
+          : null;
         const r = await fetch(LB_AUTH_ENDPOINT, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-          body: JSON.stringify({ room }),
+          body: JSON.stringify({ room, share_token: shareToken ?? undefined }),
         });
         if (!r.ok) {
           const txt = await r.text().catch(() => '');

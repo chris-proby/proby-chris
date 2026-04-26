@@ -6,6 +6,7 @@ const LIVEBLOCKS_SECRET = process.env.LIVEBLOCKS_SECRET_KEY ?? '';
 
 interface LiveblocksAuthRequest {
   room?: string;
+  share_token?: string;
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -24,7 +25,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const user = await getUserFromAuthHeader(req.headers.authorization);
   if (!user) return res.status(401).json({ error: 'unauthorized' });
 
-  const { room } = (req.body ?? {}) as LiveblocksAuthRequest;
+  const { room, share_token: providedToken } = (req.body ?? {}) as LiveblocksAuthRequest;
   if (!room || typeof room !== 'string') {
     return res.status(400).json({ error: 'room required' });
   }
@@ -51,8 +52,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   let role: 'owner' | 'editor' | 'viewer' | null = (membership?.role as 'owner' | 'editor' | 'viewer' | null) ?? null;
 
   if (!role) {
-    // Not a member. Allow auto-join only if there is a share_token (= shared canvas)
+    // Non-member: allow auto-join only when the request carries the
+    // canvas's current share_token (constant-time comparison).
     if (!canvas.share_token) return res.status(403).json({ error: 'no access' });
+    if (!providedToken || !timingSafeEqual(providedToken, canvas.share_token)) {
+      return res.status(403).json({ error: 'invalid share token' });
+    }
     const { error: insErr } = await sb.from('canvas_members').insert({
       canvas_id: canvas.id,
       user_id: user.id,
@@ -93,4 +98,12 @@ function pickColor(id: string): string {
   let h = 0;
   for (const ch of id) h = ((h << 5) - h) + ch.charCodeAt(0);
   return COLORS[Math.abs(h) % COLORS.length];
+}
+
+// constant-time string comparison to defend against timing attacks
+function timingSafeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
 }
