@@ -59,7 +59,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       .eq('id', canvasId);
     if (error) return res.status(500).json({ error: 'update failed' });
 
-    return res.status(200).json({ share_token: newToken });
+    let evicted = 0;
+    if (body.revoke) {
+      // also evict every member except the owner so existing guests lose access
+      const { count, error: delErr } = await sb
+        .from('canvas_members')
+        .delete({ count: 'exact' })
+        .eq('canvas_id', canvasId)
+        .neq('user_id', user.id);
+      if (delErr) return res.status(500).json({ error: 'evict failed' });
+      evicted = count ?? 0;
+    }
+
+    return res.status(200).json({ share_token: newToken, evicted });
   }
 
   res.setHeader('Allow', 'GET, POST');

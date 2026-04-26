@@ -51,6 +51,7 @@ export default function InvitePanel({ session, onClose, collabMode, roomOwnerId 
 
   const rotateToken = async (revoke = false) => {
     if (!SUPABASE_CONFIGURED) return;
+    if (revoke && !confirm('공유를 해제하면 현재 접속 중인 게스트도 모두 즉시 차단됩니다. 계속하시겠어요?')) return;
     setBusy(true);
     try {
       const token = await getAccessToken();
@@ -63,7 +64,12 @@ export default function InvitePanel({ session, onClose, collabMode, roomOwnerId 
       if (r.ok) {
         const json = await r.json();
         setShareToken(json.share_token ?? null);
-        track(revoke ? 'InvitePanel_ShareToken_Revoke' : 'InvitePanel_ShareToken_Rotate');
+        track(revoke ? 'InvitePanel_ShareToken_Revoke' : 'InvitePanel_ShareToken_Rotate', {
+          evicted: json.evicted ?? 0,
+        });
+        if (revoke && (json.evicted ?? 0) > 0) {
+          alert(`${json.evicted}명의 게스트를 차단했습니다.`);
+        }
       }
     } finally {
       setBusy(false);
