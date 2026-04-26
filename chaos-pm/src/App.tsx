@@ -13,15 +13,46 @@ import { useHistoryTracker } from './hooks/useHistoryTracker';
 import { useClipboardPaste } from './hooks/useClipboardPaste';
 import { useTheme } from './hooks/useTheme';
 import { useStore } from './store';
-import { getCurrentSession, logout } from './auth';
+import { getCurrentSession, hydrateSession, onAuthChange, logout, type AuthSession } from './auth';
 import { RoomProvider, LiveObject, getUserColor, LIVEBLOCKS_KEY } from './liveblocks';
 import { analyticsIdentify, analyticsReset, track } from './analytics';
+import { SUPABASE_CONFIGURED } from './supabase';
 
 export default function App() {
-  const [session] = useState(() => getCurrentSession());
+  const [session, setSession] = useState<AuthSession | null>(null);
+  const [authReady, setAuthReady] = useState(!SUPABASE_CONFIGURED);
 
-  const handleAuth = () => { window.location.reload(); };
-  const handleLogout = () => { track('Toolbar_Logout_Click'); analyticsReset(); logout(); window.location.reload(); };
+  useEffect(() => {
+    if (!SUPABASE_CONFIGURED) {
+      setSession(getCurrentSession());
+      setAuthReady(true);
+      return;
+    }
+    let mounted = true;
+    hydrateSession().then((s) => {
+      if (!mounted) return;
+      setSession(s);
+      setAuthReady(true);
+    });
+    const unsub = onAuthChange((s) => { if (mounted) setSession(s); });
+    return () => { mounted = false; unsub(); };
+  }, []);
+
+  const handleAuth = () => { /* state updates via onAuthChange */ };
+  const handleLogout = async () => {
+    track('Toolbar_Logout_Click');
+    analyticsReset();
+    await logout();
+    window.location.reload();
+  };
+
+  if (!authReady) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', color: 'var(--text-muted, #94a3b8)' }}>
+        loading...
+      </div>
+    );
+  }
 
   if (!session) return <AuthScreen onAuth={handleAuth} />;
 

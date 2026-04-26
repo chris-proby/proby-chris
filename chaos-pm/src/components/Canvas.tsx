@@ -6,6 +6,7 @@ import WidgetPicker from './WidgetPicker';
 import CollabCursors from './CollabCursors';
 import type { RubberBand, Viewport, WidgetType } from '../types';
 import { vpBridge, keyBridge, collabBridge } from '../viewportBridge';
+import { track } from '../analytics';
 
 const MIN_SCALE = 0.08;
 const MAX_SCALE = 4;
@@ -104,7 +105,8 @@ export default function Canvas({ collabMode }: { collabMode?: boolean }) {
         applyViewport(next);
       }
       if (pendingRef.current) {
-        setPendingConnection({ ...pendingRef.current, toX: e.clientX, toY: e.clientY });
+        const cr = containerRef.current?.getBoundingClientRect() ?? { left: 0, top: 0 };
+        setPendingConnection({ ...pendingRef.current, toX: e.clientX - cr.left, toY: e.clientY - cr.top });
       }
       if (isRubberBanding.current && rubberBandRef.current) {
         const next = { ...rubberBandRef.current, endX: e.clientX, endY: e.clientY };
@@ -169,6 +171,7 @@ export default function Canvas({ collabMode }: { collabMode?: boolean }) {
 
     if (selected.length > 0) {
       setMultiSelected(selected.map((w) => w.id));
+      track('Canvas_RubberBand_SelectComplete', { selected_count: selected.length });
     } else {
       clearSelection();
     }
@@ -249,6 +252,7 @@ export default function Canvas({ collabMode }: { collabMode?: boolean }) {
     const cr = containerRef.current?.getBoundingClientRect();
     const wx = (e.clientX - (cr?.left ?? 0) - vp.x) / vp.scale - 140;
     const wy = (e.clientY - (cr?.top ?? 0) - vp.y) / vp.scale - 90;
+    track('Canvas_WidgetPicker_Open', { scale: Math.round(vp.scale * 100) });
     setPicker({ sx: e.clientX, sy: e.clientY, wx, wy });
   };
 

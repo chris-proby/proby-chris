@@ -3,7 +3,8 @@ import { v4 as uuid } from 'uuid';
 import { useStore } from '../store';
 import { useShallow } from 'zustand/react/shallow';
 import { saveFile, loadFile } from '../fileStorage';
-import type { TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, GoalStatus, KeyResult, LeadData, LeadStage, FunnelData, TextboxData, HtmlData, FileUploadData, FileItem, Attachment, ConnectionType, DirectoryData, DirectoryColumn, DirectoryColumnType, WorklogData, WorklogEntry, FinanceData, InvoiceEntry, InvoiceStatus } from '../types';
+import { track } from '../analytics';
+import type { TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, GoalStatus, KeyResult, LeadData, LeadStage, FunnelData, TextboxData, HtmlData, FileUploadData, FileItem, Attachment, ConnectionType, DirectoryData, DirectoryColumn, DirectoryColumnType, WorklogData, WorklogEntry, FinanceData, InvoiceEntry, InvoiceStatus, CalendarData, CalendarEvent, EmbedData } from '../types';
 
 const NOTE_COLORS = ['#fef9c3', '#dbeafe', '#dcfce7', '#fce7f3', '#ede9fe', '#ffedd5'];
 
@@ -20,6 +21,16 @@ export default function InspectorPanel() {
   const setSelectedConnection = useStore((s) => s.setSelectedConnection);
   const ungroupWidget = useStore((s) => s.ungroupWidget);
   const toggleGroupCollapse = useStore((s) => s.toggleGroupCollapse);
+
+  // Hooks must be called before any early returns (Rules of Hooks)
+  const trackedIdRef = useRef<string | null>(null);
+  const widget = widgets.find((w) => w.id === selectedWidgetId);
+  useEffect(() => {
+    if (widget && widget.id !== trackedIdRef.current) {
+      trackedIdRef.current = widget.id;
+      track(`InspectorPanel_Open_${widget.type}`);
+    }
+  });
 
   if (selectedConnectionId) {
     const conn = connections.find((c) => c.id === selectedConnectionId);
@@ -51,9 +62,7 @@ export default function InspectorPanel() {
               <div className="field-label">목표 관계</div>
               <button
                 className={`conn-goal-parent-btn${conn.type === 'goal-parent' ? ' active' : ''}`}
-                onClick={() => updateConnection(conn.id, {
-                  type: conn.type === 'goal-parent' ? 'relates-to' : 'goal-parent',
-                })}
+                onClick={() => { const nt = conn.type === 'goal-parent' ? 'relates-to' : 'goal-parent'; track('InspectorPanel_Connection_GoalParentToggle', { new_type: nt }); updateConnection(conn.id, { type: nt }); }}
               >
                 <span className="conn-goal-parent-icon">🎯</span>
                 <span className="conn-goal-parent-text">
@@ -77,7 +86,7 @@ export default function InspectorPanel() {
                 <button
                   key={t}
                   className={`seg-btn${conn.type === t ? ' active' : ''}`}
-                  onClick={() => updateConnection(conn.id, { type: t })}
+                  onClick={() => { track('InspectorPanel_Connection_TypeChange', { new_type: t }); updateConnection(conn.id, { type: t }); }}
                 >
                   {t === 'relates-to' ? '관련' : t === 'blocks' ? '차단' : '의존'}
                 </button>
@@ -104,7 +113,6 @@ export default function InspectorPanel() {
     );
   }
 
-  const widget = widgets.find((w) => w.id === selectedWidgetId);
   if (!widget) return null;
 
   return (
@@ -205,6 +213,18 @@ export default function InspectorPanel() {
             onChange={(d) => updateWidgetData(widget.id, d)}
           />
         )}
+        {widget.type === 'calendar' && (
+          <CalendarInspector
+            data={widget.data as CalendarData}
+            onChange={(d) => updateWidgetData(widget.id, d)}
+          />
+        )}
+        {widget.type === 'embed' && (
+          <EmbedInspector
+            data={widget.data as EmbedData}
+            onChange={(d) => updateWidgetData(widget.id, d)}
+          />
+        )}
       </div>
       <div className="inspector-footer">
         <div className="meta-row">
@@ -220,10 +240,10 @@ export default function InspectorPanel() {
 }
 
 const TYPE_ICONS: Record<string, string> = {
-  task: '✓', note: '📝', link: '🔗', image: '🖼️', group: '⬡', goal: '🎯', lead: '💼', funnel: '📊', textbox: 'T', html: '⟨/⟩', fileupload: '📁', directory: '👥', worklog: '📋', finance: '💰',
+  task: '✓', note: '📝', link: '🔗', image: '🖼️', group: '⬡', goal: '🎯', lead: '💼', funnel: '📊', textbox: 'T', html: '⟨/⟩', fileupload: '📁', directory: '👥', worklog: '📋', finance: '💰', calendar: '📅', embed: '🔲',
 };
 const TYPE_LABELS: Record<string, string> = {
-  task: '작업', note: '메모', link: '링크', image: '이미지', group: '그룹', goal: '목표', lead: '리드', funnel: '세일즈 퍼널', textbox: '텍스트박스', html: 'HTML', fileupload: '파일 업로드', directory: '인원 디렉토리', worklog: '작업로그', finance: '재무 현황',
+  task: '작업', note: '메모', link: '링크', image: '이미지', group: '그룹', goal: '목표', lead: '리드', funnel: '세일즈 퍼널', textbox: '텍스트박스', html: 'HTML', fileupload: '파일 업로드', directory: '인원 디렉토리', worklog: '작업로그', finance: '재무 현황', calendar: '캘린더', embed: '임베드',
 };
 
 /* ─── Group Inspector ─── */
@@ -399,7 +419,7 @@ function TaskInspector({ data, onChange }: { data: TaskData; onChange: (d: Parti
         <div className="field-label">상태</div>
         <div className="seg-group">
           {(['todo', 'in-progress', 'done'] as const).map((s) => (
-            <button key={s} className={`seg-btn${data.status === s ? ' active' : ''}`} onClick={() => onChange({ status: s })}>
+            <button key={s} className={`seg-btn${data.status === s ? ' active' : ''}`} onClick={() => { track('InspectorPanel_TaskStatus_Change', { new_status: s, prev_status: data.status }); onChange({ status: s }); }}>
               {s === 'todo' ? '할 일' : s === 'in-progress' ? '진행 중' : '완료'}
             </button>
           ))}
@@ -690,7 +710,7 @@ function GoalInspector({ widgetId, data, onChange }: { widgetId: string; data: G
             <button
               key={value}
               className={`seg-btn${data.status === value ? ' active' : ''}`}
-              onClick={() => onChange({ status: value })}
+              onClick={() => { track('InspectorPanel_GoalStatus_Change', { new_status: value, prev_status: data.status }); onChange({ status: value }); }}
             >
               {label}
             </button>
@@ -879,7 +899,7 @@ function LeadInspector({ data, onChange }: { data: LeadData; onChange: (d: Parti
             <button
               key={value}
               className={`seg-btn${data.stage === value ? ' active' : ''}`}
-              onClick={() => onChange({ stage: value })}
+              onClick={() => { track('InspectorPanel_LeadStage_Change', { new_stage: value, prev_stage: data.stage }); onChange({ stage: value }); }}
               style={{ flex: '1 1 30%' }}
             >
               {label}
@@ -1561,8 +1581,8 @@ function parseInvAmount(str: string): number {
 function parseInvStatus(str: string): InvoiceStatus {
   const s = str.toLowerCase();
   if (/paid|완료|지급|결제|수령|완납|done/.test(s)) return 'paid';
-  if (/overdue|연체|미납|지연|초과/.test(s)) return 'overdue';
   if (/cancel|취소|무효|폐기/.test(s)) return 'cancelled';
+  if (/request|요청|견적|제안|draft/.test(s)) return 'requested';
   return 'pending';
 }
 
@@ -1600,8 +1620,8 @@ function parseMdInvoices(md: string): InvoiceEntry[] {
   return blocks.map(parseInvBlock).filter(Boolean) as InvoiceEntry[];
 }
 
-const INV_STATUS_LABELS: Record<InvoiceStatus, string> = { paid: '수금', pending: '미수금', overdue: '연체', cancelled: '취소' };
-const INV_STATUS_COLORS: Record<InvoiceStatus, string> = { paid: '#22c55e', pending: '#f59e0b', overdue: '#ef4444', cancelled: '#64748b' };
+const INV_STATUS_LABELS: Record<InvoiceStatus, string> = { paid: '수금', pending: '미수금', cancelled: '취소', requested: '요청' };
+const INV_STATUS_COLORS: Record<InvoiceStatus, string> = { paid: '#22c55e', pending: '#f59e0b', cancelled: '#64748b', requested: '#6366f1' };
 
 function fmtInspAmt(n: number, currency = 'KRW'): string {
   if (currency === 'KRW') {
@@ -1616,16 +1636,26 @@ function FinanceInspector({ data, onChange }: { data: FinanceData; onChange: (d:
   const fileRef = useRef<HTMLInputElement>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
 
-  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      const parsed = parseMdInvoices(reader.result as string);
-      if (parsed.length > 0) onChange({ invoices: [...data.invoices, ...parsed] });
-      else alert('인식된 인보이스가 없습니다. 샘플 형식을 확인해주세요.');
-    };
-    reader.readAsText(file);
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
+    if (!files.length) return;
+
+    const readFile = (f: File) =>
+      new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.readAsText(f);
+      });
+
+    const allParsed = (await Promise.all(files.map(readFile)))
+      .flatMap((text) => parseMdInvoices(text));
+
+    if (allParsed.length > 0) {
+      track('InspectorPanel_Finance_FileUpload', { invoice_count: allParsed.length, file_count: files.length });
+      onChange({ invoices: [...data.invoices, ...allParsed] });
+    } else {
+      alert('인식된 인보이스가 없습니다. 샘플 형식을 확인해주세요.');
+    }
     e.target.value = '';
   };
 
@@ -1658,19 +1688,35 @@ function FinanceInspector({ data, onChange }: { data: FinanceData; onChange: (d:
       </div>
 
       <div className="field">
+        <div className="field-label">환율 (USD → KRW)</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <span style={{ fontSize: 11, color: 'var(--panel-muted)' }}>$1 =</span>
+          <input
+            type="number"
+            value={data.exchangeRate ?? 1450}
+            onChange={e => onChange({ exchangeRate: Number(e.target.value) })}
+            style={{ width: 80 }}
+            min={0}
+          />
+          <span style={{ fontSize: 11, color: 'var(--panel-muted)' }}>원</span>
+        </div>
+      </div>
+
+      <div className="field">
         <div className="field-label">MD 인보이스 업로드</div>
         <div style={{ fontSize: 11, color: '#8b949e', marginBottom: 8, lineHeight: 1.5 }}>
-          고객사·금액·날짜·상태가 포함된 마크다운 파일을 업로드하면 자동으로 파싱됩니다.
+          고객사·금액·날짜·상태가 포함된 마크다운 파일을 업로드하면 자동으로 파싱됩니다.<br />
+          여러 파일을 한번에 선택할 수 있습니다.
         </div>
         <div style={{ display: 'flex', gap: 6 }}>
           <button className="btn-secondary" style={{ flex: 1 }} onClick={() => fileRef.current?.click()}>
-            📄 MD 업로드
+            📄 MD 업로드 (복수 선택 가능)
           </button>
           <button className="btn-secondary" onClick={downloadSample} title="샘플 다운로드">
             ↓ 샘플
           </button>
         </div>
-        <input ref={fileRef} type="file" accept=".md,.txt" style={{ display: 'none' }} onChange={handleUpload} />
+        <input ref={fileRef} type="file" accept=".md,.txt" multiple style={{ display: 'none' }} onChange={handleUpload} />
       </div>
 
       {data.invoices.length > 0 && (
@@ -1692,12 +1738,12 @@ function FinanceInspector({ data, onChange }: { data: FinanceData; onChange: (d:
                   {inv.invoiceNumber && <span style={{ color: '#8b949e' }}>#{inv.invoiceNumber}</span>}
                   {/* Status toggle tags */}
                   <div className="finance-status-tags">
-                    {(['paid', 'pending', 'overdue', 'cancelled'] as InvoiceStatus[]).map(s => (
+                    {(['requested', 'paid', 'pending', 'cancelled'] as InvoiceStatus[]).map(s => (
                       <button
                         key={s}
                         className={`finance-status-tag${inv.status === s ? ' active' : ''}`}
                         style={inv.status === s ? { background: INV_STATUS_COLORS[s] + '22', color: INV_STATUS_COLORS[s], borderColor: INV_STATUS_COLORS[s] + '66' } : {}}
-                        onClick={() => updateInvoiceStatus(inv.id, s)}
+                        onClick={() => { track('InspectorPanel_Finance_InvoiceStatus_Change', { new_status: s, prev_status: inv.status, client: inv.client }); updateInvoiceStatus(inv.id, s); }}
                       >
                         {INV_STATUS_LABELS[s]}
                       </button>
@@ -1709,6 +1755,143 @@ function FinanceInspector({ data, onChange }: { data: FinanceData; onChange: (d:
           </div>
         </div>
       )}
+    </>
+  );
+}
+
+/* ── Calendar Inspector ── */
+const CAL_COLORS = ['#6366f1', '#22c55e', '#f59e0b', '#ef4444', '#06b6d4', '#ec4899', '#8b5cf6', '#f97316'];
+
+function CalendarInspector({ data, onChange }: { data: CalendarData; onChange: (d: Partial<CalendarData>) => void }) {
+  const [newDate, setNewDate] = useState('');
+  const [newTitle, setNewTitle] = useState('');
+  const [newColor, setNewColor] = useState(CAL_COLORS[0]);
+
+  const addEvent = () => {
+    if (!newDate || !newTitle.trim()) return;
+    const event: CalendarEvent = {
+      id: crypto.randomUUID(),
+      date: newDate,
+      title: newTitle.trim(),
+      color: newColor,
+    };
+    onChange({ events: [...(data.events ?? []), event] });
+    setNewTitle('');
+  };
+
+  const removeEvent = (id: string) => {
+    onChange({ events: (data.events ?? []).filter((e) => e.id !== id) });
+  };
+
+  const sorted = [...(data.events ?? [])].sort((a, b) => a.date.localeCompare(b.date));
+
+  return (
+    <>
+      <div className="field">
+        <div className="field-label">위젯 제목</div>
+        <input value={data.title} onChange={(e) => onChange({ title: e.target.value })} placeholder="캘린더" />
+      </div>
+      <div className="field">
+        <div className="field-label">이벤트 추가</div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+          <input
+            type="date"
+            value={newDate}
+            onChange={(e) => setNewDate(e.target.value)}
+            style={{ fontSize: 12 }}
+          />
+          <input
+            placeholder="이벤트 제목"
+            value={newTitle}
+            onChange={(e) => setNewTitle(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && addEvent()}
+          />
+          <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+            {CAL_COLORS.map((c) => (
+              <button
+                key={c}
+                onClick={() => setNewColor(c)}
+                style={{
+                  width: 16, height: 16, borderRadius: '50%', background: c, border: 'none', cursor: 'pointer',
+                  outline: newColor === c ? '2px solid var(--text)' : 'none', outlineOffset: 1,
+                }}
+              />
+            ))}
+            <button className="tb-btn primary" style={{ marginLeft: 'auto', fontSize: 11 }} onClick={addEvent}>추가</button>
+          </div>
+        </div>
+      </div>
+      {sorted.length > 0 && (
+        <div className="field">
+          <div className="field-label">이벤트 {sorted.length}개</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, maxHeight: 240, overflowY: 'auto' }}>
+            {sorted.map((ev) => (
+              <div key={ev.id} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, padding: '4px 6px', background: 'var(--surface)', borderRadius: 4, border: '1px solid var(--border)' }}>
+                <span style={{ width: 10, height: 10, borderRadius: '50%', background: ev.color, flexShrink: 0 }} />
+                <span style={{ color: 'var(--panel-muted)', flexShrink: 0, fontSize: 11 }}>{ev.date}</span>
+                <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ev.title}</span>
+                <button onClick={() => removeEvent(ev.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--panel-muted)', fontSize: 14, padding: 0 }}>×</button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+/* ── Embed Inspector ── */
+const EMBED_PRESETS = [
+  { label: 'YouTube', hint: 'https://www.youtube.com/watch?v=...' },
+  { label: 'Figma',   hint: 'https://www.figma.com/file/...' },
+  { label: 'Google Docs', hint: 'https://docs.google.com/document/d/...' },
+];
+
+function EmbedInspector({ data, onChange }: { data: EmbedData; onChange: (d: Partial<EmbedData>) => void }) {
+  return (
+    <>
+      <div className="field">
+        <div className="field-label">위젯 제목</div>
+        <input value={data.title} onChange={(e) => onChange({ title: e.target.value })} placeholder="임베드" />
+      </div>
+      <div className="field">
+        <div className="field-label">URL</div>
+        <input
+          value={data.url}
+          onChange={(e) => onChange({ url: e.target.value })}
+          placeholder="https://..."
+          style={{ fontFamily: 'monospace', fontSize: 11 }}
+        />
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginTop: 6 }}>
+          {EMBED_PRESETS.map((p) => (
+            <button
+              key={p.label}
+              className="tb-btn"
+              style={{ fontSize: 10, padding: '2px 7px' }}
+              title={p.hint}
+              onClick={() => onChange({ url: p.hint })}
+            >
+              {p.label}
+            </button>
+          ))}
+        </div>
+      </div>
+      {data.url && (
+        <div className="field">
+          <a
+            href={data.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ fontSize: 11, color: 'var(--accent)', wordBreak: 'break-all' }}
+          >
+            ↗ 새 탭에서 열기
+          </a>
+        </div>
+      )}
+      <div style={{ padding: '8px 0 2px', fontSize: 11, color: 'var(--panel-muted)', lineHeight: 1.6 }}>
+        YouTube, Figma, Google Docs/Sheets/Slides URL을 자동으로 임베드용으로 변환합니다.<br />
+        일부 사이트는 보안 정책으로 임베드가 차단될 수 있습니다.
+      </div>
     </>
   );
 }

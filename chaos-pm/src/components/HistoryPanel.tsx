@@ -1,4 +1,5 @@
 import { useStore } from '../store';
+import { track } from '../analytics';
 
 interface Props {
   onClose: () => void;
@@ -20,8 +21,9 @@ export default function HistoryPanel({ onClose }: Props) {
   };
 
   const handleRestore = (id: string) => {
+    const snap = snapshots.find((s) => s.id === id);
     if (confirm('이 시점으로 복원하시겠습니까? 현재 변경사항이 히스토리에 저장됩니다.')) {
-      // Save current state before restoring
+      track('HistoryPanel_Snapshot_RestoreConfirm', { label: snap?.label, widget_count: snap?.widgets.length });
       useStore.getState().saveSnapshot('복원 전 상태');
       useStore.getState().restoreSnapshot(id);
     }
@@ -69,7 +71,7 @@ export default function HistoryPanel({ onClose }: Props) {
                   )}
                   <button
                     className="history-delete-btn"
-                    onClick={() => deleteSnapshot(snap.id)}
+                    onClick={() => { track('HistoryPanel_Snapshot_Delete', { label: snap.label }); deleteSnapshot(snap.id); }}
                     title="이 항목 삭제"
                   >
                     ×
@@ -81,7 +83,7 @@ export default function HistoryPanel({ onClose }: Props) {
           <div className="inspector-footer">
             <button
               className="btn-danger"
-              onClick={() => { if (confirm('모든 히스토리를 삭제하시겠습니까?')) clearSnapshots(); }}
+              onClick={() => { if (confirm('모든 히스토리를 삭제하시겠습니까?')) { track('HistoryPanel_AllSnapshots_ClearConfirm', { count: snapshots.length }); clearSnapshots(); } }}
             >
               🗑 히스토리 전체 삭제
             </button>

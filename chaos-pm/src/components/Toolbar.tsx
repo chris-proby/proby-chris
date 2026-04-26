@@ -3,6 +3,7 @@ import { useStore } from '../store';
 import type { GroupData } from '../types';
 import type { Theme } from '../hooks/useTheme';
 import type { AuthSession } from '../auth';
+import { track } from '../analytics';
 
 interface ToolbarProps {
   onToggleHistory: () => void;
@@ -69,41 +70,41 @@ export default function Toolbar({ onToggleHistory, showHistory, theme, onToggleT
 
   return (
     <header className="toolbar">
-      <div className="toolbar-logo">messy<span>notion</span></div>
+      <div className="toolbar-logo">chaos<span>PM</span></div>
       <div className="toolbar-divider" />
 
-      <button className="tb-btn" onClick={() => zoom(0.2)} title="Zoom in">
+      <button className="tb-btn" onClick={() => { zoom(0.2); track('Toolbar_ZoomIn_Click', { scale: Math.round(viewport.scale * 120) }); }} title="Zoom in">
         <span className="icon">＋</span>
       </button>
-      <span className="zoom-display" onDoubleClick={resetZoom} title="Double-click to reset zoom">
+      <span className="zoom-display" onDoubleClick={() => { resetZoom(); track('Toolbar_ZoomReset_DoubleClick'); }} title="Double-click to reset zoom">
         {Math.round(viewport.scale * 100)}%
       </span>
-      <button className="tb-btn" onClick={() => zoom(-0.167)} title="Zoom out">
+      <button className="tb-btn" onClick={() => { zoom(-0.167); track('Toolbar_ZoomOut_Click', { scale: Math.round(viewport.scale * 83) }); }} title="Zoom out">
         <span className="icon">－</span>
       </button>
-      <button className="tb-btn" onClick={fitToView} title="전체 보기">
+      <button className="tb-btn" onClick={() => { fitToView(); track('Toolbar_FitToView_Click', { widget_count: widgets.length }); }} title="전체 보기">
         ⊙ 전체 보기
       </button>
 
       <div className="toolbar-right">
         <input ref={importRef} type="file" accept=".json" style={{ display: 'none' }} onChange={handleImport} />
-        <button className="tb-btn" onClick={exportCanvas} title="캔버스 내보내기 (JSON 백업)">
+        <button className="tb-btn" onClick={() => { exportCanvas(); track('Toolbar_Export_Click'); }} title="캔버스 내보내기 (JSON 백업)">
           ↓ 내보내기
         </button>
-        <button className="tb-btn" onClick={() => importRef.current?.click()} title="캔버스 가져오기 (JSON 복원)">
+        <button className="tb-btn" onClick={() => { importRef.current?.click(); track('Toolbar_Import_Click'); }} title="캔버스 가져오기 (JSON 복원)">
           ↑ 가져오기
         </button>
         <div className="toolbar-divider" />
         <button
           className="tb-btn"
-          onClick={onToggleTheme}
+          onClick={() => { onToggleTheme(); track('Toolbar_ThemeToggle_Click', { new_theme: theme === 'dark' ? 'light' : 'dark' }); }}
           title={theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'}
         >
           {theme === 'dark' ? '☀' : '🌙'}
         </button>
         <button
           className={`tb-btn${showHistory ? ' active' : ''}`}
-          onClick={onToggleHistory}
+          onClick={() => { onToggleHistory(); track(showHistory ? 'Toolbar_HistoryPanel_Close' : 'Toolbar_HistoryPanel_Open'); }}
           title="버전 히스토리"
           style={{ position: 'relative' }}
         >
@@ -113,24 +114,24 @@ export default function Toolbar({ onToggleHistory, showHistory, theme, onToggleT
           )}
         </button>
         {canGroup && (
-          <button className="tb-btn primary" onClick={groupSelected} title="선택한 위젯을 그룹으로 묶기 (⌘G)">
+          <button className="tb-btn primary" onClick={() => { groupSelected(); track('Toolbar_GroupWidgets_Click', { widget_count: multiSelectedIds.length }); }} title="선택한 위젯을 그룹으로 묶기 (⌘G)">
             ⬡ 그룹 만들기
           </button>
         )}
         {isGroupSelected && !isGroupCollapsed && (
-          <button className="tb-btn" onClick={() => ungroupWidget(selectedWidgetId!)} title="그룹 해제">
+          <button className="tb-btn" onClick={() => { ungroupWidget(selectedWidgetId!); track('Toolbar_UngroupWidget_Click'); }} title="그룹 해제">
             ↗ 그룹 해제
           </button>
         )}
         {hasSelection && (
-          <button className="tb-btn danger" onClick={deleteSelected} title="삭제 (Del)">
+          <button className="tb-btn danger" onClick={() => { deleteSelected(); track('Toolbar_DeleteWidget_Click', { widget_type: selectedWidget?.type }); }} title="삭제 (Del)">
             🗑 삭제
           </button>
         )}
         <div className="toolbar-divider" />
         <button
           className={`tb-btn${showInvite ? ' active' : ''}`}
-          onClick={onToggleInvite}
+          onClick={() => { onToggleInvite(); track(showInvite ? 'Toolbar_InvitePanel_Close' : 'Toolbar_InvitePanel_Open'); }}
           title="초대 관리"
         >
           {collabMode ? <><span className="collab-live-dot" />공동편집</> : '✉ 초대'}

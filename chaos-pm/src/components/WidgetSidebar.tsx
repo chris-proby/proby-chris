@@ -1,24 +1,13 @@
 import { useState } from 'react';
 import { useStore } from '../store';
 import type { WidgetType } from '../types';
-
-const WIDGET_ITEMS: { type: WidgetType; icon: string; label: string; desc: string }[] = [
-  { type: 'task',    icon: '✓',    label: '작업',      desc: '할 일 & 태스크' },
-  { type: 'note',    icon: '📝',   label: '메모',      desc: '자유 텍스트 메모' },
-  { type: 'link',    icon: '🔗',   label: '링크',      desc: 'URL 북마크' },
-  { type: 'image',   icon: '🖼️',  label: '이미지',    desc: '이미지 & 사진' },
-  { type: 'goal',    icon: '🎯',   label: '목표',      desc: 'OKR & 핵심 결과' },
-  { type: 'lead',    icon: '💼',   label: '리드',      desc: '세일즈 파이프라인' },
-  { type: 'funnel',  icon: '📊',   label: '퍼널',      desc: '리드 집계 차트' },
-  { type: 'textbox', icon: 'T',    label: '텍스트박스', desc: '자유 텍스트 배치' },
-  { type: 'html',    icon: '⟨/⟩', label: 'HTML',      desc: 'HTML 미리보기' },
-  { type: 'fileupload', icon: '📁', label: '파일',       desc: '파일 업로드 & 보관' },
-  { type: 'directory', icon: '👥', label: '디렉토리',   desc: '인원 & 연락처 목록' },
-  { type: 'worklog',   icon: '📋', label: '작업로그',   desc: '팀 작업 기록 & 로그' },
-];
+import { WIDGET_GROUPS } from '../widgetGroups';
 
 export default function WidgetSidebar() {
   const [collapsed, setCollapsed] = useState(false);
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(
+    () => Object.fromEntries(WIDGET_GROUPS.map((g) => [g.label, true]))
+  );
   const addWidget = useStore((s) => s.addWidget);
   const setSelectedWidget = useStore((s) => s.setSelectedWidget);
   const viewport = useStore((s) => s.viewport);
@@ -32,6 +21,9 @@ export default function WidgetSidebar() {
     const id = addWidget(type, cx - 140 + offset(), cy - 90 + offset());
     setSelectedWidget(id);
   };
+
+  const toggleGroup = (label: string) =>
+    setOpenGroups((prev) => ({ ...prev, [label]: !prev[label] }));
 
   return (
     <aside className={`widget-sidebar${collapsed ? ' collapsed' : ''}`}>
@@ -47,28 +39,43 @@ export default function WidgetSidebar() {
       </div>
 
       <div className="sidebar-items">
-        {WIDGET_ITEMS.map(({ type, icon, label, desc }) => (
-          <button
-            key={type}
-            className="sidebar-btn"
-            onClick={() => handleAdd(type)}
-            title={collapsed ? `${label} — ${desc}` : desc}
-          >
-            <span className="sidebar-icon">{icon}</span>
-            {!collapsed && (
-              <span className="sidebar-btn-text">
-                <span className="sidebar-label">{label}</span>
-                <span className="sidebar-desc">{desc}</span>
-              </span>
-            )}
-          </button>
-        ))}
+        {WIDGET_GROUPS.map((group, gi) => {
+          const isOpen = openGroups[group.label] ?? true;
+          return (
+            <div key={group.label} className={`sidebar-group${gi > 0 ? ' sidebar-group-divider' : ''}`}>
+              {!collapsed && (
+                <button
+                  className="sidebar-group-header"
+                  onClick={() => toggleGroup(group.label)}
+                  title={isOpen ? '접기' : '펼치기'}
+                >
+                  <span className="sidebar-group-label">{group.label}</span>
+                  <span className={`sidebar-group-chevron${isOpen ? ' open' : ''}`}>›</span>
+                </button>
+              )}
+              {(collapsed || isOpen) && group.items.map(({ type, icon, label, desc }) => (
+                <button
+                  key={type}
+                  className="sidebar-btn"
+                  onClick={() => handleAdd(type)}
+                  title={collapsed ? `${label} — ${desc}` : desc}
+                >
+                  <span className="sidebar-icon">{icon}</span>
+                  {!collapsed && (
+                    <span className="sidebar-btn-text">
+                      <span className="sidebar-label">{label}</span>
+                      <span className="sidebar-desc">{desc}</span>
+                    </span>
+                  )}
+                </button>
+              ))}
+            </div>
+          );
+        })}
       </div>
 
       {!collapsed && (
-        <div className="sidebar-hint">
-          더블클릭으로도 작업 추가
-        </div>
+        <div className="sidebar-hint">더블클릭으로도 위젯 추가</div>
       )}
     </aside>
   );

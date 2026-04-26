@@ -1,21 +1,7 @@
 import { useEffect, useRef } from 'react';
 import type { WidgetType } from '../types';
-
-const ITEMS: { type: WidgetType; icon: string; label: string }[] = [
-  { type: 'task',    icon: '✓',    label: '작업'      },
-  { type: 'note',    icon: '📝',   label: '메모'      },
-  { type: 'link',    icon: '🔗',   label: '링크'      },
-  { type: 'image',   icon: '🖼️',  label: '이미지'    },
-  { type: 'goal',    icon: '🎯',   label: '목표'      },
-  { type: 'lead',    icon: '💼',   label: '리드'      },
-  { type: 'funnel',  icon: '📊',   label: '퍼널'      },
-  { type: 'textbox', icon: 'T',    label: '텍스트'    },
-  { type: 'html',    icon: '⟨/⟩', label: 'HTML'      },
-  { type: 'fileupload', icon: '📁', label: '파일'     },
-  { type: 'directory',  icon: '👥', label: '디렉토리' },
-  { type: 'worklog',   icon: '📋', label: '작업로그' },
-  { type: 'finance',   icon: '💰', label: '재무 현황' },
-];
+import { WIDGET_GROUPS } from '../widgetGroups';
+import { track } from '../analytics';
 
 interface Props {
   x: number;
@@ -27,9 +13,8 @@ interface Props {
 export default function WidgetPicker({ x, y, onSelect, onDismiss }: Props) {
   const ref = useRef<HTMLDivElement>(null);
 
-  // Adjust position so picker stays on screen
-  const PICKER_W = 260;
-  const PICKER_H = 320;
+  const PICKER_W = 280;
+  const PICKER_H = 400;
   const left = Math.min(x, window.innerWidth - PICKER_W - 12);
   const top  = Math.min(y, window.innerHeight - PICKER_H - 12);
 
@@ -45,20 +30,27 @@ export default function WidgetPicker({ x, y, onSelect, onDismiss }: Props) {
       <div
         ref={ref}
         className="widget-picker"
-        style={{ left, top }}
+        style={{ left, top, width: PICKER_W }}
         onMouseDown={(e) => e.stopPropagation()}
       >
         <div className="picker-header">위젯 추가</div>
-        <div className="picker-grid">
-          {ITEMS.map(({ type, icon, label }) => (
-            <button
-              key={type}
-              className="picker-item"
-              onClick={() => onSelect(type)}
-            >
-              <span className="picker-item-icon">{icon}</span>
-              <span className="picker-item-label">{label}</span>
-            </button>
+        <div className="picker-body">
+          {WIDGET_GROUPS.map((group, gi) => (
+            <div key={group.label} className={`picker-group${gi > 0 ? ' picker-group-divider' : ''}`}>
+              <div className="picker-group-label">{group.label}</div>
+              <div className="picker-grid">
+                {group.items.map(({ type, icon, label }) => (
+                  <button
+                    key={type}
+                    className="picker-item"
+                    onClick={() => { track(`WidgetPicker_Select_${type}`); onSelect(type); }}
+                  >
+                    <span className="picker-item-icon">{icon}</span>
+                    <span className="picker-item-label">{label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       </div>

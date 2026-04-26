@@ -1,10 +1,37 @@
 import { createClient, LiveObject } from '@liveblocks/client';
 import { createRoomContext } from '@liveblocks/react';
 import type { Widget, Connection } from './types';
+import { getAccessToken, SUPABASE_CONFIGURED } from './supabase';
 
-export const LIVEBLOCKS_KEY: string = import.meta.env.VITE_LIVEBLOCKS_PUBLIC_KEY ?? '';
+// Public key path is now legacy — kept only for local dev when Supabase isn't wired up.
+const LEGACY_PUBLIC_KEY: string = import.meta.env.VITE_LIVEBLOCKS_PUBLIC_KEY ?? '';
+const LB_AUTH_ENDPOINT = '/api/liveblocks-auth';
 
-const client = createClient({ publicApiKey: LIVEBLOCKS_KEY });
+// Realtime collab is enabled when EITHER:
+//   • Supabase is configured (production path: server-issued token), OR
+//   • a legacy public key is present (dev fallback)
+export const LIVEBLOCKS_KEY: string = SUPABASE_CONFIGURED ? 'auth-endpoint' : LEGACY_PUBLIC_KEY;
+
+const client = SUPABASE_CONFIGURED
+  ? createClient({
+      authEndpoint: async (room) => {
+        const token = await getAccessToken();
+        if (!token) throw new Error('not authenticated');
+        const r = await fetch(LB_AUTH_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          body: JSON.stringify({ room }),
+        });
+        if (!r.ok) {
+          const txt = await r.text().catch(() => '');
+          throw new Error(`liveblocks auth failed: ${r.status} ${txt}`);
+        }
+        return await r.json();
+      },
+    })
+  : LEGACY_PUBLIC_KEY
+    ? createClient({ publicApiKey: LEGACY_PUBLIC_KEY })
+    : null!;
 
 export type Presence = {
   cursor: { x: number; y: number } | null;
@@ -12,8 +39,6 @@ export type Presence = {
   color: string;
 };
 
-// Liveblocks requires storage types to satisfy LsonObject (JSON-serializable).
-// We keep runtime Widget/Connection types in a separate alias and cast at the boundary.
 export type CanvasSnapshot = {
   widgets: readonly Record<string, unknown>[];
   connections: readonly Record<string, unknown>[];
@@ -29,12 +54,11 @@ export const {
   useMutation,
   useOthers,
   useUpdateMyPresence,
-} = createRoomContext<Presence, Storage>(client);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+} = LIVEBLOCKS_KEY ? createRoomContext<Presence, Storage>(client) : ({} as ReturnType<typeof createRoomContext<Presence, Storage>>);
 
-// Re-export for App.tsx
 export { LiveObject };
 
-// Typed helpers for reading/writing canvas data through the any-typed storage
 export type CanvasData = { widgets: Widget[]; connections: Connection[]; maxZIndex: number };
 
 const COLORS = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#06b6d4', '#3b82f6', '#8b5cf6', '#ec4899'];

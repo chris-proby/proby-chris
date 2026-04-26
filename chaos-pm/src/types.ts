@@ -1,5 +1,5 @@
 export type PortSide = 'top' | 'right' | 'bottom' | 'left';
-export type WidgetType = 'task' | 'note' | 'link' | 'image' | 'group' | 'goal' | 'lead' | 'funnel' | 'textbox' | 'html' | 'fileupload' | 'directory' | 'worklog' | 'finance';
+export type WidgetType = 'task' | 'note' | 'link' | 'image' | 'group' | 'goal' | 'lead' | 'funnel' | 'textbox' | 'html' | 'fileupload' | 'directory' | 'worklog' | 'finance' | 'calendar' | 'embed';
 export type TaskStatus = 'todo' | 'in-progress' | 'done';
 export type TaskPriority = 'low' | 'medium' | 'high';
 export type ConnectionType = 'relates-to' | 'blocks' | 'depends-on' | 'goal-parent';
@@ -153,7 +153,7 @@ export interface WorklogData {
   entries: WorklogEntry[];
 }
 
-export type InvoiceStatus = 'paid' | 'pending' | 'overdue' | 'cancelled';
+export type InvoiceStatus = 'paid' | 'pending' | 'cancelled' | 'requested';
 
 export interface InvoiceEntry {
   id: string;
@@ -170,9 +170,27 @@ export interface InvoiceEntry {
 export interface FinanceData {
   title: string;
   invoices: InvoiceEntry[];
+  exchangeRate?: number; // KRW per 1 USD, used for dual-currency display
 }
 
-export type WidgetData = TaskData | NoteData | LinkData | ImageData | GroupData | GoalData | LeadData | FunnelData | TextboxData | HtmlData | FileUploadData | DirectoryData | WorklogData | FinanceData;
+export interface CalendarEvent {
+  id: string;
+  date: string; // YYYY-MM-DD
+  title: string;
+  color: string;
+}
+
+export interface CalendarData {
+  title: string;
+  events: CalendarEvent[];
+}
+
+export interface EmbedData {
+  url: string;
+  title: string;
+}
+
+export type WidgetData = TaskData | NoteData | LinkData | ImageData | GroupData | GoalData | LeadData | FunnelData | TextboxData | HtmlData | FileUploadData | DirectoryData | WorklogData | FinanceData | CalendarData | EmbedData;
 
 export interface Widget {
   id: string;
