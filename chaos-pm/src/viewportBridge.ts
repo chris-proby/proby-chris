@@ -12,3 +12,7 @@ export const keyBridge = { space: false };
 export const collabBridge = {
   onCursorMove: null as ((x: number, y: number) => void) | null,
 };
+
+// Current Liveblocks room ID — set by App.tsx after session is established.
+// Used by file upload handlers to attach files to the correct canvas.
+export const roomBridge = { current: null as string | null };

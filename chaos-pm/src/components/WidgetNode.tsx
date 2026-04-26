@@ -2,6 +2,9 @@ import React, { useRef, useEffect, useMemo, useState } from 'react';
 import { useStore, defaultSize } from '../store';
 import { track } from '../analytics';
 import { saveFile, loadFile } from '../fileStorage';
+import { uploadFileToCloud } from '../cloudFiles';
+import { SUPABASE_CONFIGURED } from '../supabase';
+import { roomBridge } from '../viewportBridge';
 import { vpBridge, keyBridge } from '../viewportBridge';
 import { getCurrentSession } from '../auth';
 import { v4 as uuidv4 } from 'uuid';
@@ -1359,12 +1362,14 @@ function fmtSize(bytes: number): string {
 }
 
 async function downloadFile(file: FileItem) {
-  let dataUrl = file.data;
-  if (!dataUrl) dataUrl = await loadFile(file.id) ?? '';
-  if (!dataUrl) return;
+  // Prefer cloud URL when available
+  let href = file.url ?? file.data;
+  if (!href) href = (await loadFile(file.id)) ?? '';
+  if (!href) return;
   const a = document.createElement('a');
-  a.href = dataUrl;
+  a.href = href;
   a.download = file.name;
+  a.target = file.url ? '_blank' : '_self';
   a.click();
 }
 
@@ -1377,30 +1382,48 @@ function FileUploadContent({
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
-    let pending = files.length;
-    const newFiles: FileItem[] = [];
-    if (!pending) return;
-    files.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const id = Math.random().toString(36).slice(2);
-        const dataUrl = reader.result as string;
-        saveFile(id, dataUrl);
-        newFiles.push({
-          id,
-          name: file.name,
-          size: file.size,
-          mimeType: file.type || 'application/octet-stream',
-          data: '',
-        });
-        pending--;
-        if (pending === 0) onChange({ files: [...data.files, ...newFiles] });
-      };
-      reader.readAsDataURL(file);
-    });
     e.target.value = '';
+    if (!files.length) return;
+
+    const room = roomBridge.current;
+    const useCloud = SUPABASE_CONFIGURED && !!room;
+
+    const newFiles: FileItem[] = [];
+    for (const file of files) {
+      try {
+        if (useCloud) {
+          const result = await uploadFileToCloud(file, room!);
+          newFiles.push({
+            id: result.id,
+            name: file.name,
+            size: file.size,
+            mimeType: file.type || 'application/octet-stream',
+            data: '',
+            url: result.url,
+            storagePath: result.storagePath,
+          });
+        } else {
+          // legacy IDB fallback
+          const dataUrl = await new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = () => reject(reader.error);
+            reader.readAsDataURL(file);
+          });
+          const id = Math.random().toString(36).slice(2);
+          await saveFile(id, dataUrl);
+          newFiles.push({
+            id, name: file.name, size: file.size,
+            mimeType: file.type || 'application/octet-stream', data: '',
+          });
+        }
+      } catch (err) {
+        console.error('upload failed:', file.name, err);
+      }
+    }
+    if (newFiles.length) onChange({ files: [...data.files, ...newFiles] });
   };
 
   return (

@@ -17,6 +17,7 @@ import { getCurrentSession, hydrateSession, onAuthChange, logout, type AuthSessi
 import { RoomProvider, LiveObject, getUserColor, LIVEBLOCKS_KEY } from './liveblocks';
 import { analyticsIdentify, analyticsReset, track } from './analytics';
 import { SUPABASE_CONFIGURED } from './supabase';
+import { roomBridge } from './viewportBridge';
 
 export default function App() {
   const [session, setSession] = useState<AuthSession | null>(null);
@@ -66,6 +67,7 @@ export default function App() {
   const isGuest = !!roomParam && roomParam !== session.userId;
   // Owner uses their own userId as room; guest joins the owner's room.
   const targetRoomId = isGuest ? roomParam! : session.userId;
+  roomBridge.current = `chaospm-${targetRoomId}`;
 
   if (LIVEBLOCKS_KEY) {
     const initState = useStore.getState();
@@ -86,6 +88,7 @@ export default function App() {
           isOwner={!isGuest}
           userName={session.name}
           userColor={getUserColor(session.userId)}
+          roomId={`chaospm-${targetRoomId}`}
         />
         <AppInner session={session} onLogout={handleLogout} collabMode roomOwnerId={targetRoomId} />
       </RoomProvider>

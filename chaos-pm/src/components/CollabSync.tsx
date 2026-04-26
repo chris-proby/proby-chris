@@ -3,14 +3,20 @@ import { useStorage, useMutation, useUpdateMyPresence, type CanvasData } from '.
 import { useStore } from '../store';
 import { collabBridge } from '../viewportBridge';
 import type { Widget, Connection } from '../types';
+import { pushSnapshot } from '../snapshotBackup';
+import { SUPABASE_CONFIGURED } from '../supabase';
 
 interface Props {
   isOwner: boolean;
   userName: string;
   userColor: string;
+  roomId: string;
 }
 
-export default function CollabSync({ isOwner, userName, userColor }: Props) {
+const SNAPSHOT_INTERVAL_MS = 5 * 60 * 1000;     // backup every 5 minutes
+const SNAPSHOT_DEBOUNCE_MS = 15 * 1000;          // also backup 15s after last change
+
+export default function CollabSync({ isOwner, userName, userColor, roomId }: Props) {
   const updateCanvas = useMutation(
     ({ storage }, data: { widgets: Widget[]; connections: Connection[]; maxZIndex: number }) => {
       storage.get('canvas')?.update(data);
@@ -110,6 +116,51 @@ export default function CollabSync({ isOwner, userName, userColor }: Props) {
     applyRemoteState(w, c, mz);
     queueMicrotask(() => { isApplyingRemote.current = false; });
   }, [remoteCanvas, applyRemoteState, readyToApplyRemote]);
+
+  // ── Server snapshot backup ─────────────────────────────────────────
+  // Periodically POST canvas state to /api/canvas/snapshot so we can
+  // recover if Liveblocks data is ever lost. Owner only — guests don't
+  // own the canvas. Skipped entirely when Supabase isn't configured.
+  useEffect(() => {
+    if (!SUPABASE_CONFIGURED || !isOwner || !idbReady) return;
+
+    let lastPushed = 0;
+    let debounceTimer: ReturnType<typeof setTimeout> | null = null;
+    let intervalTimer: ReturnType<typeof setInterval> | null = null;
+
+    const doPush = async () => {
+      const { widgets, connections, maxZIndex } = useStore.getState();
+      if (widgets.length === 0 && connections.length === 0) return;
+      const ok = await pushSnapshot(roomId, { widgets, connections, maxZIndex });
+      if (ok) lastPushed = Date.now();
+    };
+
+    // Debounced push on store changes (15s after last edit)
+    const unsub = useStore.subscribe((state, prev) => {
+      if (state.widgets === prev.widgets && state.connections === prev.connections) return;
+      if (debounceTimer) clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => { void doPush(); }, SNAPSHOT_DEBOUNCE_MS);
+    });
+
+    // Heartbeat every 5 min as a safety net
+    intervalTimer = setInterval(() => {
+      if (Date.now() - lastPushed > SNAPSHOT_INTERVAL_MS) void doPush();
+    }, SNAPSHOT_INTERVAL_MS);
+
+    // Final push on tab close
+    const onHide = () => {
+      if (document.visibilityState === 'hidden') void doPush();
+    };
+    document.addEventListener('visibilitychange', onHide);
+    window.addEventListener('pagehide', () => { void doPush(); });
+
+    return () => {
+      unsub();
+      if (debounceTimer) clearTimeout(debounceTimer);
+      if (intervalTimer) clearInterval(intervalTimer);
+      document.removeEventListener('visibilitychange', onHide);
+    };
+  }, [isOwner, idbReady, roomId]);
 
   return null;
 }

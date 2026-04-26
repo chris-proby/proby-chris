@@ -3,6 +3,9 @@ import { v4 as uuid } from 'uuid';
 import { useStore } from '../store';
 import { useShallow } from 'zustand/react/shallow';
 import { saveFile, loadFile } from '../fileStorage';
+import { uploadFileToCloud } from '../cloudFiles';
+import { SUPABASE_CONFIGURED } from '../supabase';
+import { roomBridge } from '../viewportBridge';
 import { track } from '../analytics';
 import type { TaskData, NoteData, LinkData, ImageData, GroupData, GoalData, GoalStatus, KeyResult, LeadData, LeadStage, FunnelData, TextboxData, HtmlData, FileUploadData, FileItem, Attachment, ConnectionType, DirectoryData, DirectoryColumn, DirectoryColumnType, WorklogData, WorklogEntry, FinanceData, InvoiceEntry, InvoiceStatus, CalendarData, CalendarEvent, EmbedData } from '../types';
 
@@ -359,24 +362,42 @@ function TaskInspector({ data, onChange }: { data: TaskData; onChange: (d: Parti
   const fileInputRef = useRef<HTMLInputElement>(null);
   const tagInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
-    files.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const attachment: Attachment = {
-          id: uuid(),
-          name: file.name,
-          type: file.type.startsWith('image/') ? 'image' : 'file',
-          data: reader.result as string,
-          mimeType: file.type,
-          size: file.size,
-        };
-        onChange({ attachments: [...data.attachments, attachment] });
-      };
-      reader.readAsDataURL(file);
-    });
     e.target.value = '';
+    if (!files.length) return;
+    const room = roomBridge.current;
+    const useCloud = SUPABASE_CONFIGURED && !!room;
+
+    for (const file of files) {
+      try {
+        if (useCloud) {
+          const result = await uploadFileToCloud(file, room!);
+          const attachment: Attachment = {
+            id: uuid(), name: file.name,
+            type: file.type.startsWith('image/') ? 'image' : 'file',
+            data: '', url: result.url, storagePath: result.storagePath,
+            mimeType: file.type, size: file.size,
+          };
+          onChange({ attachments: [...data.attachments, attachment] });
+        } else {
+          const dataUrl = await new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = () => reject(reader.error);
+            reader.readAsDataURL(file);
+          });
+          const attachment: Attachment = {
+            id: uuid(), name: file.name,
+            type: file.type.startsWith('image/') ? 'image' : 'file',
+            data: dataUrl, mimeType: file.type, size: file.size,
+          };
+          onChange({ attachments: [...data.attachments, attachment] });
+        }
+      } catch (err) {
+        console.error('attachment upload failed:', file.name, err);
+      }
+    }
   };
 
   const addUrlAttachment = () => {
@@ -569,13 +590,24 @@ function LinkInspector({ data, onChange }: { data: LinkData; onChange: (d: Parti
 function ImageInspector({ data, onChange }: { data: ImageData; onChange: (d: Partial<ImageData>) => void }) {
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    e.target.value = '';
     if (!file) return;
+    const room = roomBridge.current;
+    if (SUPABASE_CONFIGURED && room) {
+      try {
+        const result = await uploadFileToCloud(file, room);
+        onChange({ src: result.url, name: file.name });
+        return;
+      } catch (err) {
+        console.error('image upload failed, falling back to inline:', err);
+      }
+    }
+    // Fallback: inline base64 (legacy)
     const reader = new FileReader();
     reader.onload = () => onChange({ src: reader.result as string, name: file.name });
     reader.readAsDataURL(file);
-    e.target.value = '';
   };
 
   return (
@@ -1176,12 +1208,13 @@ function fmtSize(bytes: number): string {
 }
 
 async function downloadFile(file: FileItem) {
-  let dataUrl = file.data;
-  if (!dataUrl) dataUrl = await loadFile(file.id) ?? '';
-  if (!dataUrl) return;
+  let href = file.url ?? file.data;
+  if (!href) href = (await loadFile(file.id)) ?? '';
+  if (!href) return;
   const a = document.createElement('a');
-  a.href = dataUrl;
+  a.href = href;
   a.download = file.name;
+  a.target = file.url ? '_blank' : '_self';
   a.click();
 }
 
@@ -1194,29 +1227,41 @@ function FileUploadInspector({
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
-    let pending = files.length;
+    if (!files.length) return;
+    const room = roomBridge.current;
+    const useCloud = SUPABASE_CONFIGURED && !!room;
+
     const newFiles: FileItem[] = [];
-    if (!pending) return;
-    files.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const id = Math.random().toString(36).slice(2);
-        const dataUrl = reader.result as string;
-        saveFile(id, dataUrl);
-        newFiles.push({
-          id,
-          name: file.name,
-          size: file.size,
-          mimeType: file.type || 'application/octet-stream',
-          data: '',
-        });
-        pending--;
-        if (pending === 0) onChange({ files: [...data.files, ...newFiles] });
-      };
-      reader.readAsDataURL(file);
-    });
+    for (const file of files) {
+      try {
+        if (useCloud) {
+          const result = await uploadFileToCloud(file, room!);
+          newFiles.push({
+            id: result.id, name: file.name, size: file.size,
+            mimeType: file.type || 'application/octet-stream', data: '',
+            url: result.url, storagePath: result.storagePath,
+          });
+        } else {
+          const dataUrl = await new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = () => reject(reader.error);
+            reader.readAsDataURL(file);
+          });
+          const id = Math.random().toString(36).slice(2);
+          await saveFile(id, dataUrl);
+          newFiles.push({
+            id, name: file.name, size: file.size,
+            mimeType: file.type || 'application/octet-stream', data: '',
+          });
+        }
+      } catch (err) {
+        console.error('upload failed:', file.name, err);
+      }
+    }
+    if (newFiles.length) onChange({ files: [...data.files, ...newFiles] });
     e.target.value = '';
   };
 

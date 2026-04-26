@@ -13,7 +13,9 @@ export interface Attachment {
   id: string;
   name: string;
   type: 'file' | 'image' | 'url';
-  data: string;
+  data: string;          // legacy: base64 dataURL or URL string
+  url?: string;          // cloud-hosted URL (Supabase Storage)
+  storagePath?: string;
   mimeType?: string;
   size?: number;
 }
@@ -111,7 +113,9 @@ export interface FileItem {
   name: string;
   size: number;
   mimeType: string;
-  data: string;
+  data: string;          // legacy: base64 dataURL stored in IDB; empty when cloud-backed
+  url?: string;          // cloud-hosted public URL (Supabase Storage)
+  storagePath?: string;  // server path for deletion
 }
 
 export interface FileUploadData {

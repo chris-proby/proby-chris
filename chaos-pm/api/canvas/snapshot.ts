@@ -4,6 +4,7 @@ import { rateLimit, clientIp } from '../../lib/rate-limit.js';
 
 interface SnapshotPayload {
   canvas_id?: string;
+  room_id?: string;
   widgets?: unknown[];
   connections?: unknown[];
   max_z_index?: number;
@@ -13,6 +14,22 @@ const MAX_WIDGETS = 5_000;
 const MAX_CONNECTIONS = 20_000;
 const MAX_PAYLOAD_BYTES = 5 * 1024 * 1024; // 5MB
 
+// Resolve canvas_id from either canvas_id or liveblocks room_id
+async function resolveCanvasId(
+  sb: ReturnType<typeof supabaseAdmin>,
+  canvasId: string | undefined,
+  roomId: string | undefined,
+): Promise<string | null> {
+  if (canvasId) return canvasId;
+  if (!roomId) return null;
+  const { data } = await sb
+    .from('canvases')
+    .select('id')
+    .eq('liveblocks_room_id', roomId)
+    .maybeSingle();
+  return data?.id ?? null;
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const user = await getUserFromAuthHeader(req.headers.authorization);
   if (!user) return res.status(401).json({ error: 'unauthorized' });
@@ -20,8 +37,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const sb = supabaseAdmin();
 
   if (req.method === 'GET') {
-    const canvasId = String(req.query.canvas_id ?? '').trim();
-    if (!canvasId) return res.status(400).json({ error: 'canvas_id required' });
+    const canvasId = await resolveCanvasId(
+      sb,
+      req.query.canvas_id ? String(req.query.canvas_id).trim() : undefined,
+      req.query.room_id ? String(req.query.room_id).trim() : undefined,
+    );
+    if (!canvasId) return res.status(400).json({ error: 'canvas_id or room_id required' });
 
     const { data: canAccess } = await sb.rpc('has_canvas_access', {
       p_canvas: canvasId,
@@ -46,10 +67,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (!rl.ok) return res.status(429).json({ error: 'rate limit exceeded' });
 
     const body = req.body as SnapshotPayload;
-    const { canvas_id, widgets, connections, max_z_index } = body ?? {};
+    const { canvas_id: rawCanvasId, room_id, widgets, connections, max_z_index } = body ?? {};
 
-    if (!canvas_id || typeof canvas_id !== 'string')
-      return res.status(400).json({ error: 'canvas_id required' });
+    const canvas_id = await resolveCanvasId(sb, rawCanvasId, room_id);
+    if (!canvas_id)
+      return res.status(400).json({ error: 'canvas_id or room_id required' });
     if (!Array.isArray(widgets) || !Array.isArray(connections))
       return res.status(400).json({ error: 'widgets/connections must be arrays' });
     if (widgets.length > MAX_WIDGETS)
