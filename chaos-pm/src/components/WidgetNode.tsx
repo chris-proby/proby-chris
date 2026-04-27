@@ -330,20 +330,11 @@ function WidgetNode({ widget }: Props) {
       } as React.CSSProperties
     : undefined;
 
-  // Proportional content zoom: scales only when BOTH dimensions grow.
-  // Single-direction drag → ratio of the un-touched axis stays 1 →
-  // zoomScale = 1 → content reflows via flex/grid instead of scaling.
-  // This avoids the "horizontal drag also stretches vertically" feel.
-  const defaultW = isGroup ? widget.width  : defaultSize(widget.type).width;
-  const defaultH = isGroup ? widget.height : defaultSize(widget.type).height;
-  const widthRatio  = widget.userResized ? widget.width  / defaultW : 1;
-  const heightRatio = widget.userResized ? widget.height / defaultH : 1;
-  const zoomScale = !isGroup && widget.userResized
-    ? Math.max(1, Math.min(widthRatio, heightRatio))
-    : 1;
-  // Content wrapper natural size = visual size ÷ zoom, so visual matches widget.
-  const contentW = widget.userResized ? widget.width  / zoomScale : undefined;
-  const contentH = widget.userResized ? widget.height / zoomScale : undefined;
+  // Per-widget zoom removed: content reflows via flex/grid to fill
+  // the resized frame. Users can zoom the entire canvas (Cmd+/-) for
+  // bigger text — same model as Figma/Miro. Per-widget zoom behaved
+  // unpredictably on single-axis drags because min(widthRatio,
+  // heightRatio) jumped whenever the non-dragged axis crossed.
 
   return (
     <div
@@ -372,12 +363,11 @@ function WidgetNode({ widget }: Props) {
       )}
 
       <div style={{
-        zoom: zoomScale,
-        width: contentW,
-        height: contentH,
+        flex: '1 1 auto',
+        minHeight: 0,
+        overflow: widget.userResized ? 'hidden' : undefined,
         display: 'flex',
         flexDirection: 'column',
-        overflow: 'hidden',
         borderRadius: 'var(--radius)',
       }}>
         <WidgetContent
