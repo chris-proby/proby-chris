@@ -965,8 +965,14 @@ function HtmlContent({ data }: { data: HtmlData }) {
 }
 
 /* ── Funnel Content ── */
-const FUNNEL_STAGES: LeadStage[] = ['prospect', 'qualified', 'proposal', 'negotiation', 'won'];
-const ALL_STAGES: LeadStage[]    = ['prospect', 'qualified', 'proposal', 'negotiation', 'won', 'lost'];
+// '검증(qualified)' is deliberately excluded from the funnel view per
+// product feedback — too granular to be useful at a glance. Lead widgets
+// can still set stage='qualified'; those leads simply don't appear in
+// funnel aggregations below.
+const FUNNEL_STAGES: LeadStage[] = ['prospect', 'proposal', 'negotiation', 'won'];
+const ALL_STAGES: LeadStage[]    = ['prospect', 'proposal', 'negotiation', 'won', 'lost'];
+
+const ALL_SOURCES = '__all__';
 
 function fmtValue(v: number, currency: string): string {
   if (currency === 'KRW') {
@@ -986,13 +992,33 @@ type FunnelTab2 = 'funnel' | 'source' | 'cross' | 'pipeline';
 function FunnelContent({ data }: { data: FunnelData }) {
   const [tab, setTab] = useState<FunnelTab2>('funnel');
   const [pipeSort, setPipeSort] = useState<'expected' | 'value' | 'prob' | 'date'>('expected');
+  const [sourceFilter, setSourceFilter] = useState<string>(ALL_SOURCES);
   const widgets = useStore((s) => s.widgets);
 
-  // All hooks before any conditional return
-  const leads = useMemo(
+  // All leads from the canvas (unfiltered) — used to build the source dropdown
+  const allLeads = useMemo(
     () => widgets.filter((w) => w.type === 'lead').map((w) => w.data as LeadData),
     [widgets]
   );
+
+  // Distinct sources present in the data, sorted by frequency
+  const sourceOptions = useMemo(() => {
+    const counts = new Map<string, number>();
+    allLeads.forEach((l) => {
+      const s = l.source?.trim() || '미입력';
+      counts.set(s, (counts.get(s) ?? 0) + 1);
+    });
+    return [...counts.entries()].sort((a, b) => b[1] - a[1]).map(([s]) => s);
+  }, [allLeads]);
+
+  // Apply source filter + drop 'qualified' (excluded from funnel view)
+  const leads = useMemo(() => {
+    return allLeads.filter((l) => {
+      if (l.stage === 'qualified') return false;
+      if (sourceFilter !== ALL_SOURCES && (l.source?.trim() || '미입력') !== sourceFilter) return false;
+      return true;
+    });
+  }, [allLeads, sourceFilter]);
 
   const currency = leads[0]?.currency ?? 'KRW';
   const fmt = (n: number) => fmtValue(n, currency);
@@ -1038,6 +1064,8 @@ function FunnelContent({ data }: { data: FunnelData }) {
     const matrix: Record<string, Record<LeadStage, number>> = {};
     sources.forEach((src) => {
       matrix[src] = { prospect: 0, qualified: 0, proposal: 0, negotiation: 0, won: 0, lost: 0 };
+      // 'qualified' kept to satisfy the Record<LeadStage> type but the funnel
+      // already filtered those leads out, so the column is hidden via ALL_STAGES.
     });
     leads.forEach((l) => {
       const src = l.source?.trim() || '미입력';
@@ -1092,6 +1120,21 @@ function FunnelContent({ data }: { data: FunnelData }) {
       {/* Header */}
       <div className="funnel-header">
         <span className="funnel-title-text">{data.title || '세일즈 퍼널'}</span>
+        {sourceOptions.length > 0 && (
+          <select
+            className="funnel-source-filter"
+            value={sourceFilter}
+            onChange={(e) => setSourceFilter(e.target.value)}
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
+            title="유입 경로 필터"
+          >
+            <option value={ALL_SOURCES}>전체 유입경로</option>
+            {sourceOptions.map((s) => (
+              <option key={s} value={s}>{s}</option>
+            ))}
+          </select>
+        )}
         <span className="funnel-total-badge">{leads.length}개 리드</span>
       </div>
 
