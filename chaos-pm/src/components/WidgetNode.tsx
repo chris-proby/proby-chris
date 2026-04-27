@@ -330,10 +330,20 @@ function WidgetNode({ widget }: Props) {
       } as React.CSSProperties
     : undefined;
 
-  // Scale content proportionally to widget width when user has resized
-  const defaultW = isGroup ? widget.width : defaultSize(widget.type).width;
-  const zoomScale = (!isGroup && widget.userResized) ? widget.width / defaultW : 1;
-  const zoomHeight = widget.userResized ? widget.height / zoomScale : undefined;
+  // Proportional content zoom: scales only when BOTH dimensions grow.
+  // Single-direction drag → ratio of the un-touched axis stays 1 →
+  // zoomScale = 1 → content reflows via flex/grid instead of scaling.
+  // This avoids the "horizontal drag also stretches vertically" feel.
+  const defaultW = isGroup ? widget.width  : defaultSize(widget.type).width;
+  const defaultH = isGroup ? widget.height : defaultSize(widget.type).height;
+  const widthRatio  = widget.userResized ? widget.width  / defaultW : 1;
+  const heightRatio = widget.userResized ? widget.height / defaultH : 1;
+  const zoomScale = !isGroup && widget.userResized
+    ? Math.max(1, Math.min(widthRatio, heightRatio))
+    : 1;
+  // Content wrapper natural size = visual size ÷ zoom, so visual matches widget.
+  const contentW = widget.userResized ? widget.width  / zoomScale : undefined;
+  const contentH = widget.userResized ? widget.height / zoomScale : undefined;
 
   return (
     <div
@@ -363,8 +373,8 @@ function WidgetNode({ widget }: Props) {
 
       <div style={{
         zoom: zoomScale,
-        width: defaultW,
-        height: zoomHeight,
+        width: contentW,
+        height: contentH,
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
