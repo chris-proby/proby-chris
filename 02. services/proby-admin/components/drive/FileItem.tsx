@@ -34,16 +34,17 @@ export default function FileItem({ file, viewMode, onPreview, onDeleted, isSelec
   async function handleDownload() {
     setDownloading(true)
     try {
-      const { data, error } = await createClient().storage.from(file.storage_bucket).createSignedUrl(file.storage_path, 3600)
-      if (error || !data) throw error ?? new Error('URL 생성 실패')
+      const { data, error } = await createClient().storage.from(file.storage_bucket).download(file.storage_path)
+      if (error || !data) throw error ?? new Error('파일을 가져오지 못했습니다')
       trackMixpanel('Drive_File_Downloaded', { file_id: file.id, file_name: file.name, file_type: file.file_type, file_size: file.file_size })
+      const blobUrl = URL.createObjectURL(data)
       const a = document.createElement('a')
-      a.href = data.signedUrl
+      a.href = blobUrl
       a.download = file.original_name
-      a.rel = 'noopener'
       document.body.appendChild(a)
       a.click()
       a.remove()
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 1000)
     } catch { toast.error('다운로드 실패') } finally { setDownloading(false) }
   }
 

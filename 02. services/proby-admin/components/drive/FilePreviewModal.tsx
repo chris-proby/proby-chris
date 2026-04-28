@@ -38,15 +38,21 @@ export default function FilePreviewModal({ file, onClose }: { file: FileRecord; 
       .finally(() => setLoading(false))
   }, [file, previewType])
 
-  function handleDownload() {
-    if (!url) return
-    const a = document.createElement('a')
-    a.href = url
-    a.download = file.original_name
-    a.rel = 'noopener'
-    document.body.appendChild(a)
-    a.click()
-    a.remove()
+  async function handleDownload() {
+    try {
+      const { data, error } = await createClient().storage.from(file.storage_bucket).download(file.storage_path)
+      if (error || !data) throw error ?? new Error('파일을 가져오지 못했습니다')
+      const blobUrl = URL.createObjectURL(data)
+      const a = document.createElement('a')
+      a.href = blobUrl
+      a.download = file.original_name
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 1000)
+    } catch {
+      // noop — 사용자에게는 모달 컨트롤로만 노출
+    }
   }
 
   function handleOpenInNew() {
