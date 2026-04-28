@@ -45,7 +45,10 @@ export default function FileItem({ file, viewMode, onPreview, onDeleted, isSelec
       a.click()
       a.remove()
       setTimeout(() => URL.revokeObjectURL(blobUrl), 1000)
-    } catch { toast.error('다운로드 실패') } finally { setDownloading(false) }
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : '다운로드 실패'
+      toast.error(`다운로드 실패: ${msg}`)
+    } finally { setDownloading(false) }
   }
 
   async function handleRename() {

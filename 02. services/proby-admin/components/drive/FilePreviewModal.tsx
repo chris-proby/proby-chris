@@ -22,6 +22,7 @@ export default function FilePreviewModal({ file, onClose }: { file: FileRecord; 
   const previewType = getPreviewType(file.file_type)
 
   useEffect(() => {
+    if (previewType === 'none') { setLoading(false); return }
     const supabase = createClient()
     supabase.storage.from(file.storage_bucket).createSignedUrl(file.storage_path, 3600)
       .then(async ({ data }) => {
