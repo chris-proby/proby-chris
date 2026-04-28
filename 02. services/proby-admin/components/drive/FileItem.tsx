@@ -5,7 +5,7 @@ import { FileRecord } from '@/lib/types'
 import { formatFileSize, formatDate, getFileIcon } from '@/lib/file-utils'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { toast } from 'sonner'
-import { Video, FileText, Image, Music, File, MoreVertical, Download, Eye, Trash2, MoveRight, Check } from 'lucide-react'
+import { Video, FileText, Image, Music, File, MoreVertical, Download, Eye, Trash2, MoveRight, Check, Pencil } from 'lucide-react'
 import MoveModal from './MoveModal'
 import { trackMixpanel } from '@/lib/analytics/mixpanel'
 
@@ -25,6 +25,7 @@ interface FileItemProps {
 export default function FileItem({ file, viewMode, onPreview, onDeleted, isSelected = false, onSelect, isReadOnly = false }: FileItemProps) {
   const [downloading, setDownloading] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [renaming, setRenaming] = useState(false)
   const [showMove, setShowMove] = useState(false)
   const iconType = getFileIcon(file.file_type)
   const Icon = iconMap[iconType]
@@ -36,8 +37,26 @@ export default function FileItem({ file, viewMode, onPreview, onDeleted, isSelec
       const { data, error } = await createClient().storage.from(file.storage_bucket).createSignedUrl(file.storage_path, 3600)
       if (error || !data) throw error ?? new Error('URL 생성 실패')
       trackMixpanel('Drive_File_Downloaded', { file_id: file.id, file_name: file.name, file_type: file.file_type, file_size: file.file_size })
-      const a = document.createElement('a'); a.href = data.signedUrl; a.download = file.original_name; a.click()
+      const a = document.createElement('a')
+      a.href = data.signedUrl
+      a.download = file.original_name
+      a.rel = 'noopener'
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
     } catch { toast.error('다운로드 실패') } finally { setDownloading(false) }
+  }
+
+  async function handleRename() {
+    const next = prompt('새 파일 이름을 입력하세요', file.name)?.trim()
+    if (!next || next === file.name) return
+    setRenaming(true)
+    try {
+      const { error } = await createClient().from('files').update({ name: next }).eq('id', file.id)
+      if (error) throw error
+      trackMixpanel('Drive_File_Renamed', { file_id: file.id, old_name: file.name, new_name: next })
+      toast.success('이름이 변경됐습니다'); onDeleted?.()
+    } catch { toast.error('이름 변경 실패') } finally { setRenaming(false) }
   }
 
   async function handleDelete() {
@@ -76,6 +95,7 @@ export default function FileItem({ file, viewMode, onPreview, onDeleted, isSelec
             setShowMove(true)
             trackMixpanel('Drive_File_Move_Modal_Opened', { file_id: file.id, file_name: file.name })
           }} className="text-zinc-300 focus:bg-zinc-800 focus:text-white cursor-pointer"><MoveRight className="w-4 h-4 mr-2" />이동</DropdownMenuItem>
+          <DropdownMenuItem onClick={handleRename} disabled={renaming} className="text-zinc-300 focus:bg-zinc-800 focus:text-white cursor-pointer"><Pencil className="w-4 h-4 mr-2" />{renaming ? '변경 중...' : '이름 변경'}</DropdownMenuItem>
           <DropdownMenuSeparator className="bg-zinc-800" />
           <DropdownMenuItem onClick={handleDelete} className="text-red-400 focus:bg-zinc-800 focus:text-red-300 cursor-pointer"><Trash2 className="w-4 h-4 mr-2" />삭제</DropdownMenuItem>
         </>

@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { Folder } from '@/lib/types'
 import { formatDate } from '@/lib/file-utils'
-import { Folder as FolderIcon, ChevronRight, MoreVertical, Trash2, Lock } from 'lucide-react'
+import { Folder as FolderIcon, ChevronRight, MoreVertical, Trash2, Lock, Pencil } from 'lucide-react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { toast } from 'sonner'
 import FolderPermissionModal from './FolderPermissionModal'
@@ -23,6 +23,7 @@ interface FolderItemProps {
 export default function FolderItem({ folder, viewMode, hrefBase = '/drive', onDropFile, onDeleted, isAdmin, companyId, isRestricted }: FolderItemProps) {
   const [isDragOver, setIsDragOver] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [renaming, setRenaming] = useState(false)
   const [showPermissions, setShowPermissions] = useState(false)
   const href = `${hrefBase}?folder=${folder.id}`
 
@@ -37,6 +38,24 @@ export default function FolderItem({ folder, viewMode, hrefBase = '/drive', onDr
     setIsDragOver(false)
     const fileId = e.dataTransfer.getData('fileId')
     if (fileId && onDropFile) onDropFile(folder.id, fileId)
+  }
+
+  async function handleRename(e: React.MouseEvent) {
+    e.preventDefault()
+    e.stopPropagation()
+    const next = prompt('새 폴더 이름을 입력하세요', folder.name)?.trim()
+    if (!next || next === folder.name) return
+    setRenaming(true)
+    try {
+      const { error } = await createClient().from('folders').update({ name: next }).eq('id', folder.id)
+      if (error) throw error
+      toast.success('이름이 변경됐습니다')
+      onDeleted?.()
+    } catch {
+      toast.error('이름 변경 실패')
+    } finally {
+      setRenaming(false)
+    }
   }
 
   async function handleDelete(e: React.MouseEvent) {
@@ -90,6 +109,15 @@ export default function FolderItem({ folder, viewMode, hrefBase = '/drive', onDr
             </DropdownMenuItem>
             {onDeleted && <DropdownMenuSeparator className="bg-zinc-800" />}
           </>
+        )}
+        {onDeleted && (
+          <DropdownMenuItem
+            onClick={handleRename}
+            disabled={renaming}
+            className="text-zinc-300 focus:bg-zinc-800 focus:text-white cursor-pointer"
+          >
+            <Pencil className="w-4 h-4 mr-2" />{renaming ? '변경 중...' : '이름 변경'}
+          </DropdownMenuItem>
         )}
         {onDeleted && (
           <DropdownMenuItem

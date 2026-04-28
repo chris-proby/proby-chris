@@ -6,20 +6,12 @@ import { formatFileSize } from '@/lib/file-utils'
 import { Button } from '@/components/ui/button'
 import { X, Download, FileText, ExternalLink } from 'lucide-react'
 
-function getPreviewType(fileType: string): 'video' | 'image' | 'pdf' | 'audio' | 'office' | 'text' | 'none' {
+function getPreviewType(fileType: string): 'video' | 'image' | 'pdf' | 'audio' | 'text' | 'none' {
   if (fileType.startsWith('video/')) return 'video'
   if (fileType.startsWith('image/')) return 'image'
   if (fileType === 'application/pdf') return 'pdf'
   if (fileType.startsWith('audio/')) return 'audio'
   if (fileType.startsWith('text/') || fileType === 'application/json') return 'text'
-  if ([
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-    'application/msword',
-    'application/vnd.ms-excel',
-    'application/vnd.ms-powerpoint',
-  ].includes(fileType)) return 'office'
   return 'none'
 }
 
@@ -48,17 +40,19 @@ export default function FilePreviewModal({ file, onClose }: { file: FileRecord; 
 
   function handleDownload() {
     if (!url) return
-    const a = document.createElement('a'); a.href = url; a.download = file.original_name; a.click()
+    const a = document.createElement('a')
+    a.href = url
+    a.download = file.original_name
+    a.rel = 'noopener'
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
   }
 
   function handleOpenInNew() {
     if (!url) return
     window.open(url, '_blank')
   }
-
-  const officeViewerUrl = url
-    ? `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`
-    : null
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90" onClick={onClose}>
@@ -108,8 +102,6 @@ export default function FilePreviewModal({ file, onClose }: { file: FileRecord; 
               <p className="text-zinc-300 font-medium">{file.name}</p>
               <audio src={url} controls className="w-full max-w-md" autoPlay />
             </div>
-          ) : previewType === 'office' && officeViewerUrl ? (
-            <iframe src={officeViewerUrl} className="w-full h-full" title={file.name} />
           ) : previewType === 'text' && textContent !== null ? (
             <div className="w-full h-full overflow-auto p-6">
               <pre className="text-zinc-300 text-sm font-mono whitespace-pre-wrap break-words">{textContent}</pre>
