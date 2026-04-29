@@ -34,7 +34,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const sb = supabaseAdmin();
   const { data: canvas, error: canvasErr } = await sb
     .from('canvases')
-    .select('id, owner_id, share_token')
+    .select('id, owner_id, share_token, share_role')
     .eq('liveblocks_room_id', room)
     .maybeSingle();
 
@@ -58,13 +58,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (!providedToken || !timingSafeEqual(providedToken, canvas.share_token)) {
       return res.status(403).json({ error: 'invalid share token' });
     }
+    // Honor the canvas's configured share_role (editor by default) so
+    // shared links grant useful collab permission rather than read-only.
+    const joinRole: 'editor' | 'viewer' =
+      (canvas.share_role as 'editor' | 'viewer' | undefined) === 'viewer' ? 'viewer' : 'editor';
     const { error: insErr } = await sb.from('canvas_members').insert({
       canvas_id: canvas.id,
       user_id: user.id,
-      role: 'viewer',
+      role: joinRole,
     });
     if (insErr) return res.status(500).json({ error: 'join failed' });
-    role = 'viewer';
+    role = joinRole;
   }
 
   // Determine Liveblocks permission

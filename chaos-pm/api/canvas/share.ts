@@ -36,27 +36,49 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const canAccess = await hasCanvasAccess(canvasId, user.id, 'viewer');
     if (!canAccess) return res.status(403).json({ error: 'no access' });
 
-    const { data } = await sb.from('canvases').select('share_token').eq('id', canvasId).maybeSingle();
-    return res.status(200).json({ share_token: data?.share_token ?? null });
+    const { data } = await sb.from('canvases').select('share_token, share_role').eq('id', canvasId).maybeSingle();
+    return res.status(200).json({
+      share_token: data?.share_token ?? null,
+      share_role: (data?.share_role as 'editor' | 'viewer' | undefined) ?? 'editor',
+    });
   }
 
   if (req.method === 'POST') {
-    // rotate / revoke share_token (owner only)
+    // rotate / revoke share_token + optionally update share_role (owner only)
     const rl = rateLimit(`share-rotate:${user.id}`, 10, 60_000);
     if (!rl.ok) return res.status(429).json({ error: 'rate limit exceeded' });
 
-    const body = (req.body ?? {}) as ShareRequest & { revoke?: boolean };
+    const body = (req.body ?? {}) as ShareRequest & {
+      revoke?: boolean;
+      share_role?: 'editor' | 'viewer';
+      rotate?: boolean;
+    };
     const canvasId = await resolveCanvasId(sb, body.canvas_id, body.room_id);
     if (!canvasId) return res.status(400).json({ error: 'canvas_id or room_id required' });
 
     const isOwner = await hasCanvasAccess(canvasId, user.id, 'owner');
     if (!isOwner) return res.status(403).json({ error: 'owner only' });
 
-    const newToken = body.revoke ? null : crypto.randomBytes(24).toString('hex');
-    const { error } = await sb
+    // build update: rotate token only if explicitly requested OR revoking
+    const update: Record<string, unknown> = {};
+    if (body.revoke) {
+      update.share_token = null;
+    } else if (body.rotate || body.share_token === null) {
+      update.share_token = crypto.randomBytes(24).toString('hex');
+    }
+    if (body.share_role && (body.share_role === 'editor' || body.share_role === 'viewer')) {
+      update.share_role = body.share_role;
+    }
+    if (Object.keys(update).length === 0) {
+      return res.status(400).json({ error: 'nothing to update' });
+    }
+
+    const { data: updated, error } = await sb
       .from('canvases')
-      .update({ share_token: newToken })
-      .eq('id', canvasId);
+      .update(update)
+      .eq('id', canvasId)
+      .select('share_token, share_role')
+      .maybeSingle();
     if (error) return res.status(500).json({ error: 'update failed' });
 
     let evicted = 0;
@@ -71,7 +93,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       evicted = count ?? 0;
     }
 
-    return res.status(200).json({ share_token: newToken, evicted });
+    return res.status(200).json({
+      share_token: updated?.share_token ?? null,
+      share_role: updated?.share_role ?? 'editor',
+      evicted,
+    });
   }
 
   res.setHeader('Allow', 'GET, POST');
