@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { authedFetch, SUPABASE_CONFIGURED } from './supabase';
 import Canvas from './components/Canvas';
 import Toolbar from './components/Toolbar';
 import WidgetSidebar from './components/WidgetSidebar';
@@ -53,7 +54,7 @@ export default function AuthedApp({ session, onLogout }: Props) {
           userColor={getUserColor(session.userId)}
           roomId={`chaospm-${targetRoomId}`}
         />
-        <AppInner session={session} onLogout={onLogout} collabMode roomOwnerId={targetRoomId} />
+        <AppInner session={session} onLogout={onLogout} collabMode roomOwnerId={targetRoomId} isGuest={isGuest} />
       </RoomProvider>
     );
   }
@@ -61,12 +62,53 @@ export default function AuthedApp({ session, onLogout }: Props) {
   return <AppInner session={session} onLogout={onLogout} />;
 }
 
-function AppInner({ session, onLogout, collabMode, roomOwnerId }: {
+export type CanvasOwnership = {
+  ownerName: string | null;
+  myRole: 'owner' | 'editor' | 'viewer' | null;
+  isGuest: boolean;
+};
+
+function useCanvasOwnership(roomId: string, userId: string, isGuest: boolean): CanvasOwnership {
+  const [info, setInfo] = useState<CanvasOwnership>({
+    ownerName: null,
+    myRole: isGuest ? null : 'owner',
+    isGuest,
+  });
+
+  useEffect(() => {
+    if (!SUPABASE_CONFIGURED) return;
+    let cancelled = false;
+    (async () => {
+      const r = await authedFetch(`/api/canvas/members?room_id=${encodeURIComponent(roomId)}`);
+      if (!r.ok || cancelled) return;
+      const json = await r.json();
+      const members = (json.members ?? []) as { user_id: string; role: 'owner' | 'editor' | 'viewer'; name: string; email: string }[];
+      const owner = members.find((m) => m.role === 'owner');
+      const me = members.find((m) => m.user_id === userId);
+      setInfo({
+        ownerName: owner?.name || owner?.email?.split('@')[0] || null,
+        myRole: me?.role ?? null,
+        isGuest,
+      });
+    })();
+    return () => { cancelled = true; };
+  }, [roomId, userId, isGuest]);
+
+  return info;
+}
+
+function AppInner({ session, onLogout, collabMode, roomOwnerId, isGuest }: {
   session: AuthSession;
   onLogout: () => void;
   collabMode?: boolean;
   roomOwnerId?: string;
+  isGuest?: boolean;
 }) {
+  const ownership = useCanvasOwnership(
+    `chaospm-${roomOwnerId ?? session.userId}`,
+    session.userId,
+    !!isGuest,
+  );
   const selectedWidgetId = useStore((s) => s.selectedWidgetId);
   const selectedConnectionId = useStore((s) => s.selectedConnectionId);
   const deleteSelected = useStore((s) => s.deleteSelected);
@@ -116,6 +158,7 @@ function AppInner({ session, onLogout, collabMode, roomOwnerId }: {
         onToggleInvite={() => { setShowInvite((v) => !v); setShowHistory(false); }}
         showInvite={showInvite}
         collabMode={collabMode}
+        ownership={ownership}
       />
       <div className="workspace">
         <WidgetSidebar />

@@ -4,6 +4,7 @@ import type { GroupData } from '../types';
 import type { Theme } from '../hooks/useTheme';
 import type { AuthSession } from '../auth';
 import { track } from '../analytics';
+import type { CanvasOwnership } from '../AuthedApp';
 
 interface ToolbarProps {
   onToggleHistory: () => void;
@@ -15,9 +16,10 @@ interface ToolbarProps {
   onToggleInvite: () => void;
   showInvite: boolean;
   collabMode?: boolean;
+  ownership?: CanvasOwnership;
 }
 
-export default function Toolbar({ onToggleHistory, showHistory, theme, onToggleTheme, session, onLogout, onToggleInvite, showInvite, collabMode }: ToolbarProps) {
+export default function Toolbar({ onToggleHistory, showHistory, theme, onToggleTheme, session, onLogout, onToggleInvite, showInvite, collabMode, ownership }: ToolbarProps) {
   const importRef = useRef<HTMLInputElement>(null);
   const viewport = useStore((s) => s.viewport);
   const setViewport = useStore((s) => s.setViewport);
@@ -71,6 +73,8 @@ export default function Toolbar({ onToggleHistory, showHistory, theme, onToggleT
   return (
     <header className="toolbar">
       <div className="toolbar-logo">chaos<span>PM</span></div>
+      <div className="toolbar-divider" />
+      <CanvasBadge ownership={ownership} />
       <div className="toolbar-divider" />
 
       <button className="tb-btn" onClick={() => { zoom(0.2); track('Toolbar_ZoomIn_Click', { scale: Math.round(viewport.scale * 120) }); }} title="Zoom in">
@@ -144,5 +148,47 @@ export default function Toolbar({ onToggleHistory, showHistory, theme, onToggleT
         </div>
       </div>
     </header>
+  );
+}
+
+function CanvasBadge({ ownership }: { ownership?: CanvasOwnership }) {
+  if (!ownership) return null;
+  const { isGuest, ownerName, myRole } = ownership;
+
+  if (!isGuest) {
+    return (
+      <span
+        title="당신이 소유한 캔버스입니다"
+        style={{
+          display: 'inline-flex', alignItems: 'center', gap: 6,
+          padding: '4px 10px', fontSize: 12, fontWeight: 500,
+          background: 'rgba(34,197,94,0.12)', color: '#16a34a',
+          border: '1px solid rgba(34,197,94,0.3)', borderRadius: 999,
+        }}
+      >
+        <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#16a34a' }} />
+        내 캔버스
+      </span>
+    );
+  }
+
+  const isViewer = myRole === 'viewer';
+  const isEditor = myRole === 'editor' || myRole === 'owner';
+  const roleLabel = isViewer ? '보기 전용' : isEditor ? '편집 가능' : '권한 확인 중';
+  const tone = isViewer ? '#f59e0b' : '#3b82f6';
+  const bg = isViewer ? 'rgba(245,158,11,0.12)' : 'rgba(59,130,246,0.12)';
+  const border = isViewer ? 'rgba(245,158,11,0.35)' : 'rgba(59,130,246,0.35)';
+  return (
+    <span
+      title={isViewer ? '읽기 전용 모드 — 편집 권한이 없습니다' : '편집 권한이 부여된 다른 사람의 캔버스입니다'}
+      style={{
+        display: 'inline-flex', alignItems: 'center', gap: 6,
+        padding: '4px 10px', fontSize: 12, fontWeight: 500,
+        background: bg, color: tone, border: `1px solid ${border}`, borderRadius: 999,
+      }}
+    >
+      <span style={{ width: 6, height: 6, borderRadius: '50%', background: tone }} />
+      {ownerName ? `${ownerName}님의 캔버스` : '공유받은 캔버스'} · {roleLabel}
+    </span>
   );
 }
