@@ -1,5 +1,6 @@
 {
   "alias": ["chaos-pm.vercel.app"],
+  "installCommand": "npm install --include=dev",
   "crons": [
     { "path": "/api/cron/backup", "schedule": "0 18 * * *" }
   ],
