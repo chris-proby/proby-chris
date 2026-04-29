@@ -127,6 +127,9 @@ interface Store {
 
   exportCanvas: () => void;
   importCanvas: (file: File) => Promise<void>;
+
+  readOnly: boolean;
+  setReadOnly: (readOnly: boolean) => void;
 }
 
 const _session = getCurrentSession();
@@ -205,10 +208,14 @@ export const useStore = create<Store>()(
       maxZIndex: 0,
       snapshots: [],
       undoStack: [],
+      readOnly: false,
+
+      setReadOnly: (readOnly) => set({ readOnly }),
 
       setViewport: (v) => set({ viewport: v }),
 
       addWidget: (type, x, y) => {
+        if (get().readOnly) return '';
         const limitErr = checkWidgetCount(get().widgets.length);
         if (limitErr) { showLimitError(limitErr); return ''; }
         const id = uuid();
@@ -226,22 +233,29 @@ export const useStore = create<Store>()(
         return id;
       },
 
-      updateWidget: (id, changes) => set((s) => ({
-        widgets: s.widgets.map((w) =>
-          w.id === id ? { ...w, ...changes, updatedAt: Date.now() } : w
-        ),
-      })),
+      updateWidget: (id, changes) => {
+        if (get().readOnly) return;
+        set((s) => ({
+          widgets: s.widgets.map((w) =>
+            w.id === id ? { ...w, ...changes, updatedAt: Date.now() } : w
+          ),
+        }));
+      },
 
-      updateWidgetData: (id, dataChanges) => set((s) => ({
-        widgets: s.widgets.map((w) =>
-          w.id === id
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            ? { ...w, data: { ...(w.data as any), ...dataChanges } as Widget['data'], updatedAt: Date.now() }
-            : w
-        ),
-      })),
+      updateWidgetData: (id, dataChanges) => {
+        if (get().readOnly) return;
+        set((s) => ({
+          widgets: s.widgets.map((w) =>
+            w.id === id
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              ? { ...w, data: { ...(w.data as any), ...dataChanges } as Widget['data'], updatedAt: Date.now() }
+              : w
+          ),
+        }));
+      },
 
       deleteWidget: (id) => {
+        if (get().readOnly) return;
         const { widgets } = get();
         const w = widgets.find((x) => x.id === id);
         if (w) track(`Store_Widget_Delete_${w.type}`, { total_widgets: widgets.length - 1 });
@@ -264,6 +278,7 @@ export const useStore = create<Store>()(
       },
 
       bringToFront: (id) => {
+        if (get().readOnly) return;
         const { widgets, maxZIndex } = get();
         const target = widgets.find((w) => w.id === id);
         if (!target) return;
@@ -303,6 +318,7 @@ export const useStore = create<Store>()(
       },
 
       addConnection: (fromId, toId, type = 'relates-to') => {
+        if (get().readOnly) return;
         if (fromId === toId) return;
         if (get().connections.some((c) => c.fromId === fromId && c.toId === toId)) return;
         const limitErr = checkConnectionCount(get().connections.length);
@@ -315,11 +331,15 @@ export const useStore = create<Store>()(
         }));
       },
 
-      updateConnection: (id, changes) => set((s) => ({
-        connections: s.connections.map((c) => c.id === id ? { ...c, ...changes } : c),
-      })),
+      updateConnection: (id, changes) => {
+        if (get().readOnly) return;
+        set((s) => ({
+          connections: s.connections.map((c) => c.id === id ? { ...c, ...changes } : c),
+        }));
+      },
 
       deleteConnection: (id) => {
+        if (get().readOnly) return;
         const conn = get().connections.find((c) => c.id === id);
         track('Store_Connection_Delete', { connection_type: conn?.type });
         set((s) => ({
@@ -329,6 +349,7 @@ export const useStore = create<Store>()(
       },
 
       deleteSelected: () => {
+        if (get().readOnly) return;
         const { selectedWidgetId, selectedConnectionId, multiSelectedIds } = get();
         if (!selectedWidgetId && !selectedConnectionId && multiSelectedIds.length === 0) return;
         get().pushUndo();
@@ -366,14 +387,20 @@ export const useStore = create<Store>()(
 
       setPendingConnection: (p) => set({ pendingConnection: p }),
 
-      setWidgetGroup: (widgetId, groupId) => set((s) => ({
-        widgets: s.widgets.map((w) => w.id === widgetId ? { ...w, groupId } : w),
-      })),
+      setWidgetGroup: (widgetId, groupId) => {
+        if (get().readOnly) return;
+        set((s) => ({
+          widgets: s.widgets.map((w) => w.id === widgetId ? { ...w, groupId } : w),
+        }));
+      },
 
-      stageGroupChange: (change) => set((s) => ({
-        widgets: s.widgets.map((w) => w.id === change.widgetId ? { ...w, groupId: change.newGroupId } : w),
-        pendingGroupChange: change,
-      })),
+      stageGroupChange: (change) => {
+        if (get().readOnly) return;
+        set((s) => ({
+          widgets: s.widgets.map((w) => w.id === change.widgetId ? { ...w, groupId: change.newGroupId } : w),
+          pendingGroupChange: change,
+        }));
+      },
 
       confirmGroupChange: () => set({ pendingGroupChange: null }),
 
@@ -391,6 +418,7 @@ export const useStore = create<Store>()(
       setDropTargetGroupId: (id) => set({ dropTargetGroupId: id }),
 
       groupSelected: () => {
+        if (get().readOnly) return;
         const { multiSelectedIds, widgets } = get();
         const selected = widgets.filter((w) => multiSelectedIds.includes(w.id));
         if (selected.length < 2) return;
@@ -436,6 +464,7 @@ export const useStore = create<Store>()(
       },
 
       ungroupWidget: (groupId) => {
+        if (get().readOnly) return;
         const children = get().widgets.filter((w) => w.groupId === groupId);
         track('Store_Group_Dissolve', { child_count: children.length });
         set((s) => ({
@@ -448,6 +477,7 @@ export const useStore = create<Store>()(
       },
 
       toggleGroupCollapse: (groupId) => {
+        if (get().readOnly) return;
         const { widgets } = get();
         const group = widgets.find((w) => w.id === groupId);
         if (!group || group.type !== 'group') return;
@@ -478,6 +508,7 @@ export const useStore = create<Store>()(
       applyRemoteState: (widgets, connections, maxZIndex) => set({ widgets, connections, maxZIndex }),
 
       batchMoveWidgets: (moves) => {
+        if (get().readOnly) return;
         if (moves.length === 0) return;
         const moveMap = new Map(moves.map((m) => [m.id, m]));
         const now = Date.now();
@@ -521,6 +552,7 @@ export const useStore = create<Store>()(
       },
 
       restoreSnapshot: (id) => {
+        if (get().readOnly) return;
         const { snapshots } = get();
         const snap = snapshots.find((s) => s.id === id);
         if (!snap) return;
@@ -550,6 +582,7 @@ export const useStore = create<Store>()(
       },
 
       undo: () => {
+        if (get().readOnly) return;
         const { undoStack } = get();
         if (!undoStack.length) return;
         const [entry, ...rest] = undoStack;
@@ -576,6 +609,7 @@ export const useStore = create<Store>()(
       },
 
       importCanvas: async (file: File) => {
+        if (get().readOnly) return;
         const text = await file.text();
         const data = JSON.parse(text);
         if (!Array.isArray(data.widgets) || !Array.isArray(data.connections)) {

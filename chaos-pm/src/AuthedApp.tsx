@@ -109,6 +109,12 @@ function AppInner({ session, onLogout, collabMode, roomOwnerId, isGuest }: {
     session.userId,
     !!isGuest,
   );
+  const setReadOnly = useStore((s) => s.setReadOnly);
+  const readOnly = useStore((s) => s.readOnly);
+  useEffect(() => {
+    // viewer → read-only. owner / editor → editable.
+    setReadOnly(ownership.myRole === 'viewer');
+  }, [ownership.myRole, setReadOnly]);
   const selectedWidgetId = useStore((s) => s.selectedWidgetId);
   const selectedConnectionId = useStore((s) => s.selectedConnectionId);
   const deleteSelected = useStore((s) => s.deleteSelected);
@@ -161,7 +167,7 @@ function AppInner({ session, onLogout, collabMode, roomOwnerId, isGuest }: {
         ownership={ownership}
       />
       <div className="workspace">
-        <WidgetSidebar />
+        {!readOnly && <WidgetSidebar />}
         <Canvas collabMode={collabMode} />
         {showHistory && <HistoryPanel onClose={() => setShowHistory(false)} />}
         {showInvite && <InvitePanel session={session} onClose={() => setShowInvite(false)} collabMode={collabMode} roomOwnerId={roomOwnerId} />}

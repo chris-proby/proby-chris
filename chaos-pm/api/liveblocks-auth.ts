@@ -51,6 +51,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   let role: 'owner' | 'editor' | 'viewer' | null = (membership?.role as 'owner' | 'editor' | 'viewer' | null) ?? null;
 
+  // Existing viewer joining via current share_token + share_role=editor → upgrade.
+  // (Never downgrade owner; never affect editor.)
+  if (
+    role === 'viewer' &&
+    canvas.share_role === 'editor' &&
+    canvas.share_token &&
+    providedToken &&
+    timingSafeEqual(providedToken, canvas.share_token)
+  ) {
+    const { error: upErr } = await sb
+      .from('canvas_members')
+      .update({ role: 'editor' })
+      .eq('canvas_id', canvas.id)
+      .eq('user_id', user.id);
+    if (!upErr) role = 'editor';
+  }
+
   if (!role) {
     // Non-member: allow auto-join only when the request carries the
     // canvas's current share_token (constant-time comparison).
