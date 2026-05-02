@@ -1,0 +1,2860 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SK Interview Editor</title>
+<link rel="stylesheet" as="style" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<script type="module">
+  import { upload } from 'https://esm.sh/@vercel/blob@0.27.3/client';
+  window.__blobUpload = upload;
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script type="text/javascript">
+  (function(f,b){if(!b.__SV){var e,g,i,h;window.mixpanel=b;b._i=[];b.init=function(e,f,c){function g(a,d){var b=d.split(".");2==b.length&&(a=a[b[0]],d=b[1]);a[d]=function(){a.push([d].concat(Array.prototype.slice.call(arguments,0)))}}var a=b;"undefined"!==typeof c?a=b[c]=[]:c="mixpanel";a.people=a.people||[];a.toString=function(a){var d="mixpanel";"mixpanel"!==c&&(d+="."+c);a||(d+=" (stub)");return d};a.people.toString=function(){return a.toString(1)+".people (stub)"};i="disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking start_batch_senders people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split(" ");for(h=0;h<i.length;h++)g(a,i[h]);var j="set set_once union unset remove delete".split(" ");a.get_group=function(){function b(c){d[c]=function(){call2_args=arguments;call2=[c].concat(Array.prototype.slice.call(call2_args,0));a.push([e,call2])}}for(var d={},e=["get_group"].concat(Array.prototype.slice.call(arguments,0)),c=0;c<j.length;c++)b(j[c]);return d};b._i.push([e,f,c])};b.__SV=1.2;e=f.createElement("script");e.type="text/javascript";e.async=!0;e.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===f.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";g=f.getElementsByTagName("script")[0];g.parentNode.insertBefore(e,g)}})(document,window.mixpanel||[]);
+  mixpanel.init("e2db67936091b2fee97578b19edc88fe", { debug: false, track_pageview: true, persistence: "localStorage" });
+</script>
+<style>
+  :root {
+    --bg: #faf7f6;
+    --panel: #ffffff;
+    --border: #ece6e4;
+    --border-strong: #d8cdc9;
+    --text: #1a1a1c;
+    --muted: #6b6b73;
+    /* SK Brand */
+    --sk-red: #EA002C;
+    --sk-orange: #F47725;
+    --sk-yellow: #FBBC05;
+    --sk-green: #B3CF0A;
+    --sk-teal: #009A93;
+    --sk-blue: #0072C6;
+    --sk-navy: #0E306D;
+    --sk-purple: #68127A;
+    --accent: #EA002C;
+    --accent-soft: #fde6ea;
+    --secondary: #F47725;
+    --secondary-soft: #fde7d6;
+    /* Field tints (very soft) */
+    --opening: #fef3e3;
+    --main: #e6f0f9;
+    --follow: #f5f1ef;
+    --closing: #fde6ea;
+    --sidebar-w: 320px;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; min-height: 100vh; }
+  .layout { display: flex; flex: 1; min-height: 0; }
+  .top-header {
+    display: flex; align-items: center; gap: 18px;
+    padding: 14px 24px;
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 1px 0 rgba(234, 0, 44, 0.04);
+    position: sticky; top: 0; z-index: 20;
+  }
+  .top-header .brand { display: flex; align-items: center; gap: 14px; }
+  .top-header .brand img { height: 56px; width: auto; }
+  .top-header .brand .titles { display: flex; flex-direction: column; line-height: 1.15; }
+  .top-header .brand .t1 { font-size: 22px; font-weight: 800; color: var(--sk-red); letter-spacing: -0.015em; }
+  .top-header .brand .t2 { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .top-header .accent-bar { width: 6px; height: 44px; border-radius: 3px; background: linear-gradient(180deg, var(--sk-red) 0%, var(--sk-orange) 100%); }
+  .top-header .spacer { flex: 1; }
+  .top-header .top-actions { display: flex; gap: 8px; align-items: center; }
+  .top-tabs { display: flex; gap: 4px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 4px; }
+  .top-tabs .tab { background: transparent; color: var(--muted); border: none; padding: 7px 14px; border-radius: 6px; font-weight: 500; font-size: 13px; }
+  .top-tabs .tab:hover { color: var(--text); background: rgba(0,0,0,0.04); }
+  .top-tabs .tab.active { background: var(--sk-red); color: #fff; }
+
+  /* Result view */
+  .result-wrap { padding: 20px; max-width: 1080px; margin: 0 auto; }
+  .dropzone { border: 2px dashed var(--border-strong); border-radius: 10px; padding: 36px; text-align: center; color: var(--muted); background: var(--panel); transition: all 0.15s; cursor: pointer; }
+  .dropzone:hover, .dropzone.drag { border-color: var(--sk-red); background: var(--accent-soft); color: var(--text); }
+  .dropzone .big { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .dropzone .sub { font-size: 13px; }
+  .result-file { margin-top: 16px; padding: 14px 16px; background: var(--panel); border: 1px solid var(--border); border-radius: 10px; display: flex; align-items: center; gap: 12px; }
+  .result-file .meta { flex: 1; min-width: 0; }
+  .result-file .name { font-weight: 600; word-break: break-all; }
+  .result-file .info { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .preview-frame { width: 100%; height: 70vh; border: 1px solid var(--border); border-radius: 10px; margin-top: 14px; background: #fff; }
+  .docx-preview img { max-width: 160px; max-height: 160px; height: auto; width: auto; display: block; }
+  .docx-preview h1 { font-size: 22px; margin: 16px 0 10px; }
+  .docx-preview h2 { font-size: 16px; margin: 14px 0 8px; }
+  .docx-preview p { margin: 6px 0; }
+  .docx-preview table { border-collapse: collapse; margin: 10px 0; border: 0; }
+  .docx-preview td, .docx-preview th { border: 0; background: transparent !important; padding: 6px 10px; }
+  button, label.btn, a.btn { background: var(--accent); color: white; border: none; padding: 7px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; line-height: 1.2; }
+  button.secondary, label.btn.secondary, a.btn.secondary { background: white; color: var(--text); border: 1px solid var(--border-strong); }
+  button.subtle, label.btn.subtle { background: transparent; color: var(--muted); border: 1px solid var(--border); font-weight: 500; padding: 6px 10px; font-size: 12px; }
+  button.subtle:hover, label.btn.subtle:hover { background: var(--bg); color: var(--text); border-color: var(--border-strong); }
+  button.danger { background: var(--sk-red); }
+  button:hover { opacity: 0.9; }
+  input[type=file] { display: none; }
+
+  aside.left { width: var(--sidebar-w); background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; height: calc(100vh - 86px); position: sticky; top: 86px; transition: width 0.2s ease; overflow: hidden; flex: none; }
+  aside.left.collapsed { width: 92px; }
+  aside.left.collapsed .side-head { padding: 12px 7px; }
+  aside.left.collapsed .side-head label.btn,
+  aside.left.collapsed .side-head #add-entry-btn,
+  aside.left.collapsed .side-section { display: none; }
+  aside.left.collapsed .side-head > div { justify-content: center; }
+  aside.left.collapsed .file-item { padding: 8px 8px; }
+  aside.left.collapsed .file-item .row2,
+  aside.left.collapsed .file-item .row3,
+  aside.left.collapsed .file-item .company { display: none; }
+  aside.left.collapsed .file-item .row1 { font-size: 12px; line-height: 1.3; }
+  aside.left.collapsed .file-item .row1 .subject { font-weight: 600; }
+  aside.left.collapsed .sort-pills,
+  aside.left.collapsed #list-header-trigger { display: none; }
+  aside.right { width: 0; background: var(--panel); border-left: 1px solid var(--border); height: calc(100vh - 86px); position: sticky; top: 86px; overflow: hidden; transition: width 0.2s ease; flex: none; display: flex; flex-direction: column; }
+  aside.right .panel-head { flex: none; }
+  aside.right.open { width: 360px; }
+  aside.right .panel-head { padding: 12px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+  aside.right .panel-head h3 { margin: 0; font-size: 14px; font-weight: 700; color: var(--sk-red); flex: 1; }
+  aside.right .essays { padding: 12px 14px 24px; overflow-y: auto; flex: 1 1 auto; min-height: 0; }
+  aside.right .essay-card { border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 10px; background: var(--bg); }
+  aside.right .essay-card .essay-label { font-size: 11px; font-weight: 700; color: var(--sk-red); letter-spacing: 0.04em; margin-bottom: 6px; text-transform: uppercase; }
+  aside.right .essay-card .essay-text { font-size: 13px; line-height: 1.6; color: var(--text); word-break: break-word; }
+  aside.right .essay-card .essay-text p { margin: 0 0 6px; }
+  aside.right .essay-card .essay-text p:last-child { margin-bottom: 0; }
+  aside.right .essay-card .essay-text ul { padding-left: 18px; margin: 4px 0 8px; }
+  aside.right .essay-card .essay-text li { margin-bottom: 4px; }
+  aside.right .essay-card .essay-text li::marker { color: var(--sk-red); }
+  aside.right .empty-essay { color: var(--muted); font-size: 13px; padding: 16px 8px; text-align: center; }
+  aside.right .group { margin-bottom: 18px; }
+  aside.right .group > summary { font-size: 11px; font-weight: 800; color: var(--sk-red); cursor: pointer; padding: 6px 4px; letter-spacing: 0.04em; text-transform: uppercase; list-style: none; user-select: none; }
+  aside.right .group > summary::-webkit-details-marker { display: none; }
+  aside.right .group > summary::before { content: '▾'; margin-right: 6px; display: inline-block; transition: transform 0.15s; }
+  aside.right .group:not([open]) > summary::before { transform: rotate(-90deg); }
+  details.essay-card { padding: 8px 10px; }
+  details.essay-card > summary { list-style: none; cursor: pointer; user-select: none; display: flex; align-items: center; gap: 6px; }
+  details.essay-card > summary::-webkit-details-marker { display: none; }
+  details.essay-card > summary::before { content: '▸'; color: var(--sk-red); display: inline-block; transition: transform 0.15s; font-size: 10px; }
+  details.essay-card[open] > summary::before { transform: rotate(90deg); }
+  details.essay-card[open] { background: white; }
+  details.essay-card .essay-text { margin-top: 8px; }
+
+  .score-row { display: grid; grid-template-columns: 1fr 130px 36px; gap: 10px; align-items: center; padding: 18px 4px 6px; }
+  .score-label { font-size: 12px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .score-bar { position: relative; height: 8px; background: var(--border); border-radius: 4px; }
+  .score-fill { height: 100%; background: linear-gradient(90deg, var(--sk-orange), var(--sk-red)); border-radius: 4px; }
+  .score-median { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--sk-navy); border-radius: 1px; transform: translateX(-1px); }
+  .score-median::after { content: attr(data-v); position: absolute; top: -14px; left: 50%; transform: translateX(-50%); font-size: 10px; font-weight: 700; color: var(--sk-navy); background: white; padding: 0 3px; border-radius: 3px; line-height: 12px; white-space: nowrap; }
+  .score-legend { display: flex; align-items: center; gap: 6px; padding: 4px 4px 8px; font-size: 11px; color: var(--muted); }
+  .score-legend .line { width: 12px; height: 2px; background: var(--sk-navy); border-radius: 1px; }
+  .score-num { font-size: 12px; font-weight: 800; color: var(--sk-red); text-align: right; font-variant-numeric: tabular-nums; }
+  .score-row + .score-row { margin-top: 8px; }
+  .sidebar-toggle { background: transparent; color: var(--muted); border: 1px solid var(--border); width: 30px; height: 30px; padding: 0; border-radius: 6px; font-size: 16px; line-height: 1; flex: none; }
+  .sidebar-toggle:hover { color: var(--sk-red); border-color: var(--sk-red); }
+  .sidebar-toggle.floating { position: sticky; top: 86px; align-self: flex-start; margin: 12px 8px 0 12px; background: white; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+  .side-head { padding: 14px 14px 12px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; background: linear-gradient(180deg, #fff 0%, var(--bg) 100%); }
+  .side-brand { display: flex; align-items: center; gap: 10px; }
+  .side-brand img { height: 28px; width: auto; }
+  .side-brand .titles { display: flex; flex-direction: column; line-height: 1.15; }
+  .side-brand .titles .t1 { font-size: 14px; font-weight: 700; color: var(--sk-red); letter-spacing: -0.01em; }
+  .side-brand .titles .t2 { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .side-head h1 { font-size: 14px; margin: 0; }
+  .side-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+  .side-actions > * { font-size: 12px; padding: 6px 9px; }
+  .side-section { padding: 10px 14px; border-bottom: 1px solid var(--border); }
+  .side-section h3 { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 8px; }
+  .file-list { flex: 1; overflow: auto; padding: 4px 0; }
+  .file-item { padding: 9px 14px; border-bottom: 1px solid #f0f0f3; cursor: pointer; display: flex; gap: 8px; align-items: flex-start; font-size: 13px; }
+  .file-item:hover { background: #fafafa; }
+  .file-item.active { background: var(--accent-soft); border-left: 3px solid var(--sk-red); padding-left: 11px; }
+  .file-item.done { opacity: 0.45; }
+  .file-item.done.active { opacity: 0.75; }
+  .file-item.done:hover { opacity: 0.85; }
+  .today-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sk-red); box-shadow: 0 0 0 3px rgba(234, 0, 44, 0.18); flex: none; margin-top: 6px; }
+  .reschedule-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sk-orange); box-shadow: 0 0 0 3px rgba(244, 119, 37, 0.22); flex: none; margin-top: 6px; }
+  .live-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--sk-yellow); flex: none; margin-top: 5px; position: relative; box-shadow: 0 0 0 0 rgba(251, 188, 5, 0.6); animation: live-pulse 1.6s infinite; }
+  @keyframes live-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(251, 188, 5, 0.55); }
+    70%  { box-shadow: 0 0 0 9px rgba(251, 188, 5, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(251, 188, 5, 0); }
+  }
+  .file-item .ttl { flex: 1; min-width: 0; }
+  .file-item .ttl .name { font-weight: 500; line-height: 1.3; word-break: break-word; }
+  .file-item .ttl .sub { color: var(--muted); font-size: 11px; margin-top: 2px; word-break: break-all; }
+  .file-item .dot { width: 8px; height: 8px; border-radius: 50%; background: #ccc; flex: none; margin-top: 6px; }
+  .file-item .dot.loaded { background: #2d8a3e; }
+  .file-count { font-size: 11px; color: var(--muted); }
+
+  main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .main-head { position: sticky; top: 86px; z-index: 5; background: var(--panel); border-bottom: 1px solid var(--border); padding: 12px 20px; display: flex; flex-direction: column; gap: 8px; }
+  .main-head .title-row { display: flex; gap: 10px; align-items: center; }
+  .main-head .filename { font-size: 13px; color: var(--muted); }
+  .main-head .actions-row { display: flex; gap: 8px; }
+  .main-head .actions-row[hidden] { display: none; }
+  .status-pills { display: flex; gap: 4px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 3px; }
+  .status-pills[hidden] { display: none; }
+  .status-pills button { background: transparent; color: var(--muted); border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; }
+  .status-pills button:hover { color: var(--text); }
+  .status-pills button.active[data-s="예정"] { background: var(--sk-blue); color: #fff; }
+  .status-pills button.active[data-s="진행중"] { background: var(--sk-yellow); color: #4a3500; }
+  .status-pills button.active[data-s="완료"] { background: var(--sk-teal); color: #fff; }
+  .status-pills button.active[data-s="재조정"] { background: var(--sk-orange); color: #fff; }
+
+  /* Sidebar 3-row item */
+  .file-item .ttl .row1 { font-weight: 600; line-height: 1.3; word-break: break-word; }
+  .file-item .ttl .row2 { color: var(--muted); font-size: 12px; margin-top: 2px; }
+  .file-item .ttl .row3 { font-size: 11px; margin-top: 5px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .badge-pill { display: inline-block; padding: 2px 7px; border-radius: 999px; font-weight: 600; font-size: 11px; line-height: 1.4; border: 1px solid; }
+  .badge-q-done { color: var(--sk-teal); border-color: var(--sk-teal); background: rgba(0,154,147,0.06); }
+  .badge-q-todo { color: var(--sk-red); border-color: var(--sk-red); background: rgba(234,0,44,0.06); }
+  .badge-i-예정 { color: var(--sk-blue); border-color: var(--sk-blue); background: rgba(0,114,198,0.06); }
+  .badge-i-완료 { color: var(--sk-teal); border-color: var(--sk-teal); background: rgba(0,154,147,0.06); }
+  .badge-i-재조정 { color: var(--sk-orange); border-color: var(--sk-orange); background: rgba(244,119,37,0.06); }
+  .badge-i-진행중 { color: #6f4f00; border-color: var(--sk-yellow); background: rgba(251,188,5,0.14); }
+  .sort-pills { display: inline-flex; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 2px; }
+  .sort-pills button { background: transparent; color: var(--muted); border: none; padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; cursor: pointer; }
+  .sort-pills button.active { background: var(--sk-red); color: #fff; }
+  .sort-pills button:hover:not(.active) { color: var(--text); }
+  .main-head h2 { margin: 0; font-size: 15px; font-weight: 600; }
+  .meta-row { display: flex; gap: 12px; padding: 12px 20px; background: var(--panel); border-bottom: 1px solid var(--border); align-items: center; flex-wrap: wrap; }
+  .meta-row[hidden] { display: none; }
+  .meta-field { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+  .meta-field span { font-weight: 600; color: var(--text); white-space: nowrap; }
+  .meta-field input { padding: 7px 10px; border: 1px solid var(--border-strong); border-radius: 6px; font: inherit; font-size: 13px; min-width: 160px; }
+  .meta-field.url { display: flex; align-items: center; gap: 8px; }
+  .meta-field.url > span { width: 44px; }
+  .meta-field.url input { flex: 1; width: 100%; min-width: 0; }
+  .meta-url-stack { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 280px; }
+  .editor-wrap { padding: 24px 20px 80px; max-width: 1080px; width: 100%; margin: 0 auto; }
+  .empty { text-align: center; color: var(--muted); padding: 80px 20px; }
+
+  .paste-area-wrap { padding: 24px 20px; max-width: 900px; margin: 0 auto; }
+  .paste-area-wrap h3 { font-size: 14px; margin: 0 0 8px; }
+  .paste-area-wrap p { font-size: 13px; color: var(--muted); margin: 0 0 12px; }
+  .paste-area-wrap textarea { width: 100%; height: 360px; resize: vertical; border: 1px solid var(--border-strong); border-radius: 6px; padding: 10px; font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .paste-area-wrap .actions { display: flex; gap: 8px; margin-top: 10px; justify-content: flex-end; }
+
+  .section { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 18px; overflow: hidden; }
+  .section-header { padding: 10px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; background: #fafafa; }
+  .section-header .badge { font-size: 11px; padding: 3px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+  .section-header h2 { margin: 0; font-size: 14px; font-weight: 600; }
+  .qstat { margin-left: auto; display: flex; align-items: center; gap: 14px; font-size: 11px; color: var(--muted); position: relative; cursor: help; }
+  .qstat .item { display: flex; gap: 4px; align-items: baseline; }
+  .qstat .item b { color: var(--sk-navy); font-weight: 700; font-size: 12px; font-variant-numeric: tabular-nums; }
+  .qstat-tip { display: none; position: absolute; top: calc(100% + 6px); right: 0; width: 440px; max-width: 90vw; background: white; border: 1px solid var(--border-strong); border-radius: 8px; padding: 14px 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.10); z-index: 30; font-size: 12px; color: var(--text); }
+  .qstat:hover .qstat-tip { display: block; }
+  .qstat-tip .tip-h { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 11px; font-weight: 700; color: var(--sk-red); letter-spacing: 0.04em; margin-bottom: 4px; text-transform: uppercase; }
+  .qstat-tip .tip-h .tip-h-sub { font-weight: 500; color: var(--muted); text-transform: none; letter-spacing: 0; }
+  .qstat-tip .tip-section { margin-top: 12px; }
+  .qstat-tip .tip-section-title { font-size: 11px; color: var(--muted); margin-bottom: 4px; display: flex; justify-content: space-between; }
+  .qstat-tip .tip-stats { font-size: 11px; color: var(--text); font-variant-numeric: tabular-nums; }
+  .qstat-tip .tip-stats b { color: var(--sk-navy); }
+  .qstat-tip svg { display: block; width: 100%; height: 60px; overflow: visible; }
+  .qstat-tip .hist-bar { fill: var(--sk-orange); }
+  .qstat-tip .hist-bar.high { fill: var(--sk-red); }
+  .qstat-tip .sd-band { fill: rgba(0,114,198,0.10); }
+  .qstat-tip .mean-line { stroke: var(--sk-navy); stroke-width: 2; }
+  .qstat-tip .axis-line { stroke: var(--border-strong); stroke-width: 1; }
+  .qstat-tip .axis-tick { fill: var(--muted); font-size: 9px; font-family: ui-monospace, Menlo, monospace; }
+  .qstat-tip .mean-label { fill: var(--sk-navy); font-weight: 700; }
+  .block { padding: 12px 14px; border-bottom: 1px dashed var(--border); }
+  .block:last-child { border-bottom: none; }
+  .block-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin-bottom: 6px; display: flex; gap: 8px; align-items: center; }
+  .block-label.opening { color: var(--sk-orange); }
+  .block-label.chapter { color: var(--sk-teal); }
+  .block-label.topic { color: var(--sk-teal); }
+  .block-label.main { color: var(--sk-blue); }
+  .block-label.closing { color: var(--sk-red); }
+  .block-label .cond { background: #fff3cd; color: #7c5500; padding: 2px 6px; border-radius: 4px; font-size: 11px; text-transform: none; letter-spacing: 0; font-weight: 500; }
+  .block-label .spacer { flex: 1; }
+  .broadcast-btn { font-size: 11px; padding: 4px 8px; background: white; color: var(--accent); border: 1px solid var(--accent); border-radius: 5px; font-weight: 600; }
+  .broadcast-btn:hover { background: var(--accent-soft); }
+  .broadcast-btn:disabled { color: var(--muted); border-color: var(--border-strong); cursor: not-allowed; opacity: 0.6; }
+  .sentences { display: flex; flex-direction: column; gap: 6px; }
+  .sentence-row { display: flex; gap: 6px; align-items: flex-start; }
+  textarea.sent {
+    flex: 1; resize: none; border: 1px solid var(--border-strong); border-radius: 6px; padding: 8px 10px; font: inherit; font-size: 14px; line-height: 1.5; background: white;
+    min-height: 36px; overflow: hidden;
+  }
+  textarea.sent:focus { outline: 2px solid var(--accent); border-color: var(--accent); }
+  .sentence-row.opening textarea { background: var(--opening); }
+  .sentence-row.chapter textarea { background: var(--chapter); font-weight: 600; }
+  .sentence-row.topic textarea { background: var(--topic); font-weight: 500; }
+  .sentence-row.main textarea { background: var(--main); font-weight: 500; }
+  .sentence-row.follow textarea { background: var(--follow); }
+  .sentence-row.closing textarea { background: var(--closing); }
+  .row-actions { display: flex; flex-direction: column; gap: 4px; }
+  .icon-btn { background: transparent; color: var(--muted); border: 1px solid var(--border); width: 28px; height: 28px; padding: 0; border-radius: 6px; font-size: 14px; line-height: 1; }
+  .icon-btn:hover { background: var(--bg); color: var(--text); }
+  .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #1a1a1c; color: white; padding: 10px 16px; border-radius: 8px; font-size: 13px; opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 200; }
+  .toast.show { opacity: 1; }
+
+  .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 100; }
+  .modal[hidden] { display: none; }
+  .modal-card { background: white; border-radius: 10px; padding: 20px; width: min(960px, 94vw); max-height: 88vh; display: flex; flex-direction: column; gap: 14px; }
+  .modal-card h3 { margin: 0; font-size: 15px; }
+  .modal-card .scroll { overflow: auto; }
+  .modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
+
+  /* Auth gating — hard-hide app chrome until authenticated. */
+  body.auth-pending .top-header,
+  body.auth-pending .layout,
+  body.login-mode .top-header,
+  body.login-mode .layout { display: none !important; }
+  body.auth-pending { background: linear-gradient(135deg, #ffffff 0%, var(--accent-soft) 60%, #fff 100%); }
+  #login-screen[hidden] { display: none !important; }
+  #login-screen {
+    position: fixed; inset: 0; z-index: 1000;
+    background: linear-gradient(135deg, #ffffff 0%, var(--accent-soft) 60%, #fff 100%);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .login-card {
+    background: white; border-radius: 16px; padding: 36px 32px;
+    box-shadow: 0 18px 50px rgba(234, 0, 44, 0.10), 0 1px 0 rgba(0,0,0,0.02);
+    width: min(380px, 90vw);
+    border-top: 4px solid var(--sk-red);
+  }
+  .login-card .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+  .login-card .brand img { height: 38px; width: auto; }
+  .login-card .brand .ti { font-size: 18px; font-weight: 800; color: var(--sk-red); letter-spacing: -0.01em; line-height: 1.1; }
+  .login-card .brand .sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .login-card label { display: flex; flex-direction: column; gap: 6px; font-size: 12px; color: var(--muted); margin-bottom: 14px; font-weight: 600; }
+  .login-card input { padding: 10px 12px; border: 1px solid var(--border-strong); border-radius: 8px; font: inherit; font-size: 14px; }
+  .login-card input:focus { outline: 2px solid var(--accent); border-color: var(--accent); }
+  .login-card button { width: 100%; background: var(--sk-red); color: #fff; border: none; padding: 11px 14px; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer; }
+  .login-card button:hover { opacity: 0.92; }
+  .login-card .err { color: var(--sk-red); font-size: 12px; margin-top: 10px; min-height: 16px; }
+  .login-card .hint { font-size: 11px; color: var(--muted); margin-top: 14px; line-height: 1.5; }
+
+  /* Logout button in header */
+  .logout-btn { background: transparent; border: 1px solid var(--border); color: var(--muted); padding: 6px 10px; border-radius: 6px; font-size: 12px; }
+  .logout-btn:hover { color: var(--sk-red); border-color: var(--sk-red); }
+
+  .diff-box { background: #f7f7f8; border: 1px solid var(--border); border-radius: 6px; padding: 10px; font-size: 13px; }
+  .diff-box .label { font-size: 11px; color: var(--muted); font-weight: 600; }
+  .diff-from { color: #c2185b; white-space: pre-wrap; word-break: break-word; }
+  .diff-to { color: #137333; white-space: pre-wrap; word-break: break-word; }
+
+  .match-item { border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; }
+  .match-item .profile { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+  .match-item .profile b { color: var(--text); }
+  .match-item .qctx { font-size: 12px; background: #fafafa; padding: 6px 8px; border-radius: 5px; margin-top: 6px; color: #555; }
+  .match-item .qctx .qttl { font-weight: 600; color: var(--text); }
+</style>
+</head>
+<body class="auth-pending">
+
+<div id="login-screen" hidden>
+  <form class="login-card" id="login-form" autocomplete="on">
+    <div class="brand">
+      <img src="./assets/logo.png" alt="SK" />
+      <div>
+        <div class="ti">SK-Proby 어드민</div>
+        <div class="sub">관리자 로그인</div>
+      </div>
+    </div>
+    <label>
+      <span>비밀번호</span>
+      <input type="password" id="login-password" autocomplete="current-password" required />
+    </label>
+    <button type="submit" id="login-submit">로그인</button>
+    <div class="err" id="login-error"></div>
+  </form>
+</div>
+
+<header class="top-header">
+  <div class="accent-bar"></div>
+  <div class="brand">
+    <img src="./assets/logo.png" alt="SK" />
+    <div class="titles">
+      <span class="t1">SK-Proby 어드민</span>
+      <span class="t2">SK 인터뷰 운영 콘솔</span>
+    </div>
+  </div>
+  <div class="spacer"></div>
+  <nav class="top-tabs">
+    <button class="tab active" data-tab="editor">질문 편집기</button>
+    <button class="tab" data-tab="result">인터뷰 결과</button>
+  </nav>
+  <span id="sync-status" style="font-size:11px;color:var(--sk-red);margin-left:10px;"></span>
+  <button class="logout-btn" id="logout-btn" style="margin-left:8px;">로그아웃</button>
+</header>
+
+<div class="layout">
+<aside class="left">
+  <div class="side-head">
+    <div style="display:flex;gap:6px;align-items:center;">
+      <button class="secondary subtle" id="link-export-btn" type="button" style="flex:1;" title="모든 인원의 링크를 xlsx로 다운로드">링크 전체 다운</button>
+      <input type="file" id="csv-input" accept=".csv,text/csv" style="display:none;" />
+      <button class="secondary subtle" id="add-entry-btn" style="flex:1;">대상자 추가</button>
+      <button class="sidebar-toggle" id="left-toggle" title="사이드바 접기" aria-label="collapse sidebar">‹</button>
+    </div>
+  </div>
+
+  <div class="side-section" id="list-header-trigger" style="display:flex; align-items:center; justify-content:space-between; cursor:pointer; user-select:none; gap: 8px; flex-wrap: wrap;">
+    <h3 style="margin:0;">목록</h3>
+    <div style="display:flex; align-items:center; gap:8px; margin-left:auto;">
+      <div class="sort-pills" id="sort-pills">
+        <button data-sort="date" class="active" type="button">일정순</button>
+        <button data-sort="updated" type="button">최근수정</button>
+      </div>
+      <span class="file-count" id="file-count">0</span>
+    </div>
+  </div>
+  <div class="file-list" id="file-list"></div>
+</aside>
+
+<main>
+  <div class="main-head">
+    <div class="title-row">
+      <h2 id="active-title">목록을 선택하세요</h2>
+      <span style="flex:1;"></span>
+      <div class="status-pills" id="status-pills" hidden>
+        <button data-s="예정">예정</button>
+        <button data-s="진행중">진행중</button>
+        <button data-s="완료">완료</button>
+        <button data-s="재조정">재조정</button>
+      </div>
+    </div>
+    <div class="filename" id="active-filename"></div>
+    <div id="json-actions" class="actions-row" hidden>
+      <button class="secondary" id="json-edit-btn">JSON 편집</button>
+      <button class="secondary" id="finalize-btn" style="background:var(--sk-teal);color:white;border-color:var(--sk-teal);">수정 완료</button>
+      <button id="json-export-btn">질문 추출</button>
+      <button class="secondary" id="link-view-btn" type="button">링크 보기</button>
+      <span style="flex:1;"></span>
+      <button class="secondary" id="essay-toggle" title="추가정보 보기">추가정보</button>
+    </div>
+  </div>
+  <div class="meta-row" id="meta-row" hidden>
+    <label class="meta-field">
+      <span>캘린더</span>
+      <input type="datetime-local" id="meta-date" step="60" />
+    </label>
+    <div class="meta-url-stack">
+      <label class="meta-field url">
+        <span>메인</span>
+        <input type="url" id="meta-url" placeholder="https://..." />
+      </label>
+      <label class="meta-field url">
+        <span>백업1</span>
+        <input type="url" id="meta-url2" placeholder="https://..." />
+      </label>
+      <label class="meta-field url">
+        <span>백업2</span>
+        <input type="url" id="meta-url3" placeholder="https://..." />
+      </label>
+    </div>
+  </div>
+  <div id="root">
+    <div class="empty">CSV 업로드 후 좌측 목록을 선택하세요.</div>
+  </div>
+</main>
+<aside class="right" id="essay-sidebar">
+  <div class="panel-head">
+    <h3>추가정보</h3>
+    <button class="sidebar-toggle" id="essay-close" title="닫기">×</button>
+  </div>
+  <div class="essays" id="essay-list"></div>
+</aside>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal" id="backup-modal" hidden>
+  <div class="modal-card" style="width:min(520px,92vw);">
+    <h3>백업 / 복원</h3>
+    <p style="font-size:13px;color:var(--muted);margin:0;">전체 entries (메타·.data·.result·status·잠금 등 모든 정보)를 JSON 파일로 저장하거나 다시 불러옵니다.</p>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <button id="backup-export">📥 JSON으로 내보내기</button>
+      <label class="btn secondary" for="backup-import-input" style="text-align:center;cursor:pointer;">📤 JSON 파일에서 복원</label>
+      <input type="file" id="backup-import-input" accept=".json,application/json" style="display:none;" />
+      <div id="backup-status" style="font-size:12px;color:var(--muted);min-height:18px;text-align:center;"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="secondary" id="backup-close">닫기</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="add-entry-modal" hidden>
+  <div class="modal-card" style="width:min(440px,92vw);">
+    <h3>대상자 추가</h3>
+    <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--muted);">
+      <span>대상자 (이름) *</span>
+      <input id="add-name" type="text" style="padding:8px 10px;border:1px solid var(--border-strong);border-radius:6px;font:inherit;" />
+    </label>
+    <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--muted);">
+      <span>회사</span>
+      <input id="add-company" type="text" style="padding:8px 10px;border:1px solid var(--border-strong);border-radius:6px;font:inherit;" />
+    </label>
+    <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--muted);">
+      <span>일자 · 시간</span>
+      <input id="add-date" type="datetime-local" step="60" style="padding:8px 10px;border:1px solid var(--border-strong);border-radius:6px;font:inherit;" />
+    </label>
+    <div class="modal-actions">
+      <button class="secondary" id="add-cancel">취소</button>
+      <button id="add-save">추가</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="link-view-modal" hidden>
+  <div class="modal-card" style="width:min(580px,92vw);">
+    <h3 style="margin:0;">링크 보기</h3>
+    <div id="link-view-meta" style="font-size:13px;color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 14px;line-height:1.6;"></div>
+
+    <div>
+      <div style="display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--muted);font-weight:600;margin-bottom:4px;">
+        <span>버전 A · 라벨 포함</span>
+        <button class="secondary" id="link-copy-a" type="button" style="font-size:11px;padding:4px 8px;">복사</button>
+      </div>
+      <pre id="link-body-a" style="margin:0;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;white-space:pre-wrap;background:#fff;border:1px solid var(--border);border-radius:8px;padding:10px 14px;line-height:1.6;color:var(--text);"></pre>
+    </div>
+
+    <div>
+      <div style="display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--muted);font-weight:600;margin-bottom:4px;">
+        <span>버전 B · 링크만</span>
+        <button class="secondary" id="link-copy-b" type="button" style="font-size:11px;padding:4px 8px;">복사</button>
+      </div>
+      <pre id="link-body-b" style="margin:0;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;white-space:pre-wrap;background:#fff;border:1px solid var(--border);border-radius:8px;padding:10px 14px;line-height:1.6;color:var(--text);"></pre>
+    </div>
+
+    <div class="modal-actions">
+      <button class="secondary" id="link-view-close" type="button">닫기</button>
+      <button id="link-view-copy" type="button">전체 복사</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="json-edit-modal" hidden>
+  <div class="modal-card">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+      <h3 style="margin:0;">JSON 편집</h3>
+      <button class="secondary" id="json-edit-copy" type="button" style="font-size:12px;padding:6px 10px;">복사</button>
+    </div>
+    <div style="font-size:12px;color:var(--muted);">현재 저장된 최신 JSON이 미리 담겨 있어요. 그대로 복사해 가셔도 되고, 수정해서 다시 저장하셔도 됩니다.</div>
+    <textarea id="json-edit-area" style="flex:1;min-height:420px;resize:vertical;border:1px solid var(--border-strong);border-radius:6px;padding:10px;font:12px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;"></textarea>
+    <div class="modal-actions">
+      <button class="secondary" id="json-edit-cancel">취소</button>
+      <button id="json-edit-save">저장</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="broadcast-modal" hidden>
+  <div class="modal-card">
+    <h3>일괄 변경 미리보기</h3>
+    <div class="diff-box">
+      <div class="label">변경 내용</div>
+      <div style="margin-top:6px;"><span class="label" style="color:#c2185b;">원본:</span><div class="diff-from" id="diff-from"></div></div>
+      <div style="margin-top:8px;"><span class="label" style="color:#137333;">변경:</span><div class="diff-to" id="diff-to"></div></div>
+    </div>
+    <div style="font-size:13px;">아래 항목들에 동일한 원본 텍스트가 포함되어 있습니다. 승인 시 모두 변경됩니다.</div>
+    <div class="scroll" id="match-list"></div>
+    <div class="modal-actions">
+      <button class="secondary" id="bc-cancel">취소</button>
+      <button id="bc-approve">승인 (<span id="bc-count">0</span>건 변경)</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Mixpanel tracking helper — silent if SDK fails / not loaded.
+function track(name, props) {
+  try {
+    if (window.mixpanel && window.mixpanel.track) {
+      window.mixpanel.track(name, props || {});
+    }
+  } catch (e) { /* swallow */ }
+}
+
+// State
+let entries = [];
+let activeId = null;
+let blocks = [];
+let nextId = 1;
+let activeTab = 'editor';   // 'editor' | 'result'
+let leftCollapsed = false;
+let rightOpen = false;
+let sortMode = 'date';      // 'date' | 'updated'
+let deleteClickState = { id: null, count: 0, timer: null };
+
+const UI_STORAGE_KEY = 'interview-editor:ui:v1';
+let saveTimer = null;
+function persist() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(persistNow, 400);
+}
+function persistNow() {
+  clearTimeout(saveTimer);
+  try {
+    localStorage.setItem(UI_STORAGE_KEY, JSON.stringify({ activeId, activeTab, leftCollapsed, rightOpen, sortMode }));
+  } catch {}
+  scheduleServerWrite();
+}
+
+let writeTimer = null;
+let writing = false;
+let writeAgain = false;
+let dirty = false;
+let editVersion = 0;
+const dirtyEntryIds = new Set();
+const removedEntryIds = new Set();
+
+function markEntryDirty(id) {
+  if (id == null) return;
+  // Refuse to write back a stale ID that no longer exists in the live entries —
+  // protects against zombie writes from bfcache-restored tabs after dedupe.
+  const e = entries.find(x => x.id === id);
+  if (!e) return;
+  dirtyEntryIds.add(id);
+  dirty = true;
+  editVersion++;
+  e.updatedAt = Date.now();
+}
+function markEntryRemoved(id) {
+  if (id == null) return;
+  dirtyEntryIds.delete(id);
+  removedEntryIds.add(id);
+  dirty = true;
+  editVersion++;
+}
+function scheduleServerWrite() {
+  // Active entry is the most common target; mark it dirty as a default heuristic
+  if (activeId != null) markEntryDirty(activeId);
+  clearTimeout(writeTimer);
+  writeTimer = setTimeout(writeEntriesToServer, 1200);
+}
+function flushServerWrite() {
+  clearTimeout(writeTimer);
+  return writeEntriesToServer();
+}
+async function writeEntriesToServer() {
+  if (writing) { writeAgain = true; return; }
+  writing = true;
+  setError('');
+  const versionAtStart = editVersion;
+  try {
+    // Snapshot ids and clear; new edits during write will repopulate
+    const idsToWrite = [...dirtyEntryIds];
+    const idsToDelete = [...removedEntryIds];
+    dirtyEntryIds.clear();
+    removedEntryIds.clear();
+
+    // PUT each dirty entry independently — race-free per-entry storage
+    const putOne = async (id) => {
+      const entry = entries.find(e => e.id === id);
+      if (!entry) return; // skipped (might have been removed)
+      const r = await fetch('/api/entry', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ entry })
+      });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok || !d.ok) throw new Error('PUT entry ' + id + ': ' + (d.error || r.status));
+    };
+    const deleteOne = async (id) => {
+      const r = await fetch('/api/entry?id=' + id, { method: 'DELETE' });
+      if (!r.ok) throw new Error('DELETE entry ' + id + ': ' + r.status);
+    };
+
+    // Run with concurrency 8
+    const queue = [...idsToWrite];
+    await Promise.all(Array.from({ length: 8 }, async () => {
+      while (queue.length) await putOne(queue.shift());
+    }));
+    for (const id of idsToDelete) await deleteOne(id);
+
+    if (editVersion === versionAtStart) dirty = false;
+  } catch (err) {
+    console.warn('save failed', err);
+    setError('저장 실패');
+  } finally {
+    writing = false;
+    if (writeAgain) { writeAgain = false; scheduleServerWrite(); }
+  }
+}
+
+function setError(msg) {
+  const el = document.getElementById('sync-status');
+  if (!el) return;
+  el.textContent = msg || '';
+}
+
+function restoreUiState() {
+  try {
+    const raw = localStorage.getItem(UI_STORAGE_KEY);
+    if (!raw) return;
+    const p = JSON.parse(raw);
+    if (typeof p.activeId === 'number' || p.activeId === null) activeId = p.activeId;
+    if (p.activeTab === 'editor' || p.activeTab === 'result') activeTab = p.activeTab;
+    leftCollapsed = !!p.leftCollapsed;
+    rightOpen = !!p.rightOpen;
+    if (p.sortMode === 'date' || p.sortMode === 'updated') sortMode = p.sortMode;
+  } catch {}
+}
+
+// CSV parser handling quoted fields with commas/newlines.
+function parseCSV(text) {
+  const rows = [];
+  let cur = [];
+  let cell = '';
+  let i = 0;
+  let inQ = false;
+  while (i < text.length) {
+    const c = text[i];
+    if (inQ) {
+      if (c === '"') {
+        if (text[i + 1] === '"') { cell += '"'; i += 2; continue; }
+        inQ = false; i++; continue;
+      }
+      cell += c; i++; continue;
+    }
+    if (c === '"') { inQ = true; i++; continue; }
+    if (c === ',') { cur.push(cell); cell = ''; i++; continue; }
+    if (c === '\r') { i++; continue; }
+    if (c === '\n') { cur.push(cell); rows.push(cur); cur = []; cell = ''; i++; continue; }
+    cell += c; i++;
+  }
+  if (cell.length > 0 || cur.length > 0) { cur.push(cell); rows.push(cur); }
+  if (!rows.length) return [];
+  const header = rows[0].map(h => h.trim());
+  return rows.slice(1).filter(r => r.some(v => (v || '').trim() !== '')).map(r => {
+    const o = {};
+    header.forEach((h, idx) => { o[h] = (r[idx] ?? '').trim(); });
+    return o;
+  });
+}
+
+const DATE_KEYS = ['date', 'Date', 'DATE', '날짜', '일자', '인터뷰일', '인터뷰 날짜'];
+const NAME_KEYS = ['이름', '대상자', 'name', 'Name', '성함', '제목', 'title', 'Title'];
+const COMPANY_KEYS = ['멤버사', '회사', 'company', 'Company', '소속'];
+const CODE_KEYS = ['코드', 'code', 'Code', 'CODE', '대상자코드', '비고'];
+const TIME_KEYS = ['시간', 'time', 'Time'];
+const URL_KEYS = ['url', 'URL', 'Url', '링크', 'link'];
+
+function cleanValue(v) {
+  if (v == null) return '';
+  const s = String(v).trim();
+  if (!s) return '';
+  // Treat various sheet "missing" tokens as empty
+  if (/^#?n[\/\-_.\s]?a!?$/i.test(s)) return '';                  // #N/A, #N-A, NA, #na ...
+  if (/^#(ref|name|div\/0|null|num|value|getting_data)!?\??$/i.test(s)) return '';
+  if (/^-+$/.test(s)) return '';
+  if (s.toLowerCase() === 'null' || s.toLowerCase() === 'undefined') return '';
+  return s;
+}
+function pickField(profile, keys) {
+  for (const k of keys) {
+    const v = cleanValue(profile[k]);
+    if (v) return v;
+  }
+  return '';
+}
+function normalizeDate(v) {
+  const raw = cleanValue(v);
+  if (!raw) return '';
+  const s = raw.replace(/[./]/g, '-').replace(/\s+/g, '');
+  let m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (m) return `${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`;
+  // M-D-YYYY (US style with year at the end)
+  m = s.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
+  if (m) return `${m[3]}-${m[1].padStart(2,'0')}-${m[2].padStart(2,'0')}`;
+  // Unrecognized — return empty rather than dirty raw
+  return '';
+}
+function loadCsvRows(rows) {
+  // CSV upload is additive only: rows whose (subject + company) already exists are
+  // skipped; only genuinely new people get appended. Existing entries are not
+  // modified or deleted in any way.
+  const norm = (s) => (s || '').normalize('NFC').trim().toLowerCase();
+  const existingKeys = new Set(entries.map(e => `${norm(e.subject)}::${norm(e.company)}`));
+
+  let added = 0, skipped = 0;
+  const additions = [];
+  rows.forEach(profile => {
+    const subject = pickField(profile, NAME_KEYS) || '(이름 없음)';
+    const company = pickField(profile, COMPANY_KEYS);
+    const k = `${norm(subject)}::${norm(company)}`;
+    if (existingKeys.has(k)) { skipped++; return; }
+    existingKeys.add(k); // also dedupe within the same CSV
+    const date = normalizeDate(pickField(profile, DATE_KEYS));
+    const code = pickField(profile, CODE_KEYS);
+    const time = pickField(profile, TIME_KEYS);
+    const name = company ? `${subject} - ${company}` : subject;
+    const url = pickField(profile, URL_KEYS);
+    const id = nextId++;
+    additions.push({
+      id, profile,
+      date, time, name, subject, company, code,
+      data: null,
+      meta: { url, date }
+    });
+    added++;
+  });
+
+  if (additions.length) {
+    entries = entries.concat(additions);
+    additions.forEach(e => markEntryDirty(e.id));
+  }
+  applySort();
+  persistNow();
+  renderSidebar();
+  if (!activeId && entries.length) {
+    activeId = entries[0].id;
+    renderRight();
+  }
+  showToast(`CSV 업로드: ${added}명 추가${skipped ? `, ${skipped}명 중복 스킵` : ''}`);
+}
+
+document.getElementById('link-export-btn').onclick = () => {
+  if (!entries.length) {
+    showToast('내보낼 데이터가 없습니다');
+    return;
+  }
+  const headers = ['이름', '조직', '일자', '시간', '메인 링크', '백업 링크', '백업 링크2'];
+  const rows = [...entries]
+    .sort(byDateAsc)
+    .map(e => [
+      (e.subject || e.name || '').trim(),
+      (e.company || '').trim(),
+      cleanValue(e.date) || '',
+      cleanValue(e.time) || '',
+      (e.meta && e.meta.url) || '',
+      (e.meta && e.meta.url2) || '',
+      (e.meta && e.meta.url3) || ''
+    ]);
+  const aoa = [headers, ...rows];
+  const ws = XLSX.utils.aoa_to_sheet(aoa);
+  // Column widths
+  ws['!cols'] = [
+    { wch: 12 }, { wch: 22 }, { wch: 14 }, { wch: 14 }, { wch: 50 }, { wch: 50 }, { wch: 50 }
+  ];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, '링크 목록');
+  const ts = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 16);
+  const filename = `SK-Proby_링크전체_${ts}.xlsx`;
+  XLSX.writeFile(wb, filename);
+  track('link_export_all_xlsx_download', { row_count: rows.length });
+  showToast(`${rows.length}명 링크 다운로드`);
+};
+
+document.getElementById('add-entry-btn').onclick = () => {
+  track('entry_add_modal_open');
+  document.getElementById('add-name').value = '';
+  document.getElementById('add-company').value = '';
+  document.getElementById('add-date').value = '';
+  document.getElementById('add-entry-modal').hidden = false;
+  setTimeout(() => document.getElementById('add-name').focus(), 0);
+};
+document.getElementById('add-cancel').onclick = () => {
+  document.getElementById('add-entry-modal').hidden = true;
+};
+document.getElementById('add-entry-modal').addEventListener('click', (ev) => {
+  if (ev.target.id === 'add-entry-modal') document.getElementById('add-entry-modal').hidden = true;
+});
+document.getElementById('add-save').onclick = () => {
+  const subject = document.getElementById('add-name').value.trim();
+  const company = document.getElementById('add-company').value.trim();
+  const dt = document.getElementById('add-date').value; // YYYY-MM-DDTHH:MM
+  if (!subject) { alert('대상자(이름)을 입력하세요'); return; }
+  let date = '', time = '';
+  if (dt) {
+    const [d, t] = dt.split('T');
+    date = d || '';
+    time = t || '';
+  }
+  const profile = { 대상자: subject };
+  if (company) profile['회사'] = company;
+  if (date) profile['일자'] = date;
+  if (time) profile['시간'] = time;
+  const id = nextId++;
+  const name = company ? `${subject} - ${company}` : subject;
+  entries.push({
+    id, profile, date, time, name, subject, company,
+    data: null, meta: { url: '', date: dt || '' }
+  });
+  applySort();
+  activeId = id;
+  markEntryDirty(id);
+  persistNow();
+  document.getElementById('add-entry-modal').hidden = true;
+  renderSidebar();
+  renderRight();
+  track('entry_add_submit', { entry_id: id, subject, company, has_date: !!date });
+  showToast('대상자 추가됨');
+};
+
+document.getElementById('csv-input').addEventListener('change', async (e) => {
+  const f = e.target.files[0];
+  if (!f) return;
+  const text = await f.text();
+  const rows = parseCSV(text);
+  if (!rows.length) { alert('CSV가 비어있습니다.'); return; }
+  e.target.value = '';
+  loadCsvRows(rows);
+  track('csv_upload_load', { row_count: rows.length, file_name: f.name });
+  showToast(`${rows.length}개 행 로드`);
+});
+
+// Sentence splitter (preserves delimiters).
+function splitSentences(text) {
+  if (!text) return [''];
+  const re = /[^.!?。？！\n]*(?:[.!?。？！]+[)"'」』\]]*\s*|\n+|$)/g;
+  const out = [];
+  let m;
+  while ((m = re.exec(text)) !== null) {
+    if (m[0] === '' && m.index === text.length) break;
+    out.push(m[0]);
+    if (m.index === re.lastIndex) re.lastIndex++;
+  }
+  if (out.length === 0) out.push(text);
+  return out;
+}
+function autosize(ta) { ta.style.height = 'auto'; ta.style.height = (ta.scrollHeight + 2) + 'px'; }
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._h);
+  t._h = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function getActiveEntry() { return entries.find(e => e.id === activeId) || null; }
+
+function byDateAsc(a, b) {
+  const ad = cleanValue(a.date);
+  const bd = cleanValue(b.date);
+  if (ad && bd) {
+    const c = ad.localeCompare(bd);
+    if (c !== 0) return c;
+    const at = cleanValue(a.time), bt = cleanValue(b.time);
+    return (at || '').localeCompare(bt || '');
+  }
+  if (ad) return -1;
+  if (bd) return 1;
+  return 0;
+}
+function byUpdatedDesc(a, b) {
+  const ua = Number(a.updatedAt) || 0;
+  const ub = Number(b.updatedAt) || 0;
+  if (ua === ub) return byDateAsc(a, b);
+  return ub - ua;
+}
+function applySort() {
+  if (sortMode === 'updated') entries.sort(byUpdatedDesc);
+  else entries.sort(byDateAsc);
+}
+
+// Walk all editable text blocks, with location info.
+// fn(kind, get, set, location)
+// location = { chapterTitle, topicTitle, questionContent, condition }
+function walkBlocks(sd, fn) {
+  if (!sd) return;
+  fn('opening', () => sd.interview_opening || '', v => sd.interview_opening = v, {});
+  (sd.interview_chapters || []).forEach(ch => {
+    (ch.topics || []).forEach(tp => {
+      (tp.questions || []).forEach(q => {
+        const baseLoc = { chapterTitle: ch.title, topicTitle: tp.title, questionContent: q.content };
+        fn('main', () => q.content || '', v => {
+          q.content = v;
+          if (Array.isArray(q.segments) && q.segments.length === 1 && q.segments[0].type === 'text') q.segments[0].text = v;
+        }, baseLoc);
+        const pp = q.probing_plan;
+        if (pp) walkChecklist(pp, fn, baseLoc);
+      });
+    });
+  });
+  if (sd.interview_closing) {
+    fn('closing', () => sd.interview_closing.closing_message || '', v => sd.interview_closing.closing_message = v, {});
+  }
+}
+function walkChecklist(pp, fn, baseLoc) {
+  (pp.root_checklist || []).forEach(item => {
+    fn('follow', () => item.text || '', v => item.text = v, { ...baseLoc });
+  });
+  (pp.branches || []).forEach(br => {
+    (br.checklist || []).forEach(item => {
+      fn('follow', () => item.text || '', v => item.text = v, { ...baseLoc, condition: br.if || '' });
+    });
+    if (br.branches) walkChecklist(br, fn, baseLoc);
+  });
+}
+
+// Sidebar rendering
+function todayKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function renderSidebar() {
+  const list = document.getElementById('file-list');
+  list.innerHTML = '';
+  // Count unique by subject + company (NFC normalized) to avoid showing duplicates.
+  const uniqKeys = new Set();
+  const uniqDoneKeys = new Set();
+  const _norm = (s) => (s || '').normalize('NFC').trim().toLowerCase();
+  for (const e of entries) {
+    const k = `${_norm(e.subject)}::${_norm(e.company)}`;
+    uniqKeys.add(k);
+    if (e.status === '완료') uniqDoneKeys.add(k);
+  }
+  document.getElementById('file-count').textContent = `${uniqDoneKeys.size}/${uniqKeys.size}`;
+  const today = todayKey();
+  entries.forEach(e => {
+    const item = document.createElement('div');
+    item.className = 'file-item'
+      + (e.id === activeId ? ' active' : '')
+      + (e.status === '완료' ? ' done' : '');
+    const ttl = document.createElement('div');
+    ttl.className = 'ttl';
+
+    const row1 = document.createElement('div');
+    row1.className = 'row1';
+    const subj = e.subject || e.name || '(이름 없음)';
+    row1.innerHTML = `<span class="subject">${escapeHtml(subj)}</span>` +
+      (e.company ? `<span class="company">, ${escapeHtml(e.company)}</span>` : '');
+    ttl.appendChild(row1);
+
+    const row2 = document.createElement('div');
+    row2.className = 'row2';
+    row2.textContent = [cleanValue(e.date), cleanValue(e.time)].filter(Boolean).join(', ') || '일정 미정';
+    ttl.appendChild(row2);
+
+    const row3 = document.createElement('div');
+    row3.className = 'row3';
+    const qBadge = e.data
+      ? `<span class="badge-pill badge-q-done">질문 ${e.locked ? '잠금' : '완료'}</span>`
+      : `<span class="badge-pill badge-q-todo">질문 미입력</span>`;
+    const status = e.status || '예정';
+    const iBadge = `<span class="badge-pill badge-i-${status}">${status}</span>`;
+    row3.innerHTML = `${qBadge} ${iBadge}`;
+    ttl.appendChild(row3);
+
+    item.appendChild(ttl);
+
+    if (e.status === '진행중') {
+      const dot = document.createElement('div');
+      dot.className = 'live-dot';
+      dot.title = '진행중';
+      item.appendChild(dot);
+    } else if (e.status === '재조정') {
+      const dot = document.createElement('div');
+      dot.className = 'reschedule-dot';
+      dot.title = '재조정';
+      item.appendChild(dot);
+    }
+    if (e.status !== '진행중') {
+      const dRaw = cleanValue(e.date) || '';
+      const dPart = dRaw.length >= 10 ? dRaw.slice(0, 10) : dRaw;
+      if (dPart === today) {
+        const dot = document.createElement('div');
+        dot.className = 'today-dot';
+        dot.title = '오늘 인터뷰';
+        item.appendChild(dot);
+      }
+    }
+
+    item.onclick = () => {
+      // Hidden 5x click on same card → delete confirmation
+      if (deleteClickState.id !== e.id) {
+        deleteClickState.id = e.id;
+        deleteClickState.count = 1;
+      } else {
+        deleteClickState.count++;
+      }
+      clearTimeout(deleteClickState.timer);
+      deleteClickState.timer = setTimeout(() => {
+        deleteClickState = { id: null, count: 0, timer: null };
+      }, 1800);
+      const remaining = 5 - deleteClickState.count;
+      if (deleteClickState.count >= 5) {
+        deleteClickState = { id: null, count: 0, timer: null };
+        const label = `${e.subject || ''}${e.company ? ' - ' + e.company : ''}`;
+        track('sidebar_card_delete_5x_click_prompt', { entry_id: e.id, subject: e.subject });
+        if (confirm(`「${label}」 항목을 삭제할까요?\n\n서버에서 영구 삭제되며 복구할 수 없습니다.`)) {
+          const idx = entries.findIndex(x => x.id === e.id);
+          if (idx >= 0) entries.splice(idx, 1);
+          markEntryRemoved(e.id);
+          if (activeId === e.id) activeId = entries[0]?.id ?? null;
+          persistNow();
+          renderSidebar();
+          if (activeId) renderRight(); else clearRight();
+          track('sidebar_card_delete_confirmed', { entry_id: e.id });
+          showToast('삭제됨');
+        } else {
+          track('sidebar_card_delete_cancelled', { entry_id: e.id });
+        }
+        return;
+      } else if (deleteClickState.count >= 3) {
+        showToast(`삭제까지 ${remaining}회 더`);
+      }
+      // Normal navigation: activate this entry
+      if (e.id === activeId) return;
+      activeId = e.id;
+      persist();
+      renderSidebar();
+      renderRight();
+      applyRightState();
+    };
+    list.appendChild(item);
+  });
+}
+
+function clearRight() {
+  document.getElementById('active-title').textContent = '목록을 선택하세요';
+  document.getElementById('active-filename').textContent = '';
+  document.getElementById('meta-row').hidden = true;
+  document.getElementById('json-actions').hidden = true;
+  document.getElementById('status-pills').hidden = true;
+  document.getElementById('root').innerHTML = '<div class="empty">CSV 업로드 후 좌측 목록을 선택하세요.</div>';
+  blocks = [];
+}
+
+function sanitizeFilename(s) {
+  return (s || '').replace(/[\\/:*?"<>|\n\r\t]+/g, '_').replace(/\s+/g, ' ').trim().slice(0, 120) || 'untitled';
+}
+
+document.getElementById('json-export-btn').onclick = async () => {
+  const e = getActiveEntry();
+  if (!e || !e.data) return;
+  track('editor_export_questions_to_slack', { entry_id: e.id, subject: e.subject, company: e.company });
+  showToast('Slack 전송 중…');
+
+  try {
+    const r = await fetch('/api/slack', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: e.subject || e.name,
+        company: e.company || '',
+        json: e.data
+      })
+    });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok || !data.ok) throw new Error(data.error || `HTTP ${r.status}`);
+    showToast('Slack #test 전송 완료');
+  } catch (err) {
+    showToast('Slack 전송 실패: ' + err.message);
+    console.error(err);
+  }
+};
+
+function applyLockState(locked) {
+  const root = document.getElementById('root');
+  root.querySelectorAll('textarea.sent').forEach(t => { t.readOnly = locked; t.style.background = locked ? '#f4f4f6' : ''; });
+  root.querySelectorAll('.broadcast-btn').forEach(b => { b.style.display = locked ? 'none' : ''; });
+  root.querySelectorAll('.icon-btn').forEach(b => { b.style.display = locked ? 'none' : ''; });
+  document.getElementById('meta-date').disabled = locked;
+  document.getElementById('meta-url').disabled = locked;
+  document.getElementById('json-edit-btn').disabled = locked;
+  document.getElementById('json-edit-btn').style.opacity = locked ? '0.5' : '';
+  const fb = document.getElementById('finalize-btn');
+  if (locked) {
+    fb.textContent = '수정 잠금됨';
+    fb.disabled = false; // allow secret-unlock interaction
+    fb.style.opacity = '0.6';
+    fb.style.cursor = 'pointer';
+  } else {
+    fb.textContent = '수정 완료';
+    fb.disabled = false;
+    fb.style.opacity = '';
+    fb.style.cursor = '';
+  }
+}
+
+// Secret 10x click on "수정 잠금됨" to unlock
+let unlockClicks = 0; let unlockTimer = null;
+
+document.getElementById('finalize-btn').onclick = () => {
+  const e = getActiveEntry();
+  if (!e || !e.data) return;
+
+  if (e.locked) {
+    unlockClicks++;
+    clearTimeout(unlockTimer);
+    unlockTimer = setTimeout(() => { unlockClicks = 0; }, 3000);
+    const remaining = 10 - unlockClicks;
+    track('editor_unlock_attempt_click', { entry_id: e.id, click_count: unlockClicks });
+    if (unlockClicks >= 10) {
+      unlockClicks = 0;
+      e.locked = false;
+      markEntryDirty(e.id);
+      persistNow();
+      applyLockState(false);
+      renderSidebar();
+      track('editor_unlock_success', { entry_id: e.id, subject: e.subject });
+      showToast('수정 잠금 해제됨');
+    } else if (unlockClicks >= 5) {
+      showToast(`잠금 해제까지 ${remaining}회 남음`);
+    }
+    return;
+  }
+
+  track('editor_finalize_lock_click', { entry_id: e.id });
+  if (!confirm('더이상 수정하실 수 없습니다. 진행하시겠습니까?')) {
+    track('editor_finalize_lock_cancelled', { entry_id: e.id });
+    return;
+  }
+  e.locked = true;
+  markEntryDirty(e.id);
+  persistNow();
+  applyLockState(true);
+  renderSidebar();
+  track('editor_finalize_lock_confirmed', { entry_id: e.id, subject: e.subject });
+  showToast('수정 잠금 처리됨');
+};
+
+function buildLinkData(e) {
+  const subject = (e.subject || e.name || '').trim();
+  const company = (e.company || '').trim();
+  const date = cleanValue(e.date);
+  const time = cleanValue(e.time);
+  const meta = [
+    `참석자: ${subject}${company ? ' (' + company + ')' : ''}`,
+    `일정: ${[date, time].filter(Boolean).join(' ') || '-'}`
+  ].join('\n');
+  const m  = (e.meta && e.meta.url) || '';
+  const b1 = (e.meta && e.meta.url2) || '';
+  const b2 = (e.meta && e.meta.url3) || '';
+  const versionA = [
+    `메인: ${m || '-'}`,
+    `백업1: ${b1 || '-'}`,
+    `백업2: ${b2 || '-'}`
+  ].join('\n');
+  const versionB = [m, b1, b2].filter(Boolean).join('\n') || '-';
+  return { meta, versionA, versionB };
+}
+
+async function copyToClipboard(text, btn) {
+  const original = btn.textContent;
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(text);
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove();
+    }
+    btn.textContent = '복사됨 ✓';
+  } catch {
+    btn.textContent = '복사 실패';
+  }
+  setTimeout(() => { btn.textContent = original; }, 1500);
+}
+
+document.getElementById('link-view-btn').onclick = () => {
+  const e = getActiveEntry();
+  if (!e) return;
+  const { meta, versionA, versionB } = buildLinkData(e);
+  document.getElementById('link-view-meta').textContent = meta;
+  document.getElementById('link-body-a').textContent = versionA;
+  document.getElementById('link-body-b').textContent = versionB;
+  document.getElementById('link-view-modal').hidden = false;
+  track('link_view_modal_open', {
+    entry_id: e.id,
+    subject: e.subject,
+    company: e.company
+  });
+};
+document.getElementById('link-view-close').onclick = () => {
+  document.getElementById('link-view-modal').hidden = true;
+  track('link_view_modal_close');
+};
+document.getElementById('link-view-modal').addEventListener('click', (ev) => {
+  if (ev.target.id === 'link-view-modal') document.getElementById('link-view-modal').hidden = true;
+});
+document.getElementById('link-copy-a').onclick = (ev) => {
+  ev.stopPropagation();
+  const e = getActiveEntry();
+  copyToClipboard(document.getElementById('link-body-a').textContent, ev.currentTarget);
+  track('link_view_copy_version_a_with_labels', {
+    entry_id: e?.id,
+    subject: e?.subject,
+    company: e?.company,
+    has_main: !!(e?.meta?.url),
+    has_backup1: !!(e?.meta?.url2),
+    has_backup2: !!(e?.meta?.url3)
+  });
+};
+document.getElementById('link-copy-b').onclick = (ev) => {
+  ev.stopPropagation();
+  const e = getActiveEntry();
+  copyToClipboard(document.getElementById('link-body-b').textContent, ev.currentTarget);
+  track('link_view_copy_version_b_urls_only', {
+    entry_id: e?.id,
+    subject: e?.subject,
+    company: e?.company,
+    has_main: !!(e?.meta?.url),
+    has_backup1: !!(e?.meta?.url2),
+    has_backup2: !!(e?.meta?.url3)
+  });
+};
+document.getElementById('link-view-copy').onclick = (ev) => {
+  const e = getActiveEntry(); if (!e) return;
+  const { meta, versionA, versionB } = buildLinkData(e);
+  const text = `${meta}\n\n[A] 라벨 포함\n${versionA}\n\n[B] 링크만\n${versionB}`;
+  copyToClipboard(text, ev.currentTarget);
+  track('link_view_copy_all_combined', {
+    entry_id: e.id,
+    subject: e.subject,
+    company: e.company
+  });
+};
+
+document.getElementById('json-edit-btn').onclick = () => {
+  const e = getActiveEntry();
+  if (!e || !e.data) return;
+  track('editor_json_edit_modal_open', { entry_id: e.id, subject: e.subject, company: e.company });
+  const ta = document.getElementById('json-edit-area');
+  ta.value = JSON.stringify(e.data, null, 2);
+  document.getElementById('json-edit-modal').hidden = false;
+  setTimeout(() => { ta.focus(); ta.select(); }, 30);
+};
+document.getElementById('json-edit-copy').onclick = async () => {
+  const e = getActiveEntry();
+  track('editor_json_edit_copy_current', { entry_id: e?.id });
+  const ta = document.getElementById('json-edit-area');
+  const btn = document.getElementById('json-edit-copy');
+  const original = btn.textContent;
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(ta.value);
+    } else {
+      ta.focus(); ta.select(); document.execCommand('copy');
+    }
+    btn.textContent = '복사됨 ✓';
+    setTimeout(() => { btn.textContent = original; }, 1500);
+  } catch (err) {
+    btn.textContent = '복사 실패';
+    setTimeout(() => { btn.textContent = original; }, 1500);
+  }
+};
+document.getElementById('json-edit-cancel').onclick = () => {
+  document.getElementById('json-edit-modal').hidden = true;
+};
+document.getElementById('json-edit-modal').addEventListener('click', (ev) => {
+  if (ev.target.id === 'json-edit-modal') document.getElementById('json-edit-modal').hidden = true;
+});
+document.getElementById('json-edit-save').onclick = () => {
+  const e = getActiveEntry();
+  if (!e) return;
+  try {
+    const parsed = JSON.parse(document.getElementById('json-edit-area').value);
+    e.data = parsed;
+    persistNow();
+    document.getElementById('json-edit-modal').hidden = true;
+    renderSidebar();
+    renderRight();
+    track('editor_json_edit_save', { entry_id: e.id, subject: e.subject, company: e.company });
+    showToast('JSON 저장됨');
+  } catch (err) {
+    track('editor_json_edit_save_parse_error');
+    alert('JSON 파싱 실패: ' + err.message);
+  }
+};
+
+function buildEntryTitle(e) {
+  return [e.code, e.subject, e.company].filter(Boolean).join(', ') || e.name || '(이름 없음)';
+}
+function buildEntrySubtitle(e) {
+  return [cleanValue(e.date), cleanValue(e.time)].filter(Boolean).join(', ');
+}
+
+function parseStartTime(s) {
+  if (!s) return '';
+  const m = String(s).match(/(\d{1,2}):(\d{2})/);
+  if (!m) return '';
+  return `${m[1].padStart(2, '0')}:${m[2]}`;
+}
+function getDatetimeInputValue(en) {
+  if (!en) return '';
+  if (en.meta?.date && /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(en.meta.date)) return en.meta.date;
+  const datePart = en.date && en.date.length >= 10 ? en.date.slice(0, 10) : en.date;
+  if (!datePart) return '';
+  const timePart = parseStartTime(en.time) || '00:00';
+  return `${datePart}T${timePart}`;
+}
+
+function updateStatusPills(e) {
+  const wrap = document.getElementById('status-pills');
+  if (!e) { wrap.hidden = true; return; }
+  wrap.hidden = false;
+  const cur = e.status || '예정';
+  wrap.querySelectorAll('button').forEach(b => b.classList.toggle('active', b.dataset.s === cur));
+}
+
+document.querySelectorAll('#sort-pills button').forEach(b => {
+  b.addEventListener('click', (ev) => {
+    ev.stopPropagation();
+    sortMode = b.dataset.sort;
+    document.querySelectorAll('#sort-pills button').forEach(x => x.classList.toggle('active', x === b));
+    applySort();
+    persist();
+    renderSidebar();
+    track('sidebar_sort_change', { mode: sortMode });
+  });
+});
+
+document.querySelectorAll('#status-pills button').forEach(b => {
+  b.onclick = () => {
+    const e = getActiveEntry(); if (!e) return;
+    const prev = e.status || '예정';
+    e.status = b.dataset.s;
+    persist();
+    updateStatusPills(e);
+    renderSidebar();
+    track('header_status_change', { entry_id: e.id, from: prev, to: e.status });
+  };
+});
+
+function renderRight() {
+  const e = getActiveEntry();
+  if (!e) { clearRight(); return; }
+  document.getElementById('active-title').textContent = buildEntryTitle(e);
+  document.getElementById('active-filename').textContent = buildEntrySubtitle(e);
+  updateStatusPills(e);
+
+  if (activeTab === 'result') {
+    document.getElementById('meta-row').hidden = true;
+    document.getElementById('json-actions').hidden = true;
+    renderResultView(e);
+    return;
+  }
+  // editor tab
+  if (!e.data) {
+    document.getElementById('meta-row').hidden = true;
+    document.getElementById('json-actions').hidden = true;
+    renderPasteArea(e);
+  } else {
+    document.getElementById('meta-row').hidden = false;
+    document.getElementById('json-actions').hidden = false;
+    document.getElementById('meta-date').value = getDatetimeInputValue(e);
+    document.getElementById('meta-url').value = e.meta?.url || '';
+    document.getElementById('meta-url2').value = e.meta?.url2 || '';
+    document.getElementById('meta-url3').value = e.meta?.url3 || '';
+    renderEditor(e);
+    applyLockState(!!e.locked);
+  }
+}
+
+function setActiveTab(t) {
+  activeTab = t;
+  document.querySelectorAll('.top-tabs .tab').forEach(b => b.classList.toggle('active', b.dataset.tab === t));
+  persist();
+}
+document.querySelectorAll('.top-tabs .tab').forEach(btn => {
+  btn.onclick = () => {
+    setActiveTab(btn.dataset.tab);
+    if (activeId) renderRight(); else clearRight();
+    applyRightState();
+    track('header_tab_change', { tab: btn.dataset.tab });
+  };
+});
+
+function renderResultView(entry) {
+  const root = document.getElementById('root');
+  root.innerHTML = '';
+  const wrap = document.createElement('div');
+  wrap.className = 'result-wrap';
+
+  const hasResult = !!(entry.result && (entry.result.path || entry.result.url));
+  if (!hasResult) {
+    const dz = document.createElement('div');
+    dz.className = 'dropzone';
+    dz.innerHTML = `
+      <div class="big">파일을 드래그하거나 클릭하여 업로드</div>
+      <div class="sub">PDF, DOC/DOCX, XLS/XLSX, PPT/PPTX, 이미지 등 (최대 4MB)</div>
+    `;
+    const fi = document.createElement('input');
+    fi.type = 'file';
+    fi.style.display = 'none';
+    dz.appendChild(fi);
+    dz.onclick = () => fi.click();
+    fi.onchange = () => fi.files[0] && uploadResultFile(entry, fi.files[0]);
+    ;['dragenter', 'dragover'].forEach(ev => dz.addEventListener(ev, e => {
+      e.preventDefault(); e.stopPropagation(); dz.classList.add('drag');
+    }));
+    ;['dragleave', 'drop'].forEach(ev => dz.addEventListener(ev, e => {
+      e.preventDefault(); e.stopPropagation(); dz.classList.remove('drag');
+    }));
+    dz.addEventListener('drop', (e) => {
+      const f = e.dataTransfer?.files?.[0];
+      if (f) uploadResultFile(entry, f);
+    });
+    wrap.appendChild(dz);
+  }
+
+  if (entry.result?.path || entry.result?.url) {
+    const card = document.createElement('div');
+    card.className = 'result-file';
+    card.style.marginTop = '0';
+    const dlHref = resultFileUrl(entry, { download: true });
+    card.innerHTML = `
+      <div class="meta">
+        <div class="name">${escapeHtml(entry.result.filename || '파일')}</div>
+      </div>
+      <a class="btn secondary" href="${dlHref}" download="${escapeHtml(entry.result.filename || 'file')}">다운로드</a>
+      <button class="btn secondary" id="result-remove" style="background:white;color:var(--sk-red);border:1px solid var(--sk-red);">제거</button>
+    `;
+    wrap.appendChild(card);
+
+    const ct = entry.result.contentType || '';
+    const isDocx = /\.docx$/i.test(entry.result.filename || '') || ct === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+    const previewUrl = resultFileUrl(entry);
+
+    if (ct.startsWith('image/')) {
+      const img = document.createElement('img');
+      img.src = previewUrl;
+      img.style.maxWidth = '100%';
+      img.style.borderRadius = '10px';
+      img.style.marginTop = '14px';
+      img.style.display = 'block';
+      wrap.appendChild(img);
+    } else if (ct === 'application/pdf' || /\.pdf$/i.test(entry.result.filename || '')) {
+      const frame = document.createElement('iframe');
+      frame.className = 'preview-frame';
+      frame.src = previewUrl;
+      wrap.appendChild(frame);
+    } else if (isDocx && window.mammoth) {
+      const ctl = document.createElement('div');
+      ctl.style.cssText = 'display:flex;align-items:center;gap:8px;margin-top:14px;font-size:12px;color:var(--muted);';
+      ctl.innerHTML = '<span>미리보기 (DOCX → HTML, 클라이언트 렌더링)</span>';
+      wrap.appendChild(ctl);
+      const docHost = document.createElement('div');
+      docHost.className = 'docx-preview';
+      docHost.style.cssText = 'background:#fff;border:1px solid var(--border);border-radius:10px;padding:24px 32px;margin-top:8px;line-height:1.7;font-size:14px;max-height:70vh;overflow:auto;';
+      docHost.innerHTML = '<div style="color:var(--muted);text-align:center;padding:30px;">불러오는 중…</div>';
+      wrap.appendChild(docHost);
+      (async () => {
+        try {
+          const r = await fetch(previewUrl);
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          const buf = await r.arrayBuffer();
+          const result = await window.mammoth.convertToHtml({ arrayBuffer: buf });
+          docHost.innerHTML = result.value || '<div style="color:var(--muted);">빈 문서</div>';
+        } catch (err) {
+          docHost.innerHTML = `<div style="color:var(--sk-red);">미리보기 실패: ${escapeHtml(err.message)}<br/><a href="${dlHref}" download style="color:var(--accent);">다운로드</a> 후 외부에서 확인</div>`;
+        }
+      })();
+    } else {
+      // Generic fallback: download-only card already shown above
+      const note = document.createElement('div');
+      note.style.cssText = 'margin-top:14px;font-size:13px;color:var(--muted);text-align:center;padding:30px;border:1px dashed var(--border-strong);border-radius:10px;';
+      note.textContent = '미리보기를 지원하지 않는 형식입니다. 다운로드 후 확인해 주세요.';
+      wrap.appendChild(note);
+    }
+
+    setTimeout(() => {
+      const r = document.getElementById('result-remove');
+      if (r) r.onclick = async () => {
+        if (!confirm('이 결과 파일을 제거할까요?')) return;
+        track('result_file_remove', { entry_id: entry.id, subject: entry.subject });
+        delete entry.result;
+        entry.__cleared = (entry.__cleared || []).concat(['result']);
+        renderResultView(entry);
+        try {
+          try { localStorage.setItem(UI_STORAGE_KEY, JSON.stringify({ activeId, activeTab, leftCollapsed, rightOpen, sortMode })); } catch {}
+          markEntryDirty(entry.id);
+          await flushServerWrite();
+        } catch (e) { console.warn(e); }
+        delete entry.__cleared;
+      };
+    }, 0);
+  }
+
+  root.appendChild(wrap);
+}
+
+async function uploadResultFile(entry, file) {
+  showToast('업로드 중…');
+  try {
+    const buf = await file.arrayBuffer();
+    const r = await fetch('/api/upload', {
+      method: 'POST',
+      headers: {
+        'Content-Type': file.type || 'application/octet-stream',
+        'X-Filename': encodeURIComponent(file.name)
+      },
+      body: buf
+    });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok || !data.ok) throw new Error(data.error || `HTTP ${r.status}`);
+    // Store path (auth-required proxy) — never expose raw blob URL going forward.
+    entry.result = { path: data.path, filename: data.filename, contentType: data.contentType };
+    markEntryDirty(entry.id);
+    await flushServerWrite();
+    renderResultView(entry);
+    showToast('업로드 완료');
+  } catch (err) {
+    showToast('업로드 실패: ' + err.message);
+    console.error(err);
+  }
+}
+
+function resultFileUrl(entry, opts) {
+  // Prefer auth-required proxy when path is known. Falls back to legacy blob URL.
+  const r = entry.result || {};
+  const isDownload = !!(opts && opts.download);
+  if (r.path) {
+    let url = '/api/file?path=' + encodeURIComponent(r.path);
+    if (isDownload) {
+      url += '&download=1';
+      if (r.filename) url += '&name=' + encodeURIComponent(r.filename);
+    }
+    return url;
+  }
+  return r.url || '';
+}
+
+function renderPasteArea(entry) {
+  const root = document.getElementById('root');
+  root.innerHTML = '';
+  const wrap = document.createElement('div');
+  wrap.className = 'paste-area-wrap';
+  wrap.innerHTML = `
+    <h3>JSON 붙여넣기</h3>
+    <p>이 항목에 사용할 인터뷰 JSON을 붙여넣어 주세요.</p>
+    <textarea placeholder='{"survey_draft": { ... }}'></textarea>
+    <div class="actions">
+      <button id="paste-load">불러오기</button>
+    </div>
+  `;
+  root.appendChild(wrap);
+  const ta = wrap.querySelector('textarea');
+  wrap.querySelector('#paste-load').onclick = async () => {
+    const v = ta.value.trim();
+    if (!v) return;
+    let data;
+    try { data = JSON.parse(v); } catch (err) { alert('JSON 파싱 실패: ' + err.message); return; }
+    entry.data = data;
+    track('editor_paste_load_submit', { entry_id: entry.id, subject: entry.subject, json_size: v.length });
+    markEntryDirty(entry.id);
+    try { localStorage.setItem(UI_STORAGE_KEY, JSON.stringify({ activeId, activeTab, leftCollapsed, rightOpen, sortMode })); } catch {}
+    showToast('저장 중…');
+    try {
+      await flushServerWrite();
+      showToast('불러왔습니다');
+    } catch (e) {
+      showToast('저장 실패 — 다시 시도해 주세요');
+    }
+    renderSidebar();
+    renderRight();
+  };
+}
+
+function makeBlock(opts) {
+  const single = opts.kind === 'opening' || opts.kind === 'main' || opts.kind === 'closing';
+  const text = opts.get();
+  const sentences = single ? [text] : splitSentences(text);
+  const b = { ...opts, sentences, originalSentences: sentences.slice() };
+  blocks.push(b);
+  return b;
+}
+
+function renderBlock(b) {
+  const wrap = document.createElement('div');
+  wrap.className = 'block';
+  const lab = document.createElement('div');
+  lab.className = 'block-label ' + b.kind;
+  if (b.onDelete) {
+    const delBtn = document.createElement('button');
+    delBtn.className = 'icon-btn block-del';
+    delBtn.title = '추가 질문 삭제';
+    delBtn.textContent = '×';
+    delBtn.style.cssText = 'width:20px;height:20px;font-size:13px;border:none;background:transparent;color:var(--sk-red);padding:0;margin-right:2px;';
+    delBtn.onclick = () => {
+      if (confirm('이 추가 질문을 삭제할까요?')) b.onDelete();
+    };
+    lab.appendChild(delBtn);
+  }
+  const labText = document.createElement('span');
+  labText.textContent = b.label;
+  lab.appendChild(labText);
+  if (b.condition) {
+    const c = document.createElement('span');
+    c.className = 'cond';
+    c.textContent = b.condition;
+    lab.appendChild(c);
+  }
+  wrap.appendChild(lab);
+
+  const list = document.createElement('div');
+  list.className = 'sentences';
+  wrap.appendChild(list);
+
+  b.sentences.forEach((s, i) => {
+    const row = document.createElement('div');
+    row.className = 'sentence-row ' + b.kind;
+    const ta = document.createElement('textarea');
+    ta.className = 'sent';
+    ta.value = s;
+    ta.rows = 1;
+    ta.addEventListener('input', () => {
+      b.sentences[i] = ta.value;
+      autosize(ta);
+      b.set(b.sentences.join(''));
+      persist();
+    });
+    row.appendChild(ta);
+
+    const bcBtn = document.createElement('button');
+    bcBtn.className = 'broadcast-btn';
+    bcBtn.textContent = '일괄 변경';
+    bcBtn.onclick = () => openSentenceBroadcast(b, i);
+    row.appendChild(bcBtn);
+
+    list.appendChild(row);
+    requestAnimationFrame(() => autosize(ta));
+  });
+  return wrap;
+}
+
+// Aggregated stats from skt/time/aggregate.js (16명 참여자 답변 기준).
+const QUESTION_STATS = [
+  { n: 16, avg_dur: 8, min_dur: 4, max_dur: 26, sd_dur: 5.3, durs: [4, 4, 4, 5, 5, 5, 5, 5, 7, 7, 7, 8, 9, 10, 10, 26], avg_words: 3, min_words: 2, max_words: 6, sd_words: 1.0, words: [2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 6] },
+  { n: 16, avg_dur: 28, min_dur: 6, max_dur: 84, sd_dur: 20.8, durs: [6, 7, 8, 10, 13, 19, 21, 23, 25, 27, 28, 32, 39, 39, 61, 84], avg_words: 36, min_words: 4, max_words: 121, sd_words: 31.7, words: [4, 6, 7, 13, 14, 22, 26, 30, 33, 33, 39, 40, 41, 46, 96, 121] },
+  { n: 16, avg_dur: 6, min_dur: 3, max_dur: 12, sd_dur: 2.3, durs: [3, 3, 4, 4, 4, 5, 5, 5, 5, 5, 5, 7, 7, 7, 9, 12], avg_words: 13, min_words: 12, max_words: 15, sd_words: 0.9, words: [12, 12, 12, 12, 12, 12, 12, 12, 13, 13, 13, 13, 13, 13, 14, 15] },
+  { n: 16, avg_dur: 77, min_dur: 14, max_dur: 233, sd_dur: 53.9, durs: [14, 17, 31, 33, 48, 50, 69, 72, 72, 75, 76, 80, 100, 120, 136, 233], avg_words: 102, min_words: 15, max_words: 359, sd_words: 81.3, words: [15, 25, 27, 36, 73, 81, 91, 95, 96, 97, 106, 106, 118, 125, 188, 359] },
+  { n: 16, avg_dur: 142, min_dur: 9, max_dur: 317, sd_dur: 75.2, durs: [9, 52, 70, 78, 111, 116, 120, 124, 144, 160, 180, 182, 182, 186, 241, 317], avg_words: 213, min_words: 8, max_words: 498, sd_words: 117.9, words: [8, 65, 106, 125, 145, 145, 183, 210, 214, 250, 259, 274, 294, 304, 322, 498] },
+  { n: 16, avg_dur: 130, min_dur: 7, max_dur: 407, sd_dur: 114.3, durs: [7, 54, 54, 55, 62, 70, 72, 87, 96, 127, 137, 147, 152, 160, 396, 407], avg_words: 199, min_words: 5, max_words: 686, sd_words: 193.3, words: [5, 76, 80, 89, 93, 108, 111, 113, 114, 168, 194, 200, 221, 294, 637, 686] },
+  { n: 16, avg_dur: 171, min_dur: 24, max_dur: 521, sd_dur: 129.3, durs: [24, 60, 62, 69, 83, 97, 103, 135, 147, 150, 173, 237, 241, 296, 335, 521], avg_words: 262, min_words: 1, max_words: 859, sd_words: 223.7, words: [1, 71, 77, 104, 125, 138, 152, 172, 198, 229, 275, 327, 403, 530, 536, 859] },
+  { n: 16, avg_dur: 173, min_dur: 53, max_dur: 445, sd_dur: 101.6, durs: [53, 54, 72, 80, 129, 130, 131, 140, 153, 191, 200, 229, 231, 237, 295, 445], avg_words: 269, min_words: 66, max_words: 746, sd_words: 172.8, words: [66, 69, 109, 147, 155, 173, 191, 209, 269, 305, 320, 348, 352, 388, 457, 746] },
+  { n: 16, avg_dur: 160, min_dur: 9, max_dur: 393, sd_dur: 97.5, durs: [9, 33, 61, 108, 110, 119, 123, 142, 161, 170, 174, 191, 219, 270, 279, 393], avg_words: 231, min_words: 4, max_words: 476, sd_words: 126.6, words: [4, 31, 115, 143, 162, 194, 196, 211, 232, 270, 277, 330, 333, 337, 388, 476] },
+  { n: 16, avg_dur: 151, min_dur: 12, max_dur: 295, sd_dur: 75.2, durs: [12, 53, 63, 95, 114, 143, 147, 152, 159, 164, 167, 172, 175, 250, 258, 295], avg_words: 226, min_words: 13, max_words: 391, sd_words: 104.6, words: [13, 64, 75, 178, 188, 194, 223, 242, 262, 266, 272, 278, 301, 322, 348, 391] },
+  { n: 16, avg_dur: 120, min_dur: 35, max_dur: 309, sd_dur: 79.4, durs: [35, 42, 47, 57, 58, 68, 82, 100, 104, 112, 120, 147, 196, 221, 224, 309], avg_words: 190, min_words: 49, max_words: 558, sd_words: 138.7, words: [49, 61, 65, 78, 87, 120, 149, 154, 157, 166, 181, 203, 321, 333, 365, 558] },
+  { n: 16, avg_dur: 138, min_dur: 11, max_dur: 353, sd_dur: 106.8, durs: [11, 12, 18, 51, 66, 72, 82, 94, 116, 153, 178, 203, 241, 278, 278, 353], avg_words: 200, min_words: 11, max_words: 663, sd_words: 170.2, words: [11, 16, 16, 62, 81, 130, 133, 148, 163, 243, 261, 267, 284, 325, 393, 663] },
+  { n: 15, avg_dur: 128, min_dur: 4, max_dur: 288, sd_dur: 81.5, durs: [4, 42, 50, 58, 69, 73, 103, 108, 148, 166, 178, 185, 224, 224, 288], avg_words: 182, min_words: 2, max_words: 425, sd_words: 122.4, words: [2, 56, 60, 77, 124, 137, 142, 147, 163, 168, 256, 294, 301, 371, 425] },
+  { n: 13, avg_dur: 128, min_dur: 7, max_dur: 388, sd_dur: 93.1, durs: [7, 45, 72, 81, 88, 103, 109, 126, 137, 144, 181, 189, 388], avg_words: 201, min_words: 5, max_words: 697, sd_words: 173.3, words: [5, 70, 84, 110, 126, 147, 154, 166, 180, 263, 297, 308, 697] },
+  { n: 11, avg_dur: 94, min_dur: 5, max_dur: 139, sd_dur: 48.0, durs: [5, 6, 67, 103, 107, 108, 112, 121, 130, 137, 139], avg_words: 142, min_words: 2, max_words: 255, sd_words: 88.1, words: [2, 2, 86, 107, 114, 156, 187, 194, 226, 234, 255] },
+  { n: 6, avg_dur: 70, min_dur: 5, max_dur: 218, sd_dur: 83.5, durs: [5, 7, 12, 70, 107, 218], avg_words: 86, min_words: 1, max_words: 220, sd_words: 103.2, words: [1, 1, 6, 82, 206, 220] },
+  { n: 4, avg_dur: 119, min_dur: 66, max_dur: 188, sd_dur: 59.7, durs: [66, 72, 149, 188], avg_words: 166, min_words: 71, max_words: 278, sd_words: 96.8, words: [71, 100, 213, 278] },
+  { n: 2, avg_dur: 138, min_dur: 99, max_dur: 176, sd_dur: 54.4, durs: [99, 176], avg_words: 188, min_words: 164, max_words: 213, sd_words: 34.6, words: [164, 213] },
+  { n: 1, avg_dur: 27, min_dur: 27, max_dur: 27, sd_dur: 0, durs: [27], avg_words: 28, min_words: 28, max_words: 28, sd_words: 0, words: [28] },
+];
+function fmtDur(sec) {
+  if (sec == null || sec <= 0) return '-';
+  const m = Math.floor(sec / 60), s = Math.round(sec % 60);
+  return m > 0 ? `${m}분${String(s).padStart(2,'0')}초` : `${s}초`;
+}
+function buildHistogramSvg(values, mean, sd, min, max, fmtFn) {
+  if (!values || !values.length) return '';
+  const W = 420, H = 80, padL = 30, padR = 8, padT = 8, padB = 24;
+  const innerW = W - padL - padR, innerH = H - padT - padB;
+  const n = values.length;
+  const bins = Math.max(4, Math.min(8, Math.ceil(Math.sqrt(n))));
+  const range = Math.max(1, max - min);
+  const counts = new Array(bins).fill(0);
+  for (const v of values) {
+    let b = Math.floor((v - min) / range * bins);
+    if (b >= bins) b = bins - 1;
+    if (b < 0) b = 0;
+    counts[b]++;
+  }
+  const maxC = Math.max(...counts, 1);
+  const x = (v) => padL + ((v - min) / range) * innerW;
+  const sdLow = Math.max(min, mean - sd);
+  const sdHigh = Math.min(max, mean + sd);
+  const sdX = x(sdLow), sdW = Math.max(0, x(sdHigh) - sdX);
+  const meanX = x(mean);
+
+  // Y-axis ticks (integer counts 0..maxC, max 4 ticks)
+  const yTickCount = Math.min(maxC, 4);
+  let yTicks = '';
+  for (let i = 0; i <= yTickCount; i++) {
+    const v = Math.round((i / yTickCount) * maxC);
+    const ty = padT + innerH - (v / maxC) * innerH;
+    yTicks += `<line class="axis-line" x1="${padL - 3}" y1="${ty}" x2="${padL}" y2="${ty}"/>`;
+    yTicks += `<text class="axis-tick" x="${padL - 5}" y="${ty + 3}" text-anchor="end">${v}</text>`;
+  }
+  // Y-axis title (rotated)
+  const yTitle = `<text class="axis-tick" x="6" y="${padT + innerH / 2}" transform="rotate(-90 8 ${padT + innerH / 2})" text-anchor="middle">명</text>`;
+
+  // Bars
+  let barsSvg = '';
+  const bw = innerW / bins;
+  for (let i = 0; i < bins; i++) {
+    const c = counts[i];
+    const h = (c / maxC) * innerH;
+    const bx = padL + i * bw + 1;
+    const by = padT + (innerH - h);
+    const isHigh = c === maxC;
+    barsSvg += `<rect class="hist-bar${isHigh ? ' high' : ''}" x="${bx.toFixed(1)}" y="${by.toFixed(1)}" width="${(bw - 2).toFixed(1)}" height="${h.toFixed(1)}" rx="1.5"/>`;
+    // bar value label
+    if (c > 0) {
+      barsSvg += `<text class="axis-tick" x="${(bx + (bw - 2) / 2).toFixed(1)}" y="${(by - 2).toFixed(1)}" text-anchor="middle">${c}</text>`;
+    }
+  }
+
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+    ${yTitle}
+    ${yTicks}
+    <line class="axis-line" x1="${padL}" y1="${padT}" x2="${padL}" y2="${padT + innerH}"/>
+    <rect class="sd-band" x="${sdX.toFixed(1)}" y="${padT}" width="${sdW.toFixed(1)}" height="${innerH}"/>
+    ${barsSvg}
+    <line class="axis-line" x1="${padL}" y1="${padT + innerH}" x2="${W - padR}" y2="${padT + innerH}"/>
+    <line class="mean-line" x1="${meanX.toFixed(1)}" y1="${padT}" x2="${meanX.toFixed(1)}" y2="${padT + innerH}"/>
+    <text class="axis-tick" x="${padL}" y="${H - 8}">${fmtFn(min)}</text>
+    <text class="axis-tick mean-label" x="${meanX.toFixed(1)}" y="${H - 8}" text-anchor="middle">평균 ${fmtFn(Math.round(mean))}</text>
+    <text class="axis-tick" x="${W - padR}" y="${H - 8}" text-anchor="end">${fmtFn(max)}</text>
+  </svg>`;
+}
+
+function buildQStat(qi) {
+  const s = QUESTION_STATS[qi - 1];
+  if (!s) return null;
+  const wrap = document.createElement('div');
+  wrap.className = 'qstat';
+  const histDur = buildHistogramSvg(s.durs, s.avg_dur, s.sd_dur, s.min_dur, s.max_dur, fmtDur);
+  const histWords = buildHistogramSvg(s.words, s.avg_words, s.sd_words, s.min_words, s.max_words, (n) => `${n}`);
+  wrap.innerHTML = `
+    <div class="item" title="평균 발화시간"><span>발화</span><b>${fmtDur(s.avg_dur)}</b></div>
+    <div class="item" title="평균 단어 수"><span>단어</span><b>${s.avg_words}</b></div>
+    <div class="qstat-tip">
+      <div class="tip-h"><span>전체 ${s.n}명 기준</span><span class="tip-h-sub">참여자 답변 분포 · 평균선 + 평균 근처 범위</span></div>
+      <div class="tip-section">
+        <div class="tip-section-title"><span>발화시간 분포 (가로: 시간, 세로: 인원수)</span><span class="tip-stats">평균 <b>${fmtDur(s.avg_dur)}</b> / 편차 ±${fmtDur(Math.round(s.sd_dur))}</span></div>
+        ${histDur}
+      </div>
+      <div class="tip-section">
+        <div class="tip-section-title"><span>단어 수 분포 (가로: 단어, 세로: 인원수)</span><span class="tip-stats">평균 <b>${s.avg_words}</b> / 편차 ±${Math.round(s.sd_words)}</span></div>
+        ${histWords}
+      </div>
+    </div>
+  `;
+  return wrap;
+}
+
+function section(title, badge, qStat) {
+  const el = document.createElement('section');
+  el.className = 'section';
+  const head = document.createElement('div');
+  head.className = 'section-header';
+  if (badge) {
+    const b = document.createElement('span');
+    b.className = 'badge';
+    b.textContent = badge;
+    head.appendChild(b);
+  }
+  const h = document.createElement('h2');
+  h.textContent = title;
+  head.appendChild(h);
+  if (qStat instanceof Node) head.appendChild(qStat);
+  el.appendChild(head);
+  const body = document.createElement('div');
+  el.appendChild(body);
+  return { el, body };
+}
+
+function renderEditor(e) {
+  blocks = [];
+  const root = document.getElementById('root');
+  root.innerHTML = '';
+  const wrap = document.createElement('div');
+  wrap.className = 'editor-wrap';
+  root.appendChild(wrap);
+
+  const sd = e.data?.survey_draft;
+  if (!sd) {
+    wrap.innerHTML = '<div class="empty">survey_draft 키를 찾을 수 없습니다.</div>';
+    return;
+  }
+
+  const openSec = section('오프닝', '인터뷰 시작');
+  openSec.body.appendChild(renderBlock(makeBlock({
+    kind: 'opening', label: '오프닝',
+    location: {},
+    get: () => sd.interview_opening || '',
+    set: v => sd.interview_opening = v
+  })));
+  wrap.appendChild(openSec.el);
+
+  let globalQi = 0;
+  (sd.interview_chapters || []).forEach((ch) => {
+    (ch.topics || []).forEach((tp) => {
+      (tp.questions || []).forEach((q, qi) => {
+        globalQi++;
+        const sec = section(`${ch.title || ''} · ${tp.title || ''}`, `Q${qi + 1}`, buildQStat(globalQi));
+        const baseLoc = { chapterTitle: ch.title, topicTitle: tp.title, questionContent: q.content };
+        sec.body.appendChild(renderBlock(makeBlock({
+          kind: 'main', label: '메인 질문',
+          location: baseLoc,
+          get: () => q.content || '',
+          set: v => {
+            q.content = v;
+            if (Array.isArray(q.segments) && q.segments.length === 1 && q.segments[0].type === 'text') q.segments[0].text = v;
+          }
+        })));
+        const pp = q.probing_plan;
+        if (pp) {
+          (pp.root_checklist || []).forEach((item) => {
+            sec.body.appendChild(renderBlock(makeBlock({
+              kind: 'follow', label: '추가 질문',
+              location: { ...baseLoc },
+              get: () => item.text || '',
+              set: v => item.text = v,
+              onDelete: () => {
+                if (e.locked) { showToast('잠금된 항목은 수정할 수 없습니다'); return; }
+                const idx = pp.root_checklist.indexOf(item);
+                if (idx >= 0) pp.root_checklist.splice(idx, 1);
+                markEntryDirty(e.id);
+                persist();
+                renderRight();
+              }
+            })));
+          });
+          (pp.branches || []).forEach((br) => {
+            (br.checklist || []).forEach((item) => {
+              sec.body.appendChild(renderBlock(makeBlock({
+                kind: 'follow', label: '추가 질문',
+                condition: br.if || '',
+                location: { ...baseLoc, condition: br.if || '' },
+                get: () => item.text || '',
+                set: v => item.text = v,
+                onDelete: () => {
+                  if (e.locked) { showToast('잠금된 항목은 수정할 수 없습니다'); return; }
+                  const idx = br.checklist.indexOf(item);
+                  if (idx >= 0) br.checklist.splice(idx, 1);
+                  markEntryDirty(e.id);
+                  persist();
+                  renderRight();
+                }
+              })));
+            });
+          });
+        }
+
+        // "+ 추가질문 추가" button — appends a new root_checklist item
+        const addRow = document.createElement('div');
+        addRow.style.cssText = 'padding:10px 14px;';
+        const addBtn = document.createElement('button');
+        addBtn.className = 'secondary subtle';
+        addBtn.textContent = '+ 추가질문 추가';
+        addBtn.style.cssText = 'width:100%;padding:8px;border:1px dashed var(--border-strong);color:var(--sk-red);';
+        addBtn.onclick = () => {
+          if (e.locked) { showToast('잠금된 항목은 수정할 수 없습니다'); return; }
+          const pp2 = q.probing_plan = q.probing_plan || { root_note: '', root_checklist: [], branches: [] };
+          pp2.root_checklist = pp2.root_checklist || [];
+          const newItem = {
+            id: (crypto && crypto.randomUUID) ? crypto.randomUUID() : 'cl-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8),
+            text: '',
+            position: pp2.root_checklist.length
+          };
+          pp2.root_checklist.push(newItem);
+          markEntryDirty(e.id);
+          persist();
+          renderRight();
+        };
+        addRow.appendChild(addBtn);
+        sec.body.appendChild(addRow);
+
+        wrap.appendChild(sec.el);
+      });
+    });
+  });
+
+  const closeSec = section('클로징', '인터뷰 종료');
+  if (sd.interview_closing) {
+    closeSec.body.appendChild(renderBlock(makeBlock({
+      kind: 'closing', label: '클로징',
+      location: {},
+      get: () => sd.interview_closing.closing_message || '',
+      set: v => sd.interview_closing.closing_message = v
+    })));
+  }
+  wrap.appendChild(closeSec.el);
+}
+
+// Broadcast (일괄 변경) — per-sentence substring match
+let pendingMatches = null;
+
+function openSentenceBroadcast(block, idx) {
+  const orig = (block.originalSentences[idx] || '').trim() ? block.originalSentences[idx] : '';
+  const newText = block.sentences[idx];
+  if (!orig) { alert('원본 문장이 비어 있어 매칭할 수 없습니다.'); return; }
+  if (orig === newText) { alert('변경된 내용이 없습니다. 먼저 문장을 수정한 뒤 시도해 주세요.'); return; }
+
+  // Whitespace-tolerant substring match: collapse all whitespace runs (spaces, line
+  // breaks) to a single \s+ wildcard so trivially-different copies of the same prompt
+  // still match across entries. Word-level differences are NOT folded — that would be
+  // dangerous; user must edit those entries individually.
+  const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const buildLooseRegex = (origText) => {
+    const tokens = origText.normalize('NFC').split(/\s+/).filter(Boolean).map(escapeRe);
+    if (!tokens.length) return null;
+    return new RegExp(tokens.join('\\s+'), 'g');
+  };
+  const matchRegexFor = buildLooseRegex(orig);
+  const origNFC = orig.normalize('NFC');
+  const matches = [];
+  let lockedSkipped = 0;
+  entries.forEach(entry => {
+    if (!entry.data?.survey_draft) return;
+    let entryHasMatch = false;
+    walkBlocks(entry.data.survey_draft, (kind, get, set, location) => {
+      if (kind !== block.kind) return;
+      const cur = (get() || '').normalize('NFC');
+      let hit = false;
+      if (matchRegexFor) {
+        matchRegexFor.lastIndex = 0;
+        hit = matchRegexFor.test(cur);
+      } else {
+        hit = cur.indexOf(origNFC) !== -1;
+      }
+      if (!hit) return;
+      entryHasMatch = true;
+      if (entry.locked) return;          // locked entries cannot be modified
+      matches.push({ entry, kind, get, set, location });
+    });
+    if (entryHasMatch && entry.locked) lockedSkipped++;
+  });
+
+  pendingMatches = { block, sentenceIndex: idx, orig, newText, matches, lockedSkipped };
+
+  document.getElementById('diff-from').textContent = orig;
+  document.getElementById('diff-to').textContent = newText;
+  document.getElementById('bc-count').textContent = matches.length;
+
+  const list = document.getElementById('match-list');
+  list.innerHTML = '';
+  if (lockedSkipped > 0) {
+    const note = document.createElement('div');
+    note.style.cssText = 'font-size:12px;color:var(--sk-teal);background:rgba(0,154,147,0.06);padding:6px 10px;border-radius:6px;margin-bottom:8px;';
+    note.textContent = `※ 동일 텍스트를 가진 잠금된 항목 ${lockedSkipped}건은 변경 대상에서 제외됩니다.`;
+    list.appendChild(note);
+  }
+  if (!matches.length) {
+    const empty = document.createElement('div');
+    empty.className = 'empty';
+    empty.style.padding = '20px';
+    empty.textContent = '동일한 원본 텍스트를 가진 변경 가능한 항목이 없습니다.';
+    list.appendChild(empty);
+  }
+  matches.forEach(m => {
+    const item = document.createElement('div');
+    item.className = 'match-item';
+    // Header: 이름 - 멤버사
+    const head = document.createElement('div');
+    head.style.cssText = 'font-size:13px;font-weight:700;color:var(--text);';
+    const name = m.entry.subject || m.entry.name || '(이름 없음)';
+    const org = m.entry.company || '';
+    head.textContent = org ? `${name} - ${org}` : name;
+    item.appendChild(head);
+    // Question content (해당 질문)
+    if (m.location.questionContent) {
+      const q = document.createElement('div');
+      q.style.cssText = 'font-size:12px;color:var(--muted);margin-top:4px;line-height:1.4;';
+      q.textContent = 'Q. ' + m.location.questionContent;
+      item.appendChild(q);
+    } else {
+      const lab = document.createElement('div');
+      lab.style.cssText = 'font-size:11px;color:var(--sk-red);margin-top:4px;font-weight:600;';
+      lab.textContent = `[${kindLabel(m.kind)}]`;
+      item.appendChild(lab);
+    }
+    if (m.location.condition) {
+      const c = document.createElement('div');
+      c.style.cssText = 'font-size:11px;color:#7c5500;margin-top:2px;';
+      c.textContent = '조건: ' + m.location.condition;
+      item.appendChild(c);
+    }
+    list.appendChild(item);
+  });
+
+  document.getElementById('broadcast-modal').hidden = false;
+  track('editor_broadcast_modal_open', {
+    kind: block.kind,
+    candidate_count: matches.length,
+    locked_skipped: lockedSkipped
+  });
+}
+
+function kindLabel(k) {
+  return ({ opening: '오프닝', chapter: '섹션', topic: '토픽', main: '메인질문', follow: '추가질문', closing: '클로징' })[k] || k;
+}
+
+function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+}
+
+document.getElementById('bc-cancel').onclick = () => { document.getElementById('broadcast-modal').hidden = true; pendingMatches = null; };
+document.getElementById('broadcast-modal').addEventListener('click', (e) => {
+  if (e.target.id === 'broadcast-modal') document.getElementById('broadcast-modal').hidden = true;
+});
+document.getElementById('bc-approve').onclick = () => {
+  track('editor_broadcast_apply_confirm', {
+    matches: pendingMatches?.matches?.length || 0,
+    kind: pendingMatches?.block?.kind
+  });
+  if (!pendingMatches) return;
+  const { block, sentenceIndex, orig, newText, matches } = pendingMatches;
+  const escapeRe2 = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const tokens = orig.normalize('NFC').split(/\s+/).filter(Boolean).map(escapeRe2);
+  const replaceRe = tokens.length ? new RegExp(tokens.join('\\s+'), 'g') : null;
+  matches.forEach(m => {
+    const cur = (m.get() || '').normalize('NFC');
+    const next = replaceRe ? cur.replace(replaceRe, newText) : cur.split(orig).join(newText);
+    m.set(next);
+    markEntryDirty(m.entry.id);
+  });
+  block.originalSentences[sentenceIndex] = newText;
+  document.getElementById('broadcast-modal').hidden = true;
+  pendingMatches = null;
+  persistNow();
+  // Skip re-render to preserve the user's current sentence layout
+  // (re-running splitSentences on appended text would otherwise create extra fields).
+  showToast(`${matches.length}건 변경 적용`);
+};
+
+// Meta inputs
+document.getElementById('meta-date').addEventListener('input', (e) => {
+  const en = getActiveEntry(); if (!en) return;
+  if (!en.meta) en.meta = {};
+  const v = e.target.value; // YYYY-MM-DDTHH:MM
+  en.meta.date = v;
+  if (v) {
+    const [d, t] = v.split('T');
+    en.date = d;
+    if (t) en.time = t;
+  } else {
+    en.date = '';
+  }
+  applySort();
+  persist();
+  renderSidebar();
+  document.getElementById('active-filename').textContent = buildEntrySubtitle(en);
+});
+document.getElementById('meta-url').addEventListener('input', (e) => {
+  const en = getActiveEntry(); if (!en) return;
+  if (!en.meta) en.meta = {};
+  en.meta.url = e.target.value;
+  persist();
+});
+document.getElementById('meta-url2').addEventListener('input', (e) => {
+  const en = getActiveEntry(); if (!en) return;
+  if (!en.meta) en.meta = {};
+  en.meta.url2 = e.target.value;
+  persist();
+});
+document.getElementById('meta-url3').addEventListener('input', (e) => {
+  const en = getActiveEntry(); if (!en) return;
+  if (!en.meta) en.meta = {};
+  en.meta.url3 = e.target.value;
+  persist();
+});
+
+function applyLeftState() {
+  document.querySelector('aside.left').classList.toggle('collapsed', leftCollapsed);
+  const btn = document.getElementById('left-toggle');
+  btn.textContent = leftCollapsed ? '›' : '‹';
+  btn.title = leftCollapsed ? '사이드바 펼치기' : '사이드바 접기';
+}
+function applyRightState() {
+  // Hide right sidebar entirely when not on editor tab or no entry
+  const e = getActiveEntry();
+  const allowed = !!e && activeTab === 'editor';
+  const el = document.getElementById('essay-sidebar');
+  el.style.display = allowed ? '' : 'none';
+  el.classList.toggle('open', allowed && rightOpen);
+  if (allowed && rightOpen) renderEssays(e);
+  document.getElementById('essay-toggle').textContent = rightOpen ? '추가정보 닫기' : '추가정보';
+}
+
+function formatEssayHtml(raw) {
+  if (!raw) return '';
+  const text = String(raw).replace(/\r\n/g, '\n').trim();
+  if (!text) return '';
+  // Split into paragraphs by blank lines first
+  const paragraphs = text.split(/\n\s*\n+/);
+  const out = [];
+  for (const para of paragraphs) {
+    const lines = para.split(/\n+/).map(l => l.trim()).filter(Boolean);
+    // Detect lines with leading list markers (-, •, *, 1., 1), ①…)
+    const listRe = /^(?:[-•*]\s+|\d+[.)]\s+|[①-⑳]\s*)(.+)$/;
+    const allList = lines.length > 1 && lines.every(l => listRe.test(l));
+    if (allList) {
+      out.push('<ul>' + lines.map(l => '<li>' + escapeHtml(l.match(listRe)[1]) + '</li>').join('') + '</ul>');
+      continue;
+    }
+    // Otherwise treat as prose: split into sentences for readability
+    const joined = lines.join(' ');
+    const sentences = splitForReading(joined);
+    if (sentences.length === 1) {
+      out.push('<p>' + escapeHtml(sentences[0]) + '</p>');
+    } else {
+      // Group every 1-2 sentences into a small paragraph for breathing room
+      let buf = [];
+      for (let i = 0; i < sentences.length; i++) {
+        buf.push(sentences[i]);
+        const next = sentences[i + 1];
+        const long = buf.join(' ').length > 90;
+        if (long || !next) {
+          out.push('<p>' + escapeHtml(buf.join(' ')) + '</p>');
+          buf = [];
+        }
+      }
+      if (buf.length) out.push('<p>' + escapeHtml(buf.join(' ')) + '</p>');
+    }
+  }
+  return out.join('');
+}
+
+function splitForReading(text) {
+  // Lossless sentence split: cut at whitespace immediately after sentence-ending punctuation.
+  // Every character of the input is preserved across returned parts.
+  const normalized = String(text).replace(/\s+/g, ' ').trim();
+  if (!normalized) return [];
+  // Use lookbehind so split markers (the whitespace) aren't included in any part,
+  // but the preceding punctuation stays attached to its sentence.
+  const parts = normalized.split(/(?<=[.!?。？！]["'」』\)]*)\s+/);
+  return parts.map(s => s.trim()).filter(Boolean);
+}
+
+function computeRoundedMedians(keys) {
+  const out = {};
+  keys.forEach(k => {
+    const arr = [];
+    entries.forEach(e => {
+      const raw = e.profile && e.profile[k];
+      const n = parseFloat(raw);
+      if (!isNaN(n)) arr.push(Math.round(n));
+    });
+    if (!arr.length) { out[k] = null; return; }
+    arr.sort((a, b) => a - b);
+    const mid = Math.floor(arr.length / 2);
+    out[k] = arr.length % 2 === 0 ? (arr[mid - 1] + arr[mid]) / 2 : arr[mid];
+  });
+  return out;
+}
+
+function buildCollapsibleGroup(title, openByDefault, items, emptyHtml) {
+  const group = document.createElement('details');
+  group.className = 'group';
+  group.open = !!openByDefault;
+  const sum = document.createElement('summary');
+  sum.textContent = title;
+  group.appendChild(sum);
+  if (!items.length) {
+    const empty = document.createElement('div');
+    empty.className = 'empty-essay';
+    empty.innerHTML = emptyHtml;
+    group.appendChild(empty);
+  } else {
+    items.forEach(({ label, text }) => {
+      const card = document.createElement('details');
+      card.className = 'essay-card';
+      const sm = document.createElement('summary');
+      sm.className = 'essay-label';
+      sm.textContent = label;
+      card.appendChild(sm);
+      const body = document.createElement('div');
+      body.className = 'essay-text';
+      const v = (text || '').trim();
+      if (v) body.innerHTML = formatEssayHtml(v);
+      else { body.textContent = '(비어있음)'; body.style.color = 'var(--muted)'; }
+      card.appendChild(body);
+      group.appendChild(card);
+    });
+  }
+  return group;
+}
+
+function renderEssays(entry) {
+  const list = document.getElementById('essay-list');
+  list.innerHTML = '';
+  const profile = entry.profile || {};
+
+  // === 전문성 그룹 ===
+  const expertiseItems = [];
+  for (let i = 1; i <= 3; i++) {
+    const k = `전문성${i}_업무내역`;
+    if (k in profile) expertiseItems.push({ label: `전문성 ${i}`, text: profile[k] });
+  }
+  list.appendChild(buildCollapsibleGroup(
+    '전문성', false, expertiseItems,
+    'CSV에 <b>전문성1_업무내역 ~ 전문성3_업무내역</b> 컬럼이 없습니다.'
+  ));
+
+  // === 성공경험 그룹 ===
+  const successItems = [];
+  for (let i = 1; i <= 5; i++) {
+    const k = `성공경험${i}_경험서술1`;
+    if (k in profile) successItems.push({ label: `성공경험 ${i}`, text: profile[k] });
+  }
+  list.appendChild(buildCollapsibleGroup(
+    '성공경험', false, successItems,
+    'CSV에 <b>성공경험1_경험서술1 ~ 성공경험5_경험서술1</b> 컬럼이 없습니다.'
+  ));
+
+  // === 에세이 그룹 ===
+  // Match 에세이Q1 ~ 에세이Q6 (no space) — also tolerate optional whitespace.
+  const essayKeys = Object.keys(profile)
+    .filter(k => /^에세이\s*Q\s*\d+\s*$/i.test(k.trim()))
+    .sort((a, b) => (parseInt(a.match(/\d+/)) || 0) - (parseInt(b.match(/\d+/)) || 0));
+
+  const eGroup = document.createElement('details');
+  eGroup.className = 'group';
+  eGroup.open = true;
+  const eSum = document.createElement('summary');
+  eSum.textContent = '에세이';
+  eGroup.appendChild(eSum);
+
+  if (!essayKeys.length) {
+    const empty = document.createElement('div');
+    empty.className = 'empty-essay';
+    empty.innerHTML = 'CSV에 <b>에세이Q1 ~ 에세이Q6</b> 컬럼이 없습니다.';
+    eGroup.appendChild(empty);
+  } else {
+    essayKeys.forEach(k => {
+      const v = (profile[k] || '').trim();
+      const card = document.createElement('details');
+      card.className = 'essay-card';
+      const sm = document.createElement('summary');
+      sm.className = 'essay-label';
+      sm.textContent = k;
+      card.appendChild(sm);
+      const body = document.createElement('div');
+      body.className = 'essay-text';
+      if (v) body.innerHTML = formatEssayHtml(v);
+      else { body.textContent = '(비어있음)'; body.style.color = 'var(--muted)'; }
+      card.appendChild(body);
+      eGroup.appendChild(card);
+    });
+  }
+  list.appendChild(eGroup);
+
+  // === 항목별 점수 그룹 ===
+  // Match SV_Q\d+_..._평균 (case-insensitive, tolerate stray whitespace).
+  const scoreKeys = Object.keys(profile)
+    .filter(k => /^\s*sv[_\s]*q\d+[_\s].+[_\s]*평균\s*$/i.test(k))
+    .sort((a, b) => (parseInt((a.match(/Q(\d+)/i) || [])[1]) || 0) - (parseInt((b.match(/Q(\d+)/i) || [])[1]) || 0));
+
+  const sGroup = document.createElement('details');
+  sGroup.className = 'group';
+  sGroup.open = true;
+  const sSum = document.createElement('summary');
+  sSum.textContent = '항목별 점수';
+  sGroup.appendChild(sSum);
+
+  if (!scoreKeys.length) {
+    const empty = document.createElement('div');
+    empty.className = 'empty-essay';
+    const candidates = Object.keys(profile).filter(k => /sv|평균|점수|score/i.test(k));
+    if (candidates.length) {
+      empty.innerHTML = '<b>SV_Qn_..._평균</b> 패턴과 정확히 일치하는 컬럼이 없습니다.<br/>유사한 컬럼:<br/><span style="font-family:ui-monospace,monospace;font-size:11px;display:block;margin-top:6px;text-align:left;">' + candidates.map(escapeHtml).join('<br/>') + '</span>';
+    } else {
+      empty.innerHTML = 'CSV에 <b>SV_Qn_..._평균</b> 컬럼이 없습니다.';
+    }
+    sGroup.appendChild(empty);
+  } else {
+    // Pick a representative N from any sister "_N" column (typically constant per respondent).
+    let repN = null;
+    for (const k of scoreKeys) {
+      const nKey = k.replace(/_평균\s*$/, '_N');
+      const nVal = parseInt(profile[nKey], 10);
+      if (!isNaN(nVal)) { repN = nVal; break; }
+    }
+    const legend = document.createElement('div');
+    legend.className = 'score-legend';
+    // Count entries that contributed any valid score across listed score columns.
+    let medianN = 0;
+    for (const k of scoreKeys) {
+      const cnt = entries.filter(e => !isNaN(parseFloat(e.profile?.[k]))).length;
+      if (cnt > medianN) medianN = cnt;
+    }
+    legend.innerHTML = `<span class="line"></span><span><b style="color:var(--sk-navy);">${medianN}명</b> 중앙값 (정수 반올림 기준)</span>` +
+      (repN != null ? `<span style="margin-left:auto;font-weight:600;color:var(--sk-navy);">평가자 N=${repN}</span>` : '');
+    sGroup.appendChild(legend);
+    const medians = computeRoundedMedians(scoreKeys);
+    scoreKeys.forEach(k => {
+      const m = k.match(/^\s*sv[_\s]*q\d+[_\s](.+?)[_\s]*평균\s*$/i);
+      const label = m ? m[1] : k;
+      const raw = profile[k];
+      const v = parseFloat(raw);
+      const valid = !isNaN(v);
+      const pct = valid ? Math.max(0, Math.min(100, v * 10)) : 0;
+      const med = medians[k];
+      const medPct = med == null ? null : Math.max(0, Math.min(100, med * 10));
+      const medMark = medPct == null ? '' :
+        `<div class="score-median" style="left:${medPct}%;" data-v="${med % 1 === 0 ? med : med.toFixed(1)}" title="전체 중앙값(반올림 기준): ${med}"></div>`;
+      const row = document.createElement('div');
+      row.className = 'score-row';
+      row.innerHTML = `
+        <div class="score-label" title="${escapeHtml(label)}">${escapeHtml(label)}</div>
+        <div class="score-bar"><div class="score-fill" style="width:${pct}%;"></div>${medMark}</div>
+        <div class="score-num">${valid ? v.toFixed(1) : '-'}</div>
+      `;
+      sGroup.appendChild(row);
+    });
+  }
+  list.appendChild(sGroup);
+}
+
+document.getElementById('left-toggle').addEventListener('click', () => {
+  leftCollapsed = !leftCollapsed;
+  applyLeftState();
+  persist();
+  track('sidebar_left_toggle', { collapsed: leftCollapsed });
+});
+document.getElementById('essay-toggle').addEventListener('click', () => {
+  rightOpen = !rightOpen;
+  applyRightState();
+  persist();
+  track('sidebar_right_essay_toggle', { open: rightOpen });
+});
+document.getElementById('essay-close').addEventListener('click', () => {
+  rightOpen = false;
+  applyRightState();
+  persist();
+});
+
+async function bootApp() {
+  document.body.classList.remove('auth-pending', 'login-mode');
+  document.getElementById('login-screen').hidden = true;
+  restoreUiState();
+  document.querySelectorAll('.top-tabs .tab').forEach(b => b.classList.toggle('active', b.dataset.tab === activeTab));
+  document.querySelectorAll('#sort-pills button').forEach(b => b.classList.toggle('active', b.dataset.sort === sortMode));
+  applyLeftState();
+
+  // Server is the single source of truth — but recover any leftover local cache
+  // from the previous architecture that may still hold richer data.
+  let serverEntries = [];
+  try {
+    const r = await fetch('/api/entries?t=' + Date.now(), { cache: 'no-store' });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok || !d.ok) throw new Error(d.error || `HTTP ${r.status}`);
+    serverEntries = Array.isArray(d.entries) ? d.entries : [];
+  } catch (err) {
+    console.warn('load failed', err);
+    setError('데이터 로드 실패 — 새로고침 해주세요');
+  }
+
+  // Legacy localStorage migration is complete by now; clean up any leftover key
+  // and trust the server as the only source of truth.
+  try { localStorage.removeItem('interview-editor:v2'); } catch {}
+  entries = serverEntries;
+
+  if (!entries.find(e => e.id === activeId)) activeId = entries[0]?.id ?? null;
+  nextId = Math.max(0, ...entries.map(e => Number(e.id) || 0)) + 1;
+  applySort();
+
+  renderSidebar();
+  if (activeId) renderRight();
+  applyRightState();
+
+  window.addEventListener('beforeunload', (e) => {
+    persistNow();
+    if (dirty || writing) {
+      e.preventDefault();
+      e.returnValue = '저장되지 않은 변경사항이 있습니다.';
+    }
+  });
+
+  // Idle auto-save — flush any pending edits to server every 30s while idle.
+  // No page reload; edits already debounce-save at 400ms, this is a safety net.
+  let idleTimer = null;
+  const IDLE_MS = 30 * 1000;
+  function scheduleIdleSave() {
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => {
+      if (dirty && !writing) {
+        track('session_idle_auto_save');
+        persistNow();
+      }
+      scheduleIdleSave();
+    }, IDLE_MS);
+  }
+  ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'].forEach(ev =>
+    document.addEventListener(ev, scheduleIdleSave, { passive: true }));
+  scheduleIdleSave();
+}
+
+async function refetchEntriesFromServer() {
+  if (dirty || writing) {
+    // local edits not yet flushed — don't clobber them
+    return;
+  }
+  setError('');
+  try {
+    const r = await fetch('/api/entries?t=' + Date.now(), { cache: 'no-store' });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok || !d.ok) throw new Error(d.error || `HTTP ${r.status}`);
+    const fetched = Array.isArray(d.entries) ? d.entries : [];
+    // Safety: if local state is richer than the server snapshot we just fetched
+    // (likely a stale CDN response), keep local instead of clobbering.
+    const localData = entries.filter(e => e && e.data).length;
+    const fetchedData = fetched.filter(e => e && e.data).length;
+    if (entries.length > 0 && localData > fetchedData) {
+      console.warn('refetch returned poorer snapshot — keeping local state');
+      setError('');
+      return;
+    }
+    entries = fetched;
+    if (!entries.find(e => e.id === activeId)) activeId = entries[0]?.id ?? null;
+    nextId = Math.max(0, ...entries.map(e => Number(e.id) || 0)) + 1;
+    applySort();
+    renderSidebar();
+    if (activeId) renderRight(); else clearRight();
+    applyRightState();
+  } catch (err) {
+    console.warn('refetch failed', err);
+    setError('데이터 로드 실패');
+  }
+}
+
+// When the page is restored from bfcache, force a full reload instead of trusting
+// the in-memory state (which may reference deleted entry IDs from before dedupe).
+window.addEventListener('pageshow', (e) => {
+  if (e.persisted && document.body && !document.body.classList.contains('login-mode')) {
+    location.reload();
+  }
+});
+
+function showLogin() {
+  document.body.classList.remove('auth-pending');
+  document.body.classList.add('login-mode');
+  document.getElementById('login-screen').hidden = false;
+  setTimeout(() => document.getElementById('login-password').focus(), 30);
+}
+
+(async () => {
+  try {
+    const r = await fetch('/api/me');
+    const d = await r.json();
+    if (d.authenticated) bootApp(); else showLogin();
+  } catch {
+    showLogin();
+  }
+})();
+
+document.getElementById('login-form').addEventListener('submit', async (ev) => {
+  ev.preventDefault();
+  track('auth_login_submit');
+  const pw = document.getElementById('login-password').value;
+  const err = document.getElementById('login-error');
+  err.textContent = '';
+  try {
+    const r = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pw })
+    });
+    const d = await r.json().catch(() => ({}));
+    if (r.ok && d.ok) {
+      track('auth_login_success');
+      location.reload();
+    } else {
+      track('auth_login_failure', { status: r.status });
+      err.textContent = d.error === 'ADMIN_PASSWORD not configured'
+        ? '서버 비밀번호가 설정되지 않았습니다 (ADMIN_PASSWORD)'
+        : '비밀번호가 올바르지 않습니다.';
+    }
+  } catch (e) {
+    err.textContent = '로그인 실패: ' + e.message;
+  }
+});
+
+// Hidden 5-click on 목록 header → enables CSV upload button
+let csvClicks = 0; let csvTimer = null;
+// Hidden 5-click on 목록 header → directly opens the CSV file picker
+const listTrigger = document.getElementById('list-header-trigger');
+if (listTrigger) {
+  listTrigger.addEventListener('click', (ev) => {
+    if (ev.target.closest && ev.target.closest('.sort-pills, .file-count')) return;
+    csvClicks++;
+    clearTimeout(csvTimer);
+    csvTimer = setTimeout(() => { csvClicks = 0; }, 2000);
+    const remaining = 5 - csvClicks;
+    if (csvClicks >= 5) {
+      csvClicks = 0;
+      const inp = document.getElementById('csv-input');
+      if (inp) {
+        inp.disabled = false;
+        inp.click();
+        track('csv_upload_picker_open_via_list_5x_click');
+      }
+      showToast('CSV 파일 선택');
+    } else if (csvClicks >= 2) {
+      showToast(`CSV 활성화까지 ${remaining}회 더`);
+    }
+  });
+}
+
+// Hidden 5-click logo → backup/restore modal
+let logoClicks = 0; let logoTimer = null;
+document.querySelectorAll('.top-header img').forEach(img => {
+  img.style.cursor = 'pointer';
+  img.addEventListener('click', () => {
+    logoClicks++;
+    clearTimeout(logoTimer);
+    logoTimer = setTimeout(() => { logoClicks = 0; }, 1500);
+    if (logoClicks >= 5) {
+      logoClicks = 0;
+      document.getElementById('backup-status').textContent = '';
+      document.getElementById('backup-modal').hidden = false;
+    }
+  });
+});
+
+document.getElementById('backup-close').onclick = () => {
+  document.getElementById('backup-modal').hidden = true;
+};
+document.getElementById('backup-modal').addEventListener('click', (ev) => {
+  if (ev.target.id === 'backup-modal') document.getElementById('backup-modal').hidden = true;
+});
+
+// Web Crypto helpers — PBKDF2 + AES-GCM (industry standard)
+async function deriveKey(password, salt) {
+  const enc = new TextEncoder();
+  const baseKey = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt, iterations: 250000, hash: 'SHA-256' },
+    baseKey, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']
+  );
+}
+async function encryptJson(input, password) {
+  const text = typeof input === 'string' ? input : JSON.stringify(input);
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const key = await deriveKey(password, salt);
+  const enc = new TextEncoder();
+  const ct = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, enc.encode(text)));
+  // Avoid spread on huge typed arrays (causes "Maximum call stack size exceeded").
+  const u8ToB64 = (u) => {
+    let s = ''; const chunk = 0x8000;
+    for (let i = 0; i < u.length; i += chunk) {
+      s += String.fromCharCode.apply(null, u.subarray(i, i + chunk));
+    }
+    return btoa(s);
+  };
+  return { format: 'sk-proby-backup-aesgcm', version: 1, salt: u8ToB64(salt), iv: u8ToB64(iv), ciphertext: u8ToB64(ct) };
+}
+async function decryptJson(envelope, password) {
+  const dec = (b64) => Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+  const salt = dec(envelope.salt);
+  const iv = dec(envelope.iv);
+  const ct = dec(envelope.ciphertext);
+  const key = await deriveKey(password, salt);
+  const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ct);
+  return JSON.parse(new TextDecoder().decode(plain));
+}
+
+// Per-entry safe stringify — isolates a single bad entry from blowing up the whole export.
+function buildExportText(entries) {
+  const head = `"exportedAt":${JSON.stringify(new Date().toISOString())},"schemaVersion":1,"entryCount":${entries.length},`;
+  const parts = [];
+  let failed = 0;
+  const failedIds = [];
+  for (const e of entries) {
+    try {
+      parts.push(JSON.stringify(e));
+    } catch (err) {
+      failed++;
+      failedIds.push(e?.id);
+      console.warn('export: entry serialization failed', e?.id, err.message);
+      parts.push(JSON.stringify({
+        id: e?.id, subject: e?.subject, company: e?.company,
+        _serialization_error: err.message
+      }));
+    }
+  }
+  return {
+    text: '{' + head + '"entries":[' + parts.join(',') + ']}',
+    failed,
+    failedIds
+  };
+}
+
+// Sanitize an entry by deep-copying with bounded depth — surfaces / strips
+// circular references and deeply nested structures that crash JSON.stringify.
+function sanitizeForExport(obj, depth = 0, seen = new WeakSet()) {
+  if (obj === null || obj === undefined) return obj;
+  if (typeof obj !== 'object') {
+    if (typeof obj === 'function' || typeof obj === 'symbol') return undefined;
+    return obj;
+  }
+  if (depth > 200) return '[max-depth]';
+  if (seen.has(obj)) return '[circular]';
+  seen.add(obj);
+  if (Array.isArray(obj)) {
+    const out = [];
+    for (let i = 0; i < obj.length; i++) out.push(sanitizeForExport(obj[i], depth + 1, seen));
+    seen.delete(obj);
+    return out;
+  }
+  const out = {};
+  for (const k of Object.keys(obj)) {
+    const v = sanitizeForExport(obj[k], depth + 1, seen);
+    if (v !== undefined) out[k] = v;
+  }
+  seen.delete(obj);
+  return out;
+}
+
+document.getElementById('backup-export').onclick = async () => {
+  track('backup_export_click', { entry_count: entries.length });
+  const status = document.getElementById('backup-status');
+  status.style.color = 'var(--muted)';
+
+  let stage = 'init';
+  let failedIds = [];
+  try {
+    stage = 'filter';
+    // Only back up entries that have JSON filled (질문 완료) AND haven't been
+    // marked as 완료 yet — those are the "in-progress with content" rows where
+    // accidental data loss is most painful.
+    const targets = entries.filter(e => !!e.data && e.status !== '완료');
+
+    stage = 'sanitize';
+    status.textContent = `데이터 정리 중… (${targets.length}/${entries.length})`;
+    const safeEntries = [];
+    for (const e of targets) {
+      try {
+        const cleaned = sanitizeForExport(e);
+        // Smoke-test stringify to surface problems early
+        JSON.stringify(cleaned);
+        safeEntries.push(cleaned);
+      } catch (err) {
+        failedIds.push(e?.id);
+        console.warn('export sanitize failed for', e?.id, err.message);
+        safeEntries.push({
+          id: e?.id, subject: e?.subject, company: e?.company,
+          _sanitize_error: err.message
+        });
+      }
+    }
+
+    stage = 'stringify-pieces';
+    status.textContent = '직렬화 중…';
+    const parts = [];
+    for (const e of safeEntries) {
+      try {
+        parts.push(JSON.stringify(e));
+      } catch (err) {
+        failedIds.push(e?.id);
+        parts.push(JSON.stringify({ id: e?.id, _stringify_error: err.message }));
+      }
+    }
+
+    stage = 'assemble';
+    const head = `{"exportedAt":${JSON.stringify(new Date().toISOString())},"schemaVersion":1,"entryCount":${safeEntries.length},"filter":"질문완료 AND status≠완료","entries":[`;
+    const tail = ']}';
+    // Use array → blob to avoid building one giant string in memory all at once.
+    const blobParts = [head];
+    for (let i = 0; i < parts.length; i++) {
+      if (i > 0) blobParts.push(',');
+      blobParts.push(parts[i]);
+    }
+    blobParts.push(tail);
+
+    stage = 'blob';
+    const blob = new Blob(blobParts, { type: 'application/json' });
+
+    stage = 'download';
+    const a = document.createElement('a');
+    const ts = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 16);
+    a.href = URL.createObjectURL(blob);
+    a.download = `sk-proby-backup-${ts}.json`;
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(a.href);
+
+    let msg = `✓ ${safeEntries.length}/${entries.length}개 entry 백업 (질문완료 & 완료 제외, ${(blob.size / 1024).toFixed(0)} KB)`;
+    if (failedIds.length > 0) {
+      msg += ` — 일부 entry 정리됨 (id: ${failedIds.slice(0, 5).join(', ')}${failedIds.length > 5 ? '…' : ''})`;
+    }
+    status.textContent = msg;
+    status.style.color = failedIds.length ? 'var(--sk-orange)' : 'var(--sk-teal)';
+  } catch (err) {
+    console.error('backup export failed at stage:', stage, err);
+    status.textContent = `실패 (${stage}): ${err.message}`;
+    status.style.color = 'var(--sk-red)';
+  }
+};
+
+document.getElementById('backup-import-input').addEventListener('change', async (ev) => {
+  const file = ev.target.files?.[0];
+  ev.target.value = '';
+  if (!file) return;
+  track('backup_import_select_file', { file_name: file.name, file_size: file.size });
+  const status = document.getElementById('backup-status');
+  status.style.color = 'var(--muted)';
+  status.textContent = '읽는 중…';
+  let payload;
+  try {
+    const text = await file.text();
+    payload = JSON.parse(text);
+  } catch (e) {
+    status.textContent = 'JSON 파싱 실패: ' + e.message;
+    status.style.color = 'var(--sk-red)';
+    return;
+  }
+  // If encrypted envelope, ask for password
+  if (payload && payload.format === 'sk-proby-backup-aesgcm' && payload.ciphertext) {
+    const pw = prompt('백업 파일 비밀번호');
+    if (!pw) { status.textContent = '취소됨'; return; }
+    try { payload = await decryptJson(payload, pw); }
+    catch { status.textContent = '복호화 실패 — 비밀번호 확인'; status.style.color = 'var(--sk-red)'; return; }
+  }
+  const arr = Array.isArray(payload) ? payload : payload.entries;
+  if (!Array.isArray(arr) || arr.length === 0) {
+    status.textContent = '백업 파일에 entries가 없습니다.';
+    status.style.color = 'var(--sk-red)';
+    return;
+  }
+  if (!confirm(`${arr.length}개 entry로 서버 상태를 덮어씁니다. 진행할까요?\n(현재 서버 데이터는 백업 파일과 머지되지 않고 항목별로 교체됩니다.)`)) {
+    status.textContent = '취소됨';
+    return;
+  }
+  // PUT each entry
+  let done = 0; let failed = 0;
+  status.textContent = `업로드 중… 0 / ${arr.length}`;
+  const queue = arr.slice();
+  await Promise.all(Array.from({ length: 6 }, async () => {
+    while (queue.length) {
+      const e = queue.shift();
+      if (!e || e.id == null) { failed++; continue; }
+      try {
+        const r = await fetch('/api/entry', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ entry: e })
+        });
+        const d = await r.json().catch(() => ({}));
+        if (!r.ok || !d.ok) throw new Error(d.error || `HTTP ${r.status}`);
+        done++;
+      } catch (err) {
+        failed++;
+        console.warn('import put failed for id', e.id, err);
+      }
+      status.textContent = `업로드 중… ${done} / ${arr.length}` + (failed ? ` (실패 ${failed})` : '');
+    }
+  }));
+  status.textContent = `복원 완료 ${done} / ${arr.length}` + (failed ? ` (실패 ${failed})` : '');
+  status.style.color = failed ? 'var(--sk-red)' : 'var(--sk-teal)';
+  // Apply imported entries directly to local state (skip refetch which may hit
+  // a stale Vercel Blob edge cache). This guarantees the restored content is
+  // immediately visible in the editor.
+  try {
+    dirty = false;
+    writing = false;
+    dirtyEntryIds.clear();
+    removedEntryIds.clear();
+    for (const e of arr) {
+      if (!e || e.id == null) continue;
+      const idx = entries.findIndex(x => x.id === e.id);
+      if (idx >= 0) entries[idx] = e;
+      else entries.push(e);
+    }
+    nextId = Math.max(nextId, ...entries.map(e => Number(e.id) || 0)) + 1;
+    applySort();
+    renderSidebar();
+    if (activeId) renderRight();
+    applyRightState();
+  } catch (e) { console.warn('local apply after import failed', e); }
+});
+
+document.getElementById('logout-btn').addEventListener('click', async () => {
+  track('auth_logout');
+  await fetch('/api/logout', { method: 'POST' });
+  location.reload();
+});
+</script>
+</body>
+</html>
