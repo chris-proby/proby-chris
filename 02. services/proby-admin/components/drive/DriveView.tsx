@@ -16,6 +16,7 @@ import MoveModal from './MoveModal'
 import { ChevronRight, Home, FolderPlus, Upload, Search, LayoutGrid, List, CheckSquare, X, MoveRight, Download } from 'lucide-react'
 import { toast } from 'sonner'
 import { trackMixpanel } from '@/lib/analytics/mixpanel'
+import { runClientZipDownload } from '@/lib/drive/bulk-download'
 
 interface DriveViewProps {
   folders: Folder[]
@@ -91,34 +92,9 @@ export default function DriveView({ folders, files, breadcrumbs, currentFolderId
   }
 
   async function handleBulkDownload() {
+    if (selectedFiles.length === 0) return
     trackMixpanel('Drive_Bulk_Download_Started', { file_count: selectedFiles.length, company_id: companyId })
-    toast.info(`${selectedFiles.length}개 파일을 ZIP으로 묶는 중입니다... (잠시 걸릴 수 있어요)`)
-    try {
-      const res = await fetch('/api/drive/bulk-download', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fileIds: selectedFiles.map((f) => f.id) }),
-      })
-      if (!res.ok) {
-        const msg = await res.text().catch(() => '')
-        toast.error(`ZIP 다운로드 실패: ${res.status} ${msg}`)
-        return
-      }
-      const blob = await res.blob()
-      const blobUrl = URL.createObjectURL(blob)
-      const cd = res.headers.get('Content-Disposition') ?? ''
-      const match = /filename\*?=(?:UTF-8'')?"?([^";]+)"?/i.exec(cd)
-      const filename = match ? decodeURIComponent(match[1]) : `proby-files-${Date.now()}.zip`
-      const a = document.createElement('a')
-      a.href = blobUrl
-      a.download = filename
-      document.body.appendChild(a)
-      a.click()
-      a.remove()
-      setTimeout(() => URL.revokeObjectURL(blobUrl), 1000)
-    } catch (e) {
-      toast.error(`ZIP 다운로드 실패: ${e instanceof Error ? e.message : String(e)}`)
-    }
+    await runClientZipDownload(selectedFiles)
   }
 
   return (
