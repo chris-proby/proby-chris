@@ -13,6 +13,7 @@
     "@supabase/ssr": "^0.10.0",
     "@supabase/supabase-js": "^2.101.1",
     "class-variance-authority": "^0.7.1",
+    "client-zip": "^2.5.0",
     "clsx": "^2.1.1",
     "lucide-react": "^1.7.0",
     "mixpanel-browser": "^2.77.0",

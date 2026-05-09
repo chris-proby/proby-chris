@@ -86,18 +86,32 @@ export default function AdminDriveView({ company, folders, files, breadcrumbs, c
   }
 
   async function handleBulkDownload() {
-    const supabase = createClient()
-    toast.info(`${selectedFiles.length}개 파일 다운로드를 시작합니다...`)
-    for (const file of selectedFiles) {
-      const { data, error } = await supabase.storage.from(file.storage_bucket).createSignedUrl(file.storage_path, 60)
-      if (error || !data?.signedUrl) { toast.error(`${file.original_name} 다운로드 실패`); continue }
+    toast.info(`${selectedFiles.length}개 파일을 ZIP으로 묶는 중입니다... (잠시 걸릴 수 있어요)`)
+    try {
+      const res = await fetch('/api/drive/bulk-download', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fileIds: selectedFiles.map((f) => f.id) }),
+      })
+      if (!res.ok) {
+        const msg = await res.text().catch(() => '')
+        toast.error(`ZIP 다운로드 실패: ${res.status} ${msg}`)
+        return
+      }
+      const blob = await res.blob()
+      const blobUrl = URL.createObjectURL(blob)
+      const cd = res.headers.get('Content-Disposition') ?? ''
+      const match = /filename\*?=(?:UTF-8'')?"?([^";]+)"?/i.exec(cd)
+      const filename = match ? decodeURIComponent(match[1]) : `proby-files-${Date.now()}.zip`
       const a = document.createElement('a')
-      a.href = data.signedUrl
-      a.download = file.original_name
+      a.href = blobUrl
+      a.download = filename
       document.body.appendChild(a)
       a.click()
-      document.body.removeChild(a)
-      await new Promise((r) => setTimeout(r, 400))
+      a.remove()
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 1000)
+    } catch (e) {
+      toast.error(`ZIP 다운로드 실패: ${e instanceof Error ? e.message : String(e)}`)
     }
   }
 
