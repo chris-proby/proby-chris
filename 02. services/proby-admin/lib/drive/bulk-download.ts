@@ -1,6 +1,6 @@
 'use client'
 
-import { downloadZip, type InputWithMeta } from 'client-zip'
+import { downloadZip } from 'client-zip'
 import { toast } from 'sonner'
 import { createClient } from '@/lib/supabase/client'
 import type { FileRecord } from '@/lib/types'
@@ -51,6 +51,22 @@ export async function runClientZipDownload(files: FileRecord[]): Promise<void> {
   if (files.length === 0) return
   const filename = `proby-files-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')}.zip`
 
+  // 1. Open Save dialog FIRST while user activation is still fresh.
+  //    Any other await before this would break user gesture context.
+  let handle: FsHandle | null = null
+  if (typeof window !== 'undefined' && typeof window.showSaveFilePicker === 'function') {
+    try {
+      handle = await window.showSaveFilePicker({
+        suggestedName: filename,
+        types: [{ description: 'ZIP archive', accept: { 'application/zip': ['.zip'] } }],
+      })
+    } catch (e) {
+      if (e instanceof Error && e.name === 'AbortError') return
+      // 기능 미지원 / 차단 시 → blob 폴백으로 진행
+      handle = null
+    }
+  }
+
   const toastId = toast.loading(`${files.length}개 파일 다운로드 준비 중...`)
   let signedUrls: Map<string, string>
   try {
@@ -61,52 +77,46 @@ export async function runClientZipDownload(files: FileRecord[]): Promise<void> {
   }
 
   const uniqueName = makeUniqueNamer()
-  const inputs: InputWithMeta[] = []
-  for (const f of files) {
-    const url = signedUrls.get(f.id)
-    if (!url) continue
-    let res: Response
-    try {
-      res = await fetch(url)
-    } catch {
-      continue
+  let done = 0
+  let skipped = 0
+
+  async function* sourceInputs() {
+    for (const f of files) {
+      const url = signedUrls.get(f.id)
+      if (!url) { skipped++; continue }
+      let res: Response
+      try {
+        res = await fetch(url)
+      } catch {
+        skipped++
+        continue
+      }
+      if (!res.ok) { skipped++; continue }
+      done++
+      toast.loading(`${done}/${files.length} 다운로드 중...`, { id: toastId })
+      yield {
+        name: uniqueName(f.original_name),
+        input: res,
+        size: f.file_size ?? undefined,
+        lastModified: f.updated_at ? new Date(f.updated_at) : undefined,
+      }
     }
-    if (!res.ok) continue
-    inputs.push({
-      name: uniqueName(f.original_name),
-      input: res,
-      size: f.file_size ?? undefined,
-      lastModified: f.updated_at ? new Date(f.updated_at) : undefined,
-    })
   }
 
-  if (inputs.length === 0) {
-    toast.error('다운로드할 파일이 없습니다', { id: toastId })
+  const zipResponse = downloadZip(sourceInputs())
+
+  if (handle) {
+    try {
+      const writable = await handle.createWritable()
+      await zipResponse.body!.pipeTo(writable)
+      toast.success(skipped > 0 ? `${done}개 다운로드 완료 (${skipped}개 실패)` : `${done}개 파일 다운로드 완료`, { id: toastId })
+    } catch (e) {
+      toast.error(`ZIP 저장 실패: ${e instanceof Error ? e.message : String(e)}`, { id: toastId })
+    }
     return
   }
 
-  toast.loading(`${inputs.length}개 파일을 ZIP으로 묶어 저장 중...`, { id: toastId })
-  const zipResponse = downloadZip(inputs)
-
-  if (typeof window !== 'undefined' && typeof window.showSaveFilePicker === 'function' && zipResponse.body) {
-    try {
-      const handle = await window.showSaveFilePicker({
-        suggestedName: filename,
-        types: [{ description: 'ZIP archive', accept: { 'application/zip': ['.zip'] } }],
-      })
-      const writable = await handle.createWritable()
-      await zipResponse.body.pipeTo(writable)
-      toast.success(`${inputs.length}개 파일 다운로드 완료`, { id: toastId })
-      return
-    } catch (e) {
-      if (e instanceof Error && (e.name === 'AbortError' || e.message.includes('aborted'))) {
-        toast.dismiss(toastId)
-        return
-      }
-      // fall through to blob fallback
-    }
-  }
-
+  // Fallback: buffer entire ZIP into memory and trigger <a download>
   try {
     const blob = await zipResponse.blob()
     const blobUrl = URL.createObjectURL(blob)
@@ -117,7 +127,7 @@ export async function runClientZipDownload(files: FileRecord[]): Promise<void> {
     a.click()
     a.remove()
     setTimeout(() => URL.revokeObjectURL(blobUrl), 1000)
-    toast.success(`${inputs.length}개 파일 다운로드 완료`, { id: toastId })
+    toast.success(skipped > 0 ? `${done}개 다운로드 완료 (${skipped}개 실패)` : `${done}개 파일 다운로드 완료`, { id: toastId })
   } catch (e) {
     toast.error(`ZIP 생성 실패: ${e instanceof Error ? e.message : String(e)}`, { id: toastId })
   }
