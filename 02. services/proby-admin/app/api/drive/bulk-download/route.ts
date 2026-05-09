@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
     if (!res.ok || !res.body) continue
     inputs.push({
       name: uniqueName(f.original_name),
-      input: res.body,
+      input: res,
       size: f.file_size ?? undefined,
       lastModified: f.updated_at ? new Date(f.updated_at) : undefined,
     })
